@@ -31,3 +31,17 @@ assert.ok(
     "Class module should provide an 'extend' method"
 );
 
+
+// create a basic test class
+var Foo = Class.extend();
+
+
+assert.ok(
+    ( Foo instanceof Object ),
+    "Extend method creates a new object"
+);
+
+assert.ok(
+    ( Foo.prototype.extend instanceof Function ),
+    "Created class contains extend method in prototype"
+);
