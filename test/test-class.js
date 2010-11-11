@@ -32,16 +32,20 @@ assert.ok(
 );
 
 
+// these two variables are declared outside of the class to ensure that they
+// will still be set even if the context of the constructor is wrong
+var construct_count   = 0,
+    construct_context = null;
+
 // create a basic test class
-var construct_count = 0;
 var Foo = Class.extend(
 {
     __construct: function()
     {
         construct_count++;
+        construct_context = this;
     },
 });
-
 
 assert.ok(
     ( Foo instanceof Object ),
@@ -53,16 +57,29 @@ assert.ok(
     "Created class contains extend method in prototype"
 );
 
+assert.ok(
+    ( Foo.prototype.__construct instanceof Function ),
+    "Provided properties should be copied to the new class prototype"
+);
+
 assert.equal(
     construct_count,
     0,
     "Constructor should not be called before class is instantiated"
 );
 
+
 var obj = new Foo();
+
 assert.equal(
     construct_count,
     1,
     "Constructor should be invoked once the class is instantiated"
+);
+
+assert.equal(
+    obj,
+    construct_context,
+    "Constructor should be invoked within the context of the class instance"
 );
 
