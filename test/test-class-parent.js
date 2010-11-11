@@ -118,3 +118,12 @@ assert.equal(
     "The parent property may also be used to invoke parent methods"
 );
 
+assert.throws( function()
+{
+    Foo.extend(
+    {
+        // overriding method with scalar; shouldn't be allowed
+        myMethod: 'scalar',
+    });
+}, TypeError, "Methods must be overridden with a Function" );
+
