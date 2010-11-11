@@ -1,5 +1,5 @@
 /**
- * Tests Class class
+ * Tests class module object creation
  *
  *  Copyright (C) 2010 Mike Gerwitz
  *
@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author  Mike Gerwitz
- * @package core
+ * @package test
  */
 
 require( './common' );
