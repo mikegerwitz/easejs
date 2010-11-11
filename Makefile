@@ -2,4 +2,6 @@
 .PHONY: test
 
 test:
-	node ./test/test-*.js
+	for test in `find ./test -name 'test-*.js'`; do \
+		node $${test}; \
+	done
