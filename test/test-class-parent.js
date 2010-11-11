@@ -31,6 +31,7 @@ var Foo = Class.extend(
 {
     hitMethod:  false,
     hitMethod2: false,
+    method2Arg: null,
 
     myMethod: function()
     {
@@ -38,9 +39,11 @@ var Foo = Class.extend(
         return this;
     },
 
-    myMethod2: function()
+    myMethod2: function( arg )
     {
         this.hitMethod2 = true;
+        this.method2Arg = arg;
+
         return this;
     },
 });
@@ -52,9 +55,9 @@ var SubFoo = Foo.extend(
         return this;
     },
 
-    myMethod2: function()
+    myMethod2: function( arg )
     {
-        return this._super();
+        return this.__super( arg );
     },
 });
 
@@ -74,6 +77,9 @@ assert.equal(
     "Sanity check"
 );
 
+var arg = 'foobar';
+sub_foo.myMethod().myMethod2( arg );
+
 // myMethod overrides without calling parent
 assert.equal(
     sub_foo.hitMethod,
@@ -81,9 +87,16 @@ assert.equal(
     "Subtype should be able to override parent properties"
 );
 
+// myMethod2 overrides parent then calls super method
 assert.equal(
     sub_foo.hitMethod2,
     true,
     "Subtype should be able to call parent method"
+);
+
+assert.equal(
+    sub_foo.method2Arg,
+    arg,
+    "Arguments should be passed to super method via _super argument list"
 );
 
