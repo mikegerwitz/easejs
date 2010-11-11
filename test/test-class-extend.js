@@ -25,11 +25,44 @@ require( './common' );
 var assert = require( 'assert' ),
     Class  = require( 'class' );
 
-var Foo = Class.extend();
-
+var foo_props = {
+        one: 1,
+        two: 2,
+    },
+    Foo = Class.extend( foo_props );
 
 assert.ok(
-    ( Foo.prototype.extend instanceof Function ),
-    "Created class contains extend method in prototype"
+    ( Foo.extend instanceof Function ),
+    "Created class contains extend method"
 );
 
+var sub_props = {
+        three: 3,
+        four:  4,
+    },
+    SubFoo = Foo.extend( sub_props );
+
+assert.ok(
+    ( SubFoo instanceof Object ),
+    "Subtype is returned as an object"
+);
+
+// ensure properties were inherited from supertype
+for ( var prop in foo_props )
+{
+    assert.equal(
+        foo_props[ prop ],
+        SubFoo.prototype[ prop ],
+        "Subtype inherits parent properties: " + prop
+    );
+}
+
+// and ensure that the subtype's properties were included
+for ( var prop in sub_props )
+{
+    assert.equal(
+        sub_props[ prop ],
+        SubFoo.prototype[ prop ],
+        "Subtype contains its own properties: " + prop
+    );
+}
