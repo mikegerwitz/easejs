@@ -33,10 +33,15 @@ var construct_count   = 0,
 // create a basic test class
 var Foo = Class.extend(
 {
+    args: null,
+
+
     __construct: function()
     {
         construct_count++;
         construct_context = this;
+
+        this.args = arguments;
     },
 });
 
@@ -51,7 +56,8 @@ assert.equal(
     "Constructor should not be called before class is instantiated"
 );
 
-var obj = new Foo();
+var args = [ 'foo', 'bar' ],
+    obj  = new Foo( args[0], args[1] );
 
 assert.equal(
     construct_count,
@@ -64,3 +70,25 @@ assert.equal(
     construct_context,
     "Constructor should be invoked within the context of the class instance"
 );
+
+assert.notEqual(
+    obj.args,
+    null,
+    "Constructor arguments should be passed to the constructor"
+);
+
+assert.equal(
+    obj.args.length,
+    args.length,
+    "All arguments should be passed to the constructor"
+);
+
+// check the argument values
+for ( var i = 0, len = args.length; i < len; i++ )
+{
+    assert.equal(
+        obj.args[ i ],
+        args[ i ],
+        "Arguments should be passed to the constructor: " + i
+    );
+}
