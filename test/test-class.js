@@ -33,7 +33,14 @@ assert.ok(
 
 
 // create a basic test class
-var Foo = Class.extend();
+var construct_count = 0;
+var Foo = Class.extend(
+{
+    __construct: function()
+    {
+        construct_count++;
+    },
+});
 
 
 assert.ok(
@@ -45,3 +52,17 @@ assert.ok(
     ( Foo.prototype.extend instanceof Function ),
     "Created class contains extend method in prototype"
 );
+
+assert.equal(
+    construct_count,
+    0,
+    "Constructor should not be called before class is instantiated"
+);
+
+var obj = new Foo();
+assert.equal(
+    construct_count,
+    1,
+    "Constructor should be invoked once the class is instantiated"
+);
+
