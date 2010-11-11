@@ -1,5 +1,5 @@
 /**
- * Tests class module object creation
+ * Tests class module extend() method
  *
  *  Copyright (C) 2010 Mike Gerwitz
  *
@@ -25,18 +25,11 @@ require( './common' );
 var assert = require( 'assert' ),
     Class  = require( 'class' );
 
-
-assert.ok(
-    ( Class.extend instanceof Function ),
-    "Class module should provide an 'extend' method"
-);
-
-
 var Foo = Class.extend();
 
 
 assert.ok(
-    ( Foo instanceof Object ),
-    "Extend method creates a new object"
+    ( Foo.prototype.extend instanceof Function ),
+    "Created class contains extend method in prototype"
 );
 
