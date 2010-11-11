@@ -66,3 +66,34 @@ for ( var prop in sub_props )
         "Subtype contains its own properties: " + prop
     );
 }
+
+assert.ok(
+    ( new SubFoo() instanceof Foo ),
+    "Subtypes must be considered to be instances of their supertypes"
+);
+
+
+//         Foo
+//          |
+//        SubFoo
+//        /   \
+// SubSubFoo  SubSubFoo2
+//
+var SubSubFoo  = SubFoo.extend(),
+    SubSubFoo2 = SubFoo.extend();
+
+assert.ok(
+    ( new SubSubFoo() instanceof Foo ),
+    "Sub-subtypes should be instances of their super-supertype"
+);
+
+assert.ok(
+    !( new SubFoo() instanceof SubSubFoo ),
+    "Supertypes should not be considered instances of their subtypes"
+);
+
+assert.ok(
+    !( new SubSubFoo2() instanceof SubSubFoo ),
+    "Subtypes should not be considered instances of their siblings"
+);
+
