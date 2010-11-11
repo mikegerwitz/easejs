@@ -59,6 +59,11 @@ var SubFoo = Foo.extend(
     {
         return this.__super( arg );
     },
+
+    callParentAlt: function()
+    {
+        return this.parent.myMethod2.apply( this, arguments );
+    },
 });
 
 var foo     = new Foo(),
@@ -98,5 +103,18 @@ assert.equal(
     sub_foo.method2Arg,
     arg,
     "Arguments should be passed to super method via _super argument list"
+);
+
+assert.deepEqual(
+    SubFoo.prototype.parent,
+    Foo.prototype,
+    "Parent property should represent parent prototype"
+);
+
+sub_foo.callParentAlt( arg = 'moo' );
+assert.equal(
+    sub_foo.method2Arg,
+    arg,
+    "The parent property may also be used to invoke parent methods"
 );
 
