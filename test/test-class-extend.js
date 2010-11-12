@@ -99,3 +99,30 @@ assert.ok(
     "Subtypes should not be considered instances of their siblings"
 );
 
+
+// to test inheritance of classes that were not previously created via the
+// Class.extend() method
+var OtherClass = function() {};
+OtherClass.prototype =
+{
+    foo: 'bla',
+};
+
+var SubOther = Class.extend( OtherClass,
+{
+    newFoo: 2,
+});
+
+
+assert.equal(
+    SubOther.prototype.foo,
+    OtherClass.prototype.foo,
+    "Prototype of existing class should be copied to subclass"
+);
+
+assert.notEqual(
+    SubOther.prototype.newFoo,
+    undefined,
+    "Subtype should contain extended members"
+);
+
