@@ -81,26 +81,26 @@ assert.ok(
     "All classes should have an isAbstract() method"
 );
 
-assert.equals(
+assert.equal(
     Foo.isAbstract(),
     false,
     "Classes are not abstract if they contain no abstract methods"
 );
 
-assert.equals(
+assert.equal(
     AbstractFoo.isAbstract(),
     true,
     "Classes should be considered abstract if they contain any abstract methods"
 );
 
-assert.equals(
+assert.equal(
     SubAbstractFoo.isAbstract(),
     true,
     "Subtypes of abstract types are abstract if they don't provide a " +
         "concrete implementation for all abstract methods"
 );
 
-assert.equals(
+assert.equal(
     ConcreteFoo.isAbstract(),
     false,
     "Subtypes of abstract types are not abstract if they provide concrete " +
