@@ -67,6 +67,16 @@ var ConcreteFoo = AbstractFoo.extend(
 });
 
 assert.ok(
+    ( abstractMethod() instanceof Function ),
+    "abstractMethod() returns a function"
+);
+
+assert.throws( function()
+{
+    abstractMethod()();
+}, Error, "Abstract methods cannot be called" );
+
+assert.ok(
     ( Foo.isAbstract instanceof Function ),
     "All classes should have an isAbstract() method"
 );
