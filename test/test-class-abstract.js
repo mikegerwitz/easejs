@@ -40,6 +40,13 @@ var Foo = Class.extend( {} );
 // abstract
 var AbstractFoo = Class.extend(
 {
+    ctorCalled: false,
+
+    __construct: function()
+    {
+        this.ctorCalled = true;
+    },
+
     method: abstractMethod( function( one, two, three ){} ),
 
     second: abstractMethod(),
@@ -143,5 +150,11 @@ assert.throws( function()
 assert.ok(
     new ConcreteFoo(),
     "Concrete subclasses can be instantiated"
+);
+
+assert.equal(
+    ( new ConcreteFoo() ).ctorCalled,
+    true,
+    "Can call constructors of abstract supertypes"
 );
 
