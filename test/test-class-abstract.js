@@ -22,12 +22,6 @@
  * @package test
  */
 
-// don't perform these tests if getters/setters are unsupported
-if ( Object.prototype.__defineGetter__ === undefined )
-{
-    return;
-}
-
 require( './common' );
 
 var assert         = require( 'assert' ),
