@@ -133,3 +133,15 @@ assert.equal(
     "Subtypes of abstract types are not abstract if they provide concrete " +
         "implementations of all abstract methods"
 );
+
+assert.throws( function()
+{
+    new AbstractFoo();
+    new SubAbstractFoo();
+}, Error, "Abstract classes cannot be instantiated" );
+
+assert.ok(
+    new ConcreteFoo(),
+    "Concrete subclasses can be instantiated"
+);
+
