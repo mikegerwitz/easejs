@@ -158,3 +158,29 @@ assert.equal(
     "Can call constructors of abstract supertypes"
 );
 
+
+assert.throws( function()
+{
+    AbstractFoo.extend(
+    {
+        // incorrect number of arguments
+        method: function()
+        {
+        },
+    });
+}, Error, "Concrete methods must implement the proper number of argments" );
+
+assert.doesNotThrow(
+    function()
+    {
+        AbstractFoo.extend(
+        {
+            second: function( foo )
+            {
+            },
+        });
+    }, Error,
+    "Concrete methods needn't implement the proper number of arguments if " +
+        "no definition was provided"
+);
+
