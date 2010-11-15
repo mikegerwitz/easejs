@@ -87,7 +87,7 @@ cannot be instantiated. Classes are automatically considered to be abstract if
 they contain one or more abstract methods.
 
     var Class          = require( 'easejs' ).Class,
-        abstractMethod = require( 'easejs' ).abstractMethod;
+        abstractMethod = Class.abstractMethod;
 
     var AbstractFoo = Class.extend(
     {
