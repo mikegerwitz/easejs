@@ -34,7 +34,10 @@ assert.ok(
 );
 
 
-var Foo = Class.extend();
+var Foo = Class.extend(
+{
+    value: 'foo',
+});
 
 
 assert.ok(
@@ -42,3 +45,8 @@ assert.ok(
     "Extend method creates a new object"
 );
 
+assert.equal(
+    Object.isFrozen( Foo ),
+    true,
+    "Generated class should be frozen"
+);
