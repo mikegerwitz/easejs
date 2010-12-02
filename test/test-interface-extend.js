@@ -71,10 +71,23 @@ assert.ok(
 );
 
 
-var SubType = Interface.extend( BaseType, {} );
+var SubType = Interface.extend( BaseType,
+{
+    second: abstractMethod(),
+});
 
 assert.ok(
-    ( SubType instanceof BaseType ),
+    ( new SubType() instanceof BaseType ),
     "Generic interface extend method can extend from other interfaces"
+);
+
+assert.ok(
+    ( SubType.prototype.method === BaseType.prototype.method ),
+    "Interface subtypes inherit abstract methods"
+);
+
+assert.ok(
+    ( SubType.prototype.second instanceof Function ),
+    "Interfaces can be extended with additional abstract methods"
 );
 
