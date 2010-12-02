@@ -172,6 +172,30 @@ assert.throws( function()
     });
 }, Error, "Concrete methods must implement the proper number of argments" );
 
+assert.throws( function()
+{
+    AbstractFoo.extend(
+    {
+        // incorrect number of arguments
+        method: abstractMethod(),
+    });
+}, Error, "Abstract methods of subtypes must implement the proper number of argments" );
+
+assert.doesNotThrow(
+    function()
+    {
+        AbstractFoo.extend(
+        {
+            // incorrect number of arguments
+            method: abstractMethod( 'one', 'two', 'three', 'four' ),
+        });
+    },
+    Error,
+    "Abstract methods of subtypes may implement additional arguments, so long" +
+        "as they implement at least the required number of arguments as defined by " +
+        "it supertype"
+);
+
 assert.doesNotThrow(
     function()
     {
