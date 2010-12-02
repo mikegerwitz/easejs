@@ -91,3 +91,26 @@ assert.ok(
     "Interfaces can be extended with additional abstract methods"
 );
 
+
+assert.ok(
+    ( BaseType.extend instanceof Function ),
+    "Interface contains extend method"
+);
+
+
+var SubType2 = BaseType.extend(
+{
+    second: abstractMethod(),
+});
+
+assert.ok(
+    ( new SubType2 instanceof BaseType ),
+    "Interface extend method can extend interfaces"
+);
+
+assert.ok(
+    ( SubType2.prototype.second instanceof Function ),
+    "Interfaces can be extended with additional abstract methods using " +
+        "shorthand extend method"
+);
+
