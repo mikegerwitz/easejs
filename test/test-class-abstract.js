@@ -25,8 +25,9 @@
 require( './common' );
 
 var assert         = require( 'assert' ),
-    Class          = require( 'class' ),
-    abstractMethod = require( 'class' ).abstractMethod;
+    Class          = require( '../lib/class' ),
+    abstractMethod = require( '../lib/class' ).abstractMethod,
+    util           = require( '../lib/util' );
 
 // not abstract
 var Foo = Class.extend( {} );
@@ -67,9 +68,16 @@ var ConcreteFoo = AbstractFoo.extend(
     },
 });
 
+
 assert.ok(
     ( abstractMethod() instanceof Function ),
     "abstractMethod() returns a function"
+);
+
+assert.ok(
+    ( util.isAbstractMethod( abstractMethod() ) ),
+    "Functions returned by abstractMethod() are considered to be abstract by " +
+        "util.isAbstractMethod"
 );
 
 assert.throws( function()
