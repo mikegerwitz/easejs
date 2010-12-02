@@ -1,5 +1,5 @@
 /**
- * Tests interfaces
+ * Tests extending of interfaces
  *
  *  Copyright (C) 2010 Mike Gerwitz
  *
@@ -28,17 +28,34 @@ var assert         = require( 'assert' ),
     Interface      = require( 'interface' ),
     abstractMethod = Interface.abstractMethod;
 
-var FooType = Interface.extend();
 
+assert.throws( function()
+{
+    Interface.extend(
+    {
+        // properties (non-methods) are not permitted
+        prop: 'not permitted',
+    });
+}, Error, "Properties are not permitted within Interface definitions" );
 
-assert.ok(
-    ( FooType instanceof Object ),
-    "Interface extend method creates a new object"
-);
+assert.throws( function()
+{
+    Interface.extend(
+    {
+        // concrete method
+        method: function() {}
+    });
+}, Error, "Concrete methods are not permitted within Interface definitions" );
 
-assert.equal(
-    Object.isFrozen( FooType ),
-    true,
-    "Generated interface object should be frozen"
+assert.doesNotThrow(
+    function()
+    {
+        Interface.extend(
+        {
+            method: abstractMethod(),
+        });
+    },
+    Error,
+    "Abstract method declarations are allowed within Interface definitions"
 );
 
