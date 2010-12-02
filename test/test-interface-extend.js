@@ -70,3 +70,11 @@ assert.ok(
     "Interface contains defined abstract methods"
 );
 
+
+var SubType = Interface.extend( BaseType, {} );
+
+assert.ok(
+    ( SubType instanceof BaseType ),
+    "Generic interface extend method can extend from other interfaces"
+);
+
