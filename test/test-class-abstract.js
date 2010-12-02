@@ -42,7 +42,7 @@ var AbstractFoo = Class.extend(
         this.ctorCalled = true;
     },
 
-    method: abstractMethod( function( one, two, three ){} ),
+    method: abstractMethod( 'one', 'two', 'three' ),
 
     second: abstractMethod(),
 });
