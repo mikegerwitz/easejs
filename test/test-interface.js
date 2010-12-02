@@ -28,10 +28,8 @@ var assert         = require( 'assert' ),
     Class          = require( 'class' ),
     Interface      = require( 'interface' );
 
-var FooType = Interface.extend(
-{
-    foo: function( foo, bar ) {},
-});
+var FooType = Interface.extend();
+
 
 assert.ok(
     ( FooType instanceof Object ),
@@ -43,4 +41,22 @@ assert.equal(
     true,
     "Generated interface object should be frozen"
 );
+
+
+assert.throws( function()
+{
+    Interface.extend(
+    {
+        // properties (non-methods) are not permitted
+        prop: 'not permitted',
+    });
+}, Error, "Only methods are permitted within Interface definitions" );
+
+assert.doesNotThrow( function()
+{
+    Interface.extend(
+    {
+        method: function() {},
+    });
+}, Error, "Method declarations are allowed within Interface definitions" );
 
