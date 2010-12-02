@@ -26,7 +26,8 @@ require( './common' );
 
 var assert         = require( 'assert' ),
     Class          = require( 'class' ),
-    Interface      = require( 'interface' );
+    Interface      = require( 'interface' ),
+    abstractMethod = Interface.abstractMethod;
 
 var FooType = Interface.extend();
 
@@ -50,13 +51,26 @@ assert.throws( function()
         // properties (non-methods) are not permitted
         prop: 'not permitted',
     });
-}, Error, "Only methods are permitted within Interface definitions" );
+}, Error, "Properties are not permitted within Interface definitions" );
 
-assert.doesNotThrow( function()
+assert.throws( function()
 {
     Interface.extend(
     {
-        method: function() {},
+        // concrete method
+        method: function() {}
     });
-}, Error, "Method declarations are allowed within Interface definitions" );
+}, Error, "Concrete methods are not permitted within Interface definitions" );
+
+assert.doesNotThrow(
+    function()
+    {
+        Interface.extend(
+        {
+            method: abstractMethod(),
+        });
+    },
+    Error,
+    "Abstract method declarations are allowed within Interface definitions"
+);
 
