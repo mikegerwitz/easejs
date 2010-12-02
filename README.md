@@ -93,7 +93,7 @@ they contain one or more abstract methods.
     {
         // a function may be provided if you wish the subtypes to implement a
         // certain number of arguments
-        fooBar: abstractMethod( function( arg ){} ),
+        fooBar: abstractMethod( 'arg' ),
 
         // alternatively, you needn't supply implementation details
         fooBar2: abstractMethod(),
