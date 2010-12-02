@@ -59,3 +59,14 @@ assert.doesNotThrow(
     "Abstract method declarations are allowed within Interface definitions"
 );
 
+
+var BaseType = Interface.extend(
+{
+    method: abstractMethod(),
+});
+
+assert.ok(
+    ( BaseType.prototype.method instanceof Function ),
+    "Interface contains defined abstract methods"
+);
+

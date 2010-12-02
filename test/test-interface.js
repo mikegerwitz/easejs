@@ -32,8 +32,8 @@ var FooType = Interface.extend();
 
 
 assert.ok(
-    ( FooType instanceof Object ),
-    "Interface extend method creates a new object"
+    ( FooType instanceof Function ),
+    "Interface extend method creates a new interface object"
 );
 
 assert.equal(
