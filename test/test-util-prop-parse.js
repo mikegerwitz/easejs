@@ -24,8 +24,8 @@
 
 require( './common' );
 
-var assert    = require( 'assert' ),
-    propParse = require( '../lib/util' ).propParse;
+var assert = require( 'assert' ),
+    util   = require( '../lib/util' );
 
 var data = {
     // scalars (properties)
@@ -42,13 +42,17 @@ var data = {
 
     // concrete method
     method: function() {},
+
+    // abstract method
+    abstractMethod: util.createAbstractMethod(),
 };
 
 
-var props   = {},
-    methods = {};
+var props    = {},
+    methods  = {},
+    amethods = {};
 
-propParse( data, {
+util.propParse( data, {
     property: function( name, value )
     {
         props[ name ] = value;
@@ -59,6 +63,11 @@ propParse( data, {
     {
         methods[ name ] = method;
     },
+
+    abstractMethod: function( name, def )
+    {
+        amethods[ name ] = def;
+    }
 } );
 
 
@@ -76,6 +85,12 @@ propParse( data, {
 assert.equal(
     methods.method,
     data.method,
-    "Property parser properly detects methods"
+    "Property parser properly detects concrete methods"
+);
+
+assert.equal(
+    amethods.abstractMethod,
+    data.abstractMethod,
+    "Property parser properly detects abstract methods"
 );
 
