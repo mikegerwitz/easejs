@@ -29,9 +29,9 @@ var assert = require( 'assert' ),
 
 var data = {
     // scalars (properties)
-    propStr: 'string',
-    propBool: true,
-    propInt: 1,
+    propStr:  'string',
+    propBool:  true,
+    propInt:   1,
     propFloat: 1.23,
 
     // array (property)
