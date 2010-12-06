@@ -40,6 +40,10 @@ var data = {
     // object (property)
     propObj: {},
 
+    // getter/setter
+    get someFoo() {},
+    set someFoo() {},
+
     // concrete method
     method: function() {},
 
@@ -50,7 +54,9 @@ var data = {
 
 var props    = {},
     methods  = {},
-    amethods = {};
+    amethods = {},
+    getters  = {},
+    setters  = {};
 
 util.propParse( data, {
     property: function( name, value )
@@ -67,7 +73,17 @@ util.propParse( data, {
     abstractMethod: function( name, def )
     {
         amethods[ name ] = def;
-    }
+    },
+
+    getter: function( name, func )
+    {
+        getters[ name ] = func;
+    },
+
+    setter: function( name, func )
+    {
+        setters[ name ] = func;
+    },
 } );
 
 
@@ -92,5 +108,17 @@ assert.equal(
     amethods.abstractMethod,
     data.abstractMethod,
     "Property parser properly detects abstract methods"
+);
+
+assert.equal(
+    getters.someFoo,
+    data.__lookupGetter__( 'someFoo' ),
+    "Property parser properly detects getters"
+);
+
+assert.equal(
+    setters.someFoo,
+    data.__lookupSetter__( 'someFoo' ),
+    "Property parser properly detects setters"
 );
 
