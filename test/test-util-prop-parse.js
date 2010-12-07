@@ -51,6 +51,12 @@ var data = {
     abstractMethod: util.createAbstractMethod(),
 };
 
+var chk_each = {};
+for ( item in data )
+{
+    chk_each[ item ] = 1;
+}
+
 
 var props    = {},
     methods  = {},
@@ -59,6 +65,16 @@ var props    = {},
     setters  = {};
 
 util.propParse( data, {
+    // run for each item in data
+    each: function( name, value )
+    {
+        // only remove if the passed value is correct
+        if ( value === data[ name ] )
+        {
+            delete chk_each[ name ];
+        }
+    },
+
     property: function( name, value )
     {
         props[ name ] = value;
@@ -120,5 +136,18 @@ assert.equal(
     setters.someFoo,
     data.__lookupSetter__( 'someFoo' ),
     "Property parser properly detects setters"
+);
+
+
+var chk_each_count = 0;
+for ( item in chk_each )
+{
+    chk_each_count++;
+}
+
+assert.equal(
+    chk_each_count,
+    0,
+    "Property parser supports passing each property to the provided function"
 );
 
