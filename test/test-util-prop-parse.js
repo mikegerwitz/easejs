@@ -80,15 +80,10 @@ util.propParse( data, {
         props[ name ] = value;
     },
 
-    // concrete method
-    method: function( name, method )
+    method: function( name, method, is_abstract )
     {
-        methods[ name ] = method;
-    },
-
-    abstractMethod: function( name, def )
-    {
-        amethods[ name ] = def;
+        var to = ( is_abstract ) ? amethods : methods;
+        to[ name ] = method;
     },
 
     getter: function( name, func )
