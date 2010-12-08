@@ -126,3 +126,12 @@ assert.notEqual(
     "Subtype should contain extended members"
 );
 
+
+assert.throws( function()
+{
+    Class.extend( OtherClass,
+    {
+        foo: function() {},
+    });
+}, Error, "Cannot override property with a method" );
+
