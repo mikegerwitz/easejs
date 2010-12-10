@@ -133,5 +133,5 @@ assert.throws( function()
     {
         foo: function() {},
     });
-}, Error, "Cannot override property with a method" );
+}, TypeError, "Cannot override property with a method" );
 
