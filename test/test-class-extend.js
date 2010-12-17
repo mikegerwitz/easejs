@@ -166,3 +166,22 @@ assert.ok(
     "Multiple instances of the same class do not share object references"
 );
 
+var arr_val = 1;
+var SubAnotherFoo = AnotherFoo.extend(
+{
+    arr: [ arr_val ],
+});
+
+var SubObj1 = new SubAnotherFoo(),
+    SubObj2 = new SubAnotherFoo();
+
+assert.ok(
+    ( ( SubObj1.arr !== SubObj2.arr ) && ( SubObj1.obj !== SubObj2.obj ) ),
+    "Instances of subtypes do not share property references"
+);
+
+assert.ok(
+    ( ( SubObj1.arr[ 0 ] === arr_val ) && ( SubObj2.arr[ 0 ] === arr_val ) ),
+    "Subtypes can override parent property values"
+);
+
