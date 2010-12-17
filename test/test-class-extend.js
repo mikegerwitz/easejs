@@ -135,3 +135,34 @@ assert.throws( function()
     });
 }, TypeError, "Cannot override property with a method" );
 
+
+var AnotherFoo = Class.extend(
+{
+    arr: [],
+    obj: {},
+});
+
+var Obj1 = new AnotherFoo(),
+    Obj2 = new AnotherFoo();
+
+Obj1.arr.push( 'one' );
+Obj2.arr.push( 'two' );
+
+Obj1.obj.a = true;
+Obj2.obj.b = true;
+
+// to ensure we're not getting/setting values of the prototype (=== can also be
+// used to test for references, but this test demonstrates the functionality
+// that we're looking to ensure)
+assert.ok(
+    ( ( Obj1.arr[ 0 ] === 'one' ) && ( Obj2.arr[ 0 ] === 'two' ) ),
+    "Multiple instances of the same class do not share array references"
+);
+
+assert.ok(
+    ( ( ( Obj1.obj.a === true ) && ( Obj1.obj.b === undefined ) )
+        && ( ( Obj2.obj.a === undefined ) && ( Obj2.obj.b === true ) )
+    ),
+    "Multiple instances of the same class do not share object references"
+);
+
