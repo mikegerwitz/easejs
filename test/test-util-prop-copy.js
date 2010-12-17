@@ -88,7 +88,8 @@ propCopy( props, dest, null, {
 
     assert.ok(
         ( item instanceof Function ),
-        "propCopy() parser function overrides can invoke default functionality"
+        "propCopy() parser function overrides can invoke default functionality " +
+            "[" + i + "]"
     );
 });
 
