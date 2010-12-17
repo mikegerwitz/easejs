@@ -30,6 +30,11 @@ var assert   = require( 'assert' ),
 var props = {
     one: 1,
     two: 2,
+
+    method: function() {},
+
+    get val() {},
+    set val() {},
 };
 
 var dest = {};
@@ -39,4 +44,46 @@ assert.ok(
     ( ( dest.one === props.one ) && ( dest.two === props.two ) ),
     "All properties should be copied to the destination object"
 );
+
+var each   = false,
+    prop   = false,
+    method = false,
+    getter = false,
+    setter = false;
+
+propCopy( props, dest, null, {
+    each: function()
+    {
+        each = true;
+    },
+
+    property: function()
+    {
+        prop = true;
+    },
+
+    method: function()
+    {
+        method = true;
+    },
+
+    getter: function()
+    {
+        getter = true;
+    },
+
+    setter: function()
+    {
+        setter = true;
+    },
+} );
+
+[ each, prop, method, getter, setter ].forEach( function( item, i )
+{
+    assert.equal(
+        item,
+        true,
+        "Can override propCopy() parser functions [" + i + "]"
+    );
+});
 
