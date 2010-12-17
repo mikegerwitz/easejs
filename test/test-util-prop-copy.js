@@ -52,38 +52,43 @@ var each   = false,
     setter = false;
 
 propCopy( props, dest, null, {
-    each: function()
+    each: function foo()
     {
-        each = true;
+        each = this.performDefault;
     },
 
     property: function()
     {
-        prop = true;
+        prop = this.performDefault;
     },
 
     method: function()
     {
-        method = true;
+        method = this.performDefault;
     },
 
     getter: function()
     {
-        getter = true;
+        getter = this.performDefault;
     },
 
     setter: function()
     {
-        setter = true;
+        setter = this.performDefault;
     },
 } );
 
 [ each, prop, method, getter, setter ].forEach( function( item, i )
 {
-    assert.equal(
+    assert.notEqual(
         item,
-        true,
+        false,
         "Can override propCopy() parser functions [" + i + "]"
+    );
+
+    assert.ok(
+        ( item instanceof Function ),
+        "propCopy() parser function overrides can invoke default functionality"
     );
 });
 
