@@ -193,3 +193,16 @@ assert.throws( function()
     });
 }, Error, "__initProps() cannot be declared (internal method)" );
 
+
+var SubSubAnotherFoo = AnotherFoo.extend(),
+    SubSubObj1       = new SubSubAnotherFoo(),
+    SubSubObj2       = new SubSubAnotherFoo();
+
+// to ensure the effect is recursive
+assert.ok(
+    ( ( SubSubObj1.arr !== SubSubObj2.arr )
+        && ( SubSubObj1.obj !== SubSubObj2.obj )
+    ),
+    "Instances of subtypes do not share property references"
+);
+
