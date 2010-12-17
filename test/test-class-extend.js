@@ -185,3 +185,11 @@ assert.ok(
     "Subtypes can override parent property values"
 );
 
+assert.throws( function()
+{
+    Class.extend(
+    {
+        __initProps: function() {},
+    });
+}, Error, "__initProps() cannot be declared (internal method)" );
+
