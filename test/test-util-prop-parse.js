@@ -146,3 +146,24 @@ assert.equal(
     "Property parser supports passing each property to the provided function"
 );
 
+
+var Foo = function() {};
+Foo.prototype.one = 1;
+
+var instance = new Foo();
+instance.two = 2;
+
+var count = 0;
+util.propParse( instance, {
+    each: function()
+    {
+        count++;
+    },
+} );
+
+assert.equal(
+    count,
+    1,
+    "propParse should ignore prototype properties of instances"
+);
+
