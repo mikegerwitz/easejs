@@ -31,7 +31,7 @@ var props = {
     one: 1,
     two: 2,
 
-    method: function() {},
+    method: function two() {},
 
     get val() {},
     set val() {},
@@ -45,13 +45,24 @@ assert.ok(
     "All properties should be copied to the destination object"
 );
 
-var each   = false,
-    prop   = false,
-    method = false,
-    getter = false,
-    setter = false;
+var each     = false,
+    prop     = false,
+    method   = false,
+    getter   = false,
+    setter   = false,
+    override = false,
 
-propCopy( props, dest, null, {
+    override_data = [];
+
+var test_val          = 'foobar',
+    dest2_orig_method = function() { return test_val; };
+
+var dest2 = {
+    // will cause methodOverride action to be invoked
+    method: dest2_orig_method,
+};
+
+propCopy( props, dest2, {
     each: function foo()
     {
         each = this.performDefault;
@@ -62,9 +73,10 @@ propCopy( props, dest, null, {
         prop = this.performDefault;
     },
 
-    method: function()
+    method: function( name, func )
     {
-        method = this.performDefault;
+        // perform default action to ensure methodOverride() is called
+        ( method = this.performDefault )( name, func );
     },
 
     getter: function()
@@ -76,9 +88,15 @@ propCopy( props, dest, null, {
     {
         setter = this.performDefault;
     },
+
+    methodOverride: function( name, pre, func )
+    {
+        override      = this.performDefault;
+        override_data = [ name, pre, func ];
+    },
 } );
 
-[ each, prop, method, getter, setter ].forEach( function( item, i )
+[ each, prop, method, getter, setter, override ].forEach( function( item, i )
 {
     assert.notEqual(
         item,
@@ -92,4 +110,19 @@ propCopy( props, dest, null, {
             "[" + i + "]"
     );
 });
+
+assert.ok(
+    ( override_data[ 0 ] === 'method' ),
+    "methodOverride action is passed correct method name"
+);
+
+assert.ok(
+    ( override_data[ 1 ]() === test_val ),
+    "methodOverride action is passed correct original function"
+);
+
+assert.ok(
+    ( override_data[ 2 ] === props.method ),
+    "methodOverride action is passed correct override function"
+);
 
