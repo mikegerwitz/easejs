@@ -1,0 +1,96 @@
+#!/bin/bash
+#
+#  Copyright (C) 2010 Mike Gerwitz
+#
+#  This file is part of ease.js.
+#
+#  ease.js is free software: you can redistribute it and/or modify it under the
+#  terms of the GNU Lesser General Public License as published by the Free
+#  Software Foundation, either version 3 of the License, or (at your option)
+#  any later version.
+#
+#  This program is distributed in the hope that it will be useful, but WITHOUT
+#  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
+#  for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# #
+
+PATH_TOOLS=$( dirname "$0" )
+PATH_LIB="$PATH_TOOLS/../lib"
+MODULE_EXT='js'
+TPL_PATH="$PATH_TOOLS/combine.tpl"
+TPL_VAR='/**{CONTENT}**/'
+
+# order matters
+CAT_MODULES="util class interface"
+
+##
+# Output template header
+##
+tpl_header()
+{
+    # cut out the top of the template (before the content location)
+    cat "$TPL_PATH" \
+        | awk "{
+            if ( \$0 == \"$TPL_VAR\" )
+                exit;
+            else
+                print \$0;
+        }"
+}
+
+##
+# Output template footer
+##
+tpl_footer()
+{
+    # cut out the bottom of the template (after where we need to place the
+    # content)
+    cat "$TPL_PATH" \
+        | awk "BEGIN { go = 0 }
+        {
+            if ( \$0 == \"$TPL_VAR\" )
+                go = 1
+            else
+                if ( go == 1 )
+                    print \$0;
+        }"
+}
+
+# ensure we can locate our template (should be in the /tools dir)
+if [ ! -f "$TPL_PATH" ]; then
+    echo "Error: combine.tpl not found ($TPL_PATH)"
+    exit 1
+fi
+
+
+# output combined file header
+tpl_header
+
+# output each of the modules
+for module in $CAT_MODULES; do
+    filename="$PATH_LIB/$module.$MODULE_EXT"
+
+    if [ ! -f "$filename" ]; then
+        echo "Error: module $module not found ($filename)"
+        exit 2
+    fi
+
+    # each module must be enclosed in a closure to emulate a module
+    echo "/** $module **/"
+    echo "( function( exports )"
+    echo "{"
+
+    cat $filename
+
+    echo "} )( exports['$module'] = {} );"
+done
+
+# output combined file footer
+tpl_footer
+
+exit 0
+
