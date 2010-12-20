@@ -80,6 +80,6 @@ var easejs = {};
 /**{CONTENT}**/
 
     // the following should match the exports of /index.js
-    ns_exports.Class = exports.class;
+    ns_exports.Class = exports['class'];
 } )( easejs );
 
