@@ -21,7 +21,7 @@ combine: mkbuild
 	${COMBINE} > ${PATH_COMBINE_OUTPUT}
 
 # run tests
-test:
+test: default
 	for test in `find ./test -name 'test-*.js'`; do \
 		node $${test}; \
 	done; \
