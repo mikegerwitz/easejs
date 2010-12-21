@@ -24,7 +24,11 @@ combine: mkbuild
 test:
 	for test in `find ./test -name 'test-*.js'`; do \
 		node $${test}; \
-	done
+	done; \
+	
+	for test in `find ./test -regex '.*/test-[^\.]*'`; do \
+		./$$test; \
+	done;
 
 # clean up build dir
 clean:
