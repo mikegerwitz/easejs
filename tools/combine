@@ -23,6 +23,7 @@ PATH_LIB="$PATH_TOOLS/../lib"
 MODULE_EXT='js'
 TPL_PATH="$PATH_TOOLS/combine.tpl"
 TPL_VAR='/**{CONTENT}**/'
+RMTRAIL="$PATH_TOOLS/rmtrail"
 
 # order matters
 CAT_MODULES="util class interface"
@@ -60,38 +61,6 @@ tpl_footer()
         }"
 }
 
-##
-# Removes trailing commas from array and object declarations (certain browsers,
-# such as earlier versions of IE, do not parse trailing commas correctly)
-#
-# This is a very simple (dumb) system. It does not check to ensure we're not
-# replacing text inside a string, nor is it 100% certain we're in an array or
-# object declaration. However, until such an implementation is needed, I'd like
-# to keep it as simple (and fast) as possible. The below implementation is
-# suitable for our needs.
-##
-rmtrail()
-{
-    cat - \
-        | sed -n '
-            # copy first line to hold buffer
-            1h
-
-            # if not the first line, append to hold buffer
-            1!H
-
-            # if last line, process
-            $ {
-                # pull from hold and perform replacement
-                g
-                s/,\(\s*[]}]\)/\1/g
-
-                # print result
-                p
-            }
-        '
-}
-
 # ensure we can locate our template (should be in the /tools dir)
 if [ ! -f "$TPL_PATH" ]; then
     echo "Error: combine.tpl not found ($TPL_PATH)"
@@ -117,7 +86,7 @@ for module in $CAT_MODULES; do
     echo "{"
 
     # add the module, removing trailing commas
-    cat $filename | rmtrail
+    cat $filename | $RMTRAIL
 
     echo "} )( exports['$module'] = {} );"
 done
