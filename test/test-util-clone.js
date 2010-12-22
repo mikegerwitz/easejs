@@ -22,10 +22,9 @@
  * @package test
  */
 
-require( './common' );
-
-var assert = require( 'assert' ),
-    util   = require( '../lib/util' );
+var common = require( './common' ),
+    assert = require( 'assert' ),
+    util   = common.require( 'util' );
 
 var arr = [ 1, 2, 3 ],
     obj = { a: 1, b: 2 };

@@ -22,10 +22,9 @@
  * @package test
  */
 
-require( './common' );
-
-var assert  = require( 'assert' ),
-    Class   = require( '../lib/class' ),
+var common  = require( './common' ),
+    assert  = require( 'assert' ),
+    Class   = common.require( 'class' ),
     Script  = process.binding( 'evals' ).Script,
     sandbox = {};
 

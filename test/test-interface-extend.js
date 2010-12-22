@@ -22,10 +22,9 @@
  * @package test
  */
 
-require( './common' );
-
-var assert         = require( 'assert' ),
-    Interface      = require( '../lib/interface' ),
+var common         = require( './common' ),
+    assert         = require( 'assert' ),
+    Interface      = common.require( 'interface' ),
     abstractMethod = Interface.abstractMethod;
 
 

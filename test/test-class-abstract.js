@@ -22,12 +22,11 @@
  * @package test
  */
 
-require( './common' );
-
-var assert         = require( 'assert' ),
-    Class          = require( '../lib/class' ),
-    abstractMethod = require( '../lib/class' ).abstractMethod,
-    util           = require( '../lib/util' );
+var common = require( './common' ),
+    assert         = require( 'assert' ),
+    Class          = common.require( 'class' ),
+    abstractMethod = common.require( 'class' ).abstractMethod,
+    util           = common.require( 'util' );
 
 // not abstract
 var Foo = Class.extend( {} );
