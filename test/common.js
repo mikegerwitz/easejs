@@ -22,5 +22,5 @@
  * @package test
  */
 
-require.paths.unshift( __dirname + '/../lib' );
+// may be implemented in the future
 

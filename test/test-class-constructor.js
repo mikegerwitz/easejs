@@ -25,7 +25,7 @@
 require( './common' );
 
 var assert = require( 'assert' ),
-    Class  = require( 'class' );
+    Class  = require( '../lib/class' );
 
 // these two variables are declared outside of the class to ensure that they
 // will still be set even if the context of the constructor is wrong

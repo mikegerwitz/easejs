@@ -25,7 +25,7 @@
 require( './common' );
 
 var assert = require( 'assert' ),
-    Class  = require( 'class' );
+    Class  = require( '../lib/class' );
 
 var Foo = Class.extend(
 {

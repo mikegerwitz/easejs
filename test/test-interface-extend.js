@@ -25,7 +25,7 @@
 require( './common' );
 
 var assert         = require( 'assert' ),
-    Interface      = require( 'interface' ),
+    Interface      = require( '../lib/interface' ),
     abstractMethod = Interface.abstractMethod;
 
 
