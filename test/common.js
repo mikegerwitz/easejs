@@ -22,5 +22,25 @@
  * @package test
  */
 
-require.paths.unshift( __dirname + '/../lib' );
+/**
+ * Library path
+ * @type  {string}
+ */
+exports.PATH_LIB = require( 'path' ).normalize( __dirname + '/../lib' );
+
+
+/**
+ * Returns requested module from the library path
+ *
+ * This method abstracts require() implementation so that the tests may be more
+ * easily implemented elsewhere (e.g. client-side)
+ *
+ * @param  {string}  module  module id
+ *
+ * @return  {Object}  module exports
+ */
+exports.require = function( module )
+{
+    return require( exports.PATH_LIB + '/' + module );
+}
 

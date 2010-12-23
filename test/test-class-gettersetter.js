@@ -28,10 +28,9 @@ if ( Object.prototype.__defineGetter__ === undefined )
     return;
 }
 
-require( './common' );
-
-var assert = require( 'assert' ),
-    Class  = require( 'class' );
+var common = require( './common' ),
+    assert = require( 'assert' ),
+    Class  = common.require( 'class' );
 
 
 var Foo = Class.extend(

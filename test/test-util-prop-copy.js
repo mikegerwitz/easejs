@@ -22,10 +22,9 @@
  * @package test
  */
 
-require( './common' );
-
-var assert   = require( 'assert' ),
-    propCopy = require( '../lib/util' ).propCopy;
+var common   = require( './common' ),
+    assert   = require( 'assert' ),
+    propCopy = common.require( 'util' ).propCopy;
 
 var props = {
     one: 1,
