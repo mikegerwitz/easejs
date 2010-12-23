@@ -94,3 +94,36 @@ for ( var i = 0, len = args.length; i < len; i++ )
         "Arguments should be passed to the constructor: " + i
     );
 }
+
+var SubFoo = Foo.extend(
+{
+    args: [ 'should', 'be', 'overwritten' ],
+} );
+
+construct_count   = 0;
+construct_context = null;
+
+var args2  = [ 'fried', 'pickle' ],
+    subobj = new SubFoo( args2[ 0 ], args2[ 1 ] );
+
+assert.equal(
+    construct_count,
+    1,
+    "Parent constructor should be called for subtype if not overridden"
+);
+
+assert.equal(
+    construct_context,
+    subobj,
+    "Parent constructor is run in context of the subtype"
+);
+
+// this should be implied by the previous test, but let's add it for some peace
+// of mind
+assert.ok(
+    ( ( subobj.args[ 0 ] === args2[ 0 ] )
+        && ( subobj.args[ 1 ] == args2[ 1 ] )
+    ),
+    "Parent constructor sets values on subtype"
+);
+
