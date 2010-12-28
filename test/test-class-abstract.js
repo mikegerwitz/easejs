@@ -22,11 +22,10 @@
  * @package test
  */
 
-var common         = require( './common' ),
-    assert         = require( 'assert' ),
-    Class          = common.require( 'class' ),
-    abstractMethod = common.require( 'util' ).createAbstractMethod,
-    util           = common.require( 'util' );
+var common = require( './common' ),
+    assert = require( 'assert' ),
+    Class  = common.require( 'class' ),
+    util   = common.require( 'util' );
 
 // not abstract
 var Foo = Class.extend( {} );
@@ -67,22 +66,6 @@ var ConcreteFoo = AbstractFoo.extend(
     },
 });
 
-
-assert.ok(
-    ( abstractMethod() instanceof Function ),
-    "abstractMethod() returns a function"
-);
-
-assert.ok(
-    ( util.isAbstractMethod( abstractMethod() ) ),
-    "Functions returned by abstractMethod() are considered to be abstract by " +
-        "util.isAbstractMethod"
-);
-
-assert.throws( function()
-{
-    abstractMethod()();
-}, Error, "Abstract methods cannot be called" );
 
 assert.ok(
     ( Foo.isAbstract instanceof Function ),
