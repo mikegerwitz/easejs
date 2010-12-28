@@ -100,7 +100,10 @@ propCopy( props, dest2, {
     },
 } );
 
-var check = [ each, prop, method, override ];
+var check   = [ each, prop, method, override ],
+    check_i = check.length,
+    item    = null
+;
 
 if ( get_set )
 {
@@ -108,20 +111,22 @@ if ( get_set )
     check.push( setter );
 }
 
-check.forEach( function( item, i )
+while ( check_i-- )
 {
+    item = check[ check_i ];
+
     assert.notEqual(
         item,
         false,
-        "Can override propCopy() parser functions [" + i + "]"
+        "Can override propCopy() parser functions [" + check_i + "]"
     );
 
     assert.ok(
         ( item instanceof Function ),
         "propCopy() parser function overrides can invoke default functionality " +
-            "[" + i + "]"
+            "[" + check_i + "]"
     );
-});
+}
 
 assert.ok(
     ( override_data[ 0 ] === 'method' ),

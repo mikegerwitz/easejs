@@ -105,15 +105,24 @@ util.propParse( data, {
 
 
 // ensure properties were properly recognized
-[ 'propStr', 'propBool', 'propInt', 'propFloat', 'propArray', 'propObj' ]
-    .forEach( function( item )
-    {
-        assert.equal(
-            props[ item ],
-            data[ item ],
-            "Property parser properly detects class properties"
-        );
-    });
+var chk = [
+        'propStr', 'propBool', 'propInt', 'propFloat', 'propArray', 'propObj'
+    ],
+
+    chk_i = chk.length,
+    item  = null
+;
+
+while ( chk_i-- )
+{
+    item = chk[ chk_i ];
+
+    assert.equal(
+        props[ item ],
+        data[ item ],
+        "Property parser properly detects class properties"
+    );
+};
 
 assert.equal(
     methods.method,
