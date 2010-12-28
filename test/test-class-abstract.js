@@ -22,10 +22,10 @@
  * @package test
  */
 
-var common = require( './common' ),
+var common         = require( './common' ),
     assert         = require( 'assert' ),
     Class          = common.require( 'class' ),
-    abstractMethod = common.require( 'class' ).abstractMethod,
+    abstractMethod = common.require( 'util' ).createAbstractMethod,
     util           = common.require( 'util' );
 
 // not abstract
@@ -41,9 +41,9 @@ var AbstractFoo = Class.extend(
         this.ctorCalled = true;
     },
 
-    method: abstractMethod( 'one', 'two', 'three' ),
+    'abstract method': [ 'one', 'two', 'three' ],
 
-    second: abstractMethod(),
+    'abstract second': [],
 });
 
 // still abstract (didn't provide a concrete implementation of both abstract
