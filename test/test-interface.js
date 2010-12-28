@@ -35,9 +35,13 @@ assert.ok(
     "Interface extend method creates a new interface object"
 );
 
-assert.equal(
-    Object.isFrozen( FooType ),
-    true,
-    "Generated interface object should be frozen"
-);
+// only perform check if supported by the engine
+if ( Object.isFrozen )
+{
+    assert.equal(
+        Object.isFrozen( FooType ),
+        true,
+        "Generated interface object should be frozen"
+    );
+}
 

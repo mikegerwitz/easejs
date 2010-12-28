@@ -44,8 +44,13 @@ assert.ok(
     "Extend method creates a new object"
 );
 
-assert.equal(
-    Object.isFrozen( Foo ),
-    true,
-    "Generated class should be frozen"
-);
+// only perform check if supported by the engine
+if ( Object.isFrozen )
+{
+    assert.equal(
+        Object.isFrozen( Foo ),
+        true,
+        "Generated class should be frozen"
+    );
+}
+
