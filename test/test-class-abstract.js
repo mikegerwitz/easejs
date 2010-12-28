@@ -197,3 +197,13 @@ assert.doesNotThrow(
         "no definition was provided"
 );
 
+
+assert.throws( function()
+{
+    Class.extend(
+    {
+        // not an array (invalid)
+        'abstract foo': 'scalar',
+    } );
+}, TypeError, "Abstract methods must be declared as arrays" );
+

@@ -27,7 +27,7 @@ var common = require( './common' ),
     util   = common.require( 'util' );
 
 var data = {
-    'abstract foo': null,
+    'abstract foo': [],
 }
 
 var abstract_methods = [],
@@ -56,7 +56,7 @@ assert.ok(
 //
 // custom parser
 var data2 = {
-        foo: 'bar',
+        foo: [],
     },
     map = {
         foo: { 'abstract': true },
