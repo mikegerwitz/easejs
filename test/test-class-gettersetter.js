@@ -30,47 +30,42 @@ if ( Object.prototype.__defineGetter__ === undefined )
 
 var common = require( './common' ),
     assert = require( 'assert' ),
-    Class  = common.require( 'class' );
+    Class  = common.require( 'class' ),
+
+    foo_def     = {},
+    sub_foo_def = {}
+;
 
 
-var Foo = Class.extend(
+// to prevent syntax errors in browsers that do not support getters/setters in
+// object notation
+foo_def.__defineGetter__( 'foo', function ()
 {
-    _foo: '',
-
-    set foo( val )
-    {
-        this._foo = ''+( val );
-    },
-
-    get foo()
-    {
-        return this._foo;
-    },
-
-    set bar( val )
-    {
-    },
-
-    get bar()
-    {
-        return 'durp';
-    },
-});
-
-var SubFoo  = Foo.extend(
+    return this._foo;
+} );
+foo_def.__defineSetter__( 'foo', function ( val )
 {
-    bar2: null,
+    this._foo = ''+( val );
+} );
+foo_def.__defineGetter__( 'bar', function ()
+{
+    return 'durp';
+} );
+foo_def.__defineSetter__( 'bar', function ( val )
+{
+} );
 
-    set bar( val )
-    {
-        this.bar2 = val;
-    },
+sub_foo_def.__defineGetter__( 'bar', function ()
+{
+    return this.bar2;
+} );
+sub_foo_def.__defineSetter__( 'bar', function ( val )
+{
+    this.bar2 = val;
+} );
 
-    get bar()
-    {
-        return this.bar2;
-    },
-});
+var Foo    = Class.extend( foo_def ),
+    SubFoo = Foo.extend( sub_foo_def );
 
 var foo = new Foo(),
     sub = new SubFoo(),

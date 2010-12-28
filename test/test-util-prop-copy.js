@@ -26,17 +26,22 @@ var common   = require( './common' ),
     assert   = require( 'assert' ),
     propCopy = common.require( 'util' ).propCopy;
 
-var props = {
-    one: 1,
-    two: 2,
+    get_set = ( Object.prototype.__defineGetter__ ) ? true : false;
 
-    method: function two() {},
+    props = {
+        one: 1,
+        two: 2,
 
-    get val() {},
-    set val() {},
-};
+        method: function two() {},
+    },
+    dest  = {}
+;
 
-var dest = {};
+if ( get_set )
+{
+    props.__defineGetter__( 'val', function () {} );
+    props.__defineSetter__( 'val', function () {} );
+}
 
 propCopy( props, dest );
 assert.ok(
@@ -95,7 +100,15 @@ propCopy( props, dest2, {
     },
 } );
 
-[ each, prop, method, getter, setter, override ].forEach( function( item, i )
+var check = [ each, prop, method, override ];
+
+if ( get_set )
+{
+    check.push( getter );
+    check.push( setter );
+}
+
+check.forEach( function( item, i )
 {
     assert.notEqual(
         item,

@@ -22,9 +22,12 @@
  * @package test
  */
 
-var common   = require( './common' ),
+var common = require( './common' ),
     assert = require( 'assert' ),
-    util   = common.require( 'util' );
+    util   = common.require( 'util' ),
+
+    get_set = ( ( Object.prototype.__defineGetter__ ) ? true : false )
+;
 
 var data = {
     // scalars (properties)
@@ -39,16 +42,20 @@ var data = {
     // object (property)
     propObj: {},
 
-    // getter/setter
-    get someFoo() {},
-    set someFoo() {},
-
     // concrete method
     method: function() {},
 
     // abstract method
     abstractMethod: util.createAbstractMethod(),
 };
+
+// only add getter/setter if it's supported by our engine
+if ( get_set )
+{
+    data.__defineGetter__( 'someFoo', function () {} );
+    data.__defineSetter__( 'someFoo', function () {} );
+}
+
 
 var chk_each = {};
 for ( item in data )
@@ -93,7 +100,7 @@ util.propParse( data, {
     setter: function( name, func )
     {
         setters[ name ] = func;
-    },
+    }
 } );
 
 
@@ -120,17 +127,20 @@ assert.equal(
     "Property parser properly detects abstract methods"
 );
 
-assert.equal(
-    getters.someFoo,
-    data.__lookupGetter__( 'someFoo' ),
-    "Property parser properly detects getters"
-);
+if ( get_set )
+{
+    assert.equal(
+        getters.someFoo,
+        data.__lookupGetter__( 'someFoo' ),
+        "Property parser properly detects getters"
+    );
 
-assert.equal(
-    setters.someFoo,
-    data.__lookupSetter__( 'someFoo' ),
-    "Property parser properly detects setters"
-);
+    assert.equal(
+        setters.someFoo,
+        data.__lookupSetter__( 'someFoo' ),
+        "Property parser properly detects setters"
+    );
+}
 
 
 var chk_each_count = 0;
