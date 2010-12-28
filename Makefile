@@ -3,6 +3,7 @@ PATH_BUILD=./build
 PATH_TOOLS=./tools
 PATH_COMBINE_OUTPUT=${PATH_BUILD}/ease.js
 PATH_COMBINE_OUTPUT_FULL=${PATH_BUILD}/ease-full.js
+PATH_BROWSER_TEST=${PATH_TOOLS}/browser-test.html
 
 COMBINE=${PATH_TOOLS}/combine
 
@@ -21,6 +22,7 @@ mkbuild:
 combine: mkbuild
 	${COMBINE} > ${PATH_COMBINE_OUTPUT}
 	INC_TEST=1 ${COMBINE} > ${PATH_COMBINE_OUTPUT_FULL}
+	cp ${PATH_BROWSER_TEST} ${PATH_BUILD}
 
 # run tests
 test: default
