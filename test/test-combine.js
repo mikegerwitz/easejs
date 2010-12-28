@@ -28,45 +28,68 @@ var common  = require( './common' ),
     Script  = process.binding( 'evals' ).Script,
     sandbox = {};
 
-// attempt to read the combined file
-try
+
+var files = [ 'ease.js', 'ease-full.js' ],
+    file  = '',
+    i     = files.length;
+
+while ( i-- )
 {
-    var data = require( 'fs' )
-        .readFileSync( ( __dirname + '/../build/ease.js' ), 'ascii' );
-}
-catch ( e )
-{
-    // if the file doesn't exit, just skip the test
-    console.log(
-        "Combined file not found. Test skipped. Please run `make combined`."
+    file = files[ i ];
+
+    // attempt to read the combined file
+    try
+    {
+        var data = require( 'fs' )
+            .readFileSync( ( __dirname + '/../build/' + file ), 'ascii' );
+    }
+    catch ( e )
+    {
+        // if the file doesn't exit, just skip the test
+        console.log(
+            "Combined file not found. Test skipped. Please run `make combined`."
+        );
+        process.exit( 0 );
+    }
+
+    // run the script (if this fails to compile, the generated code is invalid)
+    var cmb_script = new Script( data );
+    cmb_script.runInNewContext( sandbox );
+
+    assert.equal(
+        sandbox.require,
+        undefined,
+        "require() function is not in the global scope"
     );
-    process.exit( 0 );
+
+    assert.equal(
+        sandbox.exports,
+        undefined,
+        "exports are not in the global scope"
+    );
+
+
+    assert.ok(
+        ( sandbox.easejs !== undefined ),
+        "'easejs' namespace is defined within combined file"
+    );
+
+    assert.ok(
+        ( sandbox.easejs.Class !== undefined ),
+        "easejs namespace contains class exports"
+    );
+
+
+    // the full file has tests included to be run client-side
+    if ( file === 'ease-full.js' )
+    {
+        assert.ok(
+            ( typeof sandbox.easejs.runTests === 'function' ),
+            "Full ease.js file contains test runner"
+        );
+
+        // cross your fingers
+        sandbox.easejs.runTests();
+    }
 }
-
-// run the script (if this fails to compile, the generated code is invalid)
-var cmb_script = new Script( data );
-cmb_script.runInNewContext( sandbox );
-
-assert.equal(
-    sandbox.require,
-    undefined,
-    "require() function is not in the global scope"
-);
-
-assert.equal(
-    sandbox.exports,
-    undefined,
-    "exports are not in the global scope"
-);
-
-
-assert.ok(
-    ( sandbox.easejs !== undefined ),
-    "'easejs' namespace is defined within combined file"
-);
-
-assert.ok(
-    ( sandbox.easejs.Class !== undefined ),
-    "easejs namespace contains class exports"
-);
 

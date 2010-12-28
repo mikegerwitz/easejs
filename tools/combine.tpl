@@ -67,7 +67,7 @@ var easejs = {};
     {
         // remove the './' directory prefix (every module is currently included
         // via a relative path)
-        var id_clean = module_id.substring( 2 );
+        var id_clean = module_id.replace( /^.\//, '' );
 
         // attempt to retrieve the module
         var module = exports[ id_clean ];
