@@ -26,7 +26,7 @@ TPL_VAR='/**{CONTENT}**/'
 RMTRAIL="$PATH_TOOLS/rmtrail"
 
 # order matters
-CAT_MODULES="util class interface"
+CAT_MODULES="prop_parser util class interface"
 
 ##
 # Output template header
