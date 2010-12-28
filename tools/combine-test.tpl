@@ -26,6 +26,12 @@ exports.common = {
 };
 
 
+function failAssertion( err )
+{
+    throw Error( 'Assertion failed: ' + err.toString() );
+}
+
+
 /**
  * Bare-bones implementation of node.js assert module
  *
@@ -36,7 +42,7 @@ exports.assert = {
     {
         if ( val !== cmp )
         {
-            throw Error( err );
+            failAssertion( err );
         }
     },
 
@@ -45,7 +51,7 @@ exports.assert = {
     {
         if ( val === cmp )
         {
-            throw Error( err );
+            failAssertion( err );
         }
     },
 
@@ -60,7 +66,7 @@ exports.assert = {
     {
         if ( !result )
         {
-            throw Error( err );
+            failAssertion( err );
         }
     },
 
@@ -75,7 +81,7 @@ exports.assert = {
         {
             if ( !( e instanceof expected ) )
             {
-                throw Error( err );
+                failAssertion( err );
             }
         }
     },
@@ -91,7 +97,7 @@ exports.assert = {
         {
             if ( e instanceof not_expected )
             {
-                throw Error( err );
+                failAssertion( err );
             }
         }
     },
