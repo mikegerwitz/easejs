@@ -148,5 +148,5 @@ reserve the keywords. In an effort to ensure that ease.js will not clash, the
 following precautions are taken:
 
 * `Class` is used with a capital C
-* `abstractMethod()` is used rather than `abstract()`
+* Reserved keywords are quoted when used (e.g. in property strings)
 
