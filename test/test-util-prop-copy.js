@@ -123,8 +123,8 @@ while ( check_i-- )
 
     assert.ok(
         ( item instanceof Function ),
-        "propCopy() parser function overrides can invoke default functionality " +
-            "[" + check_i + "]"
+        "propCopy() parser function overrides can invoke default " +
+            "functionality [" + check_i + "]"
     );
 }
 
