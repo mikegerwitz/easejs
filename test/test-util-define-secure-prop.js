@@ -32,6 +32,25 @@ var obj = {},
 var expected = ( ( Object.defineProperty instanceof Function ) ? false : true ),
     fallback = util.secureFallback();
 
+// IE 8 will fall back on first failure
+if ( !expected && fallback )
+{
+    try
+    {
+        util.secureFallback( false );
+        util.defineSecureProp( {}, 'foo', 1 );
+
+        // If the fallback was changed on us, then there was a problem (and this
+        // is likely IE8). Change the value we're expecting so our tests don't
+        // fail.
+        if ( util.secureFallback() === true )
+        {
+            expected = true;
+        }
+    }
+    catch ( e ) {}
+}
+
 assert.equal(
     expected,
     fallback,
