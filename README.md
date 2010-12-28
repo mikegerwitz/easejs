@@ -86,17 +86,16 @@ Abstract classes require that their subtypes implement certain methods. They
 cannot be instantiated. Classes are automatically considered to be abstract if
 they contain one or more abstract methods.
 
-    var Class          = require( 'easejs' ).Class,
-        abstractMethod = Class.abstractMethod;
+    var Class = require( 'easejs' ).Class;
 
     var AbstractFoo = Class.extend(
     {
         // a function may be provided if you wish the subtypes to implement a
         // certain number of arguments
-        fooBar: abstractMethod( 'arg' ),
+        'abstract fooBar': [ 'arg' ],
 
         // alternatively, you needn't supply implementation details
-        fooBar2: abstractMethod(),
+        'abstract fooBar2': [],
     });
 
 If the abstract method provides implementation details (as shown by
