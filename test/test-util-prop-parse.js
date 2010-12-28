@@ -58,9 +58,9 @@ if ( get_set )
 
 
 var chk_each = {};
-for ( item in data )
+for ( i in data )
 {
-    chk_each[ item ] = 1;
+    chk_each[ i ] = 1;
 }
 
 
