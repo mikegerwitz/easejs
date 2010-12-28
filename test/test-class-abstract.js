@@ -177,7 +177,7 @@ assert.throws(
         AbstractFoo.extend(
         {
             // incorrect number of arguments
-            method: abstractMethod(),
+            'abstract method': [],
         });
     },
     TypeError,
@@ -190,7 +190,7 @@ assert.doesNotThrow(
         AbstractFoo.extend(
         {
             // incorrect number of arguments
-            method: abstractMethod( 'one', 'two', 'three', 'four' ),
+            'abstract method': [ 'one', 'two', 'three', 'four' ],
         });
     },
     Error,
