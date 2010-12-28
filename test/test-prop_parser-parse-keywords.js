@@ -24,7 +24,7 @@
 
 var common = require( './common' ),
     assert = require( 'assert' ),
-    parse  = common.require( 'prop_parser' ).parse;
+    parse  = common.require( 'prop_parser' ).parseKeywords;
 
 
 var data     = parse( 'final static abstract foo' ),
