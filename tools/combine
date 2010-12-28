@@ -105,7 +105,7 @@ if [ "$INC_TEST" ]; then
     )
 
     # include test combine template
-    cat "$TPL_TEST_PATH" | grep -v '^#'
+    cat "$TPL_TEST_PATH" | grep -v '^#' | $RMTRAIL
 
     echo "/** TEST CASES **/"
     echo "ns_exports.runTests = function ()"
