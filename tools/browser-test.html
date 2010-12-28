@@ -25,8 +25,11 @@
       {
           body.style.color = 'red';
           body.innerHTML = '<p>' + e.toString() + '</p>' +
-              '<p>Remember to run <tt>`make combine`</tt> and ensure that ' +
-              'easejs-full.js is in the same directory as this file.</p>'
+              '<p><em>ease.js is not guaranteed to run properly within this ' +
+              'browser.</em></p>' +
+              '<p>If building ease.js, remember to run <tt>`make combine` ' +
+              '</tt> and ensure that easejs-full.js is in the same directory ' +
+              'this file.</p>'
           ;
       }
     /* ]]> */
