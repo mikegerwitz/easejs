@@ -126,3 +126,24 @@ assert.ok(
     "Parent constructor sets values on subtype"
 );
 
+
+var subobj2 = SubFoo( args2[ 0 ], args2[ 1 ] );
+
+assert.ok(
+    ( subobj2 instanceof SubFoo ),
+    "Constructor is self-invoking"
+);
+
+assert.equal(
+    construct_context,
+    subobj2,
+    "Self-invoking constructor is run in the context of the new object"
+);
+
+assert.ok(
+    ( ( subobj2.args[ 0 ] === args2[ 0 ] )
+        && ( subobj2.args[ 1 ] == args2[ 1 ] )
+    ),
+    "Self-invoking constructor receives arguments"
+);
+
