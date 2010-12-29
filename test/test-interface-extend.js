@@ -22,10 +22,9 @@
  * @package test
  */
 
-var common         = require( './common' ),
-    assert         = require( 'assert' ),
-    Interface      = common.require( 'interface' ),
-    abstractMethod = Interface.abstractMethod;
+var common    = require( './common' ),
+    assert    = require( 'assert' ),
+    Interface = common.require( 'interface' );
 
 
 assert.throws( function()
@@ -35,7 +34,7 @@ assert.throws( function()
         // properties (non-methods) are not permitted
         prop: 'not permitted',
     });
-}, Error, "Properties are not permitted within Interface definitions" );
+}, TypeError, "Properties are not permitted within Interface definitions" );
 
 assert.throws( function()
 {
@@ -44,24 +43,24 @@ assert.throws( function()
         // concrete method
         method: function() {}
     });
-}, Error, "Concrete methods are not permitted within Interface definitions" );
+}, TypeError, "Concrete methods are not permitted within Interface definitions" );
 
 assert.doesNotThrow(
     function()
     {
         Interface.extend(
         {
-            method: abstractMethod(),
+            'abstract method': [],
         });
     },
-    Error,
+    TypeError,
     "Abstract method declarations are allowed within Interface definitions"
 );
 
 
 var BaseType = Interface.extend(
 {
-    method: abstractMethod(),
+    'abstract method': [],
 });
 
 assert.ok(
@@ -72,7 +71,7 @@ assert.ok(
 
 var SubType = Interface.extend( BaseType,
 {
-    second: abstractMethod(),
+    'abstract second': [],
 });
 
 assert.ok(
@@ -99,7 +98,7 @@ assert.ok(
 
 var SubType2 = BaseType.extend(
 {
-    second: abstractMethod(),
+    'abstract second': [],
 });
 
 assert.ok(
