@@ -44,6 +44,43 @@ assert.ok(
     "Extend method creates a new object"
 );
 
+assert.ok(
+    ( Class.isClass( Class.extend() ) ),
+    "Classes are considered by the system to be classes"
+);
+
+
+//
+// isClass
+assert.ok(
+    ( !( Class.isClass( {} ) ) ),
+    "Only actual classes are considered to be classes"
+);
+
+assert.ok(
+    ( !( Class.isClass( new Foo() ) ) ),
+    "Class instances are not considered to be classes (they are objects)"
+);
+
+
+//
+// isClassInstance
+assert.ok(
+    ( Class.isClassInstance( new Foo() ) ),
+    "Class instances are considered to be classes instances"
+);
+
+assert.ok(
+    ( !( Class.isClassInstance( Foo ) ) ),
+    "Classes are not considered to be class instances"
+);
+
+assert.ok(
+    ( !( Class.isClassInstance( {} ) ) ),
+    "Other objects are not considered to be class instances"
+);
+
+
 // only perform check if supported by the engine
 if ( Object.isFrozen )
 {
