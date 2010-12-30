@@ -50,6 +50,9 @@ assert.ok(
 );
 
 
+var inst = new Foo();
+
+
 //
 // isClass
 assert.ok(
@@ -58,7 +61,7 @@ assert.ok(
 );
 
 assert.ok(
-    ( !( Class.isClass( new Foo() ) ) ),
+    !( Class.isClass( inst ) ),
     "Class instances are not considered to be classes (they are objects)"
 );
 
@@ -66,7 +69,7 @@ assert.ok(
 //
 // isClassInstance
 assert.ok(
-    ( Class.isClassInstance( new Foo() ) ),
+    ( Class.isClassInstance( inst ) ),
     "Class instances are considered to be classes instances"
 );
 
@@ -95,7 +98,7 @@ if ( Object.isFrozen )
 //
 // isInstanceOf
 assert.ok(
-    Class.isInstanceOf( Foo, new Foo() ),
+    Class.isInstanceOf( Foo, inst ),
     "Class instance is recognized by Class.isInstanceOf()"
 );
 
@@ -105,7 +108,8 @@ assert.ok(
 );
 
 assert.ok(
-    !( Class.isInstanceOf( new Foo(), Foo ) ),
+    !( Class.isInstanceOf( inst, Foo ) ),
     "Class is not an instance of its instance"
 );
+
 

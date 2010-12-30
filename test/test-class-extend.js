@@ -70,7 +70,8 @@ for ( var prop in sub_props )
 
 assert.ok(
     ( new SubFoo() instanceof Foo ),
-    "Subtypes must be considered to be instances of their supertypes"
+    "Subtypes are considered to be instances of their supertypes " +
+        "(via instanceof operator)"
 );
 
 
