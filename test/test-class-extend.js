@@ -68,10 +68,19 @@ for ( var prop in sub_props )
     );
 }
 
+
+var sub_instance = new SubFoo();
+
 assert.ok(
-    ( new SubFoo() instanceof Foo ),
+    ( sub_instance instanceof Foo ),
     "Subtypes are considered to be instances of their supertypes " +
         "(via instanceof operator)"
+);
+
+assert.ok(
+    sub_instance.isInstanceOf( SubFoo ),
+    "Subtypes are considered to be instances of their supertypes (via " +
+        "isInstanceOf method)"
 );
 
 
@@ -82,20 +91,29 @@ assert.ok(
 // SubSubFoo  SubSubFoo2
 //
 var SubSubFoo  = SubFoo.extend(),
-    SubSubFoo2 = SubFoo.extend();
+    SubSubFoo2 = SubFoo.extend(),
+
+    sub_sub_instance  = new SubSubFoo(),
+    sub_sub2_instance = new SubSubFoo2();
 
 assert.ok(
-    ( new SubSubFoo() instanceof Foo ),
+    ( ( sub_sub_instance instanceof Foo )
+        && sub_sub_instance.isInstanceOf( Foo )
+    ),
     "Sub-subtypes should be instances of their super-supertype"
 );
 
 assert.ok(
-    !( new SubFoo() instanceof SubSubFoo ),
+    ( !( sub_instance instanceof SubSubFoo )
+        && !( sub_instance.isInstanceOf( SubSubFoo ) )
+    ),
     "Supertypes should not be considered instances of their subtypes"
 );
 
 assert.ok(
-    !( new SubSubFoo2() instanceof SubSubFoo ),
+    ( !( sub_sub2_instance instanceof SubSubFoo )
+        && !( sub_sub2_instance.isInstanceOf( SubSubFoo ) )
+    ),
     "Subtypes should not be considered instances of their siblings"
 );
 
