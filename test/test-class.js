@@ -91,3 +91,21 @@ if ( Object.isFrozen )
     );
 }
 
+
+//
+// isInstanceOf
+assert.ok(
+    Class.isInstanceOf( Foo, new Foo() ),
+    "Class instance is recognized by Class.isInstanceOf()"
+);
+
+assert.ok(
+    !( Class.isInstanceOf( Foo, Foo ) ),
+    "Class is not an instance of itself when uninstantiated"
+);
+
+assert.ok(
+    !( Class.isInstanceOf( new Foo(), Foo ) ),
+    "Class is not an instance of its instance"
+);
+
