@@ -35,6 +35,12 @@ assert.ok(
     "Interface extend method creates a new interface object"
 );
 
+assert.throws( function()
+{
+    new FooType();
+}, Error, "Interfaces cannot be instantiated" );
+
+
 // only perform check if supported by the engine
 if ( Object.isFrozen )
 {

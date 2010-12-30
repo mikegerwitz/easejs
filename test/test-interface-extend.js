@@ -75,7 +75,7 @@ var SubType = Interface.extend( BaseType,
 });
 
 assert.ok(
-    ( new SubType() instanceof BaseType ),
+    ( SubType.prototype instanceof BaseType ),
     "Generic interface extend method can extend from other interfaces"
 );
 
@@ -102,7 +102,7 @@ var SubType2 = BaseType.extend(
 });
 
 assert.ok(
-    ( new SubType2 instanceof BaseType ),
+    ( SubType2.prototype instanceof BaseType ),
     "Interface extend method can extend interfaces"
 );
 
