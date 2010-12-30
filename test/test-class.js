@@ -112,11 +112,23 @@ assert.ok(
     "Class is not an instance of its instance"
 );
 
+assert.equal(
+    Class.isInstanceOf,
+    Class.isA,
+    "isA() is an alias for isInstanceOf()"
+);
+
 assert.ok(
     ( ( inst.isInstanceOf instanceof Function )
         && ( inst.isInstanceOf( Foo ) === true )
         && ( inst.isInstanceOf( inst ) === false )
     ),
     "Class instance contains partially applied isInstanceOf method"
+);
+
+assert.equal(
+    inst.isInstanceOf,
+    inst.isA,
+    "Class instance contains isA() alias for isInstanceOf() partially applied function"
 );
 
