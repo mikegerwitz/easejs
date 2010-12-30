@@ -1,5 +1,5 @@
 /**
- * Tests class interface implements method
+ * Tests class interface implement method
  *
  *  Copyright (C) 2010 Mike Gerwitz
  *
@@ -38,7 +38,7 @@ var Type2 = Interface.extend( {
 
 
 assert.ok(
-    ( Class.implements instanceof Function ),
+    ( Class.implement instanceof Function ),
     "Class provides method to implement interfaces"
 );
 
@@ -53,7 +53,7 @@ assert.ok(
 
 assert.doesNotThrow( function()
 {
-    Foo = Class.implements( Type, Type2 );
+    Foo = Class.implement( Type, Type2 );
 }, Error, "Class can implement interfaces" );
 
 assert.ok(
