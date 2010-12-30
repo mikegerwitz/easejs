@@ -63,3 +63,10 @@ assert.ok(
     "Class contains list of implemented interfaces"
 );
 
+assert.ok(
+    ( ( Foo.prototype.foo instanceof Function )
+        && ( Foo.prototype.foo2 instanceof Function )
+    ),
+    "Abstract methods are copied into the new class prototype"
+);
+
