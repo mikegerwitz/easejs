@@ -22,5 +22,6 @@
  * @package core
  */
 
-exports.Class = require( __dirname + '/lib/class' );
+exports.Class     = require( __dirname + '/lib/class' );
+exports.Interface = require( __dirname + '/lib/interface' );
 
