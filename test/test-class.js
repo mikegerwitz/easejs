@@ -112,4 +112,11 @@ assert.ok(
     "Class is not an instance of its instance"
 );
 
+assert.ok(
+    ( ( inst.isInstanceOf instanceof Function )
+        && ( inst.isInstanceOf( Foo ) === true )
+        && ( inst.isInstanceOf( inst ) === false )
+    ),
+    "Class instance contains partially applied isInstanceOf method"
+);
 
