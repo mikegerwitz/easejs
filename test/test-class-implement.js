@@ -70,3 +70,23 @@ assert.ok(
     "Abstract methods are copied into the new class prototype"
 );
 
+assert.equal(
+    Foo.isAbstract(),
+    true,
+    "Classes that implements interface(s) are considered abstract if the " +
+        "implemented methods have no concrete implementations"
+);
+
+assert.equal(
+    Foo.abstractMethods.length,
+    2,
+    "Abstract methods list is updated when interface is implemented"
+);
+
+assert.ok(
+    ( ( Foo.abstractMethods[ 0 ] == 'foo' )
+        && ( Foo.abstractMethods[ 1 ] == 'foo2' )
+    ),
+    "Abstract methods list contains names of implemented methods"
+);
+
