@@ -132,3 +132,15 @@ assert.equal(
     "Class instance contains isA() alias for isInstanceOf() partially applied function"
 );
 
+
+
+assert.ok(
+    ( Foo.__cid !== undefined ),
+    "Class id available via class"
+);
+
+assert.ok(
+    ( Foo.prototype.__cid !== undefined ),
+    "Class id available via class prototype"
+);
+

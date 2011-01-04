@@ -77,3 +77,21 @@ assert.ok(
     "Abstract methods list contains names of implemented methods"
 );
 
+
+// concrete implementation so that we can instantiate it
+var ConcreteFoo = Foo.extend(
+    {
+        foo:  function() {},
+        foo2: function() {},
+    }),
+
+    concrete_inst = new ConcreteFoo();
+
+assert.ok(
+    ( concrete_inst.isInstanceOf( Type )
+        && concrete_inst.isInstanceOf( Type2 )
+    ),
+    "Instances of classes implementing interfaces are considered to be " +
+        "instances of the implemented interfaces"
+);
+
