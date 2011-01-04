@@ -45,23 +45,10 @@ assert.ok(
 var Foo      = {},
     PlainFoo = Class.extend();
 
-assert.ok(
-    ( PlainFoo.implemented instanceof Array ),
-    "Class contains empty list of implemented interfaces if " +
-        "none are implemented"
-);
-
 assert.doesNotThrow( function()
 {
     Foo = Class.implement( Type, Type2 );
 }, Error, "Class can implement interfaces" );
-
-assert.ok(
-    ( ( Foo.implemented[ 0 ] === Type )
-        && ( Foo.implemented[ 1 ] === Type2 )
-    ),
-    "Class contains list of implemented interfaces"
-);
 
 assert.ok(
     ( ( Foo.prototype.foo instanceof Function )
