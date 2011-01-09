@@ -62,3 +62,27 @@ for ( prop in obj )
     );
 }
 
+
+//
+// deep clone
+var deep_arr  = [ [ 1, 2 ], [ 3, 4 ], [ 5, [ 6, 7 ] ], { a: 1 } ],
+    deep_arr2 = util.clone( deep_arr, true ),
+
+    deep_i = 0;
+
+// ensure that the cloned values still match
+assert.deepEqual(
+    deep_arr2,
+    deep_arr,
+    "Deep cloned values are equal"
+);
+
+deep_i = deep_arr.length;
+while ( deep_i-- )
+{
+    assert.ok(
+        ( deep_arr2[ i ] !== deep_arr[ i ] ),
+        "Deep cloned array's values are cloned"
+    );
+}
+
