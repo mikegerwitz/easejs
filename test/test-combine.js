@@ -68,17 +68,18 @@ while ( i-- )
         "exports are not in the global scope"
     );
 
-
     assert.ok(
         ( sandbox.easejs !== undefined ),
         "'easejs' namespace is defined within combined file"
     );
 
-    assert.ok(
-        ( sandbox.easejs.Class !== undefined ),
-        "easejs namespace contains class exports"
-    );
-
+    [ 'Class', 'Interface' ].forEach( function( item )
+    {
+        assert.ok(
+            sandbox.easejs[ item ],
+            "Combined file exports exposes " + item
+        );
+    } );
 
     // the full file has tests included to be run client-side
     if ( file === 'ease-full.js' )
