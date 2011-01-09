@@ -1,0 +1,15 @@
+# TODOs for ease.js
+#
+# This is by no means a complete list.
+
+Property Keywords
+  - Restrictions; throw exceptions when unknown keywords are used
+  - public (default)
+  - protected; 'this' will contain protected members of self and parents
+  - private; 'this' will contain private members of self, but not private
+    members of parents
+  - const; immutable properties
+  - final; methods cannot be overridden by subtypes
+  - static; method/property accessible via class definition
+  - event; designates a supported event
+
