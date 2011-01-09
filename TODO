@@ -13,3 +13,13 @@ Property Keywords
   - static; method/property accessible via class definition
   - event; designates a supported event
 
+Documentation
+  - Ensure all docblocks contain only valid JSDoc tags
+  - Generate documentation
+    - Add to Makefile
+  - Begin technical documentation for developers
+    - Include designs and project decisions
+    - Wiki, LaTeX, Texinfo?
+  - API documentation
+    - Wiki, LaTeX, Texinfo?
+
