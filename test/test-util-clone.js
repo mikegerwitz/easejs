@@ -65,8 +65,11 @@ for ( prop in obj )
 
 //
 // deep clone
-var deep_arr  = [ [ 1, 2 ], [ 3, 4 ], [ 5, [ 6, 7 ] ], { a: 1 } ],
+var deep_arr = [ [ 1, 2 ], [ 3, 4 ], [ 5, [ 6, 7 ] ], { a: 1 } ],
+    deep_obj = { a: [ 1 ], b: [ 2 ], c: { d: 3 } },
+
     deep_arr2 = util.clone( deep_arr, true ),
+    deep_obj2 = util.clone( deep_obj, true ),
 
     deep_i = 0;
 
@@ -77,12 +80,26 @@ assert.deepEqual(
     "Deep cloned values are equal"
 );
 
+assert.deepEqual(
+    deep_obj2,
+    deep_obj,
+    "Deep cloned values are equal"
+);
+
 deep_i = deep_arr.length;
 while ( deep_i-- )
 {
     assert.ok(
         ( deep_arr2[ i ] !== deep_arr[ i ] ),
         "Deep cloned array's values are cloned"
+    );
+}
+
+for ( prop in deep_obj )
+{
+    assert.ok(
+        ( deep_obj2[ prop ] !== deep_obj[ prop ] ),
+        "Deep cloned object's values are cloned (" + prop + ")"
     );
 }
 
