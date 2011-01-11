@@ -3,13 +3,14 @@
 ease.js is (to be) a basic collection of CommonJS modules intended to
 "ease" the transition into JavaScript from other Object-Oriented languages. It
 provides an intuitive means of achieving classical inheritance and has planned
-support for interfaces, traits and mixins.
+support traits/mixins.
 
 Current support includes:
 
 * Easy class creation
 * Classical inheritance
 * Abstract classes and methods
+* Interfaces
 
 **This project is still under development.**
 
@@ -147,6 +148,7 @@ Though JavaScript doesn't currently implement classes, interfaces, etc, it does
 reserve the keywords. In an effort to ensure that ease.js will not clash, the
 following precautions are taken:
 
-* `Class` is used with a capital C
+* `Class` is used with a capital 'C'
+* `Interface` is used with a capital 'I'
 * Reserved keywords are quoted when used (e.g. in property strings)
 
