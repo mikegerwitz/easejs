@@ -34,6 +34,20 @@ Typing
     - Provide option to throw errors on any type mismatch
   - Auto-cast, unless casting is impossible, then throw error
 
+Reflection
+  - Rather than exposing internal data via properties, fully encapsulate
+  - Classes, not just modules like the rest of ease.js
+
+Patterns
+  - Provide automated means to generate classes for common patterns (primarily
+    GoF)
+    - Generating classes at runtime gives us the powerful benefit of being able
+      to generate the classes however we wish. Therefore, we do not need code
+      generation techniques to generate classes. We can simply call a method.
+      This will remove repetitive tasks and duplicate code needed to properly
+      implement the various patterns, and serve as an excellent tool for those
+      unfamiliar with them.
+
 Documentation
   - Ensure all docblocks contain only valid JSDoc tags
   - Generate documentation
