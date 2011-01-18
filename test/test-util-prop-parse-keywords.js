@@ -26,90 +26,99 @@ var common = require( './common' ),
     assert = require( 'assert' ),
     util   = common.require( 'util' );
 
-var data = {
-    'abstract foo': [],
-}
 
-var abstract_methods = [],
-    parse_data       = {};
-
-
-util.propParse( data, {
-    method: function ( name, func, is_abstract )
-    {
-        if ( is_abstract )
-        {
-            abstract_methods.push( name );
-            parse_data[ name ] = func;
-        }
-    },
-} );
-
-assert.ok(
-    ( ( abstract_methods.length === 1 )
-        && ( abstract_methods[ 0 ] === 'foo' )
-    ),
-    "Methods with 'abstract' keyword recognized as abstract"
-);
-
-
-//
-// custom parser
-var data2 = {
-        foo: [],
-    },
-    map = {
-        foo: { 'abstract': true },
-    },
-
-    suffix = 'poo',
-
-    abstract_methods_2 = [];
-
-util.propParse( data2, {
-    keywordParser: function ( prop )
-    {
-        return {
-            name:     ( prop + suffix ),
-            keywords: map[ prop ],
-        };
-    },
-
-
-    method: function ( name, func, is_abstract )
-    {
-        if ( is_abstract )
-        {
-            abstract_methods_2.push( name );
-        }
-    },
-} );
-
-assert.ok(
-    ( abstract_methods_2[ 0 ] === ( 'foo' + suffix ) ),
-    "Can provide custom property keyword parser"
-);
-
-
-//
-// integrity test
-assert.doesNotThrow( function()
+( function testAbstractKeywordDesignatesMethodAsAbstract()
 {
-    var junk = { foo: 'bar' };
+    var data = {
+            'abstract foo': [],
+        },
 
-    util.propParse( junk, {
-        keywordParser: function ( prop )
+        abstract_methods = [],
+        parse_data       = {}
+    ;
+
+
+    util.propParse( data, {
+        method: function ( name, func, is_abstract )
         {
-            // return nothing
-        }
+            if ( is_abstract )
+            {
+                abstract_methods.push( name );
+                parse_data[ name ] = func;
+            }
+        },
     } );
 
-    util.propParse( junk, {
+    assert.ok(
+        ( ( abstract_methods.length === 1 )
+            && ( abstract_methods[ 0 ] === 'foo' )
+        ),
+        "Methods with 'abstract' keyword recognized as abstract"
+    );
+} )();
+
+
+( function testCustomPropertyKeywordParsersAreSupported()
+{
+    var data2 = {
+            foo: [],
+        },
+
+        map = {
+            foo: { 'abstract': true },
+        },
+
+        suffix = 'poo',
+
+        abstract_methods_2 = []
+    ;
+
+    util.propParse( data2, {
         keywordParser: function ( prop )
         {
-            // return bogus name and keywords
-            return { name: [], keywords: 'slefwef' };
-        }
+            return {
+                name:     ( prop + suffix ),
+                keywords: map[ prop ],
+            };
+        },
+
+
+        method: function ( name, func, is_abstract )
+        {
+            if ( is_abstract )
+            {
+                abstract_methods_2.push( name );
+            }
+        },
     } );
-}, Error, "Custom keyword parser tolerates bogus response" );
+
+    assert.ok(
+        ( abstract_methods_2[ 0 ] === ( 'foo' + suffix ) ),
+        "Can provide custom property keyword parser"
+    );
+} )();
+
+
+( function testKeywordParserToleratesBogusResponses()
+{
+    assert.doesNotThrow( function()
+    {
+        var junk = { foo: 'bar' };
+
+        util.propParse( junk, {
+            keywordParser: function ( prop )
+            {
+                // return nothing
+            }
+        } );
+
+        util.propParse( junk, {
+            keywordParser: function ( prop )
+            {
+                // return bogus name and keywords
+                return { name: [], keywords: 'slefwef' };
+            }
+        } );
+    }, Error, "Custom keyword parser tolerates bogus response" );
+} )();
 
