@@ -122,3 +122,48 @@ var common = require( './common' ),
     }, Error, "Custom keyword parser tolerates bogus response" );
 } )();
 
+
+( function testParserReturnsKeywords()
+{
+    var data = {
+            'public foo': '',
+            'const foo2': '',
+            'public bogus keywords foo3': '',
+
+            'public static final method': function() {},
+        },
+
+        parsed_keywords = {},
+
+        expected = {
+            foo:  { 'public': true },
+            foo2: { 'const': true },
+            foo3: { 'public': true, 'bogus': true, 'keywords': true },
+
+            method: { 'public': true, 'static': true, 'final': true },
+        }
+    ;
+
+    util.propParse( data, {
+        property: function( name, value, keywords )
+        {
+            parsed_keywords[ name ] = keywords;
+        },
+
+        method: function( name, func, is_abstract, keywords )
+        {
+            parsed_keywords[ name ] = keywords;
+        },
+    } );
+
+    for ( prop in parsed_keywords )
+    {
+        assert.deepEqual(
+            parsed_keywords[ prop ],
+            expected[ prop ],
+            "Keywords are properly recognized and made available for " +
+                "interpretation"
+        );
+    }
+} )();
+
