@@ -207,3 +207,15 @@ assert.throws( function()
     } );
 }, TypeError, "Abstract methods must be declared as arrays" );
 
+
+// otherwise it'll output the internal constructor code, which is especially
+// confusing since the user does not write it
+( function testConvertingAbstractClassToStringYieldsClassString()
+{
+    assert.equal(
+        Class.extend( { 'abstract foo': [] } ).toString(),
+        '<Abstract Class>',
+        "Converting abstract class to string yields class string"
+    );
+} )();
+
