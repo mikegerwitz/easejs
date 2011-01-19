@@ -131,6 +131,9 @@ var common = require( './common' ),
             'public bogus keywords foo3': '',
 
             'public static final method': function() {},
+
+            // tricky tricky
+            'lots    of   spaces': function() {},
         },
 
         parsed_keywords = {},
@@ -141,6 +144,8 @@ var common = require( './common' ),
             foo3: { 'public': true, 'bogus': true, 'keywords': true },
 
             method: { 'public': true, 'static': true, 'final': true },
+
+            spaces: { 'lots': true, 'of': true },
         }
     ;
 
@@ -162,7 +167,7 @@ var common = require( './common' ),
             parsed_keywords[ prop ],
             expected[ prop ],
             "Keywords are properly recognized and made available for " +
-                "interpretation"
+                "interpretation (" + prop + ")"
         );
     }
 } )();
