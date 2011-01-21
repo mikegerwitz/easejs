@@ -41,6 +41,8 @@ var common    = require( './common' ),
  */
 function buildPropQuick( keywords )
 {
+    keywords = keywords || {};
+
     return buildProp( members, meta, name, value, keywords );
 }
 
@@ -83,6 +85,18 @@ function buildPropQuick( keywords )
         members[ 'private' ][ name ],
         value,
         "Private properties are copied to the private member prototype"
+    );
+} )();
+
+
+( function testCopiedIntoPublicPrototypeByDefault()
+{
+    buildPropQuick();
+
+    assert.equal(
+        members[ 'public' ][ name ],
+        value,
+        "Properties are copied to the public member prototype by default"
     );
 } )();
 
