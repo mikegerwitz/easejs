@@ -94,3 +94,31 @@ function buildPropQuick( keywords )
     );
 } )();
 
+
+( function testThrowsTypeErrorIfMultipleVisibilityKeywordsAreGiven()
+{
+    assert.throws( function()
+    {
+        buildPropQuick( {
+            'public':    true,
+            'protected': true,
+        } );
+    }, TypeError, "Cannot specify multiple visibility keywords (0)" );
+
+    assert.throws( function()
+    {
+        buildPropQuick( {
+            'public':  true,
+            'private': true,
+        } );
+    }, TypeError, "Cannot specify multiple visibility keywords (1)" );
+
+    assert.throws( function()
+    {
+        buildPropQuick( {
+            'protected': true,
+            'private':   true,
+        } );
+    }, TypeError, "Cannot specify multiple visibility keywords (2)" );
+} )();
+
