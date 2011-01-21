@@ -27,7 +27,7 @@ var common    = require( './common' ),
     buildProp = common.require( 'member_builder' ).buildProp
 
     // member visibility types are quoted because they are reserved keywords
-    members = { 'public': {}, 'protected': {}, 'private': {} },
+    members = {},
     meta    = {},
 
     // stub values
@@ -43,7 +43,36 @@ function buildPropQuick( keywords )
 {
     keywords = keywords || {};
 
+    // clear out the members for a fresh start
+    members  = { 'public': {}, 'protected': {}, 'private': {} };
+
     return buildProp( members, meta, name, value, keywords );
+}
+
+
+/**
+ * Asserts that the given property exists only in the prototype for the
+ * requested visibility
+ */
+function assertOnlyVisibility( vis, name, value, message )
+{
+    var check = [ 'public', 'protected', 'private' ],
+        i     = check.length,
+        visi  = '',
+        cmp;
+
+    // forEach not used for pre-ES5 browser support
+    while ( i-- )
+    {
+        visi = check[ i ];
+        cmp  = ( visi === vis ) ? value : undefined;
+
+        assert.equal(
+            members[ visi ][ name ],
+            cmp,
+            message
+        );
+    }
 }
 
 
@@ -51,10 +80,10 @@ function buildPropQuick( keywords )
 {
     buildPropQuick( { 'public': true } );
 
-    assert.equal(
-        members[ 'public' ][ name ],
+    assertOnlyVisibility( 'public',
+        name,
         value,
-        "Public properties are copied to the public member prototype"
+        "Public properties are copied only to the public member prototype"
     );
 } )();
 
@@ -63,10 +92,10 @@ function buildPropQuick( keywords )
 {
     buildPropQuick( { 'protected': true } );
 
-    assert.equal(
-        members[ 'protected' ][ name ],
+    assertOnlyVisibility( 'protected',
+        name,
         value,
-        "Protected properties are copied to the protected member prototype"
+        "Protected properties are copied only to the protected member prototype"
     );
 } )();
 
@@ -75,10 +104,10 @@ function buildPropQuick( keywords )
 {
     buildPropQuick( { 'private': true } );
 
-    assert.equal(
-        members[ 'private' ][ name ],
+    assertOnlyVisibility( 'private',
+        name,
         value,
-        "Private properties are copied to the private member prototype"
+        "Private properties are copied only to the private member prototype"
     );
 } )();
 
@@ -87,10 +116,10 @@ function buildPropQuick( keywords )
 {
     buildPropQuick();
 
-    assert.equal(
-        members[ 'public' ][ name ],
+    assertOnlyVisibility( 'public',
+        name,
         value,
-        "Properties are copied to the public member prototype by default"
+        "Properties are copied only to the public member prototype by default"
     );
 } )();
 
