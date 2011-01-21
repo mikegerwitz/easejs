@@ -37,3 +37,32 @@ var common  = require( './common' ),
     );
 } )();
 
+
+( function testCanInitMembersWithExistingObjects()
+{
+    var pub  = { foo: 'bar' },
+        pro  = { bar: 'baz' },
+        priv = { baz: 'foo' },
+
+        members = builder.initMembers( pub, pro, priv )
+    ;
+
+    assert.deepEqual(
+        members[ 'public' ],
+        pub,
+        "Can specify object to use for public members"
+    );
+
+    assert.deepEqual(
+        members[ 'protected' ],
+        pro,
+        "Can specify object to use for protected members"
+    );
+
+    assert.deepEqual(
+        members[ 'private' ],
+        priv,
+        "Can specify object to use for private members"
+    );
+} )();
+
