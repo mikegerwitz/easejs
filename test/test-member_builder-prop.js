@@ -36,16 +36,39 @@ var common    = require( './common' ),
 ;
 
 
+/**
+ * Partially applied function to quickly build properties using common test data
+ */
+function buildPropQuick( keywords )
+{
+    return buildProp( members, meta, name, value, keywords );
+}
+
+
 ( function testRecognizesPublicProperty()
 {
     var keywords = { 'public': true },
-        result   = buildProp( members, meta, name, value, keywords )
+        result   = buildPropQuick( keywords )
     ;
 
     assert.equal(
         members[ 'public' ][ name ],
         value,
         "Public properties are copied to the public member prototype"
+    );
+} )();
+
+
+( function testRecognizesProtectedProperty()
+{
+    var keywords = { 'protected': true },
+        result   = buildPropQuick( keywords )
+    ;
+
+    assert.equal(
+        members[ 'protected' ][ name ],
+        value,
+        "Protected properties are copied to the protected member prototype"
     );
 } )();
 
