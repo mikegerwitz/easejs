@@ -32,7 +32,7 @@ var common    = require( './common' ),
 
     // stub values
     name  = 'foo',
-    value = 'bar'
+    value = { bar: 'baz' }
 ;
 
 
@@ -67,7 +67,7 @@ function assertOnlyVisibility( vis, name, value, message )
         visi = check[ i ];
         cmp  = ( visi === vis ) ? value : undefined;
 
-        assert.equal(
+        assert.deepEqual(
             members[ visi ][ name ],
             cmp,
             message
