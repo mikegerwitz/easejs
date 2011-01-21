@@ -72,3 +72,17 @@ function buildPropQuick( keywords )
     );
 } )();
 
+
+( function testRecognizesPrivateProperty()
+{
+    var keywords = { 'private': true },
+        result   = buildPropQuick( keywords )
+    ;
+
+    assert.equal(
+        members[ 'private' ][ name ],
+        value,
+        "Private properties are copied to the private member prototype"
+    );
+} )();
+
