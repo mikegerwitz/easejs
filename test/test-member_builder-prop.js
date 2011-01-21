@@ -49,9 +49,7 @@ function buildPropQuick( keywords )
 
 ( function testRecognizesPublicProperty()
 {
-    var keywords = { 'public': true },
-        result   = buildPropQuick( keywords )
-    ;
+    buildPropQuick( { 'public': true } );
 
     assert.equal(
         members[ 'public' ][ name ],
@@ -63,9 +61,7 @@ function buildPropQuick( keywords )
 
 ( function testRecognizesProtectedProperty()
 {
-    var keywords = { 'protected': true },
-        result   = buildPropQuick( keywords )
-    ;
+    buildPropQuick( { 'protected': true } );
 
     assert.equal(
         members[ 'protected' ][ name ],
@@ -77,9 +73,7 @@ function buildPropQuick( keywords )
 
 ( function testRecognizesPrivateProperty()
 {
-    var keywords = { 'private': true },
-        result   = buildPropQuick( keywords )
-    ;
+    buildPropQuick( { 'private': true } );
 
     assert.equal(
         members[ 'private' ][ name ],
