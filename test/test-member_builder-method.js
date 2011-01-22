@@ -89,3 +89,48 @@ mb_common.assertCommon();
     }, TypeError, "Method cannot have lesser number of parameters" );
 } )();
 
+
+/**
+ * The __super property is defined for method overrides and permits invoking the
+ * overridden method (method of the supertype).
+ *
+ * In this test, we are not looking to assert that __super matches the super
+ * method. Rather, we want to ensure it /invokes/ it. This is because the super
+ * method may be wrapped to provide additional functionality. We don't know, we
+ * don't care. We just want to make sure it's functioning properly.
+ */
+( function testOverridenMethodShouldContainReferenceToSuperMethod()
+{
+    var orig_called = false;
+
+    // "super" method
+    mb_common.value = function()
+    {
+        orig_called = true;
+    };
+
+    mb_common.buildMemberQuick();
+
+    // override method
+    mb_common.value = function()
+    {
+        assert.notEqual(
+            this.__super,
+            undefined,
+            "__super is defined for overridden method"
+        );
+
+        this.__super();
+        assert.equal(
+            orig_called,
+            true,
+            "Invoking __super calls super method"
+        );
+    };
+
+    mb_common.buildMemberQuick( {}, true );
+
+    // invoke the method
+    mb_common.members[ 'public' ][ mb_common.name ]();
+} )();
+
