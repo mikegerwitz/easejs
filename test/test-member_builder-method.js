@@ -61,3 +61,31 @@ mb_common.assertCommon();
     }, TypeError, "Cannot override property with method" );
 } )();
 
+
+/**
+ * To ensure interfaces of subtypes remain compatible with that of their
+ * supertypes, the parameter lists must match and build upon each other.
+ */
+( function testMethodOverridesMustHaveEqualOrGreaterParameters()
+{
+    mb_common.value = function( one, two ) {};
+    mb_common.buildMemberQuick();
+
+    assert.doesNotThrow( function()
+    {
+        mb_common.buildMemberQuick( {}, true );
+    }, TypeError, "Method can have equal number of parameters" );
+
+    assert.doesNotThrow( function()
+    {
+        mb_common.value = function( one, two, three ) {};
+        mb_common.buildMemberQuick( {}, true );
+    }, TypeError, "Method can have greater number of parameters" );
+
+    assert.throws( function()
+    {
+        mb_common.value = function( one ) {};
+        mb_common.buildMemberQuick( {}, true );
+    }, TypeError, "Method cannot have lesser number of parameters" );
+} )();
+
