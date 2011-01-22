@@ -37,12 +37,15 @@ exports.buildMember = null;
 /**
  * Partially applied function to quickly build properties using common test data
  */
-exports.buildMemberQuick = function( keywords )
+exports.buildMemberQuick = function( keywords, preserve_prior )
 {
     keywords = keywords || {};
 
     // clear out the members for a fresh start
-    exports.members = { 'public': {}, 'protected': {}, 'private': {} };
+    if ( !preserve_prior )
+    {
+        exports.members = { 'public': {}, 'protected': {}, 'private': {} };
+    }
 
     return exports.buildMember(
         exports.members,

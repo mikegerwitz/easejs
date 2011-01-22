@@ -23,6 +23,7 @@
  */
 
 var common    = require( './common' ),
+    assert    = require( 'assert' ),
     mb_common = require( './inc-member_builder-common' )
 ;
 
@@ -31,4 +32,19 @@ mb_common.buildMember = common.require( 'member_builder' ).buildProp;
 
 // do assertions common to all member builders
 mb_common.assertCommon();
+
+
+( function testCannotOverrideMethodWithProperty()
+{
+    // this will be considered a method, as it is a function
+    mb_common.value = function() {};
+    mb_common.buildMemberQuick();
+
+    assert.throws( function()
+    {
+        // attempt to override with property
+        mb_common.value = 'foo';
+        mb_common.buildMemberQuick( {}, true );
+    }, TypeError, "Cannot override method with property" );
+} )();
 
