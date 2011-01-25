@@ -170,5 +170,43 @@ var common = require( './common' ),
                 "interpretation (" + prop + ")"
         );
     }
+
+
+    // for browsers that support it
+    if ( Object.prototype.__defineGetter__ !== undefined )
+    {
+        data            = {};
+        parsed_keywords = {};
+
+        // to prevent syntax errors for environments that don't support
+        // getters/setters in object notation
+        data.__defineGetter__( 'public foo', function() {} );
+        data.__defineSetter__( 'public foo', function() {} );
+
+
+        util.propParse( data, {
+            getter: function( name, value, keywords )
+            {
+                parsed_keywords[ name + 'g' ] = keywords;
+            },
+
+            setter: function( name, value, keywords )
+            {
+                parsed_keywords[ name + 's' ] = keywords;
+            },
+        } );
+
+        assert.deepEqual(
+            parsed_keywords.foog,
+            { 'public': true },
+            "Getter keywords are properly recognized and available"
+        );
+
+        assert.deepEqual(
+            parsed_keywords.foos,
+            { 'public': true },
+            "Setter keywords are properly recognized and available"
+        );
+    }
 } )();
 
