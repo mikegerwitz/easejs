@@ -138,10 +138,6 @@ The abstract methods are available as a read-only `abstractMethods` property.
     Concretefoo.isAbstract();      // false
     StillAbstractFoo.isAbstract(); // true
 
-    AbstractFoo.abstractMethods;      // [ 'fooBar', 'fooBar2' ]
-    ConcreteFoo.abstractMethods;      // []
-    StillAbstractFoo.abstractMethods; // [ 'fooBar2' ]
-
 
 ## Use of Reserved Words
 Though JavaScript doesn't currently implement classes, interfaces, etc, it does
