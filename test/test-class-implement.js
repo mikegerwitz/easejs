@@ -112,6 +112,11 @@ var Type = Interface.extend( {
 } )();
 
 
+/**
+ * Since interfaces can contain only abstract methods, it stands to reason that
+ * any class implementing an interface without providing any concrete methods
+ * should be abstract by default.
+ */
 ( function testClassesImplementingInterfacesAreConsideredAbstractByDefault()
 {
     assert.equal(
@@ -121,40 +126,6 @@ var Type = Interface.extend( {
             "implemented methods have no concrete implementations"
     );
 } ) ();
-
-
-( function testAbstractMethodListUpdatedWhenInterfaceImplemented()
-{
-    // no base
-    assert.equal(
-        Foo.abstractMethods.length,
-        2,
-        "Abstract methods list is updated when interface is implemented " +
-            "(empty base)"
-    );
-
-    // PlainFoo base
-    assert.equal(
-        PlainFoo2.abstractMethods.length,
-        2,
-        "Abstract methods list is updated when interface is implemented " +
-            "(concrete base)"
-    );
-} )();
-
-
-( function testProperAbstractMethodsAreCopiedFromInterface()
-{
-    assert.ok(
-        ( ( Foo.abstractMethods[ 0 ] == 'foo' )
-            && ( Foo.abstractMethods[ 1 ] == 'foo2' )
-        )
-        && ( ( PlainFoo2.abstractMethods[ 0 ] == 'foo' )
-            && ( PlainFoo2.abstractMethods[ 1 ] == 'foo2' )
-        ),
-        "Abstract methods list contains names of implemented methods"
-    );
-} )();
 
 
 ( function testInstancesOfClassesAreInstancesOfTheirImplementedInterfaces()
@@ -174,6 +145,12 @@ var Type = Interface.extend( {
         ),
         "Instances of classes implementing interfaces are considered to be " +
             "instances of the implemented interfaces"
+    );
+
+    assert.equal(
+        ConcreteFoo.isAbstract(),
+        false,
+        "Concrete implementations are not considered to be abstract"
     );
 } )();
 

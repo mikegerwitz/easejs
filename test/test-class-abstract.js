@@ -72,11 +72,6 @@ assert.ok(
     "All classes should have an isAbstract() method"
 );
 
-assert.ok(
-    ( Foo.abstractMethods instanceof Array ),
-    "All classes should provide a list of their abstract methods as an array"
-);
-
 assert.equal(
     Foo.isAbstract(),
     false,
@@ -94,28 +89,6 @@ assert.equal(
     true,
     "Subtypes of abstract types are abstract if they don't provide a " +
         "concrete implementation for all abstract methods"
-);
-
-assert.ok(
-    ( ( AbstractFoo.abstractMethods[ 0 ] == 'method' )
-        && ( AbstractFoo.abstractMethods[ 1 ] == 'second' )
-    ),
-    "Abstract classes should provide a list of their abstract methods' names"
-);
-
-assert.ok(
-    ( ( SubAbstractFoo.abstractMethods[ 0 ] == 'method' )
-        && ( SubAbstractFoo.abstractMethods[ 1 ] == undefined )
-    ),
-    "Abstract subclasses should not have their concrete methods within the " +
-        "the abstract method list if the concrete method was abstract in " +
-        "its supertype"
-);
-
-assert.equal(
-    ConcreteFoo.abstractMethods.length,
-    0,
-    "Concrete classes should not have any abstract methods listed"
 );
 
 assert.equal(
