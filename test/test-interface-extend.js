@@ -27,14 +27,39 @@ var common    = require( './common' ),
     Interface = common.require( 'interface' );
 
 
-assert.throws( function()
+( function testPropertiesNotPermittedWithinInterfaces()
 {
-    Interface.extend(
+    assert.throws( function()
     {
-        // properties (non-methods) are not permitted
-        prop: 'not permitted',
-    });
-}, TypeError, "Properties are not permitted within Interface definitions" );
+        Interface.extend(
+        {
+            // properties (non-methods) are not permitted
+            prop: 'not permitted',
+        });
+    }, TypeError, "Properties are not permitted within Interface definitions" );
+} )();
+
+
+( function testGettersAndSettersNotPermittedWithinInterfaces()
+{
+    // don't perform this test if unsupported by environment
+    if ( Object.prototype.__defineGetter__ === undefined )
+    {
+        return;
+    }
+
+    // so we don't break browsers that do not support getters/setters in object
+    // notation
+    var data = {};
+    data.__defineGetter__( 'foo', function() {} );
+    data.__defineSetter__( 'foo', function() {} );
+
+    assert.throws( function()
+    {
+        Interface.extend( data );
+    }, TypeError, "Getters/setters not permitted within Interfaces" );
+} )();
+
 
 assert.throws( function()
 {
