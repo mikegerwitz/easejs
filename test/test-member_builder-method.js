@@ -134,3 +134,20 @@ mb_common.assertCommon();
     mb_common.members[ 'public' ][ mb_common.name ]();
 } )();
 
+
+/**
+ * Once a concrete implementation has been defined for a method, a subtype
+ * cannot make it abstract.
+ */
+( function testCannotOverrideConcreteMethodWithAbstractMethod()
+{
+    // concrete method
+    mb_common.value = function() {};
+    mb_common.buildMemberQuick();
+
+    assert.throws( function()
+    {
+        mb_common.buildMemberQuick( { 'abstract': true }, true );
+    }, TypeError, "Cannot override concrete method with abstract method" );
+} )();
+
