@@ -30,11 +30,19 @@ var common = require( './common' ),
     prot = 'bar',
     priv = 'baz',
 
+    pubf  = function() {},
+    protf = function() {},
+    privf = function() {},
+
     // new anonymous class instance
     foo = Class.extend( {
         'public pub':      pub,
         'protected peeps': prot,
         'private parts':   priv,
+
+        'public pubf':     pubf,
+        'protected protf': protf,
+        'private privf':   privf,
     })();
 
 
@@ -44,6 +52,12 @@ var common = require( './common' ),
         foo.pub,
         pub,
         "Public properties are accessible via public interface"
+    );
+
+    assert.equal(
+        foo.pubf,
+        pubf,
+        "Public methods are accessible via public interface"
     );
 } )();
 
@@ -60,6 +74,18 @@ var common = require( './common' ),
         foo.parts,
         undefined,
         "Private properties are inaccessible via public interface"
+    );
+
+    assert.equal(
+        foo.protf,
+        undefined,
+        "Protected methods are inaccessible via public interface"
+    );
+
+    assert.equal(
+        foo.privf,
+        undefined,
+        "Private methods are inaccessible via public interface"
     );
 } )();
 
