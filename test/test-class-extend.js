@@ -63,7 +63,7 @@ for ( var prop in sub_props )
 {
     assert.equal(
         sub_props[ prop ],
-        SubFoo.prototype[ prop ],
+        SubFoo()[ prop ],
         "Subtype contains its own properties: " + prop
     );
 }
@@ -139,7 +139,7 @@ assert.equal(
 );
 
 assert.notEqual(
-    SubOther.prototype.newFoo,
+    SubOther().newFoo,
     undefined,
     "Subtype should contain extended members"
 );
