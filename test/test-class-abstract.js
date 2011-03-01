@@ -192,3 +192,32 @@ assert.throws( function()
     );
 } )();
 
+
+/**
+ * There was an issue where the object holding the abstract methods list was not
+ * checking for methods by using hasOwnProperty(). Therefore, if a method such
+ * as toString() was defined, it would be matched in the abstract methods list.
+ * As such, the abstract methods count would be decreased, even though it was
+ * not an abstract method to begin with (nor was it removed from the list,
+ * because it was never defined in the first place outside of the prototype).
+ *
+ * This negative number !== 0, which causes a problem when checking to ensure
+ * that there are 0 abstract methods. We check explicitly for 0 for two reasons:
+ * (a) it's faster than <, and (b - most importantly) if it's non-zero, then
+ * it's either abstract or something is wrong. Negative is especially wrong. It
+ * should never be negative!
+ */
+( function testDoesNotRecognizeObjectPrototypeMembersAsAbstractWhenDefining()
+{
+    assert.doesNotThrow( function()
+    {
+        SubAbstractFoo.extend( {
+            // concrete, so the result would otherwise not be abstract
+            'method': function( one, two, three ) {},
+
+            // the problem
+            'toString': function() {},
+        })();
+    }, Error, "Should not throw error if overriding a prototype method" );
+} )();
+
