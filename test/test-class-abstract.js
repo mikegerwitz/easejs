@@ -30,20 +30,21 @@ var common = require( './common' ),
 // not abstract
 var Foo = Class.extend( {} );
 
-// abstract
-var AbstractFoo = Class.extend(
-{
-    ctorCalled: false,
-
-    __construct: function()
+// abstract (ctor_called is not a class member to ensure that visibility bugs do
+// not impact our test)
+var ctor_called = false,
+    AbstractFoo = Class.extend(
     {
-        this.ctorCalled = true;
-    },
+        __construct: function()
+        {
+            ctor_called = true;
+        },
 
-    'abstract method': [ 'one', 'two', 'three' ],
+        'abstract method': [ 'one', 'two', 'three' ],
 
-    'abstract second': [],
-});
+        'abstract second': [],
+    })
+;
 
 // still abstract (didn't provide a concrete implementation of both abstract
 // methods)
@@ -109,8 +110,10 @@ assert.ok(
     "Concrete subclasses can be instantiated"
 );
 
+ctor_called = false;
+new ConcreteFoo();
 assert.equal(
-    ( new ConcreteFoo() ).ctorCalled,
+    ctor_called,
     true,
     "Can call constructors of abstract supertypes"
 );
