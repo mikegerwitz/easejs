@@ -26,80 +26,85 @@ var common = require( './common' ),
     assert = require( 'assert' ),
     Class  = common.require( 'class' );
 
-var Foo = Class.extend(
-{
-    hitMethod:  false,
-    hitMethod2: false,
-    method2Arg: null,
+    // we store these outside of the class to ensure that visibility bugs do not
+    // get in the way of our assertions
+    hitMethod  = false,
+    hitMethod2 = false,
+    method2Arg  = null,
 
-    myMethod: function()
+    Foo = Class.extend(
     {
-        this.hitMethod = true;
-        return this;
-    },
+        myMethod: function()
+        {
+            hitMethod = true;
+            return this;
+        },
 
-    myMethod2: function( arg )
+        myMethod2: function( arg )
+        {
+            hitMethod2 = true;
+            method2Arg = arg;
+
+            return this;
+        },
+    }),
+
+    SubFoo = Foo.extend(
     {
-        this.hitMethod2 = true;
-        this.method2Arg = arg;
+        myMethod: function()
+        {
+            return this;
+        },
 
-        return this;
-    },
-});
+        myMethod2: function( arg )
+        {
+            return this.__super( arg );
+        },
 
-var SubFoo = Foo.extend(
-{
-    myMethod: function()
-    {
-        return this;
-    },
+        callParentAlt: function()
+        {
+            return this.parent.myMethod2.apply( this, arguments );
+        },
+    }),
 
-    myMethod2: function( arg )
-    {
-        return this.__super( arg );
-    },
-
-    callParentAlt: function()
-    {
-        return this.parent.myMethod2.apply( this, arguments );
-    },
-});
-
-var foo     = new Foo(),
-    sub_foo = new SubFoo();
+    foo     = new Foo(),
+    sub_foo = new SubFoo()
+;
 
 // make sure we're working properly before we run the important assertions
 foo.myMethod().myMethod2();
 assert.equal(
-    foo.hitMethod,
+    hitMethod,
     true,
     "Sanity check"
 );
 assert.equal(
-    foo.hitMethod2,
+    hitMethod2,
     true,
     "Sanity check"
 );
+
+hitMethod = hitMethod2 = false;
 
 var arg = 'foobar';
 sub_foo.myMethod().myMethod2( arg );
 
 // myMethod overrides without calling parent
 assert.equal(
-    sub_foo.hitMethod,
+    hitMethod,
     false,
     "Subtype should be able to override parent properties"
 );
 
 // myMethod2 overrides parent then calls super method
 assert.equal(
-    sub_foo.hitMethod2,
+    hitMethod2,
     true,
     "Subtype should be able to call parent method"
 );
 
 assert.equal(
-    sub_foo.method2Arg,
+    method2Arg,
     arg,
     "Arguments should be passed to super method via _super argument list"
 );
@@ -112,7 +117,7 @@ assert.deepEqual(
 
 sub_foo.callParentAlt( arg = 'moo' );
 assert.equal(
-    sub_foo.method2Arg,
+    method2Arg,
     arg,
     "The parent property may also be used to invoke parent methods"
 );
