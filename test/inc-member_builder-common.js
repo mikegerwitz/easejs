@@ -35,7 +35,7 @@ exports.buildMember = null;
 
 
 /**
- * Partially applied function to quickly build properties using common test data
+ * Quickly build properties using common test data
  */
 exports.buildMemberQuick = function( keywords, preserve_prior )
 {
@@ -66,16 +66,25 @@ exports.assertOnlyVisibility = function( vis, name, value, message )
     var check = [ 'public', 'protected', 'private' ],
         i     = check.length,
         visi  = '',
+        value,
         cmp;
 
     // forEach not used for pre-ES5 browser support
     while ( i-- )
     {
-        visi = check[ i ];
-        cmp  = ( visi === vis ) ? value : undefined;
+        visi  = check[ i ];
+        value = exports.members[ visi ][ name ];
+        cmp   = ( visi === vis ) ? value : undefined;
+
+        // are we comparing functions?
+        if ( cmp && exports.funcVal )
+        {
+            cmp   = exports.funcVal;
+            value = value();
+        }
 
         assert.deepEqual(
-            exports.members[ visi ][ name ],
+            value,
             cmp,
             message
         );

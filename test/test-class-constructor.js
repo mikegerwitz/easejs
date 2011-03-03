@@ -29,22 +29,21 @@ var common = require( './common' ),
 // these two variables are declared outside of the class to ensure that they
 // will still be set even if the context of the constructor is wrong
 var construct_count   = 0,
-    construct_context = null;
+    construct_context = null,
+    construct_args    = null
 
 // create a basic test class
-var Foo = Class.extend(
-{
-    args: null,
-
-
-    __construct: function()
+    Foo = Class.extend(
     {
-        construct_count++;
-        construct_context = this;
+        __construct: function()
+        {
+            construct_count++;
+            construct_context = this;
+            construct_args    = arguments;
+        },
+    })
+;
 
-        this.args = arguments;
-    },
-});
 
 assert.ok(
     ( Foo.prototype.__construct instanceof Function ),
@@ -67,19 +66,19 @@ assert.equal(
 );
 
 assert.equal(
-    obj,
-    construct_context,
+    construct_context.__iid,
+    obj.__iid,
     "Constructor should be invoked within the context of the class instance"
 );
 
 assert.notEqual(
-    obj.args,
+    construct_args,
     null,
     "Constructor arguments should be passed to the constructor"
 );
 
 assert.equal(
-    obj.args.length,
+    construct_args.length,
     args.length,
     "All arguments should be passed to the constructor"
 );
@@ -88,7 +87,7 @@ assert.equal(
 for ( var i = 0, len = args.length; i < len; i++ )
 {
     assert.equal(
-        obj.args[ i ],
+        construct_args[ i ],
         args[ i ],
         "Arguments should be passed to the constructor: " + i
     );
@@ -112,16 +111,16 @@ assert.equal(
 );
 
 assert.equal(
-    construct_context,
-    subobj,
+    construct_context.__iid,
+    subobj.__iid,
     "Parent constructor is run in context of the subtype"
 );
 
 // this should be implied by the previous test, but let's add it for some peace
 // of mind
 assert.ok(
-    ( ( subobj.args[ 0 ] === args2[ 0 ] )
-        && ( subobj.args[ 1 ] == args2[ 1 ] )
+    ( ( construct_args[ 0 ] === args2[ 0 ] )
+        && ( construct_args[ 1 ] == args2[ 1 ] )
     ),
     "Parent constructor sets values on subtype"
 );
@@ -135,14 +134,14 @@ assert.ok(
 );
 
 assert.equal(
-    construct_context,
-    subobj2,
+    construct_context.__iid,
+    subobj2.__iid,
     "Self-invoking constructor is run in the context of the new object"
 );
 
 assert.ok(
-    ( ( subobj2.args[ 0 ] === args2[ 0 ] )
-        && ( subobj2.args[ 1 ] == args2[ 1 ] )
+    ( ( construct_args[ 0 ] === args2[ 0 ] )
+        && ( construct_args[ 1 ] == args2[ 1 ] )
     ),
     "Self-invoking constructor receives arguments"
 );

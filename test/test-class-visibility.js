@@ -30,9 +30,9 @@ var common = require( './common' ),
     prot = 'bar',
     priv = 'baz',
 
-    pubf  = function() {},
-    protf = function() {},
-    privf = function() {},
+    pubf  = function() { return pub; },
+    protf = function() { return prot; },
+    privf = function() { return priv; },
 
     // new anonymous class instance
     foo = Class.extend( {
@@ -43,6 +43,13 @@ var common = require( './common' ),
         'public pubf':     pubf,
         'protected protf': protf,
         'private privf':   privf,
+
+        'public getProp': function( name )
+        {
+            // return property, allowing us to break encapsulation for
+            // protected/private properties (for testing purposes)
+            return this[ name ];
+        },
     })();
 
 
@@ -55,8 +62,8 @@ var common = require( './common' ),
     );
 
     assert.equal(
-        foo.pubf,
-        pubf,
+        foo.pubf(),
+        pub,
         "Public methods are accessible via public interface"
     );
 } )();
@@ -86,6 +93,27 @@ var common = require( './common' ),
         foo.privf,
         undefined,
         "Private methods are inaccessible via public interface"
+    );
+} )();
+
+
+/**
+ * Protected members should be accessible from within class methods
+ */
+( function testProtectedMembersAreAccessibleInternally()
+{
+    assert.equal(
+        foo.getProp( 'peeps' ),
+        prot,
+        "Protected properties are available internally"
+    );
+
+    // invoke rather than checking for equality, because the method may be
+    // wrapped
+    assert.equal(
+        foo.getProp( 'protf' )(),
+        prot,
+        "Protected methods are available internally"
     );
 } )();
 

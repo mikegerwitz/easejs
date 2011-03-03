@@ -27,7 +27,8 @@ var common    = require( './common' ),
     mb_common = require( './inc-member_builder-common' )
 ;
 
-mb_common.value       = function() {};
+mb_common.funcVal     = 'foobar';
+mb_common.value       = function() { return mb_common.funcVal; };
 mb_common.buildMember = common.require( 'member_builder' ).buildMethod;
 
 // do assertions common to all member builders
@@ -50,7 +51,8 @@ mb_common.assertCommon();
  */
 ( function testCannotOverridePropertyWithMethod()
 {
-    mb_common.value = 'moofoo';
+    mb_common.value   = 'moofoo';
+    mb_common.funcVal = undefined;
     mb_common.buildMemberQuick();
 
     assert.throws( function()
@@ -149,5 +151,76 @@ mb_common.assertCommon();
     {
         mb_common.buildMemberQuick( { 'abstract': true }, true );
     }, TypeError, "Cannot override concrete method with abstract method" );
+} )();
+
+
+/**
+ * One of the powerful features of the method builder is the ability to pass in
+ * an instance to be bound to 'this' when invoking a method. This has some
+ * important consequences, such as the ability to implement protected/private
+ * members.
+ */
+( function testMethodInvocationBindsThisToPassedInstance()
+{
+    var instance = function() {},
+        val      = 'fooboo',
+        val2     = 'fooboo2',
+        iid      = 1,
+
+        func = function()
+        {
+            return this.foo;
+        },
+
+        func2 = function()
+        {
+            return this.foo2;
+        },
+
+        called       = false,
+        instCallback = function()
+        {
+            called = true;
+            return instance;
+        },
+
+        members = { 'public': {}, 'protected': {}, 'private': {} }
+    ;
+
+    // set instance values
+    instance.foo  = val;
+    instance.foo2 = val2;
+
+    // concrete method
+    mb_common.buildMember(
+        members,
+        exports.meta,
+        'func',
+        func,
+        [ 'public' ],
+        instCallback
+    );
+
+    assert.equal(
+        members[ 'public' ].func(),
+        val,
+        "Calling method will bind 'this' to passed instance"
+    );
+
+    // override method
+    mb_common.buildMember(
+        members,
+        exports.meta,
+        'func',
+        func2,
+        [ 'public' ],
+        instCallback
+    );
+
+    assert.equal(
+        members[ 'public' ].func(),
+        val2,
+        "Calling method override will bind 'this' to passed instance"
+    );
 } )();
 
