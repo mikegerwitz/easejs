@@ -16,7 +16,6 @@ Misc
 Property Keywords
   - Restrictions; throw exceptions when unknown keywords are used
   - public (default)
-  - protected; 'this' will contain protected members of self and parents
   - private; 'this' will contain private members of self, but not private
     members of parents
   - const; immutable properties
