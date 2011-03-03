@@ -50,9 +50,22 @@ var common = require( './common' ),
             // protected/private properties (for testing purposes)
             return this[ name ];
         },
+
+
+        /**
+         * Allows us to set a value from within the class
+         */
+        'public setValue': function( name, value )
+        {
+            this[ name ] = value;
+        },
     })();
 
 
+/**
+ * Public members are the only members added to the instance's prototype to be
+ * accessible externally
+ */
 ( function testPublicMembersAreAccessbileExternally()
 {
     assert.equal(
@@ -65,6 +78,67 @@ var common = require( './common' ),
         foo.pubf(),
         pub,
         "Public methods are accessible via public interface"
+    );
+} )();
+
+
+/**
+ * For reasons that are discussed in the next test (writing to public
+ * properties), we need to make sure public members are available internally.
+ * Actually, we don't need to test public methods, really, but it's in there for
+ * good measure. Who knows what bugs may be introduced in the future.
+ *
+ * This ensures that the getter is properly proxying the value to us.
+ */
+( function testPublicMembersAreAccessibleInternally()
+{
+    assert.equal(
+        foo.getProp( 'pub' ),
+        pub,
+        "Public properties are accessible internally"
+    );
+
+    assert.equal(
+        foo.getProp( 'pubf' )(),
+        pub,
+        "Public methods are accessible internally"
+    );
+} )();
+
+
+/**
+ * This may sound like an odd test, but it's actually very important. Due to how
+ * private/protected members are implemented, it compromises public members. In
+ * fact, public members would not work internally without what is essentially a
+ * proxy via setters.
+ *
+ * This test is to ensure that the setter is properly forwarding writes to the
+ * object within the prototype chain containing the public values. Otherwise,
+ * setting the value would simply mask it in the prototype chain. The value
+ * would appear to have changed internally, but when accessed externally, the
+ * value would still be the same. That would obviously be a problem ;)
+ */
+( function testPublicPropertiesAreWritableInternally()
+{
+    var val = 'moomookittypoo';
+
+    // start by setting the value
+    foo.setValue( 'pub', val );
+
+    // we should see that change internally...
+    assert.equal(
+        foo.getProp( 'pub' ),
+        val,
+        "Setting the value of a public property internally should be " +
+            "observable /internally/"
+    );
+
+    // ...as well as externally
+    assert.equal(
+        foo.pub,
+        val,
+        "Setting the value of a public property internally should be " +
+            "observable /externally/"
     );
 } )();
 
