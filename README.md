@@ -11,6 +11,7 @@ Current support includes:
 * Classical inheritance
 * Abstract classes and methods
 * Interfaces
+* Near-completed visibility support in `visibility/master` branch
 
 **This project is still under development.**
 
