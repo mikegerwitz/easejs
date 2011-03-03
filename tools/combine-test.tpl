@@ -18,12 +18,12 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # #
 
-exports.common = {
+module.common = { exports: {
     require: function ( id )
     {
         return require( id );
     }
-};
+} };
 
 
 function failAssertion( err )
@@ -37,7 +37,7 @@ function failAssertion( err )
  *
  * This contains only the used assertions
  */
-exports.assert = {
+module.assert = { exports: {
     equal: function ( val, cmp, err )
     {
         if ( val !== cmp )
@@ -101,5 +101,5 @@ exports.assert = {
             }
         }
     },
-};
+} };
 
