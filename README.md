@@ -27,7 +27,7 @@ itch.
 Please note that, as the project is under active development, the API may change
 until the first release.
 
-This module uses the [CommonJS](http://commonjs.org) module format. In the
+ease.js uses the [CommonJS](http://commonjs.org) module format. In the
 examples below, [Node.js](http://nodejs.org) is used.
 
 ### Creating Classes
