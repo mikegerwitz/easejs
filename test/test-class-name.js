@@ -49,6 +49,27 @@ var common = require( './common' ),
     {
         Class( 'Foo', 'Bar' );
     }, TypeError, "Second argument to named class must be the definition" );
+
+    // we should be permitted only two arguments
+    var args = [ 'Foo', {}, 'extra' ];
+    try
+    {
+        Class.apply( null, args );
+
+        // we should not get to this line (an exception should be thrown due to
+        // too many arguments)
+        assert.fail(
+            "Should accept only two arguments when creating named class"
+        );
+    }
+    catch ( e )
+    {
+        assert.notEqual(
+            e.toString().match( args.length + ' given' ),
+            null,
+            "Named class error should provide number of given arguments"
+        );
+    }
 } )();
 
 
