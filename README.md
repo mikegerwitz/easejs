@@ -37,7 +37,7 @@ class. The constructor is provided as the `__construct()` method (influenced by
 
     var Class = require( 'easejs' ).Class;
 
-    var Foo = Class.extend(
+    var Foo = Class(
     {
         foo: '',
 
@@ -90,7 +90,7 @@ they contain one or more abstract methods.
 
     var Class = require( 'easejs' ).Class;
 
-    var AbstractFoo = Class.extend(
+    var AbstractFoo = Class(
     {
         // a function may be provided if you wish the subtypes to implement a
         // certain number of arguments
