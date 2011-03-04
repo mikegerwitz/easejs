@@ -61,14 +61,14 @@ var common = require( './common' ),
     // concrete
     assert.equal(
         Class( {} ).toString(),
-        '<Class>',
+        '[object Class]',
         "Converting anonymous class to string yields class string"
     );
 
     // abstract
     assert.equal(
         Class( { 'abstract foo': [] } ).toString(),
-        '<AbstractClass>',
+        '[object AbstractClass]',
         "Converting abstract anonymous class to string yields class string"
     );
 } )();
@@ -85,14 +85,14 @@ var common = require( './common' ),
     // concrete
     assert.equal(
         Class( name, {} ).toString(),
-        '<class ' + name + '>',
+        '[object Class <' + name + '>]',
         "Converting named class to string yields string with name of class"
     );
 
     // abstract
     assert.equal(
         Class( name, { 'abstract foo': [] } ).toString(),
-        '<abstract class ' + name + '>',
+        '[object AbstractClass <' + name + '>]',
         "Converting abstract named class to string yields string with name " +
             "of class"
     );
@@ -114,7 +114,7 @@ var common = require( './common' ),
     // anonymous
     assert.equal(
         anon.toString(),
-        'Object #<anonymous>',
+        '[object #<anonymous>]',
         "Converting anonymous class instance to string yields string " +
             "indiciating that the class is anonymous"
     );
@@ -122,7 +122,7 @@ var common = require( './common' ),
     // named
     assert.equal(
         named.toString(),
-        'Object #<' + name + '>',
+        '[object #<' + name + '>]',
         "Converting named class instance to string yields string with name " +
             "of class"
     );
