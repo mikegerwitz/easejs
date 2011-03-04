@@ -98,3 +98,33 @@ var common = require( './common' ),
     );
 } )();
 
+
+/**
+ * Class instances are displayed differently than uninstantiated classes.
+ * Mainly, they output that they are an object, in addition to the class name.
+ */
+( function testConvertingClassInstanceToStringYieldsInstanceString()
+{
+    var name = 'Foo',
+
+        anon  = Class( {} )(),
+        named = Class( name, {} )()
+    ;
+
+    // anonymous
+    assert.equal(
+        anon.toString(),
+        'Object #<anonymous>',
+        "Converting anonymous class instance to string yields string " +
+            "indiciating that the class is anonymous"
+    );
+
+    // named
+    assert.equal(
+        named.toString(),
+        'Object #<' + name + '>',
+        "Converting named class instance to string yields string with name " +
+            "of class"
+    );
+} )();
+
