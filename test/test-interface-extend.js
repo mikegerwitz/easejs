@@ -83,57 +83,113 @@ assert.doesNotThrow(
 );
 
 
-var BaseType = Interface.extend(
+// There's a couple ways to create interfaces. Test 'em both.
+var base_types = [
+    Interface.extend(
+    {
+        'abstract method': [],
+    } ),
+
+    Interface( {
+        'abstract method': [],
+    } )
+];
+
+var BaseType;
+for ( var i = 0; i < base_types.length; i++ )
 {
-    'abstract method': [],
-});
+    BaseType = base_types[ i ];
 
-assert.ok(
-    ( BaseType.prototype.method instanceof Function ),
-    "Interface contains defined abstract methods"
-);
+    assert.ok(
+        ( BaseType.prototype.method instanceof Function ),
+        "Interface contains defined abstract methods"
+    );
 
 
-var SubType = Interface.extend( BaseType,
+    var SubType = Interface.extend( BaseType,
+    {
+        'abstract second': [],
+    });
+
+    assert.ok(
+        ( SubType.prototype instanceof BaseType ),
+        "Generic interface extend method can extend from other interfaces"
+    );
+
+    assert.ok(
+        ( SubType.prototype.method === BaseType.prototype.method ),
+        "Interface subtypes inherit abstract methods"
+    );
+
+    assert.ok(
+        ( SubType.prototype.second instanceof Function ),
+        "Interfaces can be extended with additional abstract methods"
+    );
+
+
+    assert.ok(
+        ( BaseType.extend instanceof Function ),
+        "Interface contains extend method"
+    );
+
+
+    var SubType2 = BaseType.extend(
+    {
+        'abstract second': [],
+    });
+
+    assert.ok(
+        ( SubType2.prototype instanceof BaseType ),
+        "Interface extend method can extend interfaces"
+    );
+
+    assert.ok(
+        ( SubType2.prototype.second instanceof Function ),
+        "Interfaces can be extended with additional abstract methods using " +
+            "shorthand extend method"
+    );
+}
+
+
+/**
+ * The interface invocation action depends on what arguments are passed in. One
+ * use is to pass in an object as the first and only argument, creating a new
+ * interface with no supertype.
+ */
+( function testInvokingInterfaceModuleRequiresObjectAsArgumentIfExtending()
 {
-    'abstract second': [],
-});
+    assert.throws( function()
+        {
+            Interface( 'moo' );
+            Interface( 5 );
+            Interface( false );
+            Interface();
+        },
+        TypeError,
+        "Invoking interface module requires object as argument if extending " +
+            "from base interface"
+    );
 
-assert.ok(
-    ( SubType.prototype instanceof BaseType ),
-    "Generic interface extend method can extend from other interfaces"
-);
+    var args = [ {}, 'one', 'two', 'three' ];
 
-assert.ok(
-    ( SubType.prototype.method === BaseType.prototype.method ),
-    "Interface subtypes inherit abstract methods"
-);
+    // we must only provide one argument if the first argument is an object (the
+    // interface definition)
+    try
+    {
+        Interface.apply( null, args );
 
-assert.ok(
-    ( SubType.prototype.second instanceof Function ),
-    "Interfaces can be extended with additional abstract methods"
-);
-
-
-assert.ok(
-    ( BaseType.extend instanceof Function ),
-    "Interface contains extend method"
-);
-
-
-var SubType2 = BaseType.extend(
-{
-    'abstract second': [],
-});
-
-assert.ok(
-    ( SubType2.prototype instanceof BaseType ),
-    "Interface extend method can extend interfaces"
-);
-
-assert.ok(
-    ( SubType2.prototype.second instanceof Function ),
-    "Interfaces can be extended with additional abstract methods using " +
-        "shorthand extend method"
-);
+        // if all goes well, we don't get to this line
+        assert.fail(
+            "Only one argument for interface definitions is permitted"
+        );
+    }
+    catch ( e )
+    {
+        assert.notEqual(
+            e.toString().match( args.length + ' given' ),
+            null,
+            "Interface invocation should give argument count on error"
+        );
+    }
+} )();
 
