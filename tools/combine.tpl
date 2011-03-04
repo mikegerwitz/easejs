@@ -51,7 +51,7 @@ var easejs = {};
      *
      * @type  {Object.<string,Object>}
      */
-    var exports = {};
+    var module = {};
 
     /**
      * Returns the requested module
@@ -71,19 +71,19 @@ var easejs = {};
         var id_clean = module_id.replace( /^.\//, '' );
 
         // attempt to retrieve the module
-        var module = exports[ id_clean ];
-        if ( module === undefined )
+        var mod = module[ id_clean ];
+        if ( mod === undefined )
         {
             throw "[ease.js] Undefined module: " + module_id;
         }
 
-        return module;
+        return mod.exports;
     };
 
 /**{CONTENT}**/
 
     // the following should match the exports of /index.js
-    ns_exports.Class     = exports['class'];
-    ns_exports.Interface = exports['interface'];
+    ns_exports.Class     = module['class'].exports;
+    ns_exports.Interface = module['interface'].exports;
 } )( easejs );
 

@@ -11,6 +11,7 @@ Current support includes:
 * Classical inheritance
 * Abstract classes and methods
 * Interfaces
+* Near-completed visibility support in `visibility/master` branch
 
 **This project is still under development.**
 
@@ -26,7 +27,7 @@ itch.
 Please note that, as the project is under active development, the API may change
 until the first release.
 
-This module uses the [CommonJS](http://commonjs.org) module format. In the
+ease.js uses the [CommonJS](http://commonjs.org) module format. In the
 examples below, [Node.js](http://nodejs.org) is used.
 
 ### Creating Classes
@@ -36,7 +37,7 @@ class. The constructor is provided as the `__construct()` method (influenced by
 
     var Class = require( 'easejs' ).Class;
 
-    var Foo = Class.extend(
+    var Foo = Class(
     {
         foo: '',
 
@@ -89,7 +90,7 @@ they contain one or more abstract methods.
 
     var Class = require( 'easejs' ).Class;
 
-    var AbstractFoo = Class.extend(
+    var AbstractFoo = Class(
     {
         // a function may be provided if you wish the subtypes to implement a
         // certain number of arguments
@@ -137,6 +138,23 @@ The abstract methods are available as a read-only `abstractMethods` property.
     AbstractFoo.isAbstract();      // true
     Concretefoo.isAbstract();      // false
     StillAbstractFoo.isAbstract(); // true
+
+
+### Interfaces
+Interfaces can be declared in a very similar manner to classes. All members of
+an interface must be declared as abstract.
+
+    var MyType = Interface(
+    {
+        'abstract foo': []
+    });
+
+To implement an interface, use the `implement()` class method:
+
+    var ConcreteType = Class.implement( MyType ).extend(
+    {
+        foo: function() {}
+    });
 
 
 ## Use of Reserved Words
