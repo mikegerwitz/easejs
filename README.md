@@ -140,6 +140,23 @@ The abstract methods are available as a read-only `abstractMethods` property.
     StillAbstractFoo.isAbstract(); // true
 
 
+### Interfaces
+Interfaces can be declared in a very similar manner to classes. All members of
+an interface must be declared as abstract.
+
+    var MyType = Interface(
+    {
+        'abstract foo': []
+    });
+
+To implement an interface, use the `implement()` class method:
+
+    var ConcreteType = Class.implement( MyType ).extend(
+    {
+        foo: function() {}
+    });
+
+
 ## Use of Reserved Words
 Though JavaScript doesn't currently implement classes, interfaces, etc, it does
 reserve the keywords. In an effort to ensure that ease.js will not clash, the
