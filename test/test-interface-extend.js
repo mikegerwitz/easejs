@@ -105,6 +105,12 @@ for ( var i = 0; i < base_types.length; i++ )
         "Interface contains defined abstract methods"
     );
 
+    assert.equal(
+        Interface.isInterface( BaseType ),
+        true,
+        "Interface is considered to be an interface"
+    );
+
 
     var SubType = Interface.extend( BaseType,
     {
