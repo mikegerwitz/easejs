@@ -244,18 +244,6 @@ for ( var i = 0; i < class_count; i++ )
 }
 
 
-// otherwise it'll output the internal constructor code, which is especially
-// confusing since the user does not write it
-( function testConvertingClassToStringYieldsClassString()
-{
-    assert.equal(
-        Class.extend( {} ).toString(),
-        '<Class>',
-        "Converting class to string yields class string"
-    );
-} )();
-
-
 ( function testInvokingClassModuleRequiresObjectAsArgumentIfCreating()
 {
     assert.throws( function()
