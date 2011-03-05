@@ -45,15 +45,45 @@ var common = require( './common' ),
             "Class defined with name is returned as a valid class"
         );
     }, Error, "Class accepts name" );
+} )();
 
-    // the second argument must be an object
-    assert.throws( function()
+
+/**
+ * The class definition must be an object, which is equivalent to the class
+ * body
+ */
+( function testNamedClassDefinitionRequiresThatDefinitionBeAnObject()
+{
+    var name = 'Foo';
+
+    try
     {
-        Class( 'Foo', 'Bar' );
-    }, TypeError, "Second argument to named class must be the definition" );
+        Class( name, 'Bar' );
+
+        // if all goes well, we'll never get to this point
+        assert.fail( "Second argument to named class must be the definition" );
+    }
+    catch ( e )
+    {
+        assert.notEqual(
+            e.toString().match( name ),
+            null,
+            "Class definition argument count error string contains class name"
+        );
+    }
+} )();
+
+
+/**
+ * Extraneous arguments likely indicate a misunderstanding of the API
+ */
+( function testNamedClassDefinitionIsStrictOnArgumentCount()
+{
+    var name = 'Foo',
+        args = [ name, {}, 'extra' ]
+    ;
 
     // we should be permitted only two arguments
-    var args = [ 'Foo', {}, 'extra' ];
     try
     {
         Class.apply( null, args );
@@ -66,8 +96,16 @@ var common = require( './common' ),
     }
     catch ( e )
     {
+        var errstr = e.toString();
+
         assert.notEqual(
-            e.toString().match( args.length + ' given' ),
+            errstr.match( name ),
+            null,
+            "Named class error should provide name of class"
+        );
+
+        assert.notEqual(
+            errstr.match( args.length + ' given' ),
             null,
             "Named class error should provide number of given arguments"
         );
