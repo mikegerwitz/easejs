@@ -234,3 +234,53 @@ var common = require( './common' ),
     );
 } )();
 
+
+/**
+ * The class name should be provided in the error thrown when attempting to
+ * instantiate an abstract class, if it's available
+ */
+( function testClassNameIsGivenWhenTryingToInstantiateAbstractClass()
+{
+    var name = 'Foo';
+
+    try
+    {
+        Class( name, { 'abstract foo': [] } )();
+
+        // we're not here to test to make sure it is thrown, but if it's not,
+        // then there's likely a problem
+        assert.fail(
+            "Was expecting instantiation error. There's a bug somewhere!"
+        );
+    }
+    catch ( e )
+    {
+        assert.notEqual(
+            e.toString().match( name ),
+            null,
+            "Abstract class instantiation error should contain class name"
+        );
+    }
+
+    // if no name is provided, then (anonymous) should be indicated
+    try
+    {
+        Class( { 'abstract foo': [] } )();
+
+        // we're not here to test to make sure it is thrown, but if it's not,
+        // then there's likely a problem
+        assert.fail(
+            "Was expecting instantiation error. There's a bug somewhere!"
+        );
+    }
+    catch ( e )
+    {
+        assert.notEqual(
+            e.toString().match( '(anonymous)' ),
+            null,
+            "Abstract class instantiation error should recognize that class " +
+                "is anonymous if no name was given"
+        );
+    }
+} )();
+
