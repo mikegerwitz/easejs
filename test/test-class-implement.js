@@ -64,19 +64,41 @@ var Type = Interface.extend( {
 {
     assert.doesNotThrow( function()
     {
-        Foo = Class.implement( Type, Type2 );
+        Class.implement( Type, Type2 );
     }, Error, "Class can implement interfaces" );
+} )();
 
-    assert.ok(
-        ( Class.isClass( Foo ) ),
-        "Class returned from implementing interfaces on an empty base is a " +
-            "valid class"
+
+/**
+ * Initially, the implement() method returned an abstract class. However, it
+ * doesn't make sense to create a class without any actual definition (and
+ * there's other implementation considerations that caused this route to be
+ * taken). One wouldn't do "class Foo implements Type", and not provide any
+ * body.
+ *
+ * Therefore, implement() should return nothing useful until extend() is called
+ * on it.
+ */
+( function testResultOfImplementIsNotUsableAsAClass()
+{
+    var result = Class.implement( Type );
+
+    assert.equal(
+        ( Class.isClass( result ) ),
+        false,
+        "Result of implement operation on class is not usable as a Class"
     );
 } )();
 
 
+/**
+ * As a consequence of the above, we must extend with an empty definition
+ * (base) in order to get our abstract class.
+ */
 ( function testAbstractMethodsCopiedIntoNewClassUsingEmptyBase()
 {
+    Foo = Class.implement( Type, Type2 ).extend( {} );
+
     assert.ok(
         ( ( Foo.prototype.foo instanceof Function )
             && ( Foo.prototype.foo2 instanceof Function )
@@ -90,19 +112,32 @@ var Type = Interface.extend( {
 {
     assert.doesNotThrow( function()
     {
-        PlainFoo2 = PlainFoo.implement( Type, Type2 );
+        PlainFoo.implement( Type, Type2 );
     }, Error, "Classes can implement interfaces" );
+} )();
 
-    assert.ok(
-        ( Class.isClass( PlainFoo2 ) ),
-        "Class returned from implementing interfaces on an existing base is a " +
-            "valid class"
+
+/**
+ * Ensure the same system mentioned above also applies to the extend() method on
+ * existing classes
+ */
+( function testImplementingInterfaceAtopExistingClassIsNotUsableByDefault()
+{
+    var result = PlainFoo.implement( Type );
+
+    assert.equal(
+        ( Class.isClass( result ) ),
+        false,
+        "Result of implementing interfaces on an existing base is not " +
+            "usable as a Class"
     );
 } )();
 
 
 ( function testAbstractMethodsCopiedIntoNewClassUsingExistingBase()
 {
+    PlainFoo2 = PlainFoo.implement( Type, Type2 ).extend( {} );
+
     assert.ok(
         ( ( PlainFoo2.prototype.foo instanceof Function )
             && ( PlainFoo2.prototype.foo2 instanceof Function )
