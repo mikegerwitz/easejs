@@ -24,7 +24,9 @@
 
 var common = require( './common' ),
     assert = require( 'assert' ),
-    Class  = common.require( 'class' )
+
+    Class     = common.require( 'class' ),
+    Interface = common.require( 'interface' )
 ;
 
 
@@ -49,6 +51,27 @@ var common = require( './common' ),
     {
         Class( 'Foo', 'Bar' );
     }, TypeError, "Second argument to named class must be the definition" );
+
+    // we should be permitted only two arguments
+    var args = [ 'Foo', {}, 'extra' ];
+    try
+    {
+        Class.apply( null, args );
+
+        // we should not get to this line (an exception should be thrown due to
+        // too many arguments)
+        assert.fail(
+            "Should accept only two arguments when creating named class"
+        );
+    }
+    catch ( e )
+    {
+        assert.notEqual(
+            e.toString().match( args.length + ' given' ),
+            null,
+            "Named class error should provide number of given arguments"
+        );
+    }
 } )();
 
 
@@ -125,6 +148,51 @@ var common = require( './common' ),
         '[object #<' + name + '>]',
         "Converting named class instance to string yields string with name " +
             "of class"
+    );
+} )();
+
+
+/**
+ * In order to accommodate syntax such as extending classes, ease.js supports
+ * staging class names. This will return an object that operates exactly like
+ * the normal Class module, but will result in a named class once the class is
+ * created.
+ */
+( function testCanCreateNamedClassUsingStagingMethod()
+{
+    var name   = 'Foo',
+        named  = Class( name ).extend( {} )
+        namedi = Class( name ).implement( Interface( {} ) ).extend( {} )
+    ;
+
+    // ensure what was returned is a valid class
+    assert.equal(
+        Class.isClass( named ),
+        true,
+        "Named class generated via staging method is considered to be a " +
+            "valid class"
+    );
+
+    // was the name set?
+    assert.equal(
+        named.toString(),
+        '[object Class <' + name + '>]',
+        "Name is set on named clas via staging method"
+    );
+
+
+    // we should also be able to implement interfaces
+    assert.equal(
+        Class.isClass( namedi ),
+        true,
+        "Named class generated via staging method, implementing an " +
+            "interface, is considered to be a valid class"
+    );
+
+    assert.equal(
+        namedi.toString(),
+        '[object Class <' + name + '>]',
+        "Name is set on named class via staging method when implementing"
     );
 } )();
 

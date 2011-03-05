@@ -50,6 +50,27 @@ var common     = require( './common' ),
     {
         Interface( 'Foo', 'Bar' );
     }, TypeError, "Second argument to named interface must be the definition" );
+
+    // we should be permitted only two arguments
+    var args = [ 'Foo', {}, 'extra' ];
+    try
+    {
+        Interface.apply( null, args );
+
+        // we should not get to this line (an exception should be thrown due to
+        // too many arguments)
+        assert.fail(
+            "Should accept only two arguments when creating named interface"
+        );
+    }
+    catch ( e )
+    {
+        assert.notEqual(
+            e.toString().match( args.length + ' given' ),
+            null,
+            "Named interface error should provide number of given arguments"
+        );
+    }
 } )();
 
 
