@@ -145,3 +145,76 @@ var common     = require( './common' ),
     );
 } )();
 
+
+( function testDeclarationErrorsProvideInterfaceNameIsAvailable()
+{
+    var name = 'Foo',
+
+        // functions used to cause the various errors
+        tries = [
+            // properties
+            function()
+            {
+                Interface( name, { prop: 'str' } );
+            },
+
+            // methods
+            function()
+            {
+                Interface( name, { method: function() {} } );
+            },
+        ]
+    ;
+
+    // if we have getter/setter support, add those to the tests
+    if ( Object.defineProperty )
+    {
+        // getter
+        tries.push( function()
+        {
+            var obj = {};
+            Object.defineProperty( obj, 'getter', {
+                get:        function() {},
+                enumerable: true,
+            } );
+
+            Interface( name, obj );
+        } );
+
+        // setter
+        tries.push( function()
+        {
+            var obj = {};
+            Object.defineProperty( obj, 'setter', {
+                set:        function() {},
+                enumerable: true,
+            } );
+
+            Interface( name, obj );
+        } );
+    }
+
+    // gather the error strings
+    var i = tries.length;
+    while ( i-- )
+    {
+        try
+        {
+            // cause the error
+            tries[ i ]();
+
+            // we shouldn't get to this point...
+            assert.fail( "Expected error. Something's wrong." );
+        }
+        catch ( e )
+        {
+            // ensure the error string contains the interface name
+            assert.notEqual(
+                e.toString().match( name ),
+                null,
+                "Error contains interface name when available (" + i + ")"
+            );
+        }
+    }
+} )();
+
