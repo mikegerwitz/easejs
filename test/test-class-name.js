@@ -24,7 +24,9 @@
 
 var common = require( './common' ),
     assert = require( 'assert' ),
-    Class  = common.require( 'class' )
+
+    Class     = common.require( 'class' ),
+    Interface = common.require( 'interface' )
 ;
 
 
@@ -158,8 +160,9 @@ var common = require( './common' ),
  */
 ( function testCanCreateNamedClassUsingStagingMethod()
 {
-    var name  = 'Foo',
-        named = Class( name ).extend( {} )
+    var name   = 'Foo',
+        named  = Class( name ).extend( {} )
+        namedi = Class( name ).implement( Interface( {} ) ).extend( {} )
     ;
 
     // ensure what was returned is a valid class
@@ -175,6 +178,21 @@ var common = require( './common' ),
         named.toString(),
         '[object Class <' + name + '>]',
         "Name is set on named clas via staging method"
+    );
+
+
+    // we should also be able to implement interfaces
+    assert.equal(
+        Class.isClass( namedi ),
+        true,
+        "Named class generated via staging method, implementing an " +
+            "interface, is considered to be a valid class"
+    );
+
+    assert.equal(
+        namedi.toString(),
+        '[object Class <' + name + '>]',
+        "Name is set on named class via staging method when implementing"
     );
 } )();
 
