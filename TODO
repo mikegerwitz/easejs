@@ -14,6 +14,7 @@ Misc
       cannot be used (# is not a valid token)
   - Class/Interface naming
     - Will be especially helpful for error messages
+  - Class module is becoming too large; refactor
 
 Property Keywords
   - Restrictions; throw exceptions when unknown keywords are used
