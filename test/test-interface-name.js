@@ -44,15 +44,48 @@ var common     = require( './common' ),
             "Interface defined with name is returned as a valid interface"
         );
     }, Error, "Interface accepts name" );
+} )();
 
-    // the second argument must be an object
-    assert.throws( function()
+
+/**
+ * The interface definition, which equates to the body of the interface, must be
+ * an object
+ */
+( function testNamedInterfaceDefinitionRequiresThatDefinitionBeAnObject()
+{
+    var name = 'Foo';
+
+    try
     {
-        Interface( 'Foo', 'Bar' );
-    }, TypeError, "Second argument to named interface must be the definition" );
+        Interface( name, 'Bar' );
+
+        // if all goes well, we'll never get to this point
+        assert.fail(
+            "Second argument to named interface must be the definition"
+        );
+    }
+    catch ( e )
+    {
+        assert.notEqual(
+            e.toString().match( name ),
+            null,
+            "Interface definition argument count error string contains " +
+                "interface name"
+        );
+    }
+} )();
+
+
+/**
+ * Extraneous arguments likely indicate a misunderstanding of the API
+ */
+( function testNamedInterfaceDefinitionIsStrictOnArgumentCount()
+{
+    var name = 'Foo',
+        args = [ name, {}, 'extra' ]
+    ;
 
     // we should be permitted only two arguments
-    var args = [ 'Foo', {}, 'extra' ];
     try
     {
         Interface.apply( null, args );
@@ -65,8 +98,16 @@ var common     = require( './common' ),
     }
     catch ( e )
     {
+        var errstr = e.toString();
+
         assert.notEqual(
-            e.toString().match( args.length + ' given' ),
+            errstr.match( name ),
+            null,
+            "Named interface error should provide interface name"
+        );
+
+        assert.notEqual(
+            errstr.match( args.length + ' given' ),
             null,
             "Named interface error should provide number of given arguments"
         );
