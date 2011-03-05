@@ -149,3 +149,32 @@ var common = require( './common' ),
     );
 } )();
 
+
+/**
+ * In order to accommodate syntax such as extending classes, ease.js supports
+ * staging class names. This will return an object that operates exactly like
+ * the normal Class module, but will result in a named class once the class is
+ * created.
+ */
+( function testCanCreateNamedClassUsingStagingMethod()
+{
+    var name  = 'Foo',
+        named = Class( name ).extend( {} )
+    ;
+
+    // ensure what was returned is a valid class
+    assert.equal(
+        Class.isClass( named ),
+        true,
+        "Named class generated via staging method is considered to be a " +
+            "valid class"
+    );
+
+    // was the name set?
+    assert.equal(
+        named.toString(),
+        '[object Class <' + name + '>]',
+        "Name is set on named clas via staging method"
+    );
+} )();
+
