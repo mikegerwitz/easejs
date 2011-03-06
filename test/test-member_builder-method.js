@@ -24,7 +24,7 @@
 
 var common    = require( './common' ),
     assert    = require( 'assert' ),
-    mb_common = require( './inc-member_builder-common' )
+    mb_common = require( __dirname + '/inc-member_builder-common' )
 ;
 
 mb_common.funcVal     = 'foobar';
