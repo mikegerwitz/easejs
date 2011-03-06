@@ -26,7 +26,12 @@ var common  = require( './common' ),
     assert  = require( 'assert' ),
     Class   = common.require( 'class' ),
     Script  = process.binding( 'evals' ).Script,
-    sandbox = {};
+
+    // sandbox in which combined script will be run
+    sandbox = {
+        // stub document.write() so we don't blow up
+        document: { write: function() {} },
+    };
 
 
 var files = [ 'ease.js', 'ease-full.js' ],

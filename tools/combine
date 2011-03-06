@@ -127,6 +127,10 @@ if [ "$INC_TEST" ]; then
         echo "{"
         echo "    var exports = module.exports = {};"
 
+        # write out current test to make debugging easier in browsers with very
+        # little debugging support
+        echo "    document.write( '$module...<br />' )"
+
         # add the module, removing trailing commas
         cat $filename | $RMTRAIL
 
