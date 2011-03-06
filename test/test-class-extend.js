@@ -281,3 +281,29 @@ for ( var i = 0; i < class_count; i++ )
     }
 } )();
 
+
+/**
+ * We provide a useful default toString() method, but one may wish to override
+ * it
+ */
+( function testCanOverrideToStringMethod()
+{
+    var str    = 'foomookittypoo',
+        result = ''
+    ;
+
+    result = Class( 'Foo',
+    {
+        toString: function()
+        {
+            return str;
+        }
+    })().toString();
+
+    assert.equal(
+        result,
+        str,
+        "Can override default toString() method of class"
+    );
+} )();
+
