@@ -99,32 +99,38 @@ if [ "$INC_TEST" ]; then
     # note that not all tests are included
     TEST_CASES=$( find $PATH_TEST \
         \( -name 'test-*.js' \
-            -name 'inc-*.js' \
-            ! -name 'test-combine.js' \
-            ! -name 'test-index.js' \
+            -o -name 'inc-*.js' \
         \) \
         -exec basename {} \; \
+        | sort \
+        | grep -v 'test-\(combine\|index\).js' \
     )
 
     # include test combine template
     cat "$TPL_TEST_PATH" | grep -v '^#' | $RMTRAIL
 
     echo "/** TEST CASES **/"
-    echo "ns_exports.runTests = function ()"
+    echo "ns_exports.runTests = function()"
     echo "{"
 
     for testcase in $TEST_CASES; do
         filename="$PATH_TEST/$testcase"
 
+        # generate the module name by removing path and extension, then
+        # prefixing it with "test/"
+        module="${filename%.*}"
+        module="test/${module##*/}"
+
         # each module must be enclosed in a closure to emulate a module
         echo "/** TEST CASE: $testcase **/"
-        echo "( function()"
+        echo "( function( module, __dirname )"
         echo "{"
+        echo "    var exports = module.exports = {};"
 
         # add the module, removing trailing commas
         cat $filename | $RMTRAIL
 
-        echo "} )();"
+        echo "} )( module['$module'] = {}, 'test' );"
     done
 
     echo "};"
