@@ -22,6 +22,12 @@
  * @package test
  */
 
+// no need to test getters/setters in browsers that do not support them
+if ( !Object.defineProperty )
+{
+    return;
+}
+
 var common    = require( './common' ),
     assert    = require( 'assert' ),
 
