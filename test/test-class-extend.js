@@ -292,12 +292,13 @@ for ( var i = 0; i < class_count; i++ )
         result = ''
     ;
 
-    result = Class( 'Foo',
+    result = Class( 'FooToStr',
     {
         toString: function()
         {
             return str;
-        }
+        },
+        bla: function() {},
     })().toString();
 
     assert.equal(
