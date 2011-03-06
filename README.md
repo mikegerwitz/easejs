@@ -52,6 +52,15 @@ class. The constructor is provided as the `__construct()` method (influenced by
         },
     });
 
+The above creates an anonymous class and stores it in the variable ``Foo``. You
+have the option of naming class in order to provide more useful error messages
+and toString() output:
+
+    var Foo = Class( 'Foo',
+    {
+        // ...
+    });
+
 ### Extending Classes
 Classes may inherit from one-another. If the supertype was created using
 `Class.extend()`, a convenience `extend()` method has been added to it. Classes

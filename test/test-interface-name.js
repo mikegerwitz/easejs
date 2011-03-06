@@ -44,15 +44,48 @@ var common     = require( './common' ),
             "Interface defined with name is returned as a valid interface"
         );
     }, Error, "Interface accepts name" );
+} )();
 
-    // the second argument must be an object
-    assert.throws( function()
+
+/**
+ * The interface definition, which equates to the body of the interface, must be
+ * an object
+ */
+( function testNamedInterfaceDefinitionRequiresThatDefinitionBeAnObject()
+{
+    var name = 'Foo';
+
+    try
     {
-        Interface( 'Foo', 'Bar' );
-    }, TypeError, "Second argument to named interface must be the definition" );
+        Interface( name, 'Bar' );
+
+        // if all goes well, we'll never get to this point
+        assert.fail(
+            "Second argument to named interface must be the definition"
+        );
+    }
+    catch ( e )
+    {
+        assert.notEqual(
+            e.toString().match( name ),
+            null,
+            "Interface definition argument count error string contains " +
+                "interface name"
+        );
+    }
+} )();
+
+
+/**
+ * Extraneous arguments likely indicate a misunderstanding of the API
+ */
+( function testNamedInterfaceDefinitionIsStrictOnArgumentCount()
+{
+    var name = 'Foo',
+        args = [ name, {}, 'extra' ]
+    ;
 
     // we should be permitted only two arguments
-    var args = [ 'Foo', {}, 'extra' ];
     try
     {
         Interface.apply( null, args );
@@ -65,8 +98,16 @@ var common     = require( './common' ),
     }
     catch ( e )
     {
+        var errstr = e.toString();
+
         assert.notEqual(
-            e.toString().match( args.length + ' given' ),
+            errstr.match( name ),
+            null,
+            "Named interface error should provide interface name"
+        );
+
+        assert.notEqual(
+            errstr.match( args.length + ' given' ),
             null,
             "Named interface error should provide number of given arguments"
         );
@@ -102,5 +143,101 @@ var common     = require( './common' ),
         "Converting named interface to string yields string with name of " +
             "interface"
     );
+} )();
+
+
+( function testDeclarationErrorsProvideInterfaceNameIsAvailable()
+{
+    var name = 'Foo',
+
+        // functions used to cause the various errors
+        tries = [
+            // properties
+            function()
+            {
+                Interface( name, { prop: 'str' } );
+            },
+
+            // methods
+            function()
+            {
+                Interface( name, { method: function() {} } );
+            },
+        ]
+    ;
+
+    // if we have getter/setter support, add those to the tests
+    if ( Object.defineProperty )
+    {
+        // getter
+        tries.push( function()
+        {
+            var obj = {};
+            Object.defineProperty( obj, 'getter', {
+                get:        function() {},
+                enumerable: true,
+            } );
+
+            Interface( name, obj );
+        } );
+
+        // setter
+        tries.push( function()
+        {
+            var obj = {};
+            Object.defineProperty( obj, 'setter', {
+                set:        function() {},
+                enumerable: true,
+            } );
+
+            Interface( name, obj );
+        } );
+    }
+
+    // gather the error strings
+    var i = tries.length;
+    while ( i-- )
+    {
+        try
+        {
+            // cause the error
+            tries[ i ]();
+
+            // we shouldn't get to this point...
+            assert.fail( "Expected error. Something's wrong." );
+        }
+        catch ( e )
+        {
+            // ensure the error string contains the interface name
+            assert.notEqual(
+                e.toString().match( name ),
+                null,
+                "Error contains interface name when available (" + i + ")"
+            );
+        }
+    }
+} )();
+
+
+( function testInterfaceNameIsIncludedInInstantiationError()
+{
+    var name = 'Foo';
+
+    try
+    {
+        // this should throw an exception (cannot instantiate interfaces)
+        Interface( name )();
+
+        // we should never get here
+        assert.fail( "Exception expected. There's a bug somewhere." );
+    }
+    catch ( e )
+    {
+        assert.notEqual(
+            e.toString().match( name ),
+            null,
+            "Interface name is included in instantiation error message"
+        );
+    }
 } )();
 
