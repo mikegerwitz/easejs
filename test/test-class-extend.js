@@ -274,7 +274,7 @@ for ( var i = 0; i < class_count; i++ )
     catch ( e )
     {
         assert.notEqual(
-            e.toString().match( args.length + ' given' ),
+            e.message.match( args.length + ' given' ),
             null,
             "Class invocation should give argument count on error"
         );

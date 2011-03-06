@@ -66,7 +66,7 @@ var common = require( './common' ),
     catch ( e )
     {
         assert.notEqual(
-            e.toString().match( name ),
+            e.message.match( name ),
             null,
             "Class definition argument count error string contains class name"
         );
@@ -96,7 +96,7 @@ var common = require( './common' ),
     }
     catch ( e )
     {
-        var errstr = e.toString();
+        var errstr = e.message;
 
         assert.notEqual(
             errstr.match( name ),
@@ -256,7 +256,7 @@ var common = require( './common' ),
     catch ( e )
     {
         assert.notEqual(
-            e.toString().match( name ),
+            e.message.match( name ),
             null,
             "Abstract class instantiation error should contain class name"
         );
@@ -276,7 +276,7 @@ var common = require( './common' ),
     catch ( e )
     {
         assert.notEqual(
-            e.toString().match( '(anonymous)' ),
+            e.message.match( '(anonymous)' ),
             null,
             "Abstract class instantiation error should recognize that class " +
                 "is anonymous if no name was given"

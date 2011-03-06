@@ -192,7 +192,7 @@ for ( var i = 0; i < base_types.length; i++ )
     catch ( e )
     {
         assert.notEqual(
-            e.toString().match( args.length + ' given' ),
+            e.message.match( args.length + ' given' ),
             null,
             "Interface invocation should give argument count on error"
         );

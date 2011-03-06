@@ -67,7 +67,7 @@ var common     = require( './common' ),
     catch ( e )
     {
         assert.notEqual(
-            e.toString().match( name ),
+            e.message.match( name ),
             null,
             "Interface definition argument count error string contains " +
                 "interface name"
@@ -98,7 +98,7 @@ var common     = require( './common' ),
     }
     catch ( e )
     {
-        var errstr = e.toString();
+        var errstr = e.message;
 
         assert.notEqual(
             errstr.match( name ),
@@ -210,7 +210,7 @@ var common     = require( './common' ),
         {
             // ensure the error string contains the interface name
             assert.notEqual(
-                e.toString().match( name ),
+                e.message.match( name ),
                 null,
                 "Error contains interface name when available (" + i + ")"
             );
@@ -234,7 +234,7 @@ var common     = require( './common' ),
     catch ( e )
     {
         assert.notEqual(
-            e.toString().match( name ),
+            e.message.match( name ),
             null,
             "Interface name is included in instantiation error message"
         );
