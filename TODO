@@ -12,8 +12,6 @@ Misc
         functions, will not impact function logic.
     - Should be able to run source file without preprocessing, so C-style macros
       cannot be used (# is not a valid token)
-  - Class/Interface naming
-    - Will be especially helpful for error messages
   - Class module is becoming too large; refactor
 
 Property Keywords
