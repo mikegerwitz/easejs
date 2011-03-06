@@ -218,3 +218,26 @@ var common     = require( './common' ),
     }
 } )();
 
+
+( function testInterfaceNameIsIncludedInInstantiationError()
+{
+    var name = 'Foo';
+
+    try
+    {
+        // this should throw an exception (cannot instantiate interfaces)
+        Interface( name )();
+
+        // we should never get here
+        assert.fail( "Exception expected. There's a bug somewhere." );
+    }
+    catch ( e )
+    {
+        assert.notEqual(
+            e.toString().match( name ),
+            null,
+            "Interface name is included in instantiation error message"
+        );
+    }
+} )();
+
