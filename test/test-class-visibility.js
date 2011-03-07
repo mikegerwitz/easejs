@@ -199,3 +199,24 @@ var common  = require( './common' ),
     );
 } )();
 
+
+/**
+ * Private members should be accessible from within class methods
+ */
+( function testPrivateMembersAreAccessibleInternally()
+{
+    assert.equal(
+        foo.getProp( 'parts' ),
+        priv,
+        "Private properties are available internally"
+    );
+
+    // invoke rather than checking for equality, because the method may be
+    // wrapped
+    assert.equal(
+        foo.getProp( 'privf' )(),
+        priv,
+        "Private methods are available internally"
+    );
+} )();
+
