@@ -22,9 +22,10 @@
  * @package test
  */
 
-var common = require( './common' ),
-    assert = require( 'assert' ),
-    Class  = common.require( 'class' ),
+var common  = require( './common' ),
+    assert  = require( 'assert' ),
+    Class   = common.require( 'class' ),
+    propobj = common.require( 'propobj' ),
 
     pub  = 'foo',
     prot = 'bar',
@@ -145,6 +146,13 @@ var common = require( './common' ),
 
 ( function testProtectedAndPrivateMembersAreNotAccessibleExternally()
 {
+    // browsers that do not support the property proxy will not support
+    // encapsulating properties
+    if ( !( propobj.supportsPropProxy() ) )
+    {
+        return;
+    }
+
     assert.equal(
         foo.peeps,
         undefined,
