@@ -66,7 +66,8 @@ var common  = require( './common' ),
     foo = Foo(),
 
     // subtype
-    sub_foo = Foo.extend( {} )()
+    SubFoo  = Foo.extend( {} ),
+    sub_foo = SubFoo()
 ;
 
 
@@ -273,6 +274,37 @@ var common  = require( './common' ),
         sub_foo.getProp( 'privf' ),
         undefined,
         "Private methods of supertypes should be unavailable to subtypes"
+    );
+} )();
+
+
+/**
+ * For good measure, let's make sure we didn't screw anything up. To ensure that
+ * the same object isn't being passed around to subtypes, ensure that multiple
+ * class instances do not share prototypes.
+ */
+( function testProtectedMembersAreNotSharedBetweenClassInstances()
+{
+    var val = 'foobar';
+
+    foo.setValue( 'prot', val );
+
+    // ensure that class instances do not share values (ensuring the same object
+    // isn't somehow being passed around)
+    assert.notEqual(
+        sub_foo.getProp( 'prot' ),
+        val,
+        "Class instances do not share protected values (subtype)"
+    );
+
+    // do the same for multiple instances of the same type
+    var sub_foo2 = SubFoo();
+    sub_foo2.setValue( 'prot', val );
+
+    assert.notEqual(
+        sub_foo.getProp( 'prot' ),
+        val,
+        "Class instances do not share protected values (same type)"
     );
 } )();
 
