@@ -36,7 +36,7 @@ var common  = require( './common' ),
     privf = function() { return priv; },
 
     // new anonymous class instance
-    foo = Class.extend( {
+    Foo = Class.extend( {
         'public pub':      pub,
         'protected peeps': prot,
         'private parts':   priv,
@@ -60,7 +60,14 @@ var common  = require( './common' ),
         {
             this[ name ] = value;
         },
-    })();
+    }),
+
+    // instance of Foo
+    foo = Foo(),
+
+    // subtype
+    sub_foo = Foo.extend( {} )()
+;
 
 
 /**
@@ -217,6 +224,55 @@ var common  = require( './common' ),
         foo.getProp( 'privf' )(),
         priv,
         "Private methods are available internally"
+    );
+} )();
+
+
+/**
+ * Inheritance 101; protected members should be available to subtypes
+ */
+( function testProtectedMembersAreInheritedFromParent()
+{
+    assert.equal(
+        sub_foo.getProp( 'peeps' ),
+        prot,
+        "Protected properties are available to subtypes"
+    );
+
+    // invoke rather than checking for equality, because the method may be
+    // wrapped
+    assert.equal(
+        sub_foo.getProp( 'protf' )(),
+        prot,
+        "Protected methods are available to subtypes"
+    );
+} )();
+
+
+/**
+ * Interface 101-2: We do not want private members to be available to subtypes.
+ */
+( function testPrivateMembersOfSupertypesAreInaccessibleToSubtypes()
+{
+    // browsers that do not support the property proxy will not support
+    // encapsulating properties
+    if ( !( propobj.supportsPropProxy() ) )
+    {
+        return;
+    }
+
+    assert.equal(
+        sub_foo.getProp( 'parts' ),
+        undefined,
+        "Private properties of supertypes should be unavailable to subtypes"
+    );
+
+    // invoke rather than checking for equality, because the method may be
+    // wrapped
+    assert.equal(
+        sub_foo.getProp( 'privf' ),
+        undefined,
+        "Private methods of supertypes should be unavailable to subtypes"
     );
 } )();
 
