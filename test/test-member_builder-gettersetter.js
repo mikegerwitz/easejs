@@ -22,14 +22,9 @@
  * @package test
  */
 
-// no need to test getters/setters in browsers that do not support them
-if ( !Object.defineProperty )
-{
-    return;
-}
-
-var common    = require( './common' ),
-    assert    = require( 'assert' ),
+var common = require( './common' ),
+    assert = require( 'assert' ),
+    util   = common.require( 'util' ),
 
     buildGetter = common.require( 'member_builder' ).buildGetter,
     buildSetter = common.require( 'member_builder' ).buildSetter,
@@ -42,6 +37,13 @@ var common    = require( './common' ),
     name  = 'foo',
     value = function() {}
 ;
+
+
+// no need to test getters/setters in browsers that do not support them
+if ( util.definePropertyFallback() )
+{
+    return;
+}
 
 
 function setUp()

@@ -24,7 +24,8 @@
 
 var common     = require( './common' ),
     assert     = require( 'assert' ),
-    Interface  = common.require( 'interface' )
+    Interface  = common.require( 'interface' ),
+    util       = common.require( 'util' )
 ;
 
 
@@ -167,7 +168,7 @@ var common     = require( './common' ),
     ;
 
     // if we have getter/setter support, add those to the tests
-    if ( Object.defineProperty )
+    if ( !( util.definePropertyFallback() ) )
     {
         // getter
         tries.push( function()

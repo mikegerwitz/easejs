@@ -30,20 +30,20 @@ var obj = {},
     val = 'bar';
 
 var expected = ( ( Object.defineProperty instanceof Function ) ? false : true ),
-    fallback = util.secureFallback();
+    fallback = util.definePropertyFallback();
 
 // IE 8 will fall back on first failure
 if ( !expected && fallback )
 {
     try
     {
-        util.secureFallback( false );
+        util.definePropertyFallback( false );
         util.defineSecureProp( {}, 'foo', 1 );
 
         // If the fallback was changed on us, then there was a problem (and this
         // is likely IE8). Change the value we're expecting so our tests don't
         // fail.
-        if ( util.secureFallback() === true )
+        if ( util.definePropertyFallback() === true )
         {
             expected = true;
         }
@@ -54,14 +54,14 @@ if ( !expected && fallback )
 assert.equal(
     expected,
     fallback,
-    "util.secureFallback() returns whether defining a secure property is " +
+    "util.definePropertyFallback() returns whether defining a secure property is " +
         "unsupported"
 );
 
 assert.equal(
-    util.secureFallback( fallback ),
+    util.definePropertyFallback( fallback ),
     util,
-    "util.secureFallback() returns self when used as a setter"
+    "util.definePropertyFallback() returns self when used as a setter"
 );
 
 // perform secure property tests only if our parser supports it
@@ -108,7 +108,7 @@ if ( fallback === false )
 
 
 // be naughty so we can test the alternative implementation
-util.secureFallback( true );
+util.definePropertyFallback( true );
 
 var obj2 = {},
     val2 = 'baz';
@@ -149,5 +149,5 @@ if ( fallback === false )
 }
 
 // restore in case the tests are not being run in separate processes
-util.secureFallback( fallback );
+util.definePropertyFallback( fallback );
 
