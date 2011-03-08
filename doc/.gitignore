@@ -1,0 +1,12 @@
+*.aux
+*.cp
+*.dvi
+*.fn
+*.ky
+*.log
+*.pg
+*.tmp
+*.tp
+*.vr
+*.pdf
+*.toc
