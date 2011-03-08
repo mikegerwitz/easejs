@@ -24,7 +24,9 @@
 
 var common    = require( './common' ),
     assert    = require( 'assert' ),
-    Interface = common.require( 'interface' );
+    Interface = common.require( 'interface' ),
+    util      = common.require( 'util' )
+;
 
 
 ( function testPropertiesNotPermittedWithinInterfaces()
@@ -43,7 +45,7 @@ var common    = require( './common' ),
 ( function testGettersAndSettersNotPermittedWithinInterfaces()
 {
     // don't perform this test if unsupported by environment
-    if ( Object.prototype.__defineGetter__ === undefined )
+    if ( util.definePropertyFallback() )
     {
         return;
     }
@@ -51,8 +53,12 @@ var common    = require( './common' ),
     // so we don't break browsers that do not support getters/setters in object
     // notation
     var data = {};
-    data.__defineGetter__( 'foo', function() {} );
-    data.__defineSetter__( 'foo', function() {} );
+    Object.defineProperty( data, 'foo', {
+        get: function() {},
+        set: function() {},
+
+        enumerable: true,
+    } );
 
     assert.throws( function()
     {

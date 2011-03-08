@@ -24,7 +24,8 @@
 
 var common = require( './common' ),
     assert = require( 'assert' ),
-    util   = common.require( 'util' );
+    util   = common.require( 'util' )
+;
 
 
 ( function testAbstractKeywordDesignatesMethodAsAbstract()
@@ -173,15 +174,19 @@ var common = require( './common' ),
 
 
     // for browsers that support it
-    if ( Object.prototype.__defineGetter__ !== undefined )
+    if ( util.definePropertyFallback() === false )
     {
         data            = {};
         parsed_keywords = {};
 
         // to prevent syntax errors for environments that don't support
         // getters/setters in object notation
-        data.__defineGetter__( 'public foo', function() {} );
-        data.__defineSetter__( 'public foo', function() {} );
+        Object.defineProperty( data, 'public foo', {
+            get: function() {},
+            set: function() {},
+
+            enumerable: true,
+        } );
 
 
         util.propParse( data, {

@@ -26,7 +26,7 @@ var common = require( './common' ),
     assert = require( 'assert' ),
     util   = common.require( 'util' ),
 
-    get_set = ( ( Object.prototype.__defineGetter__ ) ? true : false )
+    get_set = !( util.definePropertyFallback() )
 ;
 
 var data = {
@@ -52,8 +52,12 @@ var data = {
 // only add getter/setter if it's supported by our engine
 if ( get_set )
 {
-    data.__defineGetter__( 'someFoo', function () {} );
-    data.__defineSetter__( 'someFoo', function () {} );
+    Object.defineProperty( data, 'someFoo', {
+        get: function () {},
+        set: function () {},
+
+        enumerable: true,
+    } );
 }
 
 

@@ -22,46 +22,60 @@
  * @package test
  */
 
-// don't perform these tests if getters/setters are unsupported
-if ( Object.prototype.__defineGetter__ === undefined )
-{
-    return;
-}
-
 var common = require( './common' ),
     assert = require( 'assert' ),
     Class  = common.require( 'class' ),
+    util   = common.require( 'util' ),
 
     foo_def     = {},
     sub_foo_def = {}
 ;
 
+// don't perform these tests if getters/setters are unsupported
+if ( util.definePropertyFallback() )
+{
+    return;
+}
+
 
 // to prevent syntax errors in browsers that do not support getters/setters in
 // object notation
-foo_def.__defineGetter__( 'foo', function ()
-{
-    return this._foo;
-} );
-foo_def.__defineSetter__( 'foo', function ( val )
-{
-    this._foo = ''+( val );
-} );
-foo_def.__defineGetter__( 'bar', function ()
-{
-    return 'durp';
-} );
-foo_def.__defineSetter__( 'bar', function ( val )
-{
+Object.defineProperty( foo_def, 'foo', {
+    get: function ()
+    {
+        return this._foo;
+    },
+    set: function ( val )
+    {
+        this._foo = ''+( val );
+    },
+
+    enumerable: true,
 } );
 
-sub_foo_def.__defineGetter__( 'bar', function ()
-{
-    return this.bar2;
+Object.defineProperty( foo_def, 'bar', {
+    get: function ()
+    {
+        return 'durp';
+    },
+    set: function ( val )
+    {
+    },
+
+    enumerable: true,
 } );
-sub_foo_def.__defineSetter__( 'bar', function ( val )
-{
-    this.bar2 = val;
+
+Object.defineProperty( sub_foo_def, 'bar', {
+    get: function ()
+    {
+        return this.bar2;
+    },
+    set: function ( val )
+    {
+        this.bar2 = val;
+    },
+
+    enumerable: true,
 } );
 
 var Foo    = Class.extend( foo_def ),

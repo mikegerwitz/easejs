@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Removes trailing commas from array and object declarations (certain browsers,
 # such as earlier versions of IE, do not parse trailing commas correctly)
