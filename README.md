@@ -1,9 +1,9 @@
 # ease.js
 
-ease.js is (to be) a basic collection of CommonJS modules intended to
-"ease" the transition into JavaScript from other Object-Oriented languages. It
-provides an intuitive means of achieving classical inheritance and has planned
-support traits/mixins.
+ease.js is a basic collection of CommonJS modules intended to "ease" the
+transition into JavaScript from other Object-Oriented languages. It provides an
+intuitive means of achieving classical inheritance and has planned support
+traits/mixins.
 
 Current support includes:
 
@@ -31,8 +31,7 @@ ease.js uses the [CommonJS](http://commonjs.org) module format. In the
 examples below, [Node.js](http://nodejs.org) is used.
 
 ### Creating Classes
-If creating a class from scratch, then the process involves extending the base
-class. The constructor is provided as the `__construct()` method (influenced by
+The constructor is provided as the `__construct()` method (influenced by
 [PHP](http://php.net)).
 
     var Class = require( 'easejs' ).Class;
