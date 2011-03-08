@@ -1,0 +1,25 @@
+{
+    "name":        "easejs",
+    "description": "A basic collection of CommonJS modules intended to \"ease\" the transition into Javascript from other Object-Oriented languages",
+    "version":     "0.1.0-pre",
+    "author":      "Mike Gerwitz <mike@mikegerwitz.com>",
+
+    "repository": {
+        "type": "git",
+        "url":  "git://github.com/mikegerwitz/easejs.git"
+    },
+
+    "tags": [
+        "object oriented",
+        "oo",
+        "util",
+        "utility",
+        "lib",
+        "library",
+        "framework",
+        "classes",
+        "interfaces",
+        "protected members",
+        "inheritance"
+    ]
+}
