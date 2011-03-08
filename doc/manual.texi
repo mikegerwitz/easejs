@@ -41,6 +41,6 @@ Free Documentation License".
 This manual is for ease.js, version 0.1.0-pre.
 @end ifnottex
 
-@include license.texi
+@include ./license.texi
 
 @bye
