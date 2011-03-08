@@ -14,15 +14,14 @@ Misc
       cannot be used (# is not a valid token)
   - Class module is becoming too large; refactor
 
-Property Keywords
+Member Keywords
   - Restrictions; throw exceptions when unknown keywords are used
-  - public (default)
-  - private; 'this' will contain private members of self, but not private
-    members of parents
   - const; immutable properties
   - final; methods cannot be overridden by subtypes
   - static; method/property accessible via class definition
   - event; designates a supported event
+  - Concrete types must implement member with same visibility, or greater
+    visibility, than the abstract implementation defined
 
 Typing
   - Support JSDoc-style type definitions for parameters

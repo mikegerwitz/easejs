@@ -11,7 +11,7 @@ Current support includes:
 * Classical inheritance
 * Abstract classes and methods
 * Interfaces
-* Near-completed visibility support in `visibility/master` branch
+* Visibility support (public, protected and private members)
 
 **This project is still under development.**
 
@@ -41,12 +41,12 @@ class. The constructor is provided as the `__construct()` method (influenced by
     {
         foo: '',
 
-        __construct: function( foo )
+        'public __construct': function( foo )
         {
             this.foo = foo;
         },
 
-        someMethod: function()
+        'public someMethod': function()
         {
             console.log( 'someMethod() called' );
         },
@@ -78,7 +78,7 @@ planned features and should be available shortly.**
 
     var SubFoo = Foo.extend(
     {
-        anotherMethod: function()
+        'public anotherMethod': function()
         {
         },
     });
@@ -87,7 +87,7 @@ planned features and should be available shortly.**
     // the same effect as above, even if Foo was created using Class.extend())
     var SubFoo = Class.extend( Foo,
     {
-        anotherMethod: function()
+        'public anotherMethod': function()
         {
         },
     });
@@ -103,10 +103,10 @@ they contain one or more abstract methods.
     {
         // a function may be provided if you wish the subtypes to implement a
         // certain number of arguments
-        'abstract fooBar': [ 'arg' ],
+        'abstract public fooBar': [ 'arg' ],
 
         // alternatively, you needn't supply implementation details
-        'abstract fooBar2': [],
+        'abstract public fooBar2': [],
     });
 
 If the abstract method provides implementation details (as shown by
@@ -122,11 +122,11 @@ be considered abstract.
     // abstract methods
     var ConcreteFoo = AbstractFoo.extend(
     {
-        fooBar: function( arg )
+        'public fooBar': function( arg )
         {
         },
 
-        fooBar2: function()
+        'public fooBar2': function()
         {
         },
     });
@@ -134,7 +134,7 @@ be considered abstract.
     // cannot be instantiated because one abstract method remains
     var StillAbstractFoo = AbstractFoo.extend(
     {
-        fooBar: function( arg )
+        'public fooBar': function( arg )
         {
         },
     });
@@ -155,14 +155,14 @@ an interface must be declared as abstract.
 
     var MyType = Interface(
     {
-        'abstract foo': []
+        'abstract public foo': []
     });
 
 To implement an interface, use the `implement()` class method:
 
     var ConcreteType = Class.implement( MyType ).extend(
     {
-        foo: function() {}
+        'public foo': function() {}
     });
 
 
