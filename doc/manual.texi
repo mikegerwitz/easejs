@@ -1,6 +1,6 @@
 \input texinfo   @c -*-texinfo-*-
 @c %**start of header
-@setfilename easejs-manual.info
+@setfilename manual.info
 @settitle ease.js Manual v0.1.0-pre
 @c %**end of header
 
@@ -40,6 +40,10 @@ Free Documentation License".
 
 This manual is for ease.js, version 0.1.0-pre.
 @end ifnottex
+
+@menu
+* License:: Document License
+@end menu
 
 @include ./license.texi
 
