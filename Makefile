@@ -5,8 +5,11 @@ PATH_TOOLS=${CWD}/tools
 PATH_COMBINE_OUTPUT=${PATH_BUILD}/ease.js
 PATH_COMBINE_OUTPUT_FULL=${PATH_BUILD}/ease-full.js
 PATH_BROWSER_TEST=${PATH_TOOLS}/browser-test.html
+
 PATH_DOC=${CWD}/doc
 PATH_DOC_OUTPUT=${PATH_BUILD}/doc
+PATH_DOC_OUTPUT_INFO=${PATH_DOC_OUTPUT}/manual.info
+PATH_DOC_OUTPUT_PLAIN=${PATH_DOC_OUTPUT}/manual.txt
 PATH_DOC_OUTPUT_HTML=${PATH_DOC_OUTPUT}/manual
 PATH_DOC_OUTPUT_HTML1=${PATH_DOC_OUTPUT}/manual.html
 PATH_MANUAL_TEXI=${PATH_DOC}/manual.texi
@@ -55,6 +58,8 @@ doc:
 		| xargs rm
 	@mv -f ${PATH_DOC}/*.pdf ${PATH_DOC_OUTPUT}
 	cd ${PATH_DOC}; \
+		makeinfo -o ${PATH_DOC_OUTPUT_INFO} ${PATH_MANUAL_TEXI}; \
+		makeinfo --plain ${PATH_MANUAL_TEXI} > ${PATH_DOC_OUTPUT_PLAIN}; \
 		makeinfo --html -o ${PATH_DOC_OUTPUT_HTML} ${PATH_MANUAL_TEXI}; \
 		makeinfo --no-split --html -o ${PATH_DOC_OUTPUT_HTML1} ${PATH_MANUAL_TEXI};
 
