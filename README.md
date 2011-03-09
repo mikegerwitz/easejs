@@ -7,11 +7,14 @@ traits/mixins.
 
 Current support includes:
 
-* Easy class creation
+* Simple and intuitive class definitions
 * Classical inheritance
 * Abstract classes and methods
 * Interfaces
-* Visibility support (public, protected and private members)
+* Visibility (public, protected and private members)
+
+While the current focus of the project is Object-Oriented design, it is likely
+that ease.js will expand to other paradigms in the future.
 
 **This project is still under development.**
 
