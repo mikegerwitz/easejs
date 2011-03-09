@@ -42,9 +42,11 @@ This manual is for ease.js, version 0.1.0-pre.
 @end ifnottex
 
 @menu
+* About::   About the project
 * License:: Document License
 @end menu
 
+@include ./about.texi
 @include ./license.texi
 
 @bye

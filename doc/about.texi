@@ -1,0 +1,73 @@
+@c  This document is part of the ease.js manual
+@c  Copyright (c) 2011 Mike Gerwitz
+@c    Permission is granted to copy, distribute and/or modify this document
+@c    under the terms of the GNU Free Documentation License, Version 1.3
+@c    or any later version published by the Free Software Foundation;
+@c    with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+@c    Texts.  A copy of the license is included in the section entitled ``GNU
+@c    Free Documentation License''.
+
+@node About
+@unnumbered About ease.js
+
+ease.js is a collection of @uref{http://commonjs.org, CommonJS} modules intended
+to ``ease'' the transition into JavaScript from other Object-Oriented languages.
+It provides an intuitive means of achieving classical inheritance and has
+planned support for traits/mixins, function overloading and more.
+
+Current support includes:
+@itemize @bullet
+@item Simple and intuitive class definitions
+@item Classical inheritance
+@item Abstract classes and methods
+@item Interfaces
+@item Visibility (public, protected and private members)
+@end itemize
+
+While the current focus of the project is Object-Oriented design, it is likely
+that ease.js will expand to other paradigms in the future.
+
+@section History
+ease.js was initially developed for use at Mike's place of employment in order to
+move the familiar concept of Object Oriented development over to JavaScript for
+use in robust web applications. JavaScript lacks basic core principals of Object
+Oriented development, the most major of which is proper encapsulation.
+
+The library would be required to work both server and client-side, supporting
+all major web browsers as far back as Internet Explorer 6. Since it would be
+used in a production system and would be used to develop a core business
+application, it must also work flawlessly. This meant heavy unit testing.
+
+The solution was to develop a library that would first work server-side. The
+software of choice for server-side JavaScript was @uref{http://nodejs.org,
+Node.js}. Node uses the CommonJS format for modules. This provided an intuitive
+means of modularizing the code without use of an Object Oriented development
+style (the closest other option would be Prototypal). ease.js was first
+developed to work on Node.js.
+
+Moving the code over to the browser is not a difficult concept, since the entire
+library relied only on standard JavaScript. A couple important factors had to be
+taken into account, mainly that CommonJS modules don't simply ``work''
+client-side without some type of wrapper, not all browsers support ECMAScript 5
+and the assertion system used for tests is a Node.js module.
+
+This involved writing a simple script to concatenate all the modules and
+appropriately wrap them in closures, thereby solving the CommonJS issue. The
+required assertions were ported over to the client. The only issue was then
+ECMAScript 5 support, which with a little thought, the browser could gracefully
+fall back on by sacrificing certain features but leaving the core functionality
+relatively unscathed. This provides a proper cross-browser implementation and,
+very importantly, allows the unit tests to be run both server and client side.
+One can then be confident that ease.js will operate on both the server and a
+wide range of web browsers without having to maintain separate tests for each.
+
+Needless to say, the development was successful and the project has been used in
+production long before v0.1.0-pre was even conceived. It was thought at the
+beginning of the project that versions would be unnecessary, due to its relative
+simplicity and fairly basic feature set. The project has since evolved past its
+original specification and hopes to introduce a number of exciting features in
+the future.
+
+The project is owned and developed independently by Mike Gerwitz. There is no
+ownership by his employer.
+
