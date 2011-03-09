@@ -5,6 +5,8 @@ PATH_COMBINE_OUTPUT=${PATH_BUILD}/ease.js
 PATH_COMBINE_OUTPUT_FULL=${PATH_BUILD}/ease-full.js
 PATH_BROWSER_TEST=${PATH_TOOLS}/browser-test.html
 PATH_DOC=./doc
+PATH_DOC_OUTPUT=${PATH_BUILD}/doc
+MANUAL_TEXI=manual.texi
 
 COMBINE=${PATH_TOOLS}/combine
 
@@ -39,16 +41,20 @@ test: default
 # generate texinfo documentation (twice to generate TOC), then remove the extra
 # files that were generaetd
 doc:
-	pdftex -output-directory "${PATH_DOC}" ${PATH_DOC}/manual.texi;
-	pdftex -output-directory "${PATH_DOC}" ${PATH_DOC}/manual.texi;
+	@mkdir -p ${PATH_DOC_OUTPUT}
+	pdftex -output-directory "${PATH_DOC}" ${PATH_DOC}/${MANUAL_TEXI}
+	pdftex -output-directory "${PATH_DOC}" ${PATH_DOC}/${MANUAL_TEXI}
 	find ${PATH_DOC} -type f \
 		! -name '*.texi' -a \
 		! -name '.*' -a \
 		! -name '*.pdf' \
 		| xargs rm
-	mv ${PATH_DOC}/*.pdf ${PATH_BUILD}/
+	@mv -f ${PATH_DOC}/*.pdf ${PATH_DOC_OUTPUT}
+	cd ${PATH_DOC}; \
+		makeinfo --html -o manual ${MANUAL_TEXI}
+	@mv -f ${PATH_DOC}/manual ${PATH_DOC_OUTPUT}
 
 # clean up build dir
-clean: clean-doc
+clean:
 	rm -rf ${PATH_BUILD}
 
