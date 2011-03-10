@@ -1,0 +1,21 @@
+/**
+ * ease.js manual color scheme
+ *
+ * Inspired by Tango Icon Theme
+ */
+
+html {
+  background-color: #eeeeec;
+}
+
+body {
+  background-color: white;
+  border-color:     #babdb6;
+  border-width:     0px 1px;
+  border-style:     solid;
+
+  margin:  0px 5em;
+  padding: 1em;
+
+  font-family: arial, serif;
+}

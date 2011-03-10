@@ -12,6 +12,7 @@ PATH_DOC_OUTPUT_INFO=${PATH_DOC_OUTPUT}/manual.info
 PATH_DOC_OUTPUT_PLAIN=${PATH_DOC_OUTPUT}/manual.txt
 PATH_DOC_OUTPUT_HTML=${PATH_DOC_OUTPUT}/manual
 PATH_DOC_OUTPUT_HTML1=${PATH_DOC_OUTPUT}/manual.html
+PATH_DOC_CSS=${PATH_DOC}/manual.css
 PATH_MANUAL_TEXI=${PATH_DOC}/manual.texi
 
 COMBINE=${PATH_TOOLS}/combine
@@ -54,14 +55,17 @@ doc:
 	find ${PATH_DOC} -type f \
 		! -name '*.texi' -a \
 		! -name '.*' -a \
-		! -name '*.pdf' \
+		! -name '*.pdf' -a \
+		! -name '*.css' \
 		| xargs rm
 	@mv -f ${PATH_DOC}/*.pdf ${PATH_DOC_OUTPUT}
 	cd ${PATH_DOC}; \
 		makeinfo -o ${PATH_DOC_OUTPUT_INFO} ${PATH_MANUAL_TEXI}; \
 		makeinfo --plain ${PATH_MANUAL_TEXI} > ${PATH_DOC_OUTPUT_PLAIN}; \
-		makeinfo --html -o ${PATH_DOC_OUTPUT_HTML} ${PATH_MANUAL_TEXI}; \
-		makeinfo --no-split --html -o ${PATH_DOC_OUTPUT_HTML1} ${PATH_MANUAL_TEXI};
+		makeinfo --html --css-include="${PATH_DOC_CSS}" \
+			-o "${PATH_DOC_OUTPUT_HTML}" "${PATH_MANUAL_TEXI}"; \
+		makeinfo --no-split --html --css-include="${PATH_DOC_CSS}" \
+			-o ${PATH_DOC_OUTPUT_HTML1} ${PATH_MANUAL_TEXI};
 
 # clean up build dir
 clean:
