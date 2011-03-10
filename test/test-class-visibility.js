@@ -45,6 +45,7 @@ var common  = require( './common' ),
         'protected protf': protf,
         'private privf':   privf,
 
+
         'public getProp': function( name )
         {
             // return property, allowing us to break encapsulation for
@@ -60,13 +61,31 @@ var common  = require( './common' ),
         {
             this[ name ] = value;
         },
+
+
+        'public getSelf': function()
+        {
+            return this;
+        },
+
+
+        'public getSelfOverride': function()
+        {
+            // override me
+        },
     }),
 
     // instance of Foo
     foo = Foo(),
 
     // subtype
-    SubFoo  = Foo.extend( {} ),
+    SubFoo  = Foo.extend({
+        'public getSelfOverride': function()
+        {
+            // return this from overridden method
+            return this;
+        },
+    }),
     sub_foo = SubFoo()
 ;
 
@@ -305,6 +324,41 @@ var common  = require( './common' ),
         sub_foo.getProp( 'prot' ),
         val,
         "Class instances do not share protected values (same type)"
+    );
+} )();
+
+
+/**
+ * When a method is called, 'this' is bound to the property object containing
+ * private and protected members. Returning 'this' would therefore be a very bad
+ * thing. Not only would it break encapsulation, but it would likely have other
+ * problems down the road.
+ *
+ * Therefore, we have to check the return value of the method. If the return
+ * value is the property object that it was bound to, we need to replace the
+ * return value with the actual class instance. This allows us to transparently
+ * enforce encapsulation. How sweet is that?
+ */
+( function testReturningSelfFromMethodShouldReturnInstanceNotPropObj()
+{
+    assert.deepEqual(
+        foo.getSelf(),
+        foo,
+        "Returning 'this' from a method should return instance of self"
+    );
+
+    // what happens in the case of inheritance?
+    assert.deepEqual(
+        sub_foo.getSelf(),
+        sub_foo,
+        "Returning 'this' from a super method should return the subtype"
+    );
+
+    // finally, overridden methods should still return the instance
+    assert.deepEqual(
+        sub_foo.getSelfOverride(),
+        sub_foo,
+        "Returning 'this' from a overridden method should return the subtype"
     );
 } )();
 
