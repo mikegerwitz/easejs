@@ -19,6 +19,7 @@ have to build ease.js at all.
 @menu
 * Source Tree::  Describes the project source tree
 * Building::     How to build ease.js
+* Including::    Including ease.js in your own project
 @end menu
 
 @node Source Tree
@@ -292,4 +293,63 @@ Cleans up after the build process by removing the @file{build/} directory.
 
 If you do not want to build ease.js yourself, you are welcome to download the
 pre-built files.
+
+
+@node Including
+@section Including ease.js In Your Projects
+Using ease.js in your projects should be quick and painless. We'll worry about
+the details of how to actually @emph{use} ease.js in a bit. For now, let's just
+worry about how to include it in your project.
+
+@menu
+* Server-Side Include::  Including ease.js server-side
+* Client-Side Include::  Including ease.js in the web browser
+@end menu
+
+@node Server-Side Include
+@subsection Server-Side Include
+ease.js should work with any CommonJS-compliant system. The examples below have
+been tested with Node.js. Support is not guaranteed with any other software.
+
+Let's assume that you have installed ease.js somewhere that is accessible to
+@code{require.paths}. If you used a tool such as @command{npm}, this should have
+been done for you.
+
+@example
+/** example-include.js **/
+var easejs = require( 'easejs' );
+@end example
+
+It's important to understand what exactly the above command is doing. We are
+including the @file{easejs/} directory (adjust your path as needed). Inside that
+directory is the @file{index.js} file, which is loaded. The exports of that
+module are returned and assigned to the @var{easejs} variable. We will discuss
+what to actually do with those exports later on.
+
+That's it. You should now have ease.js available to your project.
+
+@node Client-Side Include
+@subsection Client-Side Include (Web Browser)
+ease.js can also be included in the web browser. Not only does this give you a
+powerful Object-Oriented framework client-side, but it also facilitates code
+reuse by permitting you to reuse your server-side code that depends on ease.js.
+
+In order for ease.js to operate within the client, you must either download
+@file{ease.js} or @ref{Building, build it yourself}. Let's assume that you have
+placed @file{ease.js} within the @file{scripts/} directory of your web root.
+
+@example
+  <!-- to simply use ease.js -->
+  <script type="text/javascript" src="/scripts/ease.js"></script>
+
+  <!-- to include both the framework and the unit tests -->
+  <script type="text/javascript" src="/scripts/ease-full.js"></script>
+@end example
+
+Likely, you only want the first one. The unit tests can more easily be run by
+loading @file{build/browser-test.html} in your web browser (@pxref{Building}).
+
+The script will define a global @var{easejs} variable, which can be used exactly
+like the server-side @code{require()} (@pxref{Server-Side Include}). Keep that
+in mind when going through the examples in this manual.
 
