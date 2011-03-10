@@ -17,7 +17,8 @@ downloading pre-built packages. Depending on what you are doing, you may not
 have to build ease.js at all.
 
 @menu
-* Source Tree:: Describes the project source tree
+* Source Tree::  Describes the project source tree
+* Building::     How to build ease.js
 @end menu
 
 @node Source Tree
@@ -217,4 +218,78 @@ that they have been tailored especially for ease.js. They do not contain
 unnecessary features that ease.js does not need to make use of. Therefore, you
 may need to adapt them to your own project and individual needs should you
 decide to use them in your own projects.
+
+
+@node Building
+@section Building
+Feel free to skip this section if you have no interest in building ease.js
+yourself. The build process is fast, and is unnecessary if using ease.js
+server-side.
+
+First, we should clarify what the term ``build'' means in context of ease.js.
+JavaScript is compiled on the fly. That is, we don't actually need to compile it
+manually through a build process. So when we are talking about ``building''
+ease.js, we are not talking about compiling the source code. Rather, we are
+referring to any of the following:
+
+@itemize
+@item
+Prepare the script for client-side deployment [and testing]
+
+@item
+Generate the documentation (manual and API)
+@end itemize
+
+In fact, if you're using ease.js server-side with software such as Node.js, you
+do not need to build anything at all. You can simply begin using it.
+
+The aforementioned are built using @command{make}. The process that is run will
+vary depending on your system. The command will read @file{Makefile} in the root
+directory and execute the associated command. The following are the targets
+available to you:
+
+@table @command
+@item mkbuild
+Creates the @file{build/} directory, where all output will be stored. This is run
+automatically by any of the targets.
+
+@item combine
+Runs the @command{combine} @ref{Tools Directory, tool} to produce two separate
+files: @file{ease.js}, which can be used to use ease.js within the web browser,
+and @file{ease-full.js}, which permits both using ease.js and running the unit
+tests within the browser. The output is stored in the @file{build/} directory.
+
+The unit tests can be run by opening the @file{build/browser-test.html} file in your
+web browser.
+
+@item test
+Run unit tests. This will first perform the @command{combine} process and will
+also run the tests for the combined script, ensuring that it was properly
+combined.
+
+Unit tests will be covered later in the chapter.
+
+@item doc
+Generates documentation. Currently, only the manual is build. API documentation
+will be added in the near future. The resulting documentation will be stored in
+@file{build/doc/}. For your convenience, the manual is output in the following
+forms: PDF, HTML (single page), HTML (multiple pages) and plain text.
+
+In order to build the documentation, you must have Texinfo installed. You likely
+also need LaTeX installed. If you are on a Debian-based system, for example, you
+will likely be able to run the following command to get started:
+
+@example
+  $ sudo apt-get install texlive texinfo
+@end example
+
+@item all
+Runs all targets, except for clean.
+
+@item clean
+Cleans up after the build process by removing the @file{build/} directory.
+@end table
+
+If you do not want to build ease.js yourself, you are welcome to download the
+pre-built files.
 
