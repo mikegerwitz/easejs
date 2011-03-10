@@ -48,7 +48,7 @@ This manual is for ease.js, version 0.1.0-pre.
 @end menu
 
 @include ./about.texi
-@include ./license.texi
 @include ./integration.texi
+@include ./license.texi
 
 @bye
