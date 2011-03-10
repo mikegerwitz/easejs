@@ -48,8 +48,7 @@ test: default
 # files that were generated
 #
 # generates: pdf, HTML (multiple pages), HTML (single page)
-doc:
-	@mkdir -p "${PATH_DOC_OUTPUT}"
+doc: mkbuild
 	pdftex -output-directory "${PATH_DOC}" "${PATH_MANUAL_TEXI}"
 	pdftex -output-directory "${PATH_DOC}" "${PATH_MANUAL_TEXI}"
 	find "${PATH_DOC}" -type f \
