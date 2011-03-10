@@ -67,13 +67,25 @@ var common  = require( './common' ),
         {
             return this;
         },
+
+
+        'public getSelfOverride': function()
+        {
+            // override me
+        },
     }),
 
     // instance of Foo
     foo = Foo(),
 
     // subtype
-    SubFoo  = Foo.extend( {} ),
+    SubFoo  = Foo.extend({
+        'public getSelfOverride': function()
+        {
+            // return this from overridden method
+            return this;
+        },
+    }),
     sub_foo = SubFoo()
 ;
 
@@ -340,6 +352,13 @@ var common  = require( './common' ),
         sub_foo.getSelf(),
         sub_foo,
         "Returning 'this' from a super method should return the subtype"
+    );
+
+    // finally, overridden methods should still return the instance
+    assert.deepEqual(
+        sub_foo.getSelfOverride(),
+        sub_foo,
+        "Returning 'this' from a overridden method should return the subtype"
     );
 } )();
 
