@@ -26,14 +26,14 @@ all:     combine doc
 
 # create build dir
 mkbuild:
-	@mkdir -p ${PATH_BUILD}
+	@mkdir -p "${PATH_BUILD}"
 
 # combine all modules into easily redistributable ease.js file (intended for
 # browser)
 combine: mkbuild
-	${COMBINE} > ${PATH_COMBINE_OUTPUT}
-	INC_TEST=1 ${COMBINE} > ${PATH_COMBINE_OUTPUT_FULL}
-	@cp ${PATH_BROWSER_TEST} ${PATH_BUILD}
+	${COMBINE} > "${PATH_COMBINE_OUTPUT}"
+	INC_TEST=1 "${COMBINE}" > "${PATH_COMBINE_OUTPUT_FULL}"
+	@cp "${PATH_BROWSER_TEST}" "${PATH_BUILD}"
 
 # run tests
 test: default
@@ -49,25 +49,25 @@ test: default
 #
 # generates: pdf, HTML (multiple pages), HTML (single page)
 doc:
-	@mkdir -p ${PATH_DOC_OUTPUT}
-	pdftex -output-directory "${PATH_DOC}" ${PATH_MANUAL_TEXI}
-	pdftex -output-directory "${PATH_DOC}" ${PATH_MANUAL_TEXI}
-	find ${PATH_DOC} -type f \
+	@mkdir -p "${PATH_DOC_OUTPUT}"
+	pdftex -output-directory "${PATH_DOC}" "${PATH_MANUAL_TEXI}"
+	pdftex -output-directory "${PATH_DOC}" "${PATH_MANUAL_TEXI}"
+	find "${PATH_DOC}" -type f \
 		! -name '*.texi' -a \
 		! -name '.*' -a \
 		! -name '*.pdf' -a \
 		! -name '*.css' \
 		| xargs rm
-	@mv -f ${PATH_DOC}/*.pdf ${PATH_DOC_OUTPUT}
-	cd ${PATH_DOC}; \
-		makeinfo -o ${PATH_DOC_OUTPUT_INFO} ${PATH_MANUAL_TEXI}; \
-		makeinfo --plain ${PATH_MANUAL_TEXI} > ${PATH_DOC_OUTPUT_PLAIN}; \
+	@mv -f "${PATH_DOC}"/*.pdf "${PATH_DOC_OUTPUT}"
+	cd "${PATH_DOC}"; \
+		makeinfo -o "${PATH_DOC_OUTPUT_INFO}" "${PATH_MANUAL_TEXI}"; \
+		makeinfo --plain "${PATH_MANUAL_TEXI}" > "${PATH_DOC_OUTPUT_PLAIN}"; \
 		makeinfo --html --css-include="${PATH_DOC_CSS}" \
 			-o "${PATH_DOC_OUTPUT_HTML}" "${PATH_MANUAL_TEXI}"; \
 		makeinfo --no-split --html --css-include="${PATH_DOC_CSS}" \
-			-o ${PATH_DOC_OUTPUT_HTML1} ${PATH_MANUAL_TEXI};
+			-o "${PATH_DOC_OUTPUT_HTML1}" "${PATH_MANUAL_TEXI}";
 
 # clean up build dir
 clean:
-	rm -rf ${PATH_BUILD}
+	rm -rf "${PATH_BUILD}"
 
