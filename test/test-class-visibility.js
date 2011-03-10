@@ -334,5 +334,12 @@ var common  = require( './common' ),
         foo,
         "Returning 'this' from a method should return instance of self"
     );
+
+    // what happens in the case of inheritance?
+    assert.deepEqual(
+        sub_foo.getSelf(),
+        sub_foo,
+        "Returning 'this' from a super method should return the subtype"
+    );
 } )();
 
