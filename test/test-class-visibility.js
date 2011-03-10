@@ -45,6 +45,7 @@ var common  = require( './common' ),
         'protected protf': protf,
         'private privf':   privf,
 
+
         'public getProp': function( name )
         {
             // return property, allowing us to break encapsulation for
@@ -59,6 +60,12 @@ var common  = require( './common' ),
         'public setValue': function( name, value )
         {
             this[ name ] = value;
+        },
+
+
+        'public getSelf': function()
+        {
+            return this;
         },
     }),
 
@@ -305,6 +312,27 @@ var common  = require( './common' ),
         sub_foo.getProp( 'prot' ),
         val,
         "Class instances do not share protected values (same type)"
+    );
+} )();
+
+
+/**
+ * When a method is called, 'this' is bound to the property object containing
+ * private and protected members. Returning 'this' would therefore be a very bad
+ * thing. Not only would it break encapsulation, but it would likely have other
+ * problems down the road.
+ *
+ * Therefore, we have to check the return value of the method. If the return
+ * value is the property object that it was bound to, we need to replace the
+ * return value with the actual class instance. This allows us to transparently
+ * enforce encapsulation. How sweet is that?
+ */
+( function testReturningSelfFromMethodShouldReturnInstanceNotPropObj()
+{
+    assert.deepEqual(
+        foo.getSelf(),
+        foo,
+        "Returning 'this' from a method should return instance of self"
     );
 } )();
 
