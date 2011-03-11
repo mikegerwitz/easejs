@@ -39,4 +39,4 @@ common.test( function()
          Class( {} );
     }
 
-}, 'Declare ' + count + ' empty anonymous classes' );
+}, count, 'Declare ' + count + ' empty anonymous classes' );

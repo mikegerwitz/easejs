@@ -45,16 +45,21 @@ exports.require = function( name )
 /**
  * A simple wrapper to perform testing and output the result
  *
- * @param  {function()}  test  performance test to perform
- * @param  {string=}     desc  test description
+ * The count is not used to call the function multiple times, because that would
+ * greatly impact the test results. Instead, you should pass the number of times
+ * the test was performed in a loop.
+ *
+ * @param  {function()}  test   performance test to perform
+ * @param  {number}      count  number of times the test was performed
+ * @param  {string=}     desc   test description
  *
  * @return  {undefined}
  */
-exports.test = function( test, desc )
+exports.test = function( test, count, desc )
 {
     exports.start();
     test();
-    exports.report( desc );
+    exports.report( count, desc );
 };
 
 
@@ -72,19 +77,22 @@ exports.start = function()
 /**
  * Outputs the time elapsed, followed by the description (if available)
  *
- * @param  {string=}  desc  test description
+ * @param  {number}   count  number of times the test was performed
+ * @param  {string=}  desc   test description
  *
  * @return  {undefined}
  */
-exports.report = function( desc )
+exports.report = function( count, desc )
 {
-    desc = desc || '';
+    count = +count;
+    desc  = desc || '';
 
     var end   = ( new Date() ).getTime(),
-        total = ( ( end - start ) / 1000 ).toFixed( 3 )
+        total = ( ( end - start ) / 1000 ).toFixed( 3 ),
+        pers  = ( total / count ).toFixed( 7 )
     ;
 
-    console.log( total + 's' +
+    console.log( total + "s (x" + count + " = " + pers + "s each)" +
         ( ( desc ) ? ( ': ' + desc ) : '' )
     );
 };

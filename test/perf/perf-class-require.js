@@ -29,5 +29,5 @@ var common = require( __dirname + '/common.js' );
 common.test( function()
 {
     common.require( 'class' );
-}, 'Require class module' );
+}, 1, 'Require class module' );
 

@@ -41,4 +41,4 @@ common.test( function()
         Foo();
     }
 
-}, 'Instantiate ' + count + ' empty named classes' );
+}, count, 'Instantiate ' + count + ' empty named classes' );

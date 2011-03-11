@@ -40,4 +40,4 @@ common.test( function()
         Foo();
     }
 
-}, 'Instantiate ' + count + ' empty anonymous classes' );
+}, count, 'Instantiate ' + count + ' empty anonymous classes' );
