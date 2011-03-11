@@ -4,6 +4,8 @@ PATH_TOOLS=./tools
 PATH_COMBINE_OUTPUT=${PATH_BUILD}/ease.js
 PATH_COMBINE_OUTPUT_FULL=${PATH_BUILD}/ease-full.js
 PATH_BROWSER_TEST=${PATH_TOOLS}/browser-test.html
+PATH_TEST=./test
+PATH_PERF_TEST=${PATH_TEST}/perf
 
 COMBINE=${PATH_TOOLS}/combine
 
@@ -29,12 +31,15 @@ test: default
 	for test in `find ./test -name 'test-*.js'`; do \
 		node $${test}; \
 	done; \
-	
 	for test in `find ./test -regex '.*/test-[^\.]*'`; do \
 		./$$test; \
 	done;
 
+# performance tests
+perf: default
+	find "${PATH_PERF_TEST}" -name 'perf-*.js' -exec node {} \;
+
 # clean up build dir
 clean:
 	rm -rf ${PATH_BUILD}
-	
+
