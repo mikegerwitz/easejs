@@ -44,11 +44,13 @@ This manual is for ease.js, version 0.1.0-pre.
 @menu
 * About::        About the project
 * Integration::  How to integrate ease.js into your project
+* Source Tree::  Overview of source tree
 * License::      Document License
 @end menu
 
 @include ./about.texi
 @include ./integration.texi
+@include ./source-tree.texi
 @include ./license.texi
 
 @bye
