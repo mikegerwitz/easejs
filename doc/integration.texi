@@ -45,7 +45,7 @@ look around.
   doc/  lib/  test/  tools/
 @end example
 
-The project contains four main directories:
+The project contains four main directories in addition to the root directory:
 
 @table @file
 @item ./
