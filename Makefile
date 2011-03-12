@@ -11,8 +11,7 @@ PERF_TESTS := $(shell find "$(PATH_PERF_TEST)" -name 'perf-*.js')
 
 COMBINE=${PATH_TOOLS}/combine
 
-TESTS_JS    := $(shell find "./test" -name 'test-*.js')
-TESTS_SHELL := $(shell find "./test" -name 'test-[^\.]*')
+TESTS := $(shell find "./test" -name 'test-*')
 
 
 .PHONY: test
@@ -32,7 +31,7 @@ combine: mkbuild
 	cp ${PATH_BROWSER_TEST} ${PATH_BUILD}
 
 # run tests
-test: default $(TESTS_JS) $(TESTS_SHELL)
+test: default $(TESTS)
 test-%.js: default
 		node $@
 test-%: default
