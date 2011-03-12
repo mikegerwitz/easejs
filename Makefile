@@ -29,9 +29,9 @@ combine: mkbuild
 # run tests
 test: default $(TESTS)
 test-%.js: default
-		node $@
+	node $@
 test-%: default
-		./$@
+	./$@
 
 # clean up build dir
 clean:
