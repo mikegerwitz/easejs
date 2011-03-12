@@ -5,6 +5,7 @@
 [ target: 0.1.0 ]
   Misc
     - Class module is becoming too large; refactor
+    - Disallow member redeclaration in definition
 
   Member Keywords
     - Restrictions; throw exceptions when unknown keywords are used
