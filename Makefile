@@ -7,6 +7,8 @@ PATH_BROWSER_TEST=${PATH_TOOLS}/browser-test.html
 PATH_TEST=./test
 PATH_PERF_TEST=${PATH_TEST}/perf
 
+PERF_TESTS := $(shell find "$(PATH_PERF_TEST)" -name 'perf-*.js')
+
 COMBINE=${PATH_TOOLS}/combine
 
 
@@ -36,8 +38,9 @@ test: default
 	done;
 
 # performance tests
-perf: default
-	find "${PATH_PERF_TEST}" -name 'perf-*.js' -exec node {} \;
+perf: default $(PERF_TESTS)
+perf-%.js: default
+	@node $@
 
 # clean up build dir
 clean:
