@@ -89,7 +89,7 @@ exports.report = function( count, desc )
 
     var end   = ( new Date() ).getTime(),
         total = ( ( end - start ) / 1000 ).toFixed( 3 ),
-        pers  = ( total / count ).toFixed( 7 )
+        pers  = ( total / count ).toFixed( 10 )
     ;
 
     console.log( total + "s (x" + count + " = " + pers + "s each)" +
