@@ -11,6 +11,9 @@ PERF_TESTS := $(shell find "$(PATH_PERF_TEST)" -name 'perf-*.js')
 
 COMBINE=${PATH_TOOLS}/combine
 
+TESTS_JS    := $(shell find "./test" -name 'test-*.js')
+TESTS_SHELL := $(shell find "./test" -name 'test-[^\.]*')
+
 
 .PHONY: test
 
@@ -29,13 +32,11 @@ combine: mkbuild
 	cp ${PATH_BROWSER_TEST} ${PATH_BUILD}
 
 # run tests
-test: default
-	for test in `find ./test -name 'test-*.js'`; do \
-		node $${test}; \
-	done; \
-	for test in `find ./test -regex '.*/test-[^\.]*'`; do \
-		./$$test; \
-	done;
+test: default $(TESTS_JS) $(TESTS_SHELL)
+test-%.js: default
+		node $@
+test-%: default
+		./$@
 
 # performance tests
 perf: default $(PERF_TESTS)
