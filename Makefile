@@ -17,6 +17,9 @@ PATH_MANUAL_TEXI=${PATH_DOC}/manual.texi
 
 COMBINE=${PATH_TOOLS}/combine
 
+TESTS_JS    := $(shell find "./test" -name 'test-*.js')
+TESTS_SHELL := $(shell find "./test" -name 'test-[^\.]*')
+
 
 .PHONY: test doc
 
@@ -26,23 +29,21 @@ all:     combine doc
 
 # create build dir
 mkbuild:
-	@mkdir -p "${PATH_BUILD}"
+	mkdir -p "${PATH_BUILD}"
 
 # combine all modules into easily redistributable ease.js file (intended for
 # browser)
 combine: mkbuild
 	${COMBINE} > "${PATH_COMBINE_OUTPUT}"
 	INC_TEST=1 "${COMBINE}" > "${PATH_COMBINE_OUTPUT_FULL}"
-	@cp "${PATH_BROWSER_TEST}" "${PATH_BUILD}"
+	cp "${PATH_BROWSER_TEST}" "${PATH_BUILD}"
 
 # run tests
-test: default
-	for test in `find ./test -name 'test-*.js'`; do \
-		node $${test}; \
-	done; \
-	for test in `find ./test -regex '.*/test-[^\.]*'`; do \
-		./$$test; \
-	done;
+test: default $(TESTS_JS) $(TESTS_SHELL)
+test-%.js: default
+		node $@
+test-%: default
+		./$@
 
 # generate texinfo documentation (twice to generate TOC), then remove the extra
 # files that were generated
@@ -57,7 +58,7 @@ doc: mkbuild
 		! -name '*.pdf' -a \
 		! -name '*.css' \
 		| xargs rm
-	@mv -f "${PATH_DOC}"/*.pdf "${PATH_DOC_OUTPUT}"
+	mv -f "${PATH_DOC}"/*.pdf "${PATH_DOC_OUTPUT}"
 	cd "${PATH_DOC}"; \
 		makeinfo -o "${PATH_DOC_OUTPUT_INFO}" "${PATH_MANUAL_TEXI}"; \
 		makeinfo --plain "${PATH_MANUAL_TEXI}" > "${PATH_DOC_OUTPUT_PLAIN}"; \
