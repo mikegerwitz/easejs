@@ -1,8 +1,18 @@
 /**
  * Tests amount of time taken to invoke Class methods
  *
- * Results are assigned to a var to ensure V8 doesn't optimize the calls too
- * much.
+ * The expected results are as follows:
+ *   - Method invocations are expected to be slower than invoking a method on a
+ *     conventional constructor instance. This is because of the method wrapper
+ *     used by ease.js.
+ *   - Public methods externally should be invoked very quickly. They are part
+ *     of the class's prototype and therefore easily accessible.
+ *   - Public methods /internally/ are likely to be invoked slightly more
+ *     slowly. This is because it takes one extra step down the prototype chain
+ *     to access them. The difference should be minute.
+ *   - Protected and private methods internally should be accessed fairly
+ *     quickly since, like public methods externally, they are first on the
+ *     prototype chain.
  *
  *  Copyright (C) 2010 Mike Gerwitz
  *
