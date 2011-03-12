@@ -33,9 +33,9 @@ combine: mkbuild
 # run tests
 test: default $(TESTS)
 test-%.js: default
-		node $@
+	node $@
 test-%: default
-		./$@
+	./$@
 
 # performance tests
 perf: default $(PERF_TESTS)
