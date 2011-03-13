@@ -55,6 +55,15 @@ var common  = require( './common' ),
 
 
         /**
+         * Does the same as the above, but we won't override this one
+         */
+        'public nonOverrideGetProp': function( name )
+        {
+            return this[ name ];
+        },
+
+
+        /**
          * Allows us to set a value from within the class
          */
         'public setValue': function( name, value )
@@ -116,6 +125,9 @@ var common  = require( './common' ),
             // protected/private properties (for testing purposes)
             return this[ name ];
         },
+
+
+        'private myOwnPrivateFoo': function() {},
     }),
     sub_foo = SubFoo(),
 
@@ -439,6 +451,48 @@ var common  = require( './common' ),
         priv,
         "Parent methods should have access to the private methods of the " +
             "parent (2)"
+    );
+} )();
+
+
+/**
+ * When a parent method is invoked, the parent should not be given access to the
+ * private members of the invoking subtype. Why?
+ *
+ * This is not a matter of whether or not this is possible to do. In fact it's
+ * relatively simple to implement. The issue is whether or not it makes sense.
+ * Consider a compiled language. Let's say Foo and SubFoo (as defined in this
+ * test case) were written in C++. Should Foo have access to a private property
+ * on SubFoo when it is overridden?
+ *
+ * No - that doesn't make sense. The private member is not a member of Foo and
+ * therefore Foo would fail to even compile. Alright, but we don't have such a
+ * restriction in our case. So why not implement it?
+ *
+ * Proponents of such an implementation are likely thinking of the act of
+ * inheriting methods as a copy/paste type of scenario. If we inherit public
+ * method baz(), and it were a copy/paste type of situation, then surely baz()
+ * would have access to all of SubFoo's private members. But that is not the
+ * case. Should baz() be defined as a member of Foo, then its scope is
+ * restricted to Foo and its supertypes. That is not how OO works. It is /not/
+ * copy/paste. It is inheriting functionality.
+ */
+( function testParentsShouldNotHaveAccessToPrivateMembersOfSubtypes()
+{
+    // property
+    assert.equal(
+        sub_foo.nonOverrideGetProp( '_pfoo' ),
+        undefined,
+        "Parent should not have access to private properties of subtype when " +
+            "a parent method is invoked"
+    );
+
+    // member
+    assert.equal(
+        sub_foo.nonOverrideGetProp( '_myOwnPrivateFoo' ),
+        undefined,
+        "Parent should not have access to private methods of subtype when " +
+            "a parent method is invoked"
     );
 } )();
 
