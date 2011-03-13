@@ -13,6 +13,10 @@
  *   - Protected and private methods internally should be accessed fairly
  *     quickly since, like public methods externally, they are first on the
  *     prototype chain.
+ *     - Protected members will be accessed more slowly than private members,
+ *       because they are one step lower on the prototype chain. Future versions
+ *       will remove this performance hit if the Class contains no private
+ *       members.
  *
  *  Copyright (C) 2010 Mike Gerwitz
  *
