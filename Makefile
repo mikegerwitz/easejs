@@ -5,6 +5,10 @@ PATH_TOOLS=${CWD}/tools
 PATH_COMBINE_OUTPUT=${PATH_BUILD}/ease.js
 PATH_COMBINE_OUTPUT_FULL=${PATH_BUILD}/ease-full.js
 PATH_BROWSER_TEST=${PATH_TOOLS}/browser-test.html
+PATH_TEST=./test
+PATH_PERF_TEST=${PATH_TEST}/perf
+
+PERF_TESTS := $(shell find "$(PATH_PERF_TEST)" -name 'perf-*.js')
 
 PATH_DOC=${CWD}/doc
 PATH_DOC_OUTPUT=${PATH_BUILD}/doc
@@ -17,11 +21,14 @@ PATH_MANUAL_TEXI=${PATH_DOC}/manual.texi
 
 COMBINE=${PATH_TOOLS}/combine
 
-TESTS_JS    := $(shell find "./test" -name 'test-*.js')
-TESTS_SHELL := $(shell find "./test" -name 'test-[^\.]*')
+TESTS := $(shell find "$(PATH_TEST)" \
+	-name 'test-*' \
+	-a ! -name 'test-combine.js'\
+)
+TEST_COMBINE := $(PATH_TEST)/test-combine.js
 
 
-.PHONY: test doc
+.PHONY: test test-combine doc
 
 
 default: combine
@@ -39,11 +46,17 @@ combine: mkbuild
 	cp "${PATH_BROWSER_TEST}" "${PATH_BUILD}"
 
 # run tests
-test: default $(TESTS_JS) $(TESTS_SHELL)
+test: default $(TESTS) test-combine
+test-combine: default $(TEST_COMBINE)
 test-%.js: default
-		node $@
+	node $@
 test-%: default
-		./$@
+	./$@
+
+# performance tests
+perf: default $(PERF_TESTS)
+perf-%.js: default
+	@node $@
 
 # generate texinfo documentation (twice to generate TOC), then remove the extra
 # files that were generated

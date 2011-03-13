@@ -1,0 +1,8 @@
+This directory contains the performance tests. These tests contain basic
+routines that perform a single action and output the result in seconds, with a
+basic description of what has been done. The timing is done via the native Date
+object to ensure that it can be run both server and client-side.
+
+It is important that each test performs only a single operation to ensure that
+the prior operations have no consequences on the previous, at least when run
+server-side by invoking a separate executable for each.
