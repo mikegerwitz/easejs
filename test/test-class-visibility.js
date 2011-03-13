@@ -73,6 +73,24 @@ var common  = require( './common' ),
         {
             // override me
         },
+
+
+        'public getPrivProp': function()
+        {
+            return this.parts;
+        },
+
+
+        'public invokePriv': function()
+        {
+            return this._priv();
+        },
+
+
+        'private _priv': function()
+        {
+            return priv;
+        },
     }),
 
     // instance of Foo
@@ -80,13 +98,28 @@ var common  = require( './common' ),
 
     // subtype
     SubFoo  = Foo.extend({
+        'private _pfoo': 'baz',
+
         'public getSelfOverride': function()
         {
             // return this from overridden method
             return this;
         },
+
+
+        /**
+         * We have to override this so that 'this' is not bound to the supertype
+         */
+        'public getProp': function( name )
+        {
+            // return property, allowing us to break encapsulation for
+            // protected/private properties (for testing purposes)
+            return this[ name ];
+        },
     }),
-    sub_foo = SubFoo()
+    sub_foo = SubFoo(),
+
+    sub_sub_foo = SubFoo.extend( {} )()
 ;
 
 
@@ -359,6 +392,53 @@ var common  = require( './common' ),
         sub_foo.getSelfOverride(),
         sub_foo,
         "Returning 'this' from a overridden method should return the subtype"
+    );
+} )();
+
+
+/**
+ * This one's a particularly nasty bug that snuck up on me. Private members
+ * should not be accessible to subtypes; that's a given. However, they need to
+ * be accessible to the parent methods. For example, let's say class Foo
+ * contains public method bar(), which invokes private method _baz(). This is
+ * perfectly legal. Then SubFoo extends Foo, but does not override method bar().
+ * Invoking method bar() should still be able to invoke private method _baz(),
+ * because, from the perspective of the parent class, that operation is
+ * perfectly legal.
+ *
+ * The resolution of this bug required a slight system redesign. The short-term
+ * fix was to declare any needed private members are protected, so that they
+ * were accessible by the subtype.
+ */
+( function testParentMethodsCanAccessPrivateMembersOfParent()
+{
+    // properties
+    assert.equal(
+        sub_foo.getPrivProp(),
+        priv,
+        "Parent methods should have access to the private properties of the " +
+            "parent"
+    );
+
+    // methods
+    assert.equal(
+        sub_foo.invokePriv(),
+        priv,
+        "Parent methods should have access to the private methods of the parent"
+    );
+
+    // should apply to super-supertypes too
+    assert.equal(
+        sub_sub_foo.getPrivProp(),
+        priv,
+        "Parent methods should have access to the private properties of the " +
+            "parent (2)"
+    );
+    assert.equal(
+        sub_sub_foo.invokePriv(),
+        priv,
+        "Parent methods should have access to the private methods of the " +
+            "parent (2)"
     );
 } )();
 
