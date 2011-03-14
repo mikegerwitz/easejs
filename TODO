@@ -7,15 +7,21 @@
     - Class module is becoming too large; refactor
     - Disallow member redeclaration in definition
     - Permit binding on class methods
-    - Provide ability to free class from memory (class data stored in internal vars)
+    - Provide ability to free class from memory (class data stored in internal
+      vars)
     - Move tests to directly test propobj
       - Was never done after refactoring. It's tested as a consequence of being
         used in the class module.
+    - Useful error when trying to extend from non-function
+      (rather than CALL_NON_FUNCTION_AS_CONSTRUCTOR)
 
   Member Keywords
     - Restrictions; throw exceptions when unknown keywords are used
     - Concrete types must implement member with same visibility, or greater
       visibility, than the abstract implementation defined
+    - Abstract keyword cannot be used with private members
+    - toString() must be public
+    - Should not be able to instantiate object with non-public constructor (singleton)
 
   Documentation
     - Ensure all docblocks contain only valid JSDoc tags
