@@ -116,7 +116,7 @@ We will get more into visibility later on.
 Unlike @ref{f:class-js,}, we do not use the @code{new} keyword in order to
 instantiate our class. You are more than welcome to use the @code{new} keyword
 if you wish, but it is optional when using ease.js. This is mainly because
-without this feautre, if the keyword is omitted, the constructor is called as a
+without this feature, if the keyword is omitted, the constructor is called as a
 normal function, which could have highly negative consequences. This style of
 instantiation also has its benefits, which will be discussed later on.
 
