@@ -45,7 +45,7 @@ manual).
 Contains the actual source code for the various modules.
 
 @item test/
-Contains unit tests.
+Contains unit and performance tests.
 
 @item tools/
 Various tools used during build process.
@@ -57,7 +57,7 @@ Let's take a look at each directory in more detail.
 * Root Directory::   Contains basic project files
 * Doc Directory::    Contains source documentation files (manual)
 * Lib Directory::    Contains project source files (modules)
-* Test Directory::   Contains unit tests
+* Test Directory::   Contains unit and performance tests
 * Tools Directory::  Contains build tools
 @end menu
 
@@ -155,7 +155,8 @@ followed optionally by the specific part of the module that is being tested. The
 tests are written in JavaScript and use Node.js's @file{assert} module. They may
 be run individually or at once during the build process.
 
-Tests are discussed later on in this chapter.
+In addition, there exists a @file{test/perf/} directory that contains
+performance tests used for benchmarking.
 
 
 @node Tools Directory
