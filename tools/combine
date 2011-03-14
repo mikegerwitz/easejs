@@ -103,7 +103,7 @@ if [ "$INC_TEST" ]; then
         \) \
         -exec basename {} \; \
         | sort \
-        | grep -v 'test-\(combine\|index\).js' \
+        | grep -v 'test-\(combine\(-pre-es5\)\?\|index\).js' \
     )
 
     # include test combine template
