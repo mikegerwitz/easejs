@@ -8,6 +8,9 @@
     - Disallow member redeclaration in definition
     - Permit binding on class methods
     - Provide ability to free class from memory (class data stored in internal vars)
+    - Move tests to directly test propobj
+      - Was never done after refactoring. It's tested as a consequence of being
+        used in the class module.
 
   Member Keywords
     - Restrictions; throw exceptions when unknown keywords are used
