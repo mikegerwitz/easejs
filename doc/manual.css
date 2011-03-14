@@ -25,7 +25,13 @@ dfn {
   font-weight: bold;
 }
 
-.float-caption {
-    font-size: 0.9em;
+.float {
+  border: 1px solid #babdb6;
+  padding: 0.5em;
+}
+
+.float-caption,
+.float-caption em {
+  font-size: 0.9em;
 }
 
