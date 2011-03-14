@@ -17,9 +17,33 @@ downloading pre-built packages. Depending on what you are doing, you may not
 have to build ease.js at all.
 
 @menu
-* Building::     How to build ease.js
-* Including::    Including ease.js in your own project
+* Getting ease.js::  How to get ease.js
+* Building::         How to build ease.js
+* Including::        Including ease.js in your own project
 @end menu
+
+
+@node Getting ease.js
+@section Getting ease.js
+If you simply want to use ease.js in your project, you may be interested in
+simply grabbing an archive (tarball, zip, etc), or installing through your
+favorite package manger. More information on those options will become available
+as ease.js nears its first release.
+
+If you are interested in building ease.js, you need to get a hold of the source
+tree. Either download an archive (tarball, zip, etc), or clone the Git
+repository. We will do the latter in the example below. Feel free to clone from
+your favorite source.
+
+@example
+  # to clone from GitHub (do one or the other, not both)
+  $ git clone git://github.com/mikegerwitz/easejs
+
+  # to clone from Gitorious (do one or the other, not both)
+  $ git clone git://gitorious.org/easejs/easejs.git
+@end example
+
+The repository will be cloned into the @file{./easejs} directory.
 
 
 @node Building

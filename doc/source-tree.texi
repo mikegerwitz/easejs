@@ -9,20 +9,9 @@
 
 @node Source Tree
 @appendix Source Tree
-Before building, you need to get a hold of the source tree. Either download an
-archive (tarball, zip, etc), or clone the Git repository. We will do the latter.
-Feel free to clone from your favorite source.
-
-@example
-  # to clone from GitHub (do one or the other, not both)
-  $ git clone git://github.com/mikegerwitz/easejs
-
-  # to clone from Gitorious (do one or the other, not both)
-  $ git clone git://gitorious.org/easejs/easejs.git
-@end example
-
-The repository will be cloned into the @file{./easejs} directory. Let's take a
-look around.
+You should already have gotten a hold of the source tree
+(@pxref{Getting ease.js}). If not, please do so first and feel free to follow
+along.
 
 @example
   $ cd easejs
