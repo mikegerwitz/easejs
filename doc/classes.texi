@@ -9,17 +9,17 @@
 
 @node Classes
 @chapter Working With Classes
-In Object-Oriented programming, the most common term you are likely to hear is
-``Class''. A @dfn{class} is like a blueprint for creating an @dfn{object},
+In Object-Oriented programming, the most common term you are likely to encounter
+is ``Class''. A @dfn{class} is like a blueprint for creating an @dfn{object},
 which is an @dfn{instance} of that class. Classes contain @dfn{members}, which
 include primarily properties and methods. A @dfn{property} is a value, much like
-a variable, that a class instance ``owns''. A @dfn{method}, when comparing with
-JavaScript, is a function that is ``owned'' by an instance. As a consequence,
+a variable, that a class ``owns''. A @dfn{method}, when comparing with
+JavaScript, is a function that is ``owned'' by a class. As a consequence,
 properties and methods are not part of the global scope.
 
-JavaScript does not support classes in the manner in which Object-Oriented
-programmers traditionally know. This is because JavaScript follows a different
-model, which instead uses prototypes. Using this model, JavaScript supports
+JavaScript does not support classes in the manner traditionally understood by
+Object-Oriented programmers. This is because JavaScript follows a different
+model which instead uses prototypes. Using this model, JavaScript supports
 basic instantiation and inheritance. Rather than instantiating classes,
 JavaScript instantiates constructors, which are functions. The following example
 illustrates how you would typically create a class-like object in JavaScript:
@@ -40,9 +40,9 @@ illustrates how you would typically create a class-like object in JavaScript:
 
     // create a new instance of the class and execute doStuff()
     var foo = new MyClass();
-    console.log( foo.doStuff() ); // outputs "foobar"
+    console.log( foo.getProp() ); // outputs "foobar"
 @end verbatim
-@caption{Basic ``Class'' in JavaScript}
+@caption{Basic ``Class'' in JavaScript @emph{without} using ease.js}
 @end float
 
 This gets the job done, but the prototypal paradigm has a number of limitations
@@ -58,7 +58,7 @@ details should be encapsulated). You, as a developer, should be concerned with
 only how to declare and use the classes. If you do not understand what a
 prototype is, that should be perfectly fine. You shouldn't need to understand it
 in order to use the library (though, it's always good to understand what a
-prototype is).
+prototype is when working with JavaScript).
 
 In this chapter and those that follow, we will see the limitations that ease.js
 addresses. We will also see how to declare the classes using both prototypes and
@@ -72,7 +72,7 @@ ease.js, until such a point where prototypes are no longer adequate.
 @node Declaring Classes
 @section Declaring Classes
 We just took a look at what it's like declaring a class using prototypes
-(@pxref{f:class-js,}). This method is preferred for many developers. But it is
+(@pxref{f:class-js,}). This method is preferred for many developers, but it is
 important to recognize that there is a distinct difference between Prototypal
 and Object-Oriented development models. As an Object-Oriented developer, you
 shouldn't concern yourself with @emph{how} a class is declared in JavaScript. In
@@ -82,7 +82,7 @@ Let's take a look at how to declare that exact same class using ease.js:
 
 @float Figure, f:class-easejs
 @verbatim
-    // client-side, use: var Class = easejs.Class;
+    // if client-side, use: var Class = easejs.Class;
     var Class = require( 'easejs' ).Class;
 
     var MyClass = Class(
@@ -97,7 +97,7 @@ Let's take a look at how to declare that exact same class using ease.js:
 
     // create a new instance of the class and execute doStuff()
     var foo = MyClass();
-    console.log( foo.doStuff() ); // outputs "foobar"
+    console.log( foo.getProp() ); // outputs "foobar"
 @end verbatim
 @caption{Basic anonymous class declaration using ease.js}
 @end float
@@ -107,16 +107,18 @@ couple important notes before we continue evaluating this example:
 
 @itemize
 @item
-The first thing you will likely notice is our use of the @code{public} keywords.
-These are optional (the default visibility is public), but always recommended.
+The first thing you will likely notice is our use of the @code{public} keyword.
+This is optional (the default visibility is public), but always recommended.
+Future versions of ease.js may provide warnings when the visibility is omitted.
 We will get more into visibility later on.
 
 @item
 Unlike @ref{f:class-js,}, we do not use the @code{new} keyword in order to
 instantiate our class. You are more than welcome to use the @code{new} keyword
-if you wish, but it is optional when using ease.js. This is mainly because, if
-the keyword is omitted, the constructor is called as a normal function, which
-could have highly negative consequences.
+if you wish, but it is optional when using ease.js. This is mainly because
+without this feautre, if the keyword is omitted, the constructor is called as a
+normal function, which could have highly negative consequences. This style of
+instantiation also has its benefits, which will be discussed later on.
 
 @item
 ease.js's class module is imported using @code{require()} in the above example.
@@ -178,7 +180,7 @@ debugged large JS applications that make liberal use of anonymous functions, you
 might be able to understand that frustration.
 
 Fortunately, ease.js permits you to declare a named class. A @dfn{named class}
-is simply a class that is assigned a string for its name, so that errors
+is simply a class that is assigned a string for its name, so that error
 messages, debuggers, etc provide more useful information. @emph{There is
 functionally no difference between named and anonymous classes.}
 
