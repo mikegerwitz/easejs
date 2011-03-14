@@ -479,6 +479,13 @@ var common  = require( './common' ),
  */
 ( function testParentsShouldNotHaveAccessToPrivateMembersOfSubtypes()
 {
+    // browsers that do not support the property proxy will not support
+    // encapsulating properties
+    if ( !( propobj.supportsPropProxy() ) )
+    {
+        return;
+    }
+
     // property
     assert.equal(
         sub_foo.nonOverrideGetProp( '_pfoo' ),
