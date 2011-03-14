@@ -11,10 +11,10 @@ html {
 body {
   background-color: white;
   border-color:     #babdb6;
-  border-width:     0px 1px;
+  border-width:     0px 1px 1px 1px;
   border-style:     solid;
 
-  margin:  0px 5em;
+  margin: 0px 5em;
   padding: 1em;
 
   font-family: arial, serif;
@@ -25,13 +25,16 @@ dfn {
   font-weight: bold;
 }
 
+var {
+  font-family: monospace;
+}
+
 .float {
   border: 1px solid #babdb6;
   padding: 0.5em;
 }
 
-.float-caption,
-.float-caption em {
+.float-caption {
   font-size: 0.9em;
 }
 
