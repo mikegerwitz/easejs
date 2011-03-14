@@ -19,3 +19,13 @@ body {
 
   font-family: arial, serif;
 }
+
+dfn {
+  font-style: italic;
+  font-weight: bold;
+}
+
+.float-caption {
+    font-size: 0.9em;
+}
+
