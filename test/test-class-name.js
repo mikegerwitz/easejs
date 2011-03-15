@@ -122,14 +122,14 @@ var common = require( './common' ),
     // concrete
     assert.equal(
         Class( {} ).toString(),
-        '[object Class]',
+        '(Class)',
         "Converting anonymous class to string yields class string"
     );
 
     // abstract
     assert.equal(
         Class( { 'abstract foo': [] } ).toString(),
-        '[object AbstractClass]',
+        '(AbstractClass)',
         "Converting abstract anonymous class to string yields class string"
     );
 } )();
@@ -146,14 +146,14 @@ var common = require( './common' ),
     // concrete
     assert.equal(
         Class( name, {} ).toString(),
-        '[object Class <' + name + '>]',
+        name,
         "Converting named class to string yields string with name of class"
     );
 
     // abstract
     assert.equal(
         Class( name, { 'abstract foo': [] } ).toString(),
-        '[object AbstractClass <' + name + '>]',
+        name,
         "Converting abstract named class to string yields string with name " +
             "of class"
     );
@@ -175,7 +175,7 @@ var common = require( './common' ),
     // anonymous
     assert.equal(
         anon.toString(),
-        '[object #<anonymous>]',
+        '#<anonymous>',
         "Converting anonymous class instance to string yields string " +
             "indiciating that the class is anonymous"
     );
@@ -183,7 +183,7 @@ var common = require( './common' ),
     // named
     assert.equal(
         named.toString(),
-        '[object #<' + name + '>]',
+        '#<' + name + '>',
         "Converting named class instance to string yields string with name " +
             "of class"
     );
@@ -214,7 +214,7 @@ var common = require( './common' ),
     // was the name set?
     assert.equal(
         named.toString(),
-        '[object Class <' + name + '>]',
+        name,
         "Name is set on named clas via staging method"
     );
 
@@ -229,7 +229,7 @@ var common = require( './common' ),
 
     assert.equal(
         namedi.toString(),
-        '[object Class <' + name + '>]',
+        name,
         "Name is set on named class via staging method when implementing"
     );
 } )();

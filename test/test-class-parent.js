@@ -60,11 +60,6 @@ var common = require( './common' ),
         {
             return this.__super( arg );
         },
-
-        callParentAlt: function()
-        {
-            return this.parent.myMethod2.apply( this, arguments );
-        },
     }),
 
     foo     = new Foo(),
@@ -107,19 +102,6 @@ assert.equal(
     method2Arg,
     arg,
     "Arguments should be passed to super method via _super argument list"
-);
-
-assert.deepEqual(
-    SubFoo.prototype.parent,
-    Foo.prototype,
-    "Parent property should represent parent prototype"
-);
-
-sub_foo.callParentAlt( arg = 'moo' );
-assert.equal(
-    method2Arg,
-    arg,
-    "The parent property may also be used to invoke parent methods"
 );
 
 assert.throws( function()
