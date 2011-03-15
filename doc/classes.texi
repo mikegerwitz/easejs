@@ -133,6 +133,7 @@ capital, for class names (and nothing else).
 
 @menu
 * Anonymous vs. Named Classes::
+* Temporary Classes::  Throwaway classes that only need to be used once
 @end menu
 
 
@@ -199,4 +200,47 @@ functionally no difference between named and anonymous classes.}
 
 Much better! We now have a useful error message and immediately know which class
 is causing the issue.
+
+
+@node Temporary Classes
+@subsection Temporary Classes
+In @ref{f:class-easejs,}, we saw that the @code{new} keyword was unnecessary
+when instantiating classes. This permits a form of shorthand that is very useful
+for creating @dfn{temporary classes}, or ``throwaway`` classes which are used
+only once.
+
+Consider the following example:
+
+@float Figure, f:class-tmp
+@verbatim
+    // new instance of anonymous class
+    var foo = Class(
+    {
+        'public bar': function()
+        {
+            return 'baz';
+        }
+    } )();
+
+    foo.bar(); // returns 'baz'
+@end verbatim
+@caption{Declaring a temporary (throwaway) class}
+@end float
+
+In @ref{f:class-tmp,} above, rather than declaring a class, storing that in a
+variable, then instantiating it separately, we are doing it in a single command.
+Notice the parenthesis at the end of the statement. This invokes the
+constructor. Since the @code{new} keyword is unnecessary, a new instance of the
+class is stored in the variable @var{foo}.
+
+We call this a temporary class because it is used only to create a single
+instance. The class is then never referenced again. Therefore, we needn't even
+store it - it's throwaway.
+
+The downside of this feature is that it is difficult to notice unless the reader
+is paying very close attention. There is no keyword to tip them off. Therefore,
+it is very important to clearly document that you are storing an instance in the
+variable rather than an actual class definition. If you follow the CamelCase
+convention for class names, then simply do not capitalize the first letter of
+the destination variable for the instance.
 
