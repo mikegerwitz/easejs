@@ -189,3 +189,27 @@ var Type = Interface.extend( {
     );
 } )();
 
+
+/**
+ * Consider the following scenario:
+ *
+ * MyClass.implement( Type ).extend( MyOtherClass, {} );
+ *
+ * What the above is essentially saying is: "I'd like to extend MyClass by
+ * implementing Type. Oh, no, wait, I'd actually like it to extend
+ * MyOtherClass." That doesn't make sense! Likely, it's unintended. Prevent
+ * confusion and bugs. Throw an error.
+ */
+( function testCannotSpecifyParentAfterImplementingAtopExistingClass()
+{
+    assert.throws( function()
+        {
+            // should not be permitted
+            PlainFoo.implement( Type, Type2 ).extend( PlainFoo2, {} );
+        },
+        Error,
+        "Cannot specify new parent for extend() when implementing from " +
+            "existing class"
+    );
+} )();
+
