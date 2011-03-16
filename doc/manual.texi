@@ -37,8 +37,6 @@ Free Documentation License".
 @ifnottex
 @node Top
 @top Main
-
-This manual is for ease.js, version 0.1.0-pre.
 @end ifnottex
 
 @menu
@@ -48,6 +46,11 @@ This manual is for ease.js, version 0.1.0-pre.
 * Source Tree::  Overview of source tree
 * License::      Document License
 @end menu
+
+@ifnottex
+
+@insertcopying
+@end ifnottex
 
 @include ./about.texi
 @include ./integration.texi
