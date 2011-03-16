@@ -213,3 +213,22 @@ var Type = Interface.extend( {
     );
 } )();
 
+
+/**
+ * Opposite of the above test. If a parent wasn't specified to begin with, then
+ * we're fine to specify it in extend().
+ */
+( function testCanSpecifyParentIfImplementingAtopEmptyClass()
+{
+    assert.doesNotThrow(
+        function()
+        {
+            // this /should/ work
+            Class.implement( Type ).extend( PlainFoo, {} );
+        },
+        Error,
+        "Can specify parent for exetnd() when implementing atop an " +
+            "empty base"
+    );
+} )();
+
