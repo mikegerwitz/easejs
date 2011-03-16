@@ -201,6 +201,9 @@ var common = require( './common' ),
     var name   = 'Foo',
         named  = Class( name ).extend( {} )
         namedi = Class( name ).implement( Interface( {} ) ).extend( {} )
+
+        // we should also be able to extend classes in this manner
+        namede = Class( name ).implement( Interface( {} ) ).extend( named, {} )
     ;
 
     // ensure what was returned is a valid class
@@ -231,6 +234,29 @@ var common = require( './common' ),
         namedi.toString(),
         name,
         "Name is set on named class via staging method when implementing"
+    );
+
+
+    // we should be able to extend existing classes
+    assert.equal(
+        Class.isClass( namede ),
+        true,
+        "Named class generated via staging method, implementing an " +
+            "interface, and extending an existing class is considered " +
+            "to be a valid class"
+    );
+
+    assert.equal(
+        Class.isInstanceOf( named, namede() ),
+        true,
+        "Named class extending base class is instance of the base class"
+    );
+
+    assert.equal(
+        namede.toString(),
+        name,
+        "Name is set on named class via staging method when implementing " +
+            "and extending"
     );
 } )();
 
