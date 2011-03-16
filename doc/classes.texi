@@ -26,6 +26,10 @@ illustrates how you would typically create a class-like object in JavaScript:
 
 @float Figure, f:class-js
 @verbatim
+    /**
+     * Declaring "classes" WITHOUT ease.js
+     */
+
     // our "class"
     var MyClass = function()
     {
