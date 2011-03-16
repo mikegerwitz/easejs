@@ -133,9 +133,9 @@ capital, for class names (and nothing else).
 
 @menu
 * Anonymous vs. Named Classes::
-* Temporary Classes::  Throwaway classes that only need to be used once
+* Temporary Classes::    Throwaway classes that only need to be used once
+* Temporary Instances::  Throwaway instances that only need to be used once
 @end menu
-
 
 @node Anonymous vs. Named Classes
 @subsection Anonymous vs. Named Classes
@@ -201,7 +201,6 @@ functionally no difference between named and anonymous classes.}
 Much better! We now have a useful error message and immediately know which class
 is causing the issue.
 
-
 @node Temporary Classes
 @subsection Temporary Classes
 In @ref{f:class-easejs,}, we saw that the @code{new} keyword was unnecessary
@@ -243,4 +242,45 @@ it is very important to clearly document that you are storing an instance in the
 variable rather than an actual class definition. If you follow the CamelCase
 convention for class names, then simply do not capitalize the first letter of
 the destination variable for the instance.
+
+@node Temporary Instances
+@subsection Temporary Instances
+Similar to @ref{Temporary Classes,}, you may wish to use an @emph{instance}
+temporarily to invoke a method or chain of methods. @dfn{Temporary instances}
+are instances that are instantiated in order to invoke a method or chain of
+methods, then are immediately discarded.
+
+@float Figure, f:inst-tmp
+@verbatim
+    // retrieve the name from an instance of Foo
+    var name = Foo().getName();
+
+    // method chaining
+    var car = VehicleFactory().createBody().addWheel( 4 ).addDoor( 2 ).build();
+
+    // temporary class with callback
+    HttpRequest( host, port ).get( path, function( data )
+    {
+        console.log( data );
+    } );
+
+    // Conventionally (without ease.js), you'd accomplish the above using the
+    // 'new' keyword. You may still do this with ease.js, though it is less
+    // clean looking.
+    ( new Foo() ).someMethod();
+@end verbatim
+@caption{Declaring a temporary (throwaway) class}
+@end float
+
+Rather than storing the class instance, we are using it simply to invoke
+methods. The results of those methods are stored in the variable rather than the
+class instance. The instance is immediately discarded, since it is no longer
+able to be referenced, and is as such a temporary instance.
+
+In order for method chaining to work, each method must return itself.
+
+This pattern is useful for when a class requires instantiation in order to
+invoke a method. Classes that intend to be frequently used in this manner should
+declare static methods so that they may be accessed without the overhead of
+creating a new class instance.
 
