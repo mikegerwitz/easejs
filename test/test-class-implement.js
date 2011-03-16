@@ -232,3 +232,16 @@ var Type = Interface.extend( {
     );
 } )();
 
+
+/**
+ * If more than two arguments are given to extend(), then the developer likely
+ * does not understand the API. Throw an error to prevent some bugs/confusion.
+ */
+( function testThrowsExceptionIfExtendContainsTooManyArguments()
+{
+    assert.throws( function()
+    {
+        Class.implement( Type ).extend( PlainFoo, {}, 'extra' );
+    }, Error, "extend() after implementing accepts no more than two args" );
+} )();
+
