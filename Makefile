@@ -23,9 +23,9 @@ COMBINE=${PATH_TOOLS}/combine
 
 TESTS := $(shell find "$(PATH_TEST)" \
 	-name 'test-*' \
-	-a ! -name 'test-combine.js'\
+	-a ! -name 'test-combine*.js'\
 )
-TEST_COMBINE := $(PATH_TEST)/test-combine.js
+TEST_COMBINE := $(PATH_TEST)/test-combine*.js
 
 
 .PHONY: test test-combine doc
