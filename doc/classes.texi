@@ -539,3 +539,69 @@ Calling @samp{this.__super()} from within the overridden method would, however,
 call the parent method, which would again have access to its parent's private
 members.
 
+@node Visibility Escalation
+@subsection Visibility Escalation
+@dfn{Visibility escalation} is the act of increasing the visibility of a member.
+Since private members cannot be inherited, this essentially means making a
+protected member public.
+
+If you override a protected method, you may increase its visibility to public
+without any problems. If you follow the convention of prefixing private members
+with an underscore, you may find that it's not recommended doing so for
+protected members. This is because subtypes may decide to make the member
+public.
+
+In order to increase the visibility, you do have to override the member. For
+properties, this has no discernible effect; you're just redefining it. For
+methods, this means that you are overriding the entire body. Therefore, you will
+either have to provide an alternate implementation, or call
+@samp{this.__super()} to invoke the original method.
+
+Note that @emph{you cannot go from public to protected}. This will throw an
+error. You can only increase the level of visibility. This ensures that once a
+class defines an API, subclasses cannot alter it. That API is forever for all
+subtypes. This means that, if you are expecting a certain type, you can rest
+assured that whatever you are given, even if it is a subtype, has the API you
+are expecting.
+
+Let's take a look at an example.
+
+@float Figure, f:vis-esc
+@verbatim
+    var Foo = Class(
+        {
+            'protected canEscalate': 'baz',
+
+            'protected escalateMe': function( arg )
+            {
+                console.log( 'In escalateMe' );
+            },
+
+            'public cannotMakeProtected': function()
+            {
+            }
+        } ),
+
+        SubFoo = Foo.extend(
+        {
+            /**
+             * Escalating a property means redefining it
+             */
+            'public canEscalate': 'baz',
+
+            /**
+             * We can go protected -> public
+             */
+            'public escalateMe': function( arg )
+            {
+                // simply call the parent method
+                this.__super( arg );
+            }
+        } );
+@end verbatim
+@caption{Visibility can be escalated}
+@end float
+
+Note that, in the above example, making the public @var{cannotMakeProtected}
+method protected would throw an error.
+
