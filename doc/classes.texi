@@ -320,21 +320,21 @@ Not accessible outside of the instance. Not inherited by subtypes.
 
 By default, all members are public. This means that the members can be accessed
 and modified from within an instance and from outside. Subtypes (classes that
-inherit from it) will inherit the member. Public methods expose an API by which
-users may use your class. Public properties, however, should be less common, for
-a very important reason.
+inherit from it) will inherit public members. Public methods expose an API by
+which users may use your class. Public properties, however, should be less
+common in practice for a very important reason, which is explored throughout the
+rest of this section.
 
-This introduces the concept of @dfn{encapsulation}, which is the act of hiding
-information within a class or instance. Classes should be thought of black
-boxes. We want them to do their job, but we do not care @emph{how} they do their
-job. Encapsulation takes the complexity out of a situation and allows the
-developer to focus on accomplishing the task using familiar concepts. For
-example, consider a class named @var{Dog} which has a method @code{walk()}. To
-walk a dog, we simply call @code{Dog().walk()}. The @code{walk()} method could
-be doing anything. By preventing the details of the method from being exposed,
-we present the developer with a very simple interface. Rather than the developer
-having to be concerned with moving each of the dog's legs, all they have to do
-is understand that the dog is being walked.
+@dfn{Encapsulation} is the act of hiding information within a class or instance.
+Classes should be thought of black boxes. We want them to do their job, but we
+do not care @emph{how} they do their job. Encapsulation takes the complexity out
+of a situation and allows the developer to focus on accomplishing the task using
+familiar concepts. For example, consider a class named @var{Dog} which has a
+method @code{walk()}. To walk a dog, we simply call @code{Dog().walk()}. The
+@code{walk()} method could be doing anything. By preventing the details of the
+method from being exposed, we present the developer with a very simple
+interface. Rather than the developer having to be concerned with moving each of
+the dog's legs, all they have to do is understand that the dog is being walked.
 
 Let's consider our @var{Dog} class in more detail:
 
@@ -366,7 +366,7 @@ Let's consider our @var{Dog} class in more detail:
             }
         },
 
-        'protected rollOver': function()
+        'public rollOver': function()
         {
             this._body.roll();
         },
@@ -402,17 +402,17 @@ everything as private and work from there.
 @menu
 * Private Members::
 * Protected Members::
+* Visibility Escalation::  Increasing visibility of inherited members
 @end menu
 
 @node Private Members
 @subsection Private Members
 Let's first explore private members. The majority of the members in the
-@var{Dog} class are private. This is the lowest level of visibility (and
-consequently the @emph{highest} level of encapsulation). By convention, we
-prefix private members with an underscore. Private members are available
-@emph{only to the class that defined it} and are not available outside the
-class. This means that we cannot call a private member from outside the class
-define in @ref{f:encapsulation,}:
+@var{Dog} class (@pxref{f:encapsulation,}) are private. This is the lowest level
+of visibility (and consequently the @emph{highest} level of encapsulation). By
+convention, we prefix private members with an underscore. Private members are
+available @emph{only to the class that defined it} and are not available outside
+the class.
 
 @float Figure, f:encapsulation-call-priv
 @verbatim
@@ -424,12 +424,12 @@ define in @ref{f:encapsulation,}:
 @caption{Cannot access private members outside the class}
 @end float
 
-You will notice that the dog's legs are declared private as well. This is to
-ensure we look at the dog as a whole. We don't care about what the dog is made
-up of. Legs, fur, tail, teeth, tongue, etc - they are all irrelevant to our
-purpose. We just want to talk the dog. Encapsulating those details also ensures
-that they will not be tampered with, which will keep the dog in a consistent,
-predictable state.
+You will notice that the dog's legs are declared private as well
+(@pxref{f:encapsulation,}). This is to ensure we look at the dog as a whole; we
+don't care about what the dog is made up of. Legs, fur, tail, teeth, tongue, etc
+- they are all irrelevant to our purpose. We just want to walk the dog.
+Encapsulating those details also ensures that they will not be tampered with,
+which will keep the dog in a consistent, predictable state.
 
 Private members cannot be inherited. Let's say we want to make a class called
 @var{TwoLeggedDog} to represent a dog that was trained to walk only on two feet.
@@ -456,24 +456,24 @@ prevent the front legs from moving. What happens when we explore that approach:
 @caption{Cannot override private members of supertype}
 @end float
 
-If you were to attempt to walk the dog after attempting the above change, you
-would find that @emph{the dog's front legs still move}! This is because, as
-mentioned before, private methods are not inherited. Rather than overriding the
-parent's @var{_moveFrontLeg} method, you are instead @emph{defining a new
-method}, with the name @var{_moveFrontLeg}. The old method will still be called.
-Instead, we would have to override the public @code{walk()} method to prevent
-our dog from moving his front feet.
+If you were to attempt to walk a @var{TwoLeggedDog}, you would find that
+@emph{the dog's front legs still move}! This is because, as mentioned before,
+private methods are not inherited. Rather than overriding the parent's
+@var{_moveFrontLeg} method, you are instead @emph{defining a new method}, with
+the name @var{_moveFrontLeg}. The old method will still be called.  Instead, we
+would have to override the public @var{walk} method to prevent our dog from
+moving his front feet.
 
 @node Protected Members
 @subsection Protected Members
 Protected members are often misunderstood. Many developers will declare all
-their members as either public or protected under the misconception that they
+of their members as either public or protected under the misconception that they
 may as well allow subclasses to override whatever functionality they want. This
 makes the class more flexible.
 
 While it is true that the class becomes more flexible to work with for subtypes,
 this is a dangerous practice. In fact, doing so @emph{violates encapsulation}.
-Let's consider the levels of visibility in this manner:
+Let's reconsider the levels of visibility in this manner:
 
 @table @strong
 @item public
@@ -487,22 +487,24 @@ Provides an API for @emph{the class itself}.
 @end table
 
 Just as we want to hide data from the public API, we want to do the same for
-subtypes. If we simply expose everything to any subclass that comes by, that
+subtypes. If we simply expose all members to any subclass that comes by, that
 acts as a peephole in our black box. We don't want people spying into our
 internals. Subtypes shouldn't care about the dog's implementation either.
 
-@ref{Private Members,Private} members should be used whenever possible, unless
-you are looking to provide subtypes with the ability to access or override
-methods. In that case, we can move up to try protected members.
+Private members (@pxref{Private Members,Private}) should be used whenever
+possible, unless you are looking to provide subtypes with the ability to access
+or override methods. In that case, we can move up to try protected members.
+Remember not to make a member public unless you wish it to be accessible to the
+entire world.
 
-@ref{f:encapsulation,} defined a single method as protected - @code{stand()}.
-Because it is protected, it is able to be inherited by subtypes. Since it is
-inherited, it may also be overridden. Let's define another subtype,
-@var{LazyDog}, which refuses to stand.
+@var{Dog} (@pxref{f:encapsulation,}) defined a single method as protected -
+@code{stand()}. Because the method is protected, it can be inherited by
+subtypes. Since it is inherited, it may also be overridden. Let's define another
+subtype, @var{LazyDog}, which refuses to stand.
 
 @float Figure, f:encapsulation-inherit-prot
 @verbatim
-    var lazy_dog = Class( 'TwoLeggedDog' ).extend( Dog,
+    var lazy_dog = Class( 'LazyDog' ).extend( Dog,
     {
         /**
          * Overrides parent method
