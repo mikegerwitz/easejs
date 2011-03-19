@@ -22,10 +22,11 @@
  * @package test
  */
 
-var common  = require( './common' ),
-    assert  = require( 'assert' ),
-    Class   = common.require( 'class' ),
-    propobj = common.require( 'propobj' ),
+var common    = require( './common' ),
+    assert    = require( 'assert' ),
+    Class     = common.require( 'class' ),
+    Interface = common.require( 'interface' ),
+    propobj   = common.require( 'propobj' ),
 
     pub  = 'foo',
     prot = 'bar',
@@ -636,5 +637,23 @@ var common  = require( './common' ),
     assert.equal( result, val,
         "__super() calls work with protected overrides"
     );
+} )();
+
+
+/**
+ * Concrete implementations of interfaces should have to follow the same
+ * visibility de-escalation rules as defined in the above tests (otherwise, that
+ * defeats the purpose of an interface). In other words, they must be public.
+ */
+( function testVisibilityDeescalationRulesApplyToInterfaces()
+{
+    assert.throws( function()
+    {
+        Class.implement( Interface( { 'abstract public foo': [] } ) ).extend(
+        {
+            // should throw an exception; visibility de-escalation
+            'protected foo': function() {},
+        } );
+    }, Error, "Cannot de-escalate visibility for interface members" );
 } )();
 
