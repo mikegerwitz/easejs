@@ -7,8 +7,6 @@
     - Class module is becoming too large; refactor
     - Disallow member redeclaration in definition
     - Permit binding on class methods
-    - Provide ability to free class from memory (class data stored in internal
-      vars)
     - Move tests to directly test propobj
       - Was never done after refactoring. It's tested as a consequence of being
         used in the class module.
@@ -25,8 +23,6 @@
 
   Documentation
     - Ensure all docblocks contain only valid JSDoc tags
-    - Generate documentation
-      - Add to Makefile
     - Begin technical documentation for developers
       - Include designs and project decisions
       - Wiki, LaTeX, Texinfo?
