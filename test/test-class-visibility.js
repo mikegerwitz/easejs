@@ -503,3 +503,109 @@ var common  = require( './common' ),
     );
 } )();
 
+
+/**
+ * Visibility escalation (protected -> private) should be permitted
+ */
+( function testCanEscalateMemberVisibility()
+{
+    // escalate
+    assert.doesNotThrow( function()
+    {
+        Class(
+        {
+            'protected foo': 'bar',
+            'protected baz': function() {},
+        } ).extend( {
+            'public foo': 'bar',
+            'public baz': function() {},
+        } );
+    }, Error, "Can escalate visibility of subtype members" );
+
+    // same level of visibility
+    assert.doesNotThrow( function()
+    {
+        Class(
+        {
+            'protected foo': 'bar',
+            'protected baz': function() {},
+        } ).extend( {
+            'protected foo': 'bar',
+            'protected baz': function() {},
+        } );
+    }, Error, "Can retain level of visibility for subtype members" );
+} )();
+
+
+/**
+ * We should /not/ be able to de-escalate member visibility
+ * (public -> {protected,private}
+ */
+( function testCannotDeescalateMemberVisibility()
+{
+    // public -> protected
+    assert.throws( function()
+    {
+        Class(
+        {
+            'public foo': 'bar',
+        } ).extend( {
+            'protected foo': 'bar',
+        } );
+    }, Error, "Cannot de-escalate visibility of subtype props to protected" );
+
+    assert.throws( function()
+    {
+        Class(
+        {
+            'public baz': function() {},
+        } ).extend( {
+            'protected baz': function() {},
+        } );
+    }, Error, "Cannot de-escalate visibility of subtype methods to protected" );
+
+
+    // public -> private
+    assert.throws( function()
+    {
+        Class(
+        {
+            'public foo': 'bar',
+        } ).extend( {
+            'private foo': 'bar',
+        } );
+    }, Error, "Cannot de-escalate visibility of subtype props to private" );
+
+    assert.throws( function()
+    {
+        Class(
+        {
+            'public baz': function() {},
+        } ).extend( {
+            'private baz': function() {},
+        } );
+    }, Error, "Cannot de-escalate visibility of subtype methods to private" );
+
+
+    // protected -> private
+    assert.throws( function()
+    {
+        Class(
+        {
+            'protected foo': 'bar',
+        } ).extend( {
+            'private foo': 'bar',
+        } );
+    }, Error, "Cannot de-escalate visibility of subtype props to private2" );
+
+    assert.throws( function()
+    {
+        Class(
+        {
+            'protected baz': function() {},
+        } ).extend( {
+            'private baz': function() {},
+        } );
+    }, Error, "Cannot de-escalate visibility of subtype methods to private2" );
+} )();
+
