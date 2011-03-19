@@ -62,14 +62,20 @@ perf-%.js: default
 # files that were generated
 #
 # generates: pdf, HTML (multiple pages), HTML (single page)
-doc: mkbuild
+doc: mkbuild doc-pdf doc-texi doc-plain doc-html
+doc-pdf:
 	pdftex -output-directory "${PATH_DOC}" "${PATH_MANUAL_TEXI}"
 	pdftex -output-directory "${PATH_DOC}" "${PATH_MANUAL_TEXI}"
 	mv -f "${PATH_DOC}"/*.pdf "${PATH_DOC_OUTPUT}"
 	cd "$(PATH_DOC)" && rm -f $(shell cat "$(PATH_DOC)/.gitignore")
-	cd "${PATH_DOC}"; \
-		makeinfo -o "${PATH_DOC_OUTPUT_INFO}" "${PATH_MANUAL_TEXI}"; \
-		makeinfo --plain "${PATH_MANUAL_TEXI}" > "${PATH_DOC_OUTPUT_PLAIN}"; \
+doc-texi:
+	cd "${PATH_DOC}" && \
+		makeinfo -o "${PATH_DOC_OUTPUT_INFO}" "${PATH_MANUAL_TEXI}";
+doc-plain:
+	cd "${PATH_DOC}" && \
+		makeinfo --plain "${PATH_MANUAL_TEXI}" > "${PATH_DOC_OUTPUT_PLAIN}";
+doc-html:
+	cd "${PATH_DOC}" && \
 		makeinfo --html --css-include="${PATH_DOC_CSS}" \
 			-o "${PATH_DOC_OUTPUT_HTML}" "${PATH_MANUAL_TEXI}"; \
 		makeinfo --no-split --html --css-include="${PATH_DOC_CSS}" \
