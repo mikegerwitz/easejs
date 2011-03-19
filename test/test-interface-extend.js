@@ -205,3 +205,29 @@ for ( var i = 0; i < base_types.length; i++ )
     }
 } )();
 
+
+/**
+ * Interfaces represent a public API that must be implemented. It does not make
+ * sense to have members be anything but public.
+ */
+( function testInterfaceMembersMustBePublic()
+{
+    // protected
+    assert.throws( function()
+    {
+        Interface(
+        {
+            'abstract protected foo': [],
+        } );
+    }, Error, "Interface members must be public (1)" );
+
+    // private
+    assert.throws( function()
+    {
+        Interface(
+        {
+            'abstract private foo': [],
+        } );
+    }, Error, "Interface members must be public (2)" );
+} )();
+
