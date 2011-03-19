@@ -609,3 +609,32 @@ var common  = require( './common' ),
     }, Error, "Cannot de-escalate visibility of subtype methods to private2" );
 } )();
 
+
+/**
+ * With the visibility implementation, it's possible that __super() will not
+ * work properly with protected methods. This is because of the override lookup
+ * process (which hopefully was fixed in the commit before this test was
+ * originally introduced: ce736bea).
+ */
+( function testCallingSuperMethodWorksProperlyWithProtectedMethods()
+{
+    var val = 'foobar',
+        result = Class( {
+            'protected foo': function()
+            {
+                return val;
+            },
+        } ).extend(
+        {
+            // we override to public just so we can call it externally
+            'public foo': function()
+            {
+                return this.__super();
+            },
+        } )().foo();
+
+    assert.equal( result, val,
+        "__super() calls work with protected overrides"
+    );
+} )();
+
