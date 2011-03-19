@@ -52,10 +52,10 @@ Free Documentation License".
 @insertcopying
 @end ifnottex
 
-@include ./about.texi
-@include ./integration.texi
-@include ./classes.texi
-@include ./source-tree.texi
-@include ./license.texi
+@include about.texi
+@include integration.texi
+@include classes.texi
+@include source-tree.texi
+@include license.texi
 
 @bye

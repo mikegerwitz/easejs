@@ -70,6 +70,7 @@ ease.js, until such a point where prototypes are no longer adequate.
 
 @menu
 * Declaring Classes::  Learn how to declare a class with ease.js
+* Inheritance::        Extending classes from another
 * Member Visibility::  Encapsulation is a core concept of Object-Oriented
                        programming
 @end menu
@@ -289,6 +290,25 @@ This pattern is useful for when a class requires instantiation in order to
 invoke a method. Classes that intend to be frequently used in this manner should
 declare static methods so that they may be accessed without the overhead of
 creating a new class instance.
+
+
+@node Inheritance
+@section Inheritance
+Inheritance is a touchy subject. It can be a powerful feature, but it can also
+be easily abused. @dfn{Inheritance} is the term used to describe the process of
+creating a @dfn{child} class that @dfn{extends} (inherits members from) another
+@dfn{parent} class. The parent class is also referred to as the @dfn{supertype}
+and the child is called the @dfn{subtype}. Let's consider the following example,
+where we have a dog, lazy dog, and a dog that walks on two legs:
+
+@float Figure, f:inheritance-ex
+@image{img/inheritance-ex,,,,png}
+@caption{Basic inheritance example}
+@end float
+
+In the above example, we would say that @var{LazyDog} and @var{TwoLeggedDog}
+are @emph{subtypes} of @var{Dog}, and that @var{Dog} is the @emph{supertype}
+of the other two.
 
 
 @node Member Visibility
