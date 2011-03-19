@@ -311,3 +311,40 @@ for ( var i = 0; i < class_count; i++ )
     );
 } )();
 
+
+/**
+ * In ease.js's initial design, keywords were not included. This meant that
+ * duplicate member definitions were not possible - it'd throw a parse error.
+ * However, with keywords, it is now possible to redeclare a member with the
+ * same name in the same class definition. Since this doesn't make much sense,
+ * we must disallow it.
+ */
+( function testCannotProvideDuplicateMemberDefintions()
+{
+    assert.throws( function()
+    {
+        Class(
+        {
+            // declare as protected first so that we won't get a visibility
+            // de-escalation error with the below re-definition
+            'protected foo': '',
+
+            // should fail; redefinition
+            'public foo': '',
+        } );
+    }, Error, "Cannot redeclare property in same class definition" );
+
+    assert.throws( function()
+    {
+        Class(
+        {
+            // declare as protected first so that we won't get a visibility
+            // de-escalation error with the below re-definition
+            'protected foo': function() {},
+
+            // should fail; redefinition
+            'public foo': function() {},
+        } );
+    }, Error, "Cannot redeclare method in same class definition" );
+} )();
+
