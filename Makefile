@@ -65,13 +65,8 @@ perf-%.js: default
 doc: mkbuild
 	pdftex -output-directory "${PATH_DOC}" "${PATH_MANUAL_TEXI}"
 	pdftex -output-directory "${PATH_DOC}" "${PATH_MANUAL_TEXI}"
-	find "${PATH_DOC}" -type f \
-		! -name '*.texi' -a \
-		! -name '.*' -a \
-		! -name '*.pdf' -a \
-		! -name '*.css' \
-		| xargs rm
 	mv -f "${PATH_DOC}"/*.pdf "${PATH_DOC_OUTPUT}"
+	cd "$(PATH_DOC)" && rm -f $(shell cat "$(PATH_DOC)/.gitignore")
 	cd "${PATH_DOC}"; \
 		makeinfo -o "${PATH_DOC_OUTPUT_INFO}" "${PATH_MANUAL_TEXI}"; \
 		makeinfo --plain "${PATH_MANUAL_TEXI}" > "${PATH_DOC_OUTPUT_PLAIN}"; \
