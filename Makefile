@@ -1,6 +1,7 @@
 
 PATH_BUILD=./build
 PATH_TOOLS=./tools
+PATH_LIB=./lib
 PATH_COMBINE_OUTPUT=${PATH_BUILD}/ease.js
 PATH_COMBINE_OUTPUT_FULL=${PATH_BUILD}/ease-full.js
 PATH_BROWSER_TEST=${PATH_TOOLS}/browser-test.html
@@ -19,6 +20,7 @@ PATH_DOC_CSS=${PATH_DOC}/manual.css
 PATH_DOC_IMG=${PATH_DOC}/img
 PATH_MANUAL_TEXI=${PATH_DOC}/manual.texi
 
+src_js := index.js $(wildcard $(PATH_LIB)/*.js)
 doc_src := $(wildcard $(PATH_DOC)/*.texi)
 doc_imgs := $(patsubst %.dia, %.png, $(wildcard $(PATH_DOC_IMG)/*.dia))
 
@@ -31,25 +33,29 @@ TESTS := $(shell find "$(PATH_TEST)" \
 TEST_COMBINE := $(PATH_TEST)/test-combine*.js
 
 
-.PHONY: test test-combine doc
+.PHONY: combine doc test test-combine
 
 
 default: combine
 all:     combine doc
 
 # create build dir
-mkbuild:
+$(PATH_BUILD):
 	mkdir -p "$(PATH_BUILD)"
 $(PATH_DOC_OUTPUT):
 	mkdir -p "$(PATH_DOC_OUTPUT)"
-mkbuild-doc: | $(PATH_DOC_OUTPUT)
+mkbuild: $(PATH_BUILD)
+mkbuild-doc: $(PATH_DOC_OUTPUT)
 
 # combine all modules into easily redistributable ease.js file (intended for
 # browser)
-combine: mkbuild
-	${COMBINE} > "${PATH_COMBINE_OUTPUT}"
-	INC_TEST=1 "${COMBINE}" > "${PATH_COMBINE_OUTPUT_FULL}"
-	cp "${PATH_BROWSER_TEST}" "${PATH_BUILD}"
+$(PATH_COMBINE_OUTPUT): $(src_js) | mkbuild
+	${COMBINE} > "$(PATH_COMBINE_OUTPUT)"
+$(PATH_COMBINE_OUTPUT_FULL): $(src_js) | mkbuild
+	INC_TEST=1 "$(COMBINE)" > "${PATH_COMBINE_OUTPUT_FULL}"
+$(PATH_BUILD)/browser-test.html: $(PATH_COMBINE_OUTPUT_FULL)
+	cp "$(PATH_BROWSER_TEST)" "$(PATH_BUILD)"
+combine: $(PATH_COMBINE_OUTPUT) $(PATH_BUILD)/browser-test.html
 
 # run tests
 test: default $(TESTS) test-combine
