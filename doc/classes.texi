@@ -308,7 +308,82 @@ where we have a dog, lazy dog, and a dog that walks on two legs:
 
 In the above example, we would say that @var{LazyDog} and @var{TwoLeggedDog}
 are @emph{subtypes} of @var{Dog}, and that @var{Dog} is the @emph{supertype}
-of the other two.
+of the other two. We describe inheritance as an ``is a'' relationship. That is:
+
+@itemize
+@item
+@var{LazyDog} is a @var{Dog}.
+
+@item
+@var{TwoLeggedDog} is also a @var{Dog}.
+
+@item
+@var{Dog} is @emph{not} a @var{LazyDog} or a @var{TwoLeggedDog}.
+@end itemize
+
+Subtypes @dfn{inherit} all public and protected members of their supertypes
+(@pxref{Member Visibility}). This means that, in the case of our above example,
+the @code{walk()} method would be available to our subtypes. If the subtype also
+defines a method of the same name, as was done above, it will @dfn{override} the
+parent functionality. For now, we will limit our discussion to public members.
+How would we represent this class using ease.js?
+
+@float Figure, f:inheritance
+@verbatim
+    // our parent class (supertype)
+    var Dog = Class( 'Dog',
+    {
+        'public walk': function()
+        {
+            // walk the dog
+        }
+    } );
+
+    // subclass (child), as a named class
+    var LazyDog = Class( 'LazyDog' ).extend( Dog,
+    {
+        'public walk': function()
+        {
+            // lazy dog doesn't want to walk
+        }
+    } );
+
+    // subclass (child), as an anonymous class
+    var TwoLeggedDog = Dog.extend(
+    {
+        'public walk': function()
+        {
+            // two-legged dog only walks on two feet, like a biped
+        }
+    } );
+@end verbatim
+@caption{Inheritance in ease.js}
+@end float
+
+You should already understand how to define a class (@pxref{Declaring Classes}).
+The above example introduced two means of @dfn{extending} classes, of defining a
+new class that inherits from a parent:
+
+@table @strong
+@item Named Subclasses
+@var{LazyDog} is defined as a @emph{named} subclass
+(@pxref{Anonymous vs. Named Classes}). This syntax requires the use of
+@samp{Class( 'Name' )}. The @code{extend()} method then allows you to extend
+from an existing class by passing the class reference in as the first argument.
+
+@item Anonymous Subclasses
+@var{TwoLeggedDog} was declared as an @emph{anonymous} subclass. The syntax for
+this declaration is a bit more concise, but you forfeit the benefits of named
+classes (@pxref{Anonymous vs. Named Classes}). In this case, you can simply call
+the supertype's @code{extend()} method. Alternatively, you can use the
+@samp{Class.extend( Base, @{@} )} syntax, as was used with the named subclass
+@var{LazyDog}.
+@end table
+
+You are @emph{always} recommended to use the named syntax when declaring classes
+in order to provide more useful error messages. If you are willing to deal with
+the less helpful error messages, feel free to use anonymous classes for their
+conciseness.
 
 
 @node Member Visibility
