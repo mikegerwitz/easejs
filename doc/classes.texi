@@ -302,7 +302,7 @@ and the child is called the @dfn{subtype}. Let's consider the following example,
 where we have a dog, lazy dog, and a dog that walks on two legs:
 
 @float Figure, f:inheritance-ex
-@image{img/inheritance-ex,,,,png}
+@image{img/inheritance-ex}
 @caption{Basic inheritance example}
 @end float
 

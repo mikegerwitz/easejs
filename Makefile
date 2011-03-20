@@ -70,7 +70,7 @@ doc: | doc-pdf doc-info doc-plain doc-html
 
 # doc images
 doc/img/%.png: doc/img/%.dia
-	dia -e $@ -s 600x $<
+	dia -e $@ -s 300x $<
 
 # doc pdf
 $(PATH_DOC_OUTPUT)/%.pdf: $(doc_src) | mkbuild-doc doc-img
