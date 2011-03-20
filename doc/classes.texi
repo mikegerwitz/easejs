@@ -335,7 +335,12 @@ How would we represent this class using ease.js?
     {
         'public walk': function()
         {
-            // walk the dog
+            console.log( 'Walking the dog' );
+        },
+
+        'public bark': function()
+        {
+            console.log( 'Woof!' );
         }
     } );
 
@@ -344,7 +349,7 @@ How would we represent this class using ease.js?
     {
         'public walk': function()
         {
-            // lazy dog doesn't want to walk
+            console.log( 'Lazy dog refuses to walk.' );
         }
     } );
 
@@ -353,7 +358,7 @@ How would we represent this class using ease.js?
     {
         'public walk': function()
         {
-            // two-legged dog only walks on two feet, like a biped
+            console.log( 'Walking the dog on two feet' );
         }
     } );
 @end verbatim
@@ -384,6 +389,72 @@ You are @emph{always} recommended to use the named syntax when declaring classes
 in order to provide more useful error messages. If you are willing to deal with
 the less helpful error messages, feel free to use anonymous classes for their
 conciseness.
+
+@menu
+* Understanding Member Inheritance::  How to work with inherited members
+@end menu
+
+@node Understanding Member Inheritance
+@subsection Understanding Member Inheritance
+In @ref{f:inheritance}, we took a look at how to inherit from a parent class.
+What does it mean when we ``inherit'' from a parent? What are we inheriting? The
+API.
+
+There are two types of APIs that subtypes can inherit from their parents:
+
+@table @emph
+@item Public API
+This is the API that is accessible to everyone using your class. It contains all
+public members. We will be focusing on public members in this chapter.
+
+@item Protected API
+Protected members make up a protected API, which is an API available to
+subclasses but @emph{not} the outside world. This is discussed more in the
+Member Visibility section (@pxref{Member Visibility}), so we're going to leave
+this untouched for now.
+@end table
+
+When a subtype inherits a member from its parent, it acts almost as if that
+member was defined in the class itself@footnote{This statement is not to imply
+that inheritance is a case of copy-and-paste. There are slight variations, which
+are discussed in more detail in the Member Visibility section (@pxref{Member
+Visibility}).}. This means that the subtype can use the inherited members as if
+they were its own (keep in mind that members also include properties). This
+means that we @emph{do not} have to redefine the members in order to use them
+ourselves.
+
+@var{LazyDog} and @var{TwoLeggedDog} both inherit the @code{walk()} and
+@code{bark()} methods from the @var{Dog} supertype. Using @var{LazyDog} as an
+example, let's see what happens when we attempt to use the @code{bark()} method
+inherited from the parent.
+
+@float Figure, f:using-inherited-members
+@verbatim
+    var LazyDog = Class( 'LazyDog' ).extend( Dog,
+    {
+        /**
+         * Bark when we're poked
+         */
+        'public poke': function()
+        {
+            this.bark();
+        }
+    } );
+
+    // poke() a new instance of LazyDog
+    LazyDog().poke();
+
+    // Output:
+    // Woof!
+@end verbatim
+@caption{Using inherited members}
+@end float
+
+In @ref{f:using-inherited-members} above, we added a @code{poke()} method to our
+@var{LazyDog} class. This method will call the @code{bark()} method that was
+inherited from @var{Dog}. If we actually run the example, you will notice that
+the dog does indeed bark, showing that we are able to call our parent's method
+even though we did not define it ourselves.
 
 
 @node Member Visibility
