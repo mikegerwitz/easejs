@@ -24,6 +24,7 @@ src_js := index.js $(wildcard $(PATH_LIB)/*.js)
 src_tests := index.js $(wildcard $(PATH_TEST)/test-*)
 doc_src := $(wildcard $(PATH_DOC)/*.texi)
 doc_imgs := $(patsubst %.dia, %.png, $(wildcard $(PATH_DOC_IMG)/*.dia))
+doc_imgs_txt := $(patsubst %.dia, %.png, $(wildcard $(PATH_DOC_IMG)/*.txt))
 
 COMBINE=${PATH_TOOLS}/combine
 
@@ -81,11 +82,11 @@ $(PATH_DOC_OUTPUT)/%.pdf: $(doc_src) | mkbuild-doc doc-img
 	cd "$(PATH_DOC)" && rm -f $(shell cat "$(PATH_DOC)/.gitignore")
 
 # doc info
-$(PATH_DOC_OUTPUT_INFO): $(doc_src) | mkbuild-doc
+$(PATH_DOC_OUTPUT_INFO): $(doc_src) $(doc_imgs_txt) | mkbuild-doc
 	makeinfo -I "$(PATH_DOC)" -o $@ "$(PATH_MANUAL_TEXI)";
 
 # doc plain text
-$(PATH_DOC_OUTPUT_PLAIN): | mkbuild-doc
+$(PATH_DOC_OUTPUT_PLAIN): $(doc_imgs_txt) | mkbuild-doc
 	makeinfo --plain -I "$(PATH_DOC)" "${PATH_MANUAL_TEXI}" > $@
 
 # doc html (multiple pages)
