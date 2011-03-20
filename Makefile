@@ -90,12 +90,12 @@ $(PATH_DOC_OUTPUT_PLAIN): $(doc_imgs_txt) | mkbuild-doc
 	makeinfo --plain -I "$(PATH_DOC)" "${PATH_MANUAL_TEXI}" > $@
 
 # doc html (multiple pages)
-$(PATH_DOC_OUTPUT_HTML)/index.html: | $(PATH_DOC_OUTPUT_HTML)/img mkbuild-doc doc-img
+$(PATH_DOC_OUTPUT_HTML)/index.html: $(doc_src) | $(PATH_DOC_OUTPUT_HTML)/img mkbuild-doc doc-img
 	makeinfo --html --css-include="${PATH_DOC_CSS}" \
 		-I "$(PATH_DOC)" -o "${PATH_DOC_OUTPUT_HTML}" "${PATH_MANUAL_TEXI}";
 
 # doc html (single page)
-$(PATH_DOC_OUTPUT_HTML1): | $(PATH_DOC_OUTPUT)/img mkbuild-doc doc-img
+$(PATH_DOC_OUTPUT_HTML1): $(doc_src) | $(PATH_DOC_OUTPUT)/img mkbuild-doc doc-img
 	makeinfo --no-split --html --css-include="${PATH_DOC_CSS}" \
 		-I "$(PATH_DOC)" -o "${PATH_DOC_OUTPUT_HTML1}" "${PATH_MANUAL_TEXI}";
 
