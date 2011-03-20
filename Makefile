@@ -73,7 +73,7 @@ doc/img/%.png: doc/img/%.dia
 	dia -e $@ -s 300x $<
 
 # doc pdf
-$(PATH_DOC_OUTPUT)/%.pdf: $(doc_src) | mkbuild-doc doc-img
+$(PATH_DOC_OUTPUT)/%.pdf: $(doc_src) $(doc_imgs) | mkbuild-doc doc-img
 	TEXINPUTS="$(PATH_DOC):" \
 		pdftex -output-directory "${PATH_DOC}" "${PATH_MANUAL_TEXI}" && \
 		TEXINPUTS="$(PATH_DOC):" \
@@ -100,7 +100,7 @@ $(PATH_DOC_OUTPUT_HTML1): $(doc_src) | $(PATH_DOC_OUTPUT)/img mkbuild-doc doc-im
 		-I "$(PATH_DOC)" -o "${PATH_DOC_OUTPUT_HTML1}" "${PATH_MANUAL_TEXI}";
 
 # doc images (in build dir)
-$(PATH_DOC_OUTPUT)/img: | mkbuild-doc doc-img
+$(PATH_DOC_OUTPUT)/img: $(doc_imgs) | mkbuild-doc doc-img
 	mkdir -p $@
 	cp "$(PATH_DOC_IMG)"/*.png $@
 $(PATH_DOC_OUTPUT_HTML)/img: $(PATH_DOC_OUTPUT)/img
