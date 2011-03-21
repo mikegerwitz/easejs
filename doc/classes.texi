@@ -392,9 +392,9 @@ conciseness.
 
 @menu
 * Understanding Member Inheritance::  How to work with inherited members
+* Overriding Methods::                Overriding inherited methods
 * Type Checks and Polymorphism::      Substituting similar classes for
                                       one-another
-* Overriding Methods::                Overriding inherited methods
 @end menu
 
 @node Understanding Member Inheritance
@@ -458,6 +458,60 @@ In @ref{f:using-inherited-members} above, we added a @code{poke()} method to our
 inherited from @var{Dog}. If we actually run the example, you will notice that
 the dog does indeed bark, showing that we are able to call our parent's method
 even though we did not define it ourselves.
+
+@node Overriding Methods
+@subsection Overriding Methods
+When a method is inherited, you have the option of either keeping the parent's
+implementation or overriding it to provide your own. When you override a method,
+you replace whatever functionality was defined by the parent. Using this concept
+is how we made our lazy dog lazy and our two-legged dog walk on two legs in
+@ref{f:inheritance}.
+
+After overriding a method, you may still want to invoke the parent's method.
+This allows you to augment the functionality rather than replacing it entirely.
+ease.js provides a magic @code{__super()} method to do this. This method is
+defined only for overriding methods and calls the parent method that was
+overridden.
+
+In order to demonstrate this, let's add an additional subtype to our hierarchy:
+@var{AngryDog}. @var{AngryDog} will be a subtype of @var{LazyDog}. Not only is
+this dog lazy, but he's rather moody.
+
+@float Figure, f:super-method
+@verbatim
+    var AngryDog = Class( 'AngryDog' ).extend( LazyDog,
+    {
+        'public poke': function()
+        {
+            // augment the parent method
+            console.log( 'Grrrrrr...' );
+
+            // call the overridden method
+            this.__super();
+        }
+    } );
+
+    // poke a new AngryDog instance
+    AngryDog().poke();
+
+    // Output:
+    // Grrrrrr...
+    // Woof!
+@end verbatim
+@caption{Using @code{__super()} method}
+@end float
+
+If you remember from @ref{f:using-inherited-members}, we added a @code{poke()}
+method to @var{LazyDog}. In @ref{f:super-method} above, we are overriding this
+method so that @var{AngryDog} growls when you poke him. However, we still want
+to invoke @var{LazyDog}'s default behavior when he's poked, so we also call the
+@code{__super()} method. This will also make @var{AngryDog} bark like
+@var{LazyDog}.
+
+It is important to note that @code{__super()} must be invoked like any other
+method. That is, if the overridden method requires arguments, you must pass them
+to @code{__super()}. This allows you to modify the argument list before it is
+sent to the overridden method.
 
 @node Type Checks and Polymorphism
 @subsection Type Checks and Polymorphism
@@ -565,60 +619,6 @@ be passed in, which would also permit @var{AngryDog} (since it is a subtype of
 Currently, it is necessary to perform this type check yourself. In future
 versions, ease.js will allow for argument type hinting/strict typing, which will
 automate this check for you.
-
-@node Overriding Methods
-@subsection Overriding Methods
-When a method is inherited, you have the option of either keeping the parent's
-implementation or overriding it to provide your own. When you override a method,
-you replace whatever functionality was defined by the parent. Using this concept
-is how we made our lazy dog lazy and our two-legged dog walk on two legs in
-@ref{f:inheritance}.
-
-After overriding a method, you may still want to invoke the parent's method.
-This allows you to augment the functionality rather than replacing it entirely.
-ease.js provides a magic @code{__super()} method to do this. This method is
-defined only for overriding methods and calls the parent method that was
-overridden.
-
-In order to demonstrate this, let's add an additional subtype to our hierarchy:
-@var{AngryDog}. @var{AngryDog} will be a subtype of @var{LazyDog}. Not only is
-this dog lazy, but he's rather moody.
-
-@float Figure, f:super-method
-@verbatim
-    var AngryDog = Class( 'AngryDog' ).extend( LazyDog,
-    {
-        'public poke': function()
-        {
-            // augment the parent method
-            console.log( 'Grrrrrr...' );
-
-            // call the overridden method
-            this.__super();
-        }
-    } );
-
-    // poke a new AngryDog instance
-    AngryDog().poke();
-
-    // Output:
-    // Grrrrrr...
-    // Woof!
-@end verbatim
-@caption{Using @code{__super()} method}
-@end float
-
-If you remember from @ref{f:using-inherited-members}, we added a @code{poke()}
-method to @var{LazyDog}. In @ref{f:super-method} above, we are overriding this
-method so that @var{AngryDog} growls when you poke him. However, we still want
-to invoke @var{LazyDog}'s default behavior when he's poked, so we also call the
-@code{__super()} method. This will also make @var{AngryDog} bark like
-@var{LazyDog}.
-
-It is important to note that @code{__super()} must be invoked like any other
-method. That is, if the overridden method requires arguments, you must pass them
-to @code{__super()}. This allows you to modify the argument list before it is
-sent to the overridden method.
 
 
 @node Member Visibility
