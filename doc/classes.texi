@@ -392,6 +392,8 @@ conciseness.
 
 @menu
 * Understanding Member Inheritance::  How to work with inherited members
+* Type Checks and Polymorphism::      Substituting similar classes for
+                                      one-another
 * Overriding Methods::                Overriding inherited methods
 @end menu
 
@@ -456,6 +458,113 @@ In @ref{f:using-inherited-members} above, we added a @code{poke()} method to our
 inherited from @var{Dog}. If we actually run the example, you will notice that
 the dog does indeed bark, showing that we are able to call our parent's method
 even though we did not define it ourselves.
+
+@node Type Checks and Polymorphism
+@subsection Type Checks and Polymorphism
+The fact that the API of the parent is inherited is a very important detail. If
+the API of subtypes is guaranteed to be @emph{at least} that of the parent, then
+this means that a function expecting a certain type can also work with any
+subtypes. This concept is referred to as @dfn{polymorphism}, and is a very
+powerful aspect of Object-Oriented programming.
+
+Let's consider a dog trainer. A dog trainer can generally train any type of dog
+(technicalities aside), so it would stand to reason that we would want our dog
+trainer to be able to train @var{LazyDog}, @var{AngryDog}, @var{TwoLeggedDog},
+or any other type of @var{Dog} that we may throw at him/her.
+
+@float Figure, f:polymorphism-uml
+@image{img/composition-uml}
+@caption{Class structure to demonstrate polymorphism}
+@end float
+
+Type checks are traditionally performed in JavaScript using the
+@code{instanceOf} operator. While this can be used in most inheritance cases
+with ease.js, it is not recommended. Rather, you are encouraged to use ease.js's
+own methods for determining instance type@footnote{The reason for this will
+become clear in future chapters. ease.js's own methods permit checking for
+additional types, such as Interfaces.}. Support for the @code{instanceOf}
+operator is not guaranteed.
+
+Instead, you have two choices with ease.js:
+
+@table @code
+@item Class.isInstanceOf( type, instance );
+Returns @code{true} if @var{instance} is of type @var{type}. Otherwise, returns
+@code{false}.
+
+@item Class.isA( type, instance );
+Alias for @code{Class.isInstanceOf()}. Permits code that may read better
+depending on circumstance and helps to convey the ``is a'' relationship that
+inheritance creates.
+@end table
+
+For example:
+
+@float Figure, f:instanceof-ex
+@verbatim
+    var dog   = Dog()
+        lazy  = LazyDog(),
+        angry = AngryDog();
+
+    Class.isInstanceOf( Dog, dog ); // true
+    Class.isA( Dog, dog );          // true
+    Class.isA( LazyDog, dog );      // false
+    Class.isA( Dog, lazy );         // true
+    Class.isA( Dog, angry );        // true
+
+    // we must check an instance
+    Class.isA( Dog, LazyDog ); // false; instance expected, class given
+@end verbatim
+@caption{Using ease.js to determine instance type}
+@end float
+
+It is important to note that, as demonstrated in @ref{f:instanceof-ex} above, an
+@emph{instance} must be passed as a second argument, not a class.
+
+Using this method, we can ensure that the @var{DogTrainer} may only be used with
+an instance of @var{Dog}. It doesn't matter what instance of @var{Dog} - be it a
+@var{LazyDog} or otherwise. All that matters is that we are given a @var{Dog}.
+
+@float Figure, f:polymorphism-easejs
+@verbatim
+    var DogTrainer = Class( 'DogTrainer',
+    {
+        'public __construct': function( dog )
+        {
+            // ensure that we are given an instance of Dog
+            if ( Class.isA( Dog, dog ) === false )
+            {
+                throw Error( "Expected instance of Dog" );
+            }
+        }
+    } );
+
+    // these are all fine
+    DogTrainer( Dog() );
+    DogTrainer( LazyDog() );
+    DogTrainer( AngryDog() );
+    DogTrainer( TwoLeggedDog() );
+
+    // this is not fine; we're passing the class itself
+    DogTrainer( LazyDog );
+
+    // nor is this fine, as it is not a dog
+    DogTrainer( {} );
+@end verbatim
+@caption{Polymorphism in ease.js}
+@end float
+
+It is very important that you use @emph{only} the API of the type that you are
+expecting. For example, only @var{LazyDog} and @var{AngryDog} implement a
+@code{poke()} method. It is @emph{not} a part of @var{Dog}'s API. Therefore, it
+should not be used in the @var{DogTrainer} class. Instead, if you wished to use
+the @code{poke()} method, you should require that an instance of @var{LazyDog}
+be passed in, which would also permit @var{AngryDog} (since it is a subtype of
+@var{LazyDog}).
+
+Currently, it is necessary to perform this type check yourself. In future
+versions, ease.js will allow for argument type hinting/strict typing, which will
+automate this check for you.
 
 @node Overriding Methods
 @subsection Overriding Methods
