@@ -18,6 +18,9 @@ PATH_DOC_OUTPUT_HTML=${PATH_DOC_OUTPUT}/manual
 PATH_DOC_OUTPUT_HTML1=${PATH_DOC_OUTPUT}/manual.html
 PATH_DOC_CSS=${PATH_DOC}/manual.css
 PATH_DOC_IMG=${PATH_DOC}/img
+PATH_DOC_INTERACTIVE_SRC=$(PATH_DOC)/interactive.js
+PATH_DOC_INTERACTIVE_DEST=$(PATH_DOC_OUTPUT)/interactive.js \
+	$(PATH_DOC_OUTPUT_HTML)/interactive.js
 PATH_MANUAL_TEXI=${PATH_DOC}/manual.texi
 
 src_js := index.js $(wildcard $(PATH_LIB)/*.js)
@@ -25,6 +28,9 @@ src_tests := index.js $(wildcard $(PATH_TEST)/test-*)
 doc_src := $(wildcard $(PATH_DOC)/*.texi)
 doc_imgs := $(patsubst %.dia, %.png, $(wildcard $(PATH_DOC_IMG)/*.dia))
 doc_imgs_txt := $(patsubst %.dia, %.png, $(wildcard $(PATH_DOC_IMG)/*.txt))
+
+doc_replace := s/<\/body>/<script type="text\/javascript" \
+	src="interactive.js"><\/script><\/body>/
 
 COMBINE=${PATH_TOOLS}/combine
 
@@ -90,14 +96,20 @@ $(PATH_DOC_OUTPUT_PLAIN): $(doc_imgs_txt) | mkbuild-doc
 	makeinfo --plain -I "$(PATH_DOC)" "${PATH_MANUAL_TEXI}" > $@
 
 # doc html (multiple pages)
-$(PATH_DOC_OUTPUT_HTML)/index.html: $(doc_src) | $(PATH_DOC_OUTPUT_HTML)/img mkbuild-doc doc-img
+$(PATH_DOC_OUTPUT_HTML)/index.html: $(doc_src) \
+| $(PATH_DOC_OUTPUT_HTML)/img $(PATH_DOC_OUTPUT_HTML)/interactive.js \
+mkbuild-doc doc-img
 	makeinfo --html --css-include="${PATH_DOC_CSS}" \
-		-I "$(PATH_DOC)" -o "${PATH_DOC_OUTPUT_HTML}" "${PATH_MANUAL_TEXI}";
+		-I "$(PATH_DOC)" -o "${PATH_DOC_OUTPUT_HTML}" "${PATH_MANUAL_TEXI}"
+	sed -i '$(doc_replace)' $(PATH_DOC_OUTPUT_HTML)/*.htm?
 
 # doc html (single page)
-$(PATH_DOC_OUTPUT_HTML1): $(doc_src) | $(PATH_DOC_OUTPUT)/img mkbuild-doc doc-img
+$(PATH_DOC_OUTPUT_HTML1): $(doc_src) \
+| $(PATH_DOC_OUTPUT)/img $(PATH_DOC_OUTPUT)/interactive.js mkbuild-doc doc-img
 	makeinfo --no-split --html --css-include="${PATH_DOC_CSS}" \
-		-I "$(PATH_DOC)" -o "${PATH_DOC_OUTPUT_HTML1}" "${PATH_MANUAL_TEXI}";
+		-I "$(PATH_DOC)" -o - "${PATH_MANUAL_TEXI}" \
+		| sed '$(doc_replace)' \
+			> "$(PATH_DOC_OUTPUT_HTML1)"
 
 # doc images (in build dir)
 $(PATH_DOC_OUTPUT)/img: $(doc_imgs) | mkbuild-doc doc-img
@@ -106,6 +118,10 @@ $(PATH_DOC_OUTPUT)/img: $(doc_imgs) | mkbuild-doc doc-img
 $(PATH_DOC_OUTPUT_HTML)/img: $(PATH_DOC_OUTPUT)/img
 	mkdir -p $(PATH_DOC_OUTPUT_HTML)
 	ln -s ../img $@
+
+# interactive html doc (js)
+$(PATH_DOC_INTERACTIVE_DEST): $(PATH_DOC_INTERACTIVE_SRC)
+	cp $< $@
 
 doc-img: $(doc_imgs)
 doc-pdf: $(PATH_DOC_OUTPUT)/manual.pdf
