@@ -294,12 +294,13 @@ creating a new class instance.
 
 @node Inheritance
 @section Inheritance
-Inheritance is a touchy subject. It can be a powerful feature, but it can also
-be easily abused. @dfn{Inheritance} is the term used to describe the process of
-creating a @dfn{child} class that @dfn{extends} (inherits members from) another
-@dfn{parent} class. The parent class is also referred to as the @dfn{supertype}
-and the child is called the @dfn{subtype}. Let's consider the following example,
-where we have a dog, lazy dog, and a dog that walks on two legs:
+Inheritance can be a touchy subject among Object-Oriented developers. It is a
+powerful feature that is easily abused. @dfn{Inheritance} is the term used to
+describe the process of creating a @dfn{child} class that @dfn{extends}
+(inherits members from) another @dfn{parent} class. The parent class is also
+referred to as the @dfn{supertype} and the child is called the @dfn{subtype}.
+Let's consider the following example, where we have a dog, a lazy dog, and a dog
+that walks on two legs:
 
 @float Figure, f:inheritance-ex
 @image{img/inheritance-ex}
@@ -308,7 +309,7 @@ where we have a dog, lazy dog, and a dog that walks on two legs:
 
 In the above example, we would say that @var{LazyDog} and @var{TwoLeggedDog}
 are @emph{subtypes} of @var{Dog}, and that @var{Dog} is the @emph{supertype}
-of the other two. We describe inheritance as an ``is a'' relationship. That is:
+of the two. We describe inheritance as an ``is a'' relationship. That is:
 
 @itemize
 @item
@@ -323,10 +324,11 @@ of the other two. We describe inheritance as an ``is a'' relationship. That is:
 
 Subtypes @dfn{inherit} all public and protected members of their supertypes
 (@pxref{Member Visibility}). This means that, in the case of our above example,
-the @code{walk()} method would be available to our subtypes. If the subtype also
-defines a method of the same name, as was done above, it will @dfn{override} the
-parent functionality. For now, we will limit our discussion to public members.
-How would we represent this class using ease.js?
+the @code{walk()} and @code{bark()} methods would be available to our subtypes.
+If the subtype also defines a method of the same name, as was done above, it
+will @dfn{override} the parent functionality. For now, we will limit our
+discussion to public members. How would we represent these classes using
+ease.js?
 
 @float Figure, f:inheritance
 @verbatim
@@ -366,7 +368,7 @@ How would we represent this class using ease.js?
 @end float
 
 You should already understand how to define a class (@pxref{Declaring Classes}).
-The above example introduced two means of @dfn{extending} classes, of defining a
+The above example introduced two means of @dfn{extending} classes -- defining a
 new class that inherits from a parent:
 
 @table @strong
@@ -401,7 +403,7 @@ conciseness.
 @subsection Understanding Member Inheritance
 In @ref{f:inheritance}, we took a look at how to inherit from a parent class.
 What does it mean when we ``inherit'' from a parent? What are we inheriting? The
-API.
+answer is: the API.
 
 There are two types of APIs that subtypes can inherit from their parents:
 
@@ -463,19 +465,19 @@ even though we did not define it ourselves.
 @subsection Overriding Methods
 When a method is inherited, you have the option of either keeping the parent's
 implementation or overriding it to provide your own. When you override a method,
-you replace whatever functionality was defined by the parent. Using this concept
-is how we made our lazy dog lazy and our two-legged dog walk on two legs in
-@ref{f:inheritance}.
+you replace whatever functionality was defined by the parent. This concept was
+used to make our @var{LazyDog} lazy and our @var{TwoLeggedDog} walk on two legs
+in @ref{f:inheritance}.
 
 After overriding a method, you may still want to invoke the parent's method.
-This allows you to augment the functionality rather than replacing it entirely.
-ease.js provides a magic @code{__super()} method to do this. This method is
-defined only for overriding methods and calls the parent method that was
-overridden.
+This allows you to @emph{augment} the functionality rather than replacing it
+entirely.  ease.js provides a magic @code{__super()} method to do this. This
+method is defined only for the overriding methods and calls the parent method
+that was overridden.
 
-In order to demonstrate this, let's add an additional subtype to our hierarchy:
-@var{AngryDog}. @var{AngryDog} will be a subtype of @var{LazyDog}. Not only is
-this dog lazy, but he's rather moody.
+In order to demonstrate this, let's add an additional subtype to our hierarchy.
+@var{AngryDog} will be a subtype of @var{LazyDog}. Not only is this dog lazy,
+but he's rather moody.
 
 @float Figure, f:super-method
 @verbatim
