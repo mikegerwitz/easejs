@@ -590,7 +590,7 @@ an instance of @var{Dog}. It doesn't matter what instance of @var{Dog} - be it a
             // ensure that we are given an instance of Dog
             if ( Class.isA( Dog, dog ) === false )
             {
-                throw Error( "Expected instance of Dog" );
+                throw TypeError( "Expected instance of Dog" );
             }
         }
     } );
