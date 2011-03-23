@@ -15,21 +15,27 @@ body {
   border-style:     solid;
   border-radius:    1em;
 
-  margin:  5em;
+  margin:  5em auto;
   padding: 0.5em 1em 0.5em 1em;
+
+  width: 800px;
 
   font-family: arial, serif;
 }
 
+#content {
+  position: relative;
+}
+
 h1 {
   position: absolute;
-  top:      0.5em;
+  top:      -2.5em;
 }
 
 h2 {
   position: absolute;
-  top:      1em;
-  right:    5em;
+  top:      -2.5em;
+  right:    0px;
 }
 
 ul {
