@@ -11,33 +11,50 @@ html {
 body {
   background-color: white;
   border-color:     #babdb6;
-  border-width:     0px 1px 1px 1px;
+  border-width:     1px;
   border-style:     solid;
+  border-radius:    1em;
 
-  margin: 0px 5em;
+  margin:  5em;
   padding: 0.5em 1em 0.5em 1em;
 
   font-family: arial, serif;
 }
 
-ul {
-    margin: 0;
-    padding: 0.25em;
-    height: 2em;
+h1 {
+  position: absolute;
+  top:      0.5em;
+}
 
-    border-bottom: 1px solid #babdb6;
+h2 {
+  position: absolute;
+  top:      1em;
+  right:    5em;
+}
+
+ul {
+  margin: 0;
+  padding: 0.25em;
+  height: 2em;
+
+  border-bottom: 1px solid #babdb6;
 }
 
 ul li {
-    list-style: none;
-    padding: 0px 1em 0px 0px;
-    float: left;
-    line-height: 2em;
+  list-style: none;
+  padding:    0px 1em 0px 0px;
+
+  float:       left;
+  line-height: 2em;
 }
 
 p.copyright {
-    margin-top: 1em;
-    font-size: 0.8em;
-    text-align: center;
+  position: fixed;
+  bottom:   0px;
+  left:     5em;
+  right:    5em;
+
+  font-size:  0.8em;
+  text-align: center;
 }
 
