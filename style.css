@@ -4,63 +4,97 @@
  * Inspired by Tango Icon Theme
  */
 
-html {
-  background-color: #eeeeec;
-}
-
-body {
+html, body {
   background-color: white;
-  border-color:     #babdb6;
-  border-width:     1px;
-  border-style:     solid;
-  border-radius:    1em;
 
-  margin:  5em auto;
-  padding: 0.5em 1em 0.5em 1em;
-
-  width: 800px;
+  margin:  0px 0px 1.5em 0px;
+  padding: 0;
 
   font-family: arial, serif;
+  font-size:   16px;
+}
+
+#header {
+  position: relative;
+
+  background-color: #2e3436;
+  border-bottom:    2px solid #295301;
+
+  height: 150px;
+  color:  #babdb6;
+}
+
+#header h1 {
+  display: inline-block;
+  margin:  0.5em 0px 0px 0.5em;
+
+  font-size: 4em;
 }
 
 #content {
   position: relative;
+
+  background-color: white;
+
+  margin:  0px auto;
+  padding: 0.5em 1em 1em 1em;
+
+  width: 800px;
 }
 
-h1 {
-  position: absolute;
-  top:      -2.5em;
+#menu {
+  border-bottom:    2px solid #b1dd87;
+  background-color: #4e9a06;
 }
 
-h2 {
-  position: absolute;
-  top:      -2.5em;
-  right:    0px;
+#menu ul {
+  padding: 0px;
+  height:  2.5em;
+
+  margin: 0px auto;
+  width:  800px;
 }
 
-ul {
-  margin: 0;
-  padding: 0.25em;
-  height: 2em;
-
-  border-bottom: 1px solid #babdb6;
-}
-
-ul li {
+#menu ul li {
   list-style: none;
-  padding:    0px 1em 0px 0px;
+  padding:    0px;
 
   float:       left;
   line-height: 2em;
 }
 
+#menu a, #menu a:link {
+  display: inline-block;
+  padding: 0.25em 1em;
+
+  color:           #041c40;
+  text-decoration: none;
+  font-weight:     bold;
+}
+
+#menu a:hover {
+  background-color: #b1dd87;
+}
+
 p.copyright {
   position: fixed;
   bottom:   0px;
-  left:     5em;
-  right:    5em;
+  left:     0px;
+  right:    0px;
+
+  margin: 0;
+  padding: 1em;
+
+  background-color: #2e3436;
+  border-top:       2px solid #babdb6;
+
+  color: #babdb6;
 
   font-size:  0.8em;
   text-align: center;
+}
+
+p.copyright a, p.copyright a:link {
+  color: #babdb6;
 }
 
