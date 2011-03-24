@@ -98,3 +98,58 @@ p.copyright a, p.copyright a:link {
   color: #babdb6;
 }
 
+#try {
+  position: relative;
+  width: 100px;
+  margin: 0px auto;
+  top: -2em;
+
+  background-color: #f57900;
+  color: white;
+  font-size: 2em;
+  font-weight: bold;
+  text-shadow: black 2px 2px 5px;
+  cursor: pointer;
+  text-align: center;
+
+  padding: 0.25em 0.5em;
+
+  border: 1px solid #ce5c00;
+  border-radius: 0.25em;
+  -moz-border-radius: 0.25em;
+
+  background-image: -webkit-gradient(
+      linear,
+      left bottom,
+      left top,
+      color-stop(0, rgb(245,123,0)),
+      color-stop(1, rgb(206,93,0))
+  );
+  background-image: -moz-linear-gradient(
+      center bottom,
+      rgb(245,123,0) 0%,
+      rgb(206,93,0) 100%
+  );
+}
+
+#trybox {
+  border: 1px solid #eeeeec;
+  border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+
+  background-image: -webkit-gradient(
+      linear,
+      left bottom,
+      left top,
+      color-stop(0, rgb(186,189,182)),
+      color-stop(1, rgb(238,238,236))
+  );
+  background-image: -moz-linear-gradient(
+      center bottom,
+      rgb(186,189,182) 0%,
+      rgb(238,238,236) 100%
+  );
+
+  height: 350px;
+}
+
