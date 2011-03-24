@@ -98,6 +98,18 @@ p.copyright a, p.copyright a:link {
   color: #babdb6;
 }
 
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-box-shadow: 0 0 0px #ffffff;
+  }
+  70% {
+    -webkit-box-shadow: 0 0 0px #ffffff;
+  }
+  100% {
+    -webkit-box-shadow: 0 0 5px #ffffff;
+  }
+}
+
 #try {
   position: relative;
   width: 100px;
@@ -130,6 +142,26 @@ p.copyright a, p.copyright a:link {
       rgb(245,123,0) 0%,
       rgb(206,93,0) 100%
   );
+
+  -webkit-box-shadow: 0 0 5px #ffffff;
+  -moz-box-shadow: 0 0 5px #ffffff;
+  box-shadow:0 0 5px #ffffff;
+
+  -webkit-transition: -webkit-box-shadow 0.25s linear;
+  -moz-transition-property: -moz-box-shadow;
+  -moz-transition-duration: 0.25s;
+
+  -webkit-animation-name: pulse;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-direction: alternate;
+  -webkit-animation-timing-function: ease-in-out;
+  -webkit-animation-iteration-count: 1;
+}
+
+#try:hover {
+  -webkit-box-shadow:0 0 10px #ffffff;
+  -moz-box-shadow: 0 0 10px #ffffff;
+  box-shadow:0 0 10px #ffffff;
 }
 
 #trybox {
