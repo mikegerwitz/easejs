@@ -40,11 +40,12 @@ Free Documentation License".
 @end ifnottex
 
 @menu
-* About::        About the project
-* Integration::  How to integrate ease.js into your project
-* Classes::      Learn to work with Classes
-* Source Tree::  Overview of source tree
-* License::      Document License
+* About::                  About the project
+* Integration::            How to integrate ease.js into your project
+* Classes::                Learn to work with Classes
+* Source Tree::            Overview of source tree
+* Implementation Details:: The how and why of ease.js
+* License::                Document License
 @end menu
 
 @ifnottex
@@ -56,6 +57,7 @@ Free Documentation License".
 @include integration.texi
 @include classes.texi
 @include source-tree.texi
+@include impl-details.texi
 @include license.texi
 
 @bye

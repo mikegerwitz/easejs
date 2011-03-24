@@ -1,0 +1,168 @@
+@c  This document is part of the ease.js manual
+@c  Copyright (c) 2011 Mike Gerwitz
+@c    Permission is granted to copy, distribute and/or modify this document
+@c    under the terms of the GNU Free Documentation License, Version 1.3
+@c    or any later version published by the Free Software Foundation;
+@c    with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+@c    Texts.  A copy of the license is included in the section entitled ``GNU
+@c    Free Documentation License''.
+
+@node Implementation Details
+@appendix Implementation Details / Rationale
+The majority of the development time spent on ease.js was not hacking away at
+the source code. Rather, it was spent with pen and paper. Every aspect of
+ease.js was heavily planned from the start. Every detail was important to ensure
+a consistent implementation that worked, was fast and that developers would
+enjoy working with. Failures upfront or alterations to the design in later
+versions would break backwards compatibility unnecessarily and damage the
+reputation of the project.
+
+When using ease.js, developers may wonder why things were implemented in the
+manner that they were. Perhaps they have a problem with the implementation, or
+just want to learn how the project works. This project was an excellent learning
+experience that deals very closely with the power and flexibility of prototypal
+programming. In an attempt to appease both parties, this appendix is provided to
+provide some details and rationale behind ease.js.
+
+@menu
+* Class Module Design::
+@end menu
+
+
+@node Class Module Design
+@section Class Module Design
+The @var{Class} module, which is accessible via @samp{require( 'easejs'
+).Class}, is the backbone of the entire project. In a class-based
+Object-Oriented model, as one could guess by the name, the class is the star
+player. When the project began, this was the only initial implementation detail.
+Everything else was later layered atop of it.
+
+As such, developing the Class module took the most thought and presented the
+largest challenge throughout the project. Every detail of its implementation
+exists for a reason. Nothing was put in place because the author simply ``felt
+like it''. The project aims to exist as a strong, reliable standard for the
+development of JavaScript-based applications. If such a goal is to be attained,
+the feature set and implementation details would have to be strongly functional,
+easy to use and make sense to the Object-Oriented developer community.
+
+The design also requires a strong understanding of Object-Oriented development.
+Attention was paid to the nuances that could otherwise introduce bugs or an
+inconsistent implementation.
+
+@menu
+* Class Declaration Syntax::
+* Class Storage::
+* Constructor Implementation::
+@end menu
+
+@node Class Declaration Syntax
+@subsection Class Declaration Syntax
+Much thought was put into how a class should be declared. The chosen style
+serves as syntatic sugar, making the declarations appear very similar to classes
+in other Object-Oriented languages.
+
+The original style was based on John Resig's blog post about a basic means of
+extending class-like objects (@pxref{About}). That style was
+@samp{Class.extend()} to declare a new class and @samp{Foo.extend()} to extend
+an existing class. This implementation is still supported for creating anonymous
+classes. However, a means needed to be provided to create named classes. In
+addition, invoking @code{extend()} on an empty class seemed unnecessary.
+
+The next incarnation made the @var{Class} module invokable. Anonymous classes
+could be defined using @samp{Class( @{@} )} and named classes could be defined
+by passing in a string as the first argument: @samp{Class( 'Foo', @{@} )}.
+Classes could still be extended using the previously mentioned syntax, but that
+did no justice if we need to provide a class name. Therefore, the @samp{Class(
+'SubFoo' ).extend( Supertype, @{@} )} syntax was also adopted.
+
+JavaScript's use of curly braces to represent objects provides a very convenient
+means of making class definitions look like actual class definitions. By
+convention, the opening brace for the declaration object is on its own line, to
+make it look like an opening block.
+
+@float Figure, f:class-def-syntax
+@verbatim
+    Class( 'Foo' )
+        .implement( Bar )
+        .extend(
+    {
+        'public foo': function()
+        {
+        }
+    } );
+@end verbatim
+@caption{Syntax and style of class definition}
+@end float
+
+Syntax for implementing interfaces and extending classes was another
+consideration. The implementation shown above was chosen for a couple of
+reasons. Firstly, verbs were chosen in order to (a) prevent the use of reserved
+words and (b) to represent that the process was taking place at @emph{runtime},
+@emph{as} the code was being executed. Unlike a language like C++ or Java, the
+classes are not prepared at compile-time.
+
+@node Class Storage
+@subsection Class Storage
+One of the more powerful features of ease.js is how classes (and other objects,
+such as Interfaces) are stored. Rather than adopting its own model, the decision
+was instead to blend into how JavaScript already structures its data. Everything
+in JavaScript can be assigned to a variable, including functions. Classes are no
+different.
+
+One decision was whether or not to store classes internally by name, then permit
+accessing it globally (wherever ease.js is available). This is how most
+Object-Oriented languages work. If the file in which the class is defined is
+available, the class can generally be referenced by name. This may seem natural
+to developers coming from other Object-Oriented languages. The decision was to
+@emph{not} adopt this model.
+
+By storing classes @emph{only} in variables, we have fine control over the
+scope and permit the developer to adopt their own mechanism for organizing their
+classes. For example, if the developer wishes to use namespacing, then he/she is
+free to assign the class to a namespace (e.g. @samp{org.foo.my.ns.Foo =
+Class( @{@} )}). More importantly, we can take advantage of the CommonJS format
+that ease.js was initially built for by assigning the class to
+@code{module.exports}. This permits @samp{require( 'filename' )} to return the
+class.
+
+This method also permits defining anonymous classes (while not necessarily
+recommended, they have their uses just as anonymous functions do), mimic the
+concept of Java's inner classes and create temporary classes (@pxref{Temporary
+Classes}). Indeed, we can do whatever scoping that JavaScript permits.
+
+@subsubsection Memory Management
+Memory management is perhaps one of the most important considerations.
+Initially, ease.js encapsulated class metadata and visibility structures.
+However, it quickly became apparent that this method of storing data, although
+excellent for protecting data from being manipulated, caused what appeared to be
+memory leaks in long-running software. These were in fact not memory leaks, but
+ease.js was keeping references to class data with no idea when to free them.
+
+If the globally accessible model would have been adopted (storing classes
+internally by class name rather than in variables), classes would not have been
+freed from memory when they went out of scope. This raises the memory footprint
+unnecessarily, especially for temporary classes. It would make sense that, after
+a temporary class is done being used, that the class be freed from memory.
+
+Given this fact alone, the author firmly believes that the model that was chosen
+was the best choice.
+
+@node Constructor Implementation
+@subsection Constructor Implementation
+ease.js uses a PHP-style constructor. Rather than using the class name as the
+constructor, a @code{__construct()} method is used. This was chosen primarily
+because ease.js does not always know the name of the class. In fact, in the
+early stages of development, named classes were unsupported. With the PHP-style
+constructor, the class name does not need to be known, allowing constructors to
+be written for anonymous and named classes alike.
+
+In addition, the PHP-style constructor is consistent between class definitions.
+To look up a constructor, one need only search for ``__construct'', rather than
+the class name. This makes certain operations, such as global searching (using
+@command{grep} or any other utility), much simpler.
+
+The constructor is optional. If one is not provided, nothing is done after the
+class is instantiated (aside from the internal ease.js initialization tasks).
+
+The constructor is called after all initialization tasks have been completed.
+
