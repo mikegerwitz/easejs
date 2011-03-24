@@ -140,6 +140,7 @@ capital, for class names (and nothing else).
 
 @menu
 * Anonymous vs. Named Classes::
+* Constructors::         How to declare a constructor
 * Temporary Classes::    Throwaway classes that only need to be used once
 * Temporary Instances::  Throwaway instances that only need to be used once
 @end menu
@@ -207,6 +208,43 @@ functionally no difference between named and anonymous classes.}
 
 Much better! We now have a useful error message and immediately know which class
 is causing the issue.
+
+@node Constructors
+@subsection Constructors
+In JavaScript, we are used to functions themselves being a constructor because
+only constructors can be instantiated. With ease.js, constructors are handled in
+a manner similar to most other languages, by providing a separate method. The
+implementation ease.js chose is very similar to that of PHP's
+(@pxref{Constructor Implementation}).
+
+@float Figure, f:constructor
+@verbatim
+    var Foo = Class( 'Foo',
+    {
+        'public __construct': function( name )
+        {
+            console.log( 'Hello, ' + name + '!' );
+        }
+    } );
+
+    // instantiate the class, invoking the constructor
+    Foo( 'World' );
+
+    // Output:
+    // Hello, World!
+@end verbatim
+@caption{Declaring constructors using ease.js}
+@end float
+
+When the class is instantiated, the constructor is invoked, permitting you do to
+any necessary initialization tasks before the class can be used. The constructor
+operates exactly how you would expect a constructor to in JavaScript, with one
+major difference. Returning an object in the constructor does @emph{not} return
+that object instead of the new class instance, since this does not make sense in
+a Class-based model.
+
+Constructors are optional. By default, nothing is done after the class is
+instantiated.
 
 @node Temporary Classes
 @subsection Temporary Classes
