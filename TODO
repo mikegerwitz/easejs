@@ -18,7 +18,6 @@
       visibility, than the abstract implementation defined
     - Abstract keyword cannot be used with private members
     - toString() must be public
-    - Should not be able to instantiate object with non-public constructor (singleton)
 
   Documentation
     - Ensure all docblocks contain only valid JSDoc tags

@@ -161,6 +161,13 @@ To look up a constructor, one need only search for ``__construct'', rather than
 the class name. This makes certain operations, such as global searching (using
 @command{grep} or any other utility), much simpler.
 
+One difference from PHP is the means of preventing instantiation. In PHP, if the
+constructor is declared as non-public, then an error will be raised when the
+developer attempts to instantiate the class. ease.js did not go this route, as
+the method seems cryptic. Instead, an exception should be thrown in the
+constructor if the developer doesn't wish the class to be instantiated. In the
+future, a common method may be added for consistency/convenience.
+
 The constructor is optional. If one is not provided, nothing is done after the
 class is instantiated (aside from the internal ease.js initialization tasks).
 

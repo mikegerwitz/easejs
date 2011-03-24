@@ -146,3 +146,25 @@ assert.ok(
     "Self-invoking constructor receives arguments"
 );
 
+
+/**
+ * In PHP, one would prevent a class from being instantiated by declaring the
+ * constructor as protected or private. To me, this is cryptic. A better method
+ * would simply be to throw an exception. Perhaps, in the future, an alternative
+ * will be provided for consistency.
+ *
+ * The constructor must be public.
+ */
+( function testConstructorCannotBeDeclaredAsProtectedOrPrivate()
+{
+    assert.throws( function()
+    {
+        Class( { 'protected __construct': function() {} } );
+    }, TypeError, "Constructor cannot be protected" );
+
+    assert.throws( function()
+    {
+        Class( { 'private __construct': function() {} } );
+    }, TypeError, "Constructor cannot be private" );
+} )();
+

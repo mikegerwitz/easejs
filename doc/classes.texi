@@ -243,6 +243,24 @@ major difference. Returning an object in the constructor does @emph{not} return
 that object instead of the new class instance, since this does not make sense in
 a Class-based model.
 
+If you wish to prevent a class from being instantiated, simply throw an
+exception within the constructor. This is useful if the class is intended to
+provide only static methods, or if you wish to enforce a single instance
+(one means of achieving a Singleton).
+
+@float Figure, f:constructor-prevent
+@verbatim
+    var Foo = Class( 'Foo',
+    {
+        'public __construct': function( name )
+        {
+            throw Error( "Cannot instantiate class Foo" );
+        }
+    } );
+@end verbatim
+@caption{Prevent class from being instantiated}
+@end float
+
 Constructors are optional. By default, nothing is done after the class is
 instantiated.
 
