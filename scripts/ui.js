@@ -65,6 +65,12 @@
                 .attr( 'id', 'trybox' )
                 .hide()
                 .append( $( '<h2>' ).text( 'Try ease.js' ) )
+                .append( $( '<p>' ).html(
+                    "Enter or modify a test script below. The common " +
+                    "ease.js modules, such as <tt>Class</tt>, have " +
+                    "already imported for you. When you are ready, click " +
+                    "<strong>Run</strong> to run the script."
+                ) )
                 .append( $txt = $( '<textarea>' ).text (
                     "console.log( Class( 'Foo', {} ) );"
                 ) )
