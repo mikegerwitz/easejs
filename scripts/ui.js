@@ -61,6 +61,13 @@
 
         return $trybox || ( function createTryBox()
         {
+            $txt = $( '<textarea>' );
+
+            $.get( 'scripts/ex/class.js', function( data )
+            {
+                $txt.text( data );
+            } );
+
             return $trybox = $( '<div>' )
                 .attr( 'id', 'trybox' )
                 .hide()
@@ -71,9 +78,7 @@
                     "already imported for you. When you are ready, click " +
                     "<strong>Run</strong> to run the script."
                 ) )
-                .append( $txt = $( '<textarea>' ).text (
-                    "console.log( Class( 'Foo', {} ) );"
-                ) )
+                .append( $txt )
                 .append( $( '<div>' )
                     .attr( 'id', 'trybtns' )
                     .append( $( '<div>' )
