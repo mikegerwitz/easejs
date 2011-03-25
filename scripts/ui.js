@@ -66,7 +66,7 @@
                 .hide()
                 .append( $( '<h2>' ).text( 'Try ease.js' ) )
                 .append( $txt = $( '<textarea>' ).text (
-                    "Test"
+                    "console.log( Class( 'Foo', {} ) );"
                 ) )
                 .append( $( '<div>' )
                     .attr( 'id', 'trybtns' )
@@ -76,13 +76,54 @@
                         .addClass( 'btn med green' )
                         .click( function()
                         {
-                            var Class = easejs.Class;
-                            eval( $txt.val() );
+                            runScript( $txt.val() );
                         } )
                     )
                 )
                 .prependTo( '#content' );
         } )();
+    }
+
+
+    function runScript( script )
+    {
+        var Class = easejs.Class,
+
+            $console = $( '<textarea>' )
+                .attr( {
+                    id:       'try-console',
+                    readonly: 'readonly'
+                } ),
+
+            $dialog = $( '<div>' )
+                .append( $console )
+                .dialog( {
+                    title:  'Console',
+                    modal:  true,
+                    width:  '800px',
+                    height: 'auto'
+                } ),
+
+            console = {
+                log: function( text )
+                {
+                    $console.text(
+                        $console.text() + "\n" + text
+                    );
+                }
+            };
+
+        ( function( console )
+        {
+            try
+            {
+                eval( script );
+            }
+            catch ( e )
+            {
+                console.log( e );
+            }
+        } )( console );
     }
 } )();
 

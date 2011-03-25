@@ -233,3 +233,11 @@ p.copyright a, p.copyright a:link {
   text-align: right;
 }
 
+#try-console {
+  width:  99%;
+  height: 10em;
+
+  font-size:   0.8em;
+  font-family: monospace;
+}
+
