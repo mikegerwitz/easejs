@@ -19,6 +19,9 @@
         $( '<div>' )
             .attr( 'id', 'try' )
             .text( 'Try It!' )
+            .addClass( 'btn' )
+            .addClass( 'large' )
+            .addClass( 'glow' )
             .mousedown( function( event )
             {
                 // prevent dragging from highlighting the text (so it looks more
@@ -43,11 +46,32 @@
 
     function getTry()
     {
+        var $txt;
+
         return $trybox || ( function createTryBox()
         {
             return $trybox = $( '<div>' )
                 .attr( 'id', 'trybox' )
                 .hide()
+                .append( $( '<h2>' ).text( 'Try ease.js' ) )
+                .append( $txt = $( '<textarea>' ).text (
+                    "Test"
+                ) )
+                .append( $( '<div>' )
+                    .attr( 'id', 'trybtns' )
+                    .append( $( '<div>' )
+                        .attr( 'id', 'run' )
+                        .text( 'Run' )
+                        .addClass( 'btn' )
+                        .addClass( 'med' )
+                        .addClass( 'green' )
+                        .click( function()
+                        {
+                            var Class = easejs.Class;
+                            eval( $txt.val() );
+                        } )
+                    )
+                )
                 .prependTo( '#content' );
         } )();
     }
