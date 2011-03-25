@@ -32,9 +32,7 @@
         $( '<div>' )
             .attr( 'id', 'try' )
             .text( 'Try It!' )
-            .addClass( 'btn' )
-            .addClass( 'large' )
-            .addClass( 'glow' )
+            .addClass( 'btn large glow' )
             .mousedown( function( event )
             {
                 // prevent dragging from highlighting the text (so it looks more
@@ -75,9 +73,7 @@
                     .append( $( '<div>' )
                         .attr( 'id', 'run' )
                         .text( 'Run' )
-                        .addClass( 'btn' )
-                        .addClass( 'med' )
-                        .addClass( 'green' )
+                        .addClass( 'btn med green' )
                         .click( function()
                         {
                             var Class = easejs.Class;
