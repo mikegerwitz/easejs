@@ -60,7 +60,7 @@ $(PATH_BUILD)/browser-test.html: $(PATH_COMBINE_OUTPUT_FULL)
 combine: $(PATH_COMBINE_OUTPUT) $(PATH_BUILD)/browser-test.html
 
 
-test:
+test: default
 	$(MAKE) -C $(PATH_TEST)
 
 # performance tests
