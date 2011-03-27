@@ -85,14 +85,14 @@ for module in $CAT_MODULES; do
 
     # each module must be enclosed in a closure to emulate a module
     echo "/** $module **/"
-    echo "( function( module )"
+    echo "( function( module, __dirname )"
     echo "{"
     echo "    var exports = module.exports = {};"
 
     # add the module, removing trailing commas
     cat $filename | $RMTRAIL
 
-    echo "} )( module['$module'] = {} );"
+    echo "} )( module['$module'] = {}, '.' );"
 done
 
 # include tests?
