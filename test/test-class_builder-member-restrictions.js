@@ -119,3 +119,68 @@ var common  = require( './common' ),
     );
 } )();
 
+
+/**
+ * We want these available for the same reason that we want the restricted
+ * members available (see above)
+ */
+( function testCanRetrieveListOfForcedPublicMethods()
+{
+    var pub   = builder.getForcedPublicMethods(),
+        count = 0;
+
+    assert.ok( pub instanceof Object,
+        "Can retrieve hash of forced-public methods"
+    );
+
+    for ( name in pub )
+    {
+        count++;
+    }
+
+    // ensure we weren't provided an empty object
+    assert.notEqual( count, 0,
+        "Forced-public method list is not empty"
+    );
+} )();
+
+
+/**
+ * See above. Same reason that we don't want reserved members to be modified.
+ */
+( function testCannotModifyInternalForcedPublicMethodsList()
+{
+    var val = 'foo';
+
+    // attempt to add to list
+    builder.getForcedPublicMethods().foo = val;
+
+    assert.notEqual(
+        builder.getForcedPublicMethods().foo,
+        val,
+        "Cannot alter internal list of forced-public methods"
+    );
+} )();
+
+
+/**
+ * Ensure that an exception will be thrown for each forced-public method that is
+ * not declared as public in the class definition.
+ */
+( function testAllForcedPublicMethodsAreForcedToPublic()
+{
+    var pub = builder.getForcedPublicMethods();
+
+    // test each of the reserved members
+    for ( name in pub )
+    {
+        assert.throws( function()
+        {
+            var obj = {};
+            obj[ name ] = function() {};
+
+            Class( obj );
+        }, Error, "Forced-public methods must be declared as public" );
+    }
+} )();
+
