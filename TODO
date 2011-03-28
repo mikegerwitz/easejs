@@ -14,8 +14,6 @@
 
   Member Keywords
     - Restrictions; throw exceptions when unknown keywords are used
-    - Concrete types must implement member with same visibility, or greater
-      visibility, than the abstract implementation defined
     - Abstract keyword cannot be used with private members
     - toString() must be public
 
