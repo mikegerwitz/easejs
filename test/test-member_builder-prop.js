@@ -48,3 +48,15 @@ mb_common.assertCommon();
     }, TypeError, "Cannot override method with property" );
 } )();
 
+
+/**
+ * Abstract properties do not make sense. Simple as that.
+ */
+( function testCannotDeclareAbstractProperty()
+{
+    assert.throws( function()
+    {
+        mb_common.buildMemberQuick( { 'abstract': true } );
+    }, TypeError, "Cannot declare abstract property" );
+} )();
+
