@@ -24,23 +24,31 @@
 
 var common = require( './common' ),
     assert = require( 'assert' ),
-    parse  = common.require( 'prop_parser' ).parseKeywords;
+    parse  = common.require( 'prop_parser' ).parseKeywords,
+
+    data     = parse( 'final static abstract foo' ),
+    keywords = data.keywords
+;
 
 
-var data     = parse( 'final static abstract foo' ),
-    keywords = data.keywords;
+( function testProperlyRetrievesName()
+{
+    assert.equal(
+        data.name,
+        'foo',
+        "Property keyword parser properly retrieves name"
+    );
+} )();
 
-assert.equal(
-    data.name,
-    'foo',
-    "Property keyword parser properly retrieves name"
-);
 
-assert.ok(
-    ( ( keywords['final'] === true )
-        && ( keywords['static'] === true )
-        && ( keywords['abstract'] === true )
-    ),
-    "Property keyword parser properly retrieves all keywords"
-);
+( function testProperlyRetrievesAllKeywords()
+{
+    assert.ok(
+        ( ( keywords['final'] === true )
+            && ( keywords['static'] === true )
+            && ( keywords['abstract'] === true )
+        ),
+        "Property keyword parser properly retrieves all keywords"
+    );
+} )();
 
