@@ -276,3 +276,18 @@ mb_common.assertCommon();
     );
 } )();
 
+
+/**
+ * It does not make sense to be able to declare abstract private methods, since
+ * they cannot be inherited and overridden by subtypes.
+ */
+( function testCannotDeclareAbstractPrivateMethods()
+{
+    mb_common.value = function() {};
+
+    assert.throws( function()
+    {
+        mb_common.buildMemberQuick( { 'private': true, 'abstract': true } );
+    }, TypeError, "Cannot declare private abstract method" );
+} )();
+
