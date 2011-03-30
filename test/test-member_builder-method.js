@@ -24,12 +24,13 @@
 
 var common    = require( './common' ),
     assert    = require( 'assert' ),
-    mb_common = require( __dirname + '/inc-member_builder-common' )
+    mb_common = require( __dirname + '/inc-member_builder-common' ),
+    builder   = common.require( 'member_builder' )
 ;
 
 mb_common.funcVal     = 'foobar';
 mb_common.value       = function() { return mb_common.funcVal; };
-mb_common.buildMember = common.require( 'member_builder' ).buildMethod;
+mb_common.buildMember = builder.buildMethod;
 
 // do assertions common to all member builders
 mb_common.assertCommon();
@@ -134,6 +135,57 @@ mb_common.assertCommon();
 
     // invoke the method
     mb_common.members[ 'public' ][ mb_common.name ]();
+} )();
+
+
+/**
+ * If the method is called when bound to a different context (e.g. for
+ * protected/private members), __super may not be properly bound.
+ *
+ * This test is in response to a bug found after implementing visibility
+ * support. The __super() method was previously defined on 'this', which may or
+ * may not be the context that is actually used. Likely, it's not.
+ */
+( function testSuperMethodWorksProperlyWhenContextDiffers()
+{
+    var members      = builder.initMembers(),
+        super_called = false,
+        retobj       = {},
+        instCallback = function()
+        {
+            return retobj;
+        },
+
+        // the overriding method
+        newfunc = function()
+        {
+            this.__super();
+        }
+    ;
+
+    // super method to be overridden
+    members[ 'public' ].foo = function()
+    {
+        super_called = true;
+    };
+
+    // override
+    builder.buildMethod( members, {}, 'foo', newfunc, {}, instCallback );
+
+    // call the overriding method
+    members[ 'public' ].foo();
+
+    // ensure that the super method was called
+    assert.equal( super_called, true,
+        "__super() method is called even when context differs"
+    );
+
+    // finally, ensure that __super is no longer set on the returned object
+    // after the call to ensure that the caller cannot break encapsulation by
+    // stealing a method reference (sneaky, sneaky)
+    assert.equal( retobj.__super, undefined,
+        "__super() method is unset after being called"
+    );
 } )();
 
 
