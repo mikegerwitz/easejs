@@ -657,3 +657,38 @@ var common    = require( './common' ),
     }, Error, "Cannot de-escalate visibility for interface members" );
 } )();
 
+
+/**
+ * Due to the way the property object is laid atop of the public members, we
+ * need to ensure that protected methods' functionality can /actually/ be
+ * overridden, since the protected method is higher in the prototype chain and
+ * therefore will be accessed before the public method.
+ *
+ * We don't care about private -> protected, because that's not possible through
+ * inheritance.
+ */
+( function testCanOverrideProtectedMethodFunctionalityWithPublic()
+{
+    // get the result of invoking overridden foo()
+    var result = Class(
+        {
+            'protected foo': function()
+            {
+                return false;
+            },
+        } ).extend(
+        {
+            // override and escalate visibility of method foo()
+            'public foo': function()
+            {
+                return true;
+            },
+        } )().foo();
+
+    // if the override was successful, we'll be able to invoke the overridden
+    // method
+    assert.equal( result, true,
+        "Can properly override protected methods with public"
+    );
+} )();
+
