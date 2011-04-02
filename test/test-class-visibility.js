@@ -692,3 +692,36 @@ var common    = require( './common' ),
     );
 } )();
 
+
+/**
+ * There was an issue where the private property object was not proxying values
+ * to the true protected values. This would mean that when the parent
+ * initialized protected values, those values would be unavailable to the
+ * subtype. Instead, the value available to the subtype was the value that was
+ * assigned as the default value in the class definition.
+ */
+( function testProtectedValuesAreAvailableToSubtypesWhenSetByParentMethod()
+{
+    var expected = 5,
+        result   = Class(
+        {
+            'protected val': 0,
+
+            'public __construct': function()
+            {
+                this.val = expected;
+            },
+        } ).extend(
+        {
+            'public getVal': function()
+            {
+                return this.val;
+            },
+        } )().getVal();
+
+    assert.equal( result, expected,
+        "Subtypes should have acess to protected properties values set by " +
+        "super methods"
+    );
+} )();
+
