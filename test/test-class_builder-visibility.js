@@ -38,7 +38,7 @@ var common  = require( './common' ),
  * Unfortunately, there's really no way around that. Maybe a more elegant
  * solution will arise in the future. For now, not likely.
  *
- * We need to provide a means to reference the actual instance. __self is that
+ * We need to provide a means to reference the actual instance. __inst is that
  * solution.
  */
 ( function testSelfPropertyReferencesInstanceRatherThanPropObj()
@@ -51,22 +51,22 @@ var common  = require( './common' ),
             {
                 // rather than returning, assign to external var so that we can
                 // rest assured that the return value wasn't manipulated
-                result = this.__self;
+                result = this.__inst;
                 ref    = this;
             }
         } )();
 
     assert.deepEqual( result, foo,
-        "this.__self returns reference to actual instance"
+        "this.__inst returns reference to actual instance"
     );
 
     // the property should be read-only
     if ( util.definePropertyFallback() === false )
     {
         assert.equal(
-            Object.getOwnPropertyDescriptor( ref, '__self' ).writable,
+            Object.getOwnPropertyDescriptor( ref, '__inst' ).writable,
             false,
-            "this.__self is not writable"
+            "this.__inst is not writable"
         );
     }
 } )();
