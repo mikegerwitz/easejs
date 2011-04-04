@@ -16,7 +16,8 @@ Current support includes:
 While the current focus of the project is Object-Oriented design, it is likely
 that ease.js will expand to other paradigms in the future.
 
-**This project is still under development.**
+**This project is still under development. Please read the manual for more
+information.**
 
 ## Why ease.js?
 There are already plenty of other means of achieving each of this project's
@@ -33,32 +34,38 @@ until the first release.
 ease.js uses the [CommonJS](http://commonjs.org) module format. In the
 examples below, [Node.js](http://nodejs.org) is used.
 
-### Creating Classes
+### Defining Classes
 The constructor is provided as the `__construct()` method (influenced by
 [PHP](http://php.net)).
 
     var Class = require( 'easejs' ).Class;
 
-    var Foo = Class(
+    // anonymous class definition
+    var Dog = Class(
     {
-        foo: '',
+        'private _name': '',
 
-        'public __construct': function( foo )
+        'public __construct': function( name )
         {
-            this.foo = foo;
+            this._name = name;
         },
 
-        'public someMethod': function()
+        'public bark': function()
         {
-            console.log( 'someMethod() called' );
+            console.log( 'Woof!' );
         },
+
+        'public getName': function()
+        {
+            return this._name;
+        }
     });
 
-The above creates an anonymous class and stores it in the variable ``Foo``. You
+The above creates an anonymous class and stores it in the variable ``Dog``. You
 have the option of naming class in order to provide more useful error messages
 and toString() output:
 
-    var Foo = Class( 'Foo',
+    var Dog = Class( 'Dog',
     {
         // ...
     });
