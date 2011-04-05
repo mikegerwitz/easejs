@@ -19,17 +19,25 @@
 
 ( function()
 {
-    var $trybox = null;
+    var $trybox = null,
+        $trybtn = null
+    ;
 
     $( document ).ready( function()
     {
         appendTry();
+
+        if ( document.location.href.substr( -6 ) === '#tryit' )
+        {
+            console.log( 'ok' );
+            toggleTry();
+        }
     } );
 
 
     function appendTry()
     {
-        $( '<div>' )
+        $trybtn = $( '<div>' )
             .attr( 'id', 'try' )
             .text( 'Try It!' )
             .addClass( 'btn large glow' )
@@ -41,17 +49,23 @@
             } )
             .click( function( event )
             {
-                var $try = getTry();
-
-                $( this ).text(
-                    ( $try.is( ':visible' ) )
-                        ? 'Try It!'
-                        : 'Hide It'
-                );
-
-                $try.slideToggle();
+                toggleTry();
             } )
             .appendTo( '#header' );
+    }
+
+
+    function toggleTry()
+    {
+        var $try = getTry();
+
+        $trybtn.text(
+            ( $try.is( ':visible' ) )
+                ? 'Try It!'
+                : 'Hide It'
+        );
+
+        $try.slideToggle();
     }
 
 
