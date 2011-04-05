@@ -150,3 +150,33 @@ var common    = require( './common' ),
         "Public static getters/getters are unavailable on prototype (1)"
     );
 } )();
+
+
+/**
+ * With non-static methods, 'this' is bound to the instance. In the case of
+ * static members, we should bind to the class definition (equivalent of
+ * this.__self).
+ *
+ * This functionality had already existed previously. When a propobj is not
+ * available for an instance, it falls back. This serves as a regression test to
+ * ensure this functionality remains.
+ */
+( function testStaticMethodsBoundToClassRatherThanInstance()
+{
+    var result = null,
+        Foo    = builder.build(
+        {
+            'public static foo': function()
+            {
+                result = this;
+            },
+        } );
+
+    // call the static method
+    Foo.foo();
+
+    assert.deepEqual( result, Foo,
+        "Static members are bound to class definition rather than instance"
+    );
+} )();
+
