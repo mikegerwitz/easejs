@@ -87,3 +87,66 @@ var common    = require( './common' ),
     );
 } )();
 
+
+/**
+ * Same as above, but with getters/setters. We can only run this test if
+ * getters/setters are supported by the engine running it.
+ */
+( function testPublicStaticGettersSettersAreAccessibleViaClassDefinitionOnly()
+{
+    // if unsupported, don't bother with the test
+    if ( fallback )
+    {
+        return;
+    }
+
+    // we must define in this manner so older engines won't blow up due to
+    // syntax errors
+    var def    = {},
+        val    = 'baz'
+        called = [];
+
+    Object.defineProperty( def, 'public static foo', {
+        get: function() { return val; },
+        set: function() { called[ 0 ] = true; },
+
+        enumerable: true,
+    } );
+
+    // should be public by default if not specified
+    Object.defineProperty( def, 'static bar', {
+        get: function() { return val; },
+        set: function() { called[ 1 ] = true; },
+
+        enumerable: true,
+    } );
+
+    // define the class
+    var Foo = builder.build( def );
+
+    assert.equal( Foo.foo, val,
+        "Public static getters are accessible via class definition"
+    );
+
+    Foo.foo = 'moo';
+    assert.equal( called[ 0 ], true,
+        "Public static setters are accessible via class definition"
+    );
+
+    assert.equal( Foo.bar, val,
+        "Static getters are public by default"
+    );
+
+    Foo.bar = 'moo';
+    assert.equal( called[ 1 ], true,
+        "Static setters are public by default"
+    );
+
+    // none of these should be available on the prototype
+    assert.equal( Foo.prototype.foo, undefined,
+        "Public static getters/getters are unavailable on prototype (0)"
+    );
+    assert.equal( Foo.prototype.bar, undefined,
+        "Public static getters/getters are unavailable on prototype (1)"
+    );
+} )();
