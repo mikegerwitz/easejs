@@ -142,3 +142,24 @@ var common = require( './common' ),
     }, TypeError, "Src parameter is required to be an object" );
 } )();
 
+
+/**
+ * For convenience, let's support a deep copy as well, just in case they don't
+ * want to copy everything by reference.
+ */
+( function testCanDeepCopy()
+{
+    var src  = { foo: [ 1, 2, 3 ] },
+        dest = copyTo( {}, src, true );
+
+    // copied values should be equal by value...
+    assert.deepEqual( src.val, dest.val,
+        "Copied values should be comparitively equal with deep copy"
+    );
+
+    // ...but not by reference
+    assert.ok( src.foo !== dest.foo,
+        "Copied values should not be the same object after deep copy"
+    );
+} )();
+
