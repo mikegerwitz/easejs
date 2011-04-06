@@ -286,3 +286,29 @@ var common    = require( './common' ),
     }
 } )();
 
+
+/**
+ * Each class should have its own set of static values. That is, a subtype
+ * should not share references with its parent.
+ */
+( function testInheritedPublicStaticPropertiesAreClones()
+{
+    var val = [ 1, 2, 3 ],
+        Foo = builder.build(
+        {
+            'public static bar': val,
+        } ),
+        SubFoo = builder.build( Foo, {} )
+    ;
+
+    // the values should certainly be equal...
+    assert.deepEqual( SubFoo.bar, Foo.bar,
+        "Inherited static properties should be equal by value"
+    );
+
+    // ...but they should not be the same object
+    assert.ok( SubFoo.bar !== Foo.bar,
+        "Inherited static propertis should not be the same object"
+    );
+} )();
+
