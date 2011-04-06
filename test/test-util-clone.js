@@ -103,3 +103,20 @@ for ( prop in deep_obj )
     );
 }
 
+
+/**
+ * "Cloning" functions doesn't necessarily make sense. It can, depending on how
+ * you think about it. We can do a toSource() in many circumstances and create a
+ * new function from that. But what's the point? It still does the same thing.
+ * As such, functions will not be cloned. They'll be returned by reference.
+ */
+( function testCloneDoesNothingWithFunctions()
+{
+    var func = function() {},
+        obj  = { foo: func };
+
+    assert.ok( func === util.clone( obj, true ).foo,
+        "Functions should not be cloned"
+    );
+} )();
+
