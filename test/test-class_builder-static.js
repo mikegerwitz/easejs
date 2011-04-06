@@ -201,3 +201,88 @@ var common    = require( './common' ),
     );
 } )();
 
+
+/**
+ * We don't have the benefit of static members being part of the prototype
+ * chain. Inheritance is not automatic. This test deals only with ensuring that
+ * *public* static members are inherited by subtypes.
+ */
+( function testPublicStaticMembersAreInheritedBySubtypes()
+{
+    var def = {
+        'public static foo': 'val',
+        'public static func': function() {},
+
+        'public bla': 'moo',
+    };
+
+    // also test getters/setters if supported
+    if ( !fallback )
+    {
+        Object.defineProperty( def, 'public static bar', {
+            get: function() {},
+            set: function() {},
+
+            enumerable: true,
+        } );
+    }
+
+    var baz = 'foobar',
+        Foo = builder.build( def ),
+
+        // extends from the parent and adds an additional
+        SubFoo = builder.build( Foo, { 'public static baz': baz } ),
+
+        // simply extends from the parent (also serves as a check to ensure that
+        // static members of *all* parents are inherited, not just the
+        // immediate)
+        SubSubFoo = builder.build( SubFoo, {} )
+    ;
+
+    // properties
+    assert.equal( SubFoo.foo, Foo.foo,
+        "Public static properties are inherited by subtypes"
+    );
+    assert.equal( SubSubFoo.foo, Foo.foo,
+        "Public static properties are inherited by sub-subtypes"
+    );
+
+    // methods
+    assert.deepEqual( SubFoo.func, Foo.func,
+        "Public static methods are inherited by subtypes"
+    );
+    assert.deepEqual( SubSubFoo.func, Foo.func,
+        "Public static methods are inherited by sub-subtypes"
+    );
+
+    // merge
+    assert.equal( SubFoo.baz, baz,
+        "Subtypes contain both inherited static members as well as their own"
+    );
+
+    // getters/setters (if supported by engine)
+    if ( !fallback )
+    {
+        var super_data   = Object.getOwnPropertyDescriptor( Foo, 'bar' ),
+            sub_data     = Object.getOwnPropertyDescriptor( SubFoo, 'bar' ),
+            sub_sub_data = Object.getOwnPropertyDescriptor( SubFoo, 'bar' )
+        ;
+
+        // getters
+        assert.deepEqual( super_data.get, sub_data.get,
+            "Public static getters are inherited by subtypes"
+        );
+        assert.deepEqual( super_data.get, sub_sub_data.get,
+            "Public static getters are inherited by sub-subtypes"
+        );
+
+        // setters
+        assert.deepEqual( super_data.set, sub_data.set,
+            "Public static setters are inherited by subtypes"
+        );
+        assert.deepEqual( super_data.set, sub_sub_data.set,
+            "Public static setters are inherited by sub-subtypes"
+        );
+    }
+} )();
+
