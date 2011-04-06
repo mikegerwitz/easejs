@@ -28,6 +28,27 @@ var common    = require( './common' ),
     fallback  = common.require( 'util' ).definePropertyFallback()
 ;
 
+
+/**
+ * To provide access to static members, this.__self is made available inside of
+ * instances.
+ */
+( function testSelfPropertyReferencesClassDefinition()
+{
+    var Foo = builder.build(
+    {
+        'public function test': function()
+        {
+            return this.__self;
+        },
+    } );
+
+    assert.deepEqual( Foo().test(), Foo,
+        "__self property references class definition"
+    );
+} )();
+
+
 /**
  * Static members, by their nature, should be accessible through the class
  * definition itself; that is, without instantiation. It should also not be
