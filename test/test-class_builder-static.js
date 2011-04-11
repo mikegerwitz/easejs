@@ -79,13 +79,13 @@ var common    = require( './common' ),
         } );
 
     // properties should be accessible via class definition
-    assert.equal( Foo.foo, val,
+    assert.equal( Foo.$.foo, val,
         "Public static properties should be accessible via class definition"
     );
 
     // as long as the above test succeeded, we can then conclude that static
     // members are public by default if the following succeeds
-    assert.equal( Foo.bar, val2,
+    assert.equal( Foo.$.bar, val2,
         "Static properties are public by default"
     );
 
@@ -240,10 +240,10 @@ var common    = require( './common' ),
     ;
 
     // properties
-    assert.equal( SubFoo.foo, Foo.foo,
+    assert.equal( SubFoo.$.foo, Foo.$.foo,
         "Public static properties are inherited by subtypes"
     );
-    assert.equal( SubSubFoo.foo, Foo.foo,
+    assert.equal( SubSubFoo.$.foo, Foo.$.foo,
         "Public static properties are inherited by sub-subtypes"
     );
 
@@ -256,7 +256,7 @@ var common    = require( './common' ),
     );
 
     // merge
-    assert.equal( SubFoo.baz, baz,
+    assert.equal( SubFoo.$.baz, baz,
         "Subtypes contain both inherited static members as well as their own"
     );
 
@@ -288,10 +288,11 @@ var common    = require( './common' ),
 
 
 /**
- * Each class should have its own set of static values. That is, a subtype
- * should not share references with its parent.
+ * Static references should be inherited by subtypes. That is, modifying a
+ * static property of a supertype should modify the same static property of the
+ * subtype, so long as the subtype has not defined a property of the same name.
  */
-( function testInheritedPublicStaticPropertiesAreClones()
+( function testPublicStaticPropertyReferencesAreInheritedBySubtypes()
 {
     var val = [ 1, 2, 3 ],
         Foo = builder.build(
@@ -301,14 +302,9 @@ var common    = require( './common' ),
         SubFoo = builder.build( Foo, {} )
     ;
 
-    // the values should certainly be equal...
-    assert.deepEqual( SubFoo.bar, Foo.bar,
-        "Inherited static properties should be equal by value"
-    );
-
-    // ...but they should not be the same object
-    assert.ok( SubFoo.bar !== Foo.bar,
-        "Inherited static propertis should not be the same object"
+    // the properties should reference the same object
+    assert.ok( SubFoo.$.bar === Foo.$.bar,
+        "Inherited static properties should share references"
     );
 } )();
 
