@@ -89,8 +89,8 @@
                 .append( $( '<p>' ).html(
                     "Enter or modify a test script below. The common " +
                     "ease.js modules, such as <tt>Class</tt>, have " +
-                    "already imported for you. When you are ready, click " +
-                    "<strong>Run</strong> to run the script."
+                    "already been imported for you. When you are ready, " +
+                    "click <strong>Run</strong> to run the script."
                 ) )
                 .append( $txt )
                 .append( $( '<div>' )
