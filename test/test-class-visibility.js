@@ -725,3 +725,41 @@ var common    = require( './common' ),
     );
 } )();
 
+
+/**
+ * There was a bug introduced when we prevented protected members from
+ * overriding public (since in the prototype chain, protected members are laid
+ * atop public, and this cannot change). This bug would disallow protected
+ * members from being overridden by other protected members.
+ *
+ * This test is both a proof and a regression test.
+ */
+( function testCanProperlyOverrideProtectedWithProtected()
+{
+    var val    = 'foobar',
+        result = Class(
+        {
+            'protected foo': function() {},
+        } ).extend(
+        {
+            // provide concrete implementation
+            'protected foo': function()
+            {
+                return val;
+            },
+
+            'public doFoo': function()
+            {
+                return this.foo();
+            },
+        } )().doFoo();
+    ;
+
+    // if everything worked as expected, the value of 'val' will have been
+    // returned and stored in 'result'
+    assert.equal( result, val,
+        "Protected methods can properly be overriden by another protected " +
+            "method"
+    );
+} )();
+
