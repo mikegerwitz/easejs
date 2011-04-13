@@ -53,6 +53,7 @@ inconsistent implementation.
 * Class Declaration Syntax::
 * Class Storage::
 * Constructor Implementation::
+* Static Implementation::
 @end menu
 
 @node Class Declaration Syntax
@@ -172,4 +173,227 @@ The constructor is optional. If one is not provided, nothing is done after the
 class is instantiated (aside from the internal ease.js initialization tasks).
 
 The constructor is called after all initialization tasks have been completed.
+
+@node Static Implementation
+@subsection Static Implementation
+The decisions behind ease.js's static implementation were very difficult. More
+thought and time was spent on paper designing how the static implementation
+should be represented than most other features in the project. The reason for
+this is not because the concept of static members is complicated. Rather, it is
+due to limitations of pre-ECMAScript 5 engines.
+
+@subsubsection How Static Members Are Supposed To Work
+The first insight into the problems a static implementation would present was
+the concept itself. Take any common Object-Oriented language such as C++, Java,
+or even PHP. Static members are inherited by subtypes @emph{by reference}. What
+does this mean? Consider two classes: @var{Foo} and @var{SubFoo}, the latter of
+which inherits from the former. @var{Foo} defines a static property @var{count}
+to be incremented each time the class is instantiated. The subtype @var{SubFoo},
+when instantiated (assuming the constructor is not overridden), would increment
+that very same count. Therefore, we can represent this by static that
+@samp{Foo.count === SubFoo.count}. In the example below, we demonstrate this
+concept in pseudocode:
+
+@float Figure, f:static-ref-pseudocode
+@verbatim
+    let Foo = Class
+        public static count = 0
+    let SubFoo extend from Foo
+
+    Foo.count = 5
+    SubFoo.count === 5 // true
+    SubFoo.count = 6
+    Foo.count === 6 // true
+@end verbatim
+@caption{Representing static properties in pseudocode}
+@end float
+
+As you may imagine, this is a problem. The above example does not look very
+JS-like. That is because it isn't. JS does not provide a means for variables to
+share references to the same primitive. In fact, even Objects are passed by
+value in the sense that, if the variable is reassigned, the other variable
+remains unaffected. The concept we are looking to support is similar to a
+pointer in C/C++, or a reference in PHP.
+
+We have no such luxury.
+
+@subsubsection Emulating References
+Fortunately, ECMAScript 5 provides a means to @emph{emulate} references --
+getters and setters. Taking a look at @ref{f:static-ref-pseudocode}, we can
+clearly see that @var{Foo} and @var{SubFoo} are completely separate objects.
+They do not share any values by references. We shouldn't share primitives by
+reference even if we wanted to. This issue can be resolved by using
+getters/setters on @var{SubFoo} and @emph{forwarding} gets/sets to the
+supertype:
+
+@float Figure, f:static-ref-forward
+@verbatim
+    var obj1 = { val: 1 },
+        obj2 = {
+            get val()
+            {
+                return obj1.val;
+            },
+
+            set val( value )
+            {
+                obj1.val = value;
+            },
+        }
+    ;
+
+    obj2.val; // 1
+    obj2.val = 5;
+    obj1.val; // 5
+
+    obj1.val = 6;
+    obj2.val // 6
+@end verbatim
+@caption{Emulating references with getters/setters (proxy)}
+@end float
+
+This comes with considerable overhead when compared to accessing the properties
+directly (in fact, at the time of writing this, V8 doesn't even attempt to
+optimize calls to getters/setters, so it is even slower than invoking accessor
+methods). That point aside, it works well and accomplishes what we need it to.
+
+There's just one problem. @emph{This does not work in pre-ES5 environments!}
+ease.js needs to support older environments, falling back to ensure that
+everything operates the same (even though features such as visibility aren't
+present).
+
+This means that we cannot use this proxy implementation. It is used for
+visibility in class instances, but that is because a fallback is possible. It is
+not possible to provide a fallback that works with two separate objects. If
+there were, we wouldn't have this problem in the first place.
+
+@subsubsection Deciding On a Compromise
+A number of options were available regarding how static properties should be
+implemented. Methods are not a problem -- they are only accessed by reference,
+never written to. Therefore, they can keep their convenient @samp{Foo.method()}
+syntax. Unfortunately, that cannot be the case for properties without the
+ability to implement a proxy through the use of getters/setters (which, as
+aforementioned, requires the services of ECMAScript 5, which is not available in
+older environments).
+
+The choices were has follows:
+
+@enumerate
+@item
+Add another object to be shared between classes (e.g. @samp{Foo.$}).
+
+@item
+Do not inherit by reference. Each subtype would have their own distinct value.
+
+@item
+Access properties via an accessor method (e.g. @samp{Foo.$('var')}), allowing us
+to properly proxy much like a getter/setter.
+@end enumerate
+
+There are problems with all of the above options. The first option, which
+involves sharing an object, would cause awkward inheritance in the case of a
+fallback. Subtypes would set their static properties on the object, which would
+make that property available to the @emph{supertype}! That is tolerable in the
+case of a fallback. However, the real problem lies in two other concepts: when a
+class has two subtypes that attempt to define a property with the same name, or
+when a subtype attempts to override a property. The former would cause both
+subtypes (which are entirely separate from one-another, with the exception of
+sharing the same parent) to share the same values, which is unacceptable. The
+latter case can be circumvented by simply preventing overriding of static
+properties, but the former just blows this idea out of the water entirely.
+
+The second option is to @emph{not} inherit by reference. This was the initial
+implementation (due to JavaScript limitations) until it was realized that this
+caused far too many inconsistencies between other Object-Oriented languages.
+There is no use in introducing a different implementation when we are attempting
+to mirror classic Object-Oriented principals to present a familiar paradigm to
+developers. Given this inconsistency alone, this option simply will not work.
+
+The final option is to provide an accessor method, much like the style of
+jQuery. This would serve as an ugly alternative for getters/setters. It would
+operate as follows:
+
+@float Figure, f:static-accessor-impl
+@verbatim
+    // external
+    Foo.$('var'); // getter
+    Foo.$( 'var, 'foo' ); // setter
+
+    // internal
+    this.__self.$('var'); // getter
+    this.__self.$( 'var', 'foo' ); // setter
+@end verbatim
+@caption{Accessor implementation for static properties}
+@end float
+
+Obviously, this is highly inconsistent with the rest of the framework, which
+permits accessing properties in the conventional manner. However, this
+implementation does provide a number key benefits:
+
+@itemize
+@item
+It provides an implementation that is @emph{consistent with other
+Object-Oriented languages}. This is the most important point!
+
+@item
+The accessor method parameter style is common in other frameworks like jQuery.
+
+@item
+The method name (@var{$}) is commonly used to denote a variable in scripting
+languages (such as PHP and shells, or to denote a scalar in Perl).
+
+@item
+It works consistently in ES5 and pre-ES5 environments alike.
+@end itemize
+
+So, although the syntax is inconsistent with the rest of the framework, it does
+address all of our key requirements. This makes it a viable option for our
+implementation.
+
+@subsubsection Appeasing ES5-Only Developers
+There is another argument to be had. ease.js is designed to operate across all
+major browsers for all major versions, no matter how ridiculous (e.g. Internet
+Explorer 5.5), so long as it does not require unreasonable development effort.
+That is great and all, but what about those developers who are developing
+@emph{only} for an ECMAScript 5 environment? This includes developers leveraging
+modern HTML 5 features and those using Node.js who do not intend to share code
+with pre-ES5 clients. Why should they suffer from an ugly, unnecessary syntax
+when a beautiful, natural [and elegant] implementation is available using
+proxies via getters/setters?
+
+There are certainly two sides to this argument. On one hand, it is perfectly
+acceptable to request a natural syntax if it is supported. On the other hand,
+this introduces a number of problems:
+
+@itemize
+@item
+This may make libraries written using ease.js unportable (to older
+environments). If written using an ES5-only syntax, they would have no way to
+fall back for static properties.
+
+@item
+The syntax differences could be very confusing, especially to those beginning to
+learn ease.js. They may not clearly understand the differences, or may go to use
+a library in their own code, and find that things do not work as intended.
+Code examples would also have to make clear note of what static syntax they
+decided to use. It adds a layer of complexity.
+@end itemize
+
+Now, those arguing for the cleaner syntax can also argue that all newer
+environments moving forward will support the clean, ES5-only syntax, therefore
+it would be beneficial to have. Especially when used for web applications that
+can fall back to an entirely different implementation or refuse service entirely
+to older browsers. Why hold ease.js back for those stragglers if there's no
+intent on ever supporting them?
+
+Both arguments are solid. Ultimately, ease.js will likely favor the argument of
+implementing the cleaner syntax by providing a runtime flag. If enabled, static
+members will be set using proxies. If not, it will fall back to the uglier
+implementation using the accessor method. If the environment doesn't support the
+flag when set, ease.js will throw an error and refuse to run, or will invoke a
+fallback specified by the developer to run an alternative code base that uses
+the portable, pre-ES5 syntax.
+
+This decision will ultimately be made in the future. For the time being, ease.js
+will support and encourage use of the portable static property syntax.
 
