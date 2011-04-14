@@ -370,3 +370,29 @@ var common    = require( './common' ),
     );
 } )();
 
+
+/**
+ * Ensure that the proper context is returned by static property setters. It
+ * should return the calling class, regardless of whether or not it owns the
+ * property being requested.
+ */
+( function testStaticPropertySettersReturnProperContext()
+{
+    var Foo = builder.build(
+        {
+            'public static foo': '',
+        } ),
+
+        SubFoo = builder.build( Foo, {} )
+    ;
+
+    assert.ok( Foo.$( 'foo', 'val' ) === Foo,
+        "Static property setter returns self"
+    );
+
+    assert.ok( SubFoo.$( 'foo', 'val' ) === SubFoo,
+        "Static property setter returns calling class, even if property is " +
+            "owned by a supertype"
+    );
+} )();
+
