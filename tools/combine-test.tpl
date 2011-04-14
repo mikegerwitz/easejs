@@ -40,6 +40,15 @@ function failAssertion( err )
 module.assert = { exports: {
     equal: function ( val, cmp, err )
     {
+        if ( val != cmp )
+        {
+            failAssertion( err );
+        }
+    },
+
+
+    strictEqual: function( val, cmp, err )
+    {
         if ( val !== cmp )
         {
             failAssertion( err );
