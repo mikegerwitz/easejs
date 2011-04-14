@@ -362,9 +362,20 @@ var common    = require( './common' ),
         } )
     ;
 
-    Foo.$( 'foo', undefined );
-    Foo.$( 'foo', val );
+    // first check to ensure we can set the value to null
+    Foo.$( 'foo', null );
+    assert.strictEqual( Foo.$( 'foo' ), null,
+        "Static properties may be set to null"
+    );
 
+    // then undefined (this actually won't do anything)
+    Foo.$( 'foo', undefined );
+    assert.strictEqual( Foo.$( 'foo' ), undefined,
+        "Static properties may be set to undefined"
+    );
+
+    // then set back to a scalar
+    Foo.$( 'foo', val );
     assert.equal( Foo.$( 'foo' ), val,
         "Setting static property to undefined does not corrupt lookup process"
     );
