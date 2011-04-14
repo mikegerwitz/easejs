@@ -396,3 +396,23 @@ var common    = require( './common' ),
     );
 } )();
 
+
+/**
+ * Users should not be permitted to set values of static properties that have
+ * not been declared.
+ */
+( function testAttemptingToSetUndeclaredStaticPropertyResultsInException()
+{
+    assert.throws(
+        function()
+        {
+            // should throw an exception since property 'foo' has not been
+            // declared
+            builder.build( {} ).$( 'foo', 'val' );
+        },
+        ReferenceError,
+        "Attempting to set an undeclaraed static property results in an " +
+            "exception"
+    );
+} )();
+
