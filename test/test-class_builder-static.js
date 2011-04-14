@@ -50,6 +50,23 @@ var common    = require( './common' ),
 
 
 /**
+ * If a static property does not exist, the getter should return undefined.
+ *
+ * This test exists to ensure an error is not thrown if the property is not
+ * found. This is because we check each parent and eventually reach the base
+ * object. We must ensure the base object does not cause any problems.
+ */
+( function testStaticPropertyLookupReturnsUndefinedIfNotFound()
+{
+    var result = builder.build( {} ).$( 'foo' );
+
+    assert.equal( result, undefined,
+        "Static property getter should return undefined if not found"
+    );
+} )();
+
+
+/**
  * Static members, by their nature, should be accessible through the class
  * definition itself; that is, without instantiation. It should also not be
  * available through the generated prototype (and therefore, be unavailable to
@@ -79,13 +96,13 @@ var common    = require( './common' ),
         } );
 
     // properties should be accessible via class definition
-    assert.equal( Foo.$.foo, val,
+    assert.equal( Foo.$('foo'), val,
         "Public static properties should be accessible via class definition"
     );
 
     // as long as the above test succeeded, we can then conclude that static
     // members are public by default if the following succeeds
-    assert.equal( Foo.$.bar, val2,
+    assert.equal( Foo.$('bar'), val2,
         "Static properties are public by default"
     );
 
@@ -99,12 +116,9 @@ var common    = require( './common' ),
         "Static methods are public by default"
     );
 
-    // neither should be a part of the prototype
-    assert.equal( Foo.prototype.foo, undefined,
+    // getter/setter method should not be a part of the prototype
+    assert.equal( Foo.prototype.$, undefined,
         "Public static properties are *not* part of the prototype"
-    );
-    assert.equal( Foo.prototype.baz, undefined,
-        "Public static methods are *not* part of the prototype"
     );
 } )();
 
@@ -240,10 +254,10 @@ var common    = require( './common' ),
     ;
 
     // properties
-    assert.equal( SubFoo.$.foo, Foo.$.foo,
+    assert.equal( SubFoo.$('foo'), Foo.$('foo'),
         "Public static properties are inherited by subtypes"
     );
-    assert.equal( SubSubFoo.$.foo, Foo.$.foo,
+    assert.equal( SubSubFoo.$('foo'), Foo.$('foo'),
         "Public static properties are inherited by sub-subtypes"
     );
 
@@ -256,7 +270,7 @@ var common    = require( './common' ),
     );
 
     // merge
-    assert.equal( SubFoo.$.baz, baz,
+    assert.equal( SubFoo.$('baz'), baz,
         "Subtypes contain both inherited static members as well as their own"
     );
 
@@ -303,7 +317,7 @@ var common    = require( './common' ),
     ;
 
     // the properties should reference the same object
-    assert.ok( SubFoo.$.bar === Foo.$.bar,
+    assert.ok( SubFoo.$('bar') === Foo.$('bar'),
         "Inherited static properties should share references"
     );
 } )();
