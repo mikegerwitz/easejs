@@ -308,7 +308,9 @@ var common    = require( './common' ),
  */
 ( function testPublicStaticPropertyReferencesAreInheritedBySubtypes()
 {
-    var val = [ 1, 2, 3 ],
+    var val  = [ 1, 2, 3 ],
+        val2 = [ 'a', 'b', 'c' ],
+
         Foo = builder.build(
         {
             'public static bar': val,
@@ -319,6 +321,52 @@ var common    = require( './common' ),
     // the properties should reference the same object
     assert.ok( SubFoo.$('bar') === Foo.$('bar'),
         "Inherited static properties should share references"
+    );
+
+    // setting a property on Foo should set the property on SubFoo and
+    // vice-versa
+    Foo.$( 'bar', val2 );
+    assert.deepEqual( Foo.$( 'bar' ), val2,
+        "Can set static property values"
+    );
+
+    assert.ok( Foo.$( 'bar' ) === SubFoo.$( 'bar' ),
+        "Setting a static property value on a supertype also sets the value " +
+            "on subtypes"
+    );
+
+    SubFoo.$( 'bar', val );
+    assert.ok( Foo.$( 'bar' ) === SubFoo.$( 'bar' ) );
+} )();
+
+
+/**
+ * Static members do not have the benefit of prototype chains. We must
+ * implement our own means of traversing the inheritance tree. This is done by
+ * checking to see if a class has defined the requested property, then
+ * forwarding the call to the parent if it has not.
+ *
+ * The process of looking up the property is very important. hasOwnProperty is
+ * used rather than checking for undefined, because they have drastically
+ * different results. Setting a value to undefined (if hasOwnProperty were not
+ * used) would effectively forward all requests to the base class (since no
+ * property would be found), thereby preventing it from ever being written to
+ * again.
+ */
+( function testSettingsStaticPropertiesToUndefinedWillNotCorruptLookupProcess()
+{
+    var val = 'baz',
+        Foo = builder.build(
+        {
+            'public static foo': '',
+        } )
+    ;
+
+    Foo.$( 'foo', undefined );
+    Foo.$( 'foo', val );
+
+    assert.equal( Foo.$( 'foo' ), val,
+        "Setting static property to undefined does not corrupt lookup process"
     );
 } )();
 
