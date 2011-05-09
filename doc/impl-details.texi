@@ -190,7 +190,7 @@ does this mean? Consider two classes: @var{Foo} and @var{SubFoo}, the latter of
 which inherits from the former. @var{Foo} defines a static property @var{count}
 to be incremented each time the class is instantiated. The subtype @var{SubFoo},
 when instantiated (assuming the constructor is not overridden), would increment
-that very same count. Therefore, we can represent this by static that
+that very same count. Therefore, we can represent this by stating that
 @samp{Foo.count === SubFoo.count}. In the example below, we demonstrate this
 concept in pseudocode:
 
@@ -333,7 +333,7 @@ implementation does provide a number key benefits:
 @itemize
 @item
 It provides an implementation that is @emph{consistent with other
-Object-Oriented languages}. This is the most important point!
+Object-Oriented languages}. This is the most important point.
 
 @item
 The accessor method parameter style is common in other frameworks like jQuery.
