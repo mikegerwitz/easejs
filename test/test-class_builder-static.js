@@ -43,7 +43,9 @@ var common    = require( './common' ),
         },
     } );
 
-    assert.deepEqual( Foo().test(), Foo,
+    // we must use instanceof here because the __self object has the class in
+    // its prototype chain
+    assert.ok( Foo().test() instanceof Foo,
         "__self property references class definition"
     );
 } )();
@@ -424,6 +426,38 @@ var common    = require( './common' ),
         ReferenceError,
         "Attempting to set an undeclaraed static property results in an " +
             "exception"
+    );
+} )();
+
+
+/**
+ * Protected members should be available from within the class but shouldn't be
+ * exposed to the world
+ */
+( function testProtectedStaticMembersAreAvailableInsideClassOnly()
+{
+    var val = 'foo',
+        Foo = builder.build(
+        {
+            // the same rules should apply to methods
+            'protected static baz': function()
+            {
+                return val;
+            },
+
+            // ensure method is accessible to instance methods
+            'public instBaz': function()
+            {
+                return this.__self.baz();
+            },
+        } );
+
+    assert.equal( Foo.baz, undefined,
+        "Protected methods should not be accessible outside the class"
+    );
+
+    assert.equal( Foo().instBaz(), val,
+        "Protected methods are accessible to instance methods"
     );
 } )();
 
