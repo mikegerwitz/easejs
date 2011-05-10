@@ -35,17 +35,20 @@ var common    = require( './common' ),
  */
 ( function testSelfPropertyReferencesClassDefinition()
 {
-    var Foo = builder.build(
-    {
-        'public function test': function()
+    var val = [ 'baz' ],
+        Foo = builder.build(
         {
-            return this.__self;
-        },
-    } );
+            'public function test': function()
+            {
+                return this.__self;
+            },
+        } );
+
+    Foo.bar = val;
 
     // we must use instanceof here because the __self object has the class in
     // its prototype chain
-    assert.ok( Foo().test() instanceof Foo,
+    assert.ok( ( Foo().test().bar === Foo.bar ),
         "__self property references class definition"
     );
 } )();
@@ -198,7 +201,7 @@ var common    = require( './common' ),
  * available for an instance, it falls back. This serves as a regression test to
  * ensure this functionality remains.
  */
-( function testStaticMethodsBoundToClassRatherThanInstance()
+( function testStaticMethodsNotBoundToInstance()
 {
     var result = null,
         Foo    = builder.build(
@@ -212,7 +215,7 @@ var common    = require( './common' ),
     // call the static method
     Foo.foo();
 
-    assert.deepEqual( result, Foo,
+    assert.notEqual( result, Foo,
         "Static members are bound to class definition rather than instance"
     );
 } )();
@@ -445,6 +448,12 @@ var common    = require( './common' ),
                 return val;
             },
 
+            // ensure method is accessible to static methods
+            'public static staticBaz': function()
+            {
+                return this.baz();
+            },
+
             // ensure method is accessible to instance methods
             'public instBaz': function()
             {
@@ -454,6 +463,10 @@ var common    = require( './common' ),
 
     assert.equal( Foo.baz, undefined,
         "Protected methods should not be accessible outside the class"
+    );
+
+    assert.equal( Foo.staticBaz(), val,
+        "Protected methods are accessible to static methods"
     );
 
     assert.equal( Foo().instBaz(), val,
