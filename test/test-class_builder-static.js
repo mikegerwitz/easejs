@@ -526,3 +526,44 @@ var common    = require( './common' ),
     );
 } )();
 
+
+/**
+ * Public and protected static methods should be able to be overridden by
+ * subtypes. We needn't test private methods, as they are not inherited.
+ */
+( function testStaticMethodsCanBeOverriddenBySubtypes()
+{
+    var val = 'bar',
+        Foo = builder.build(
+        {
+            'public static foo': function() {},
+            'protected static bar': function() {},
+        } ),
+
+        SubFoo = builder.build( Foo,
+        {
+            'public static foo': function()
+            {
+                return val;
+            },
+
+            'public static prot': function()
+            {
+                return this.bar();
+            },
+
+            'protected static bar': function()
+            {
+                return val;
+            },
+        } );
+
+    assert.equal( SubFoo.foo(), val,
+        "Public static methods can be overridden by subtypes"
+    );
+
+    assert.equal( SubFoo.prot(), val,
+        "Protected static methods can be overridden by subtypes"
+    );
+} )();
+
