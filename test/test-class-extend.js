@@ -348,3 +348,28 @@ for ( var i = 0; i < class_count; i++ )
     }, Error, "Cannot redeclare method in same class definition" );
 } )();
 
+
+/**
+ * To understand this test, one must understand how "inheritance" works
+ * with prototypes. We must create a new instance of the ctor (class) and add
+ * that instance to the prototype chain (if we added an un-instantiated
+ * constructor, then the members in the prototype would be accessible only
+ * though ctor.prototype). Therefore, when we instantiate this class for use in
+ * the prototype, we must ensure the constructor is not invoked, since our
+ * intent is not to create a new instance of the class.
+ */
+( function testConstructorShouldNotBeCalledWhenExtendingClass()
+{
+    var called = false,
+        Foo    = Class( {
+            'public __construct': function()
+            {
+                called = true;
+            }
+        } ).extend( {} );
+
+    assert.equal( called, false,
+        "Constructor should not be called when extending a class"
+    );
+} )();
+
