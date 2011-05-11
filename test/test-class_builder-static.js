@@ -474,3 +474,55 @@ var common    = require( './common' ),
     );
 } )();
 
+
+/**
+ * As usual, protected members (in this case, static) should be inherited by
+ * subtypes.
+ */
+( function testProtectedStaticMembersAreInheritedBySubtypes()
+{
+    var val  = 'baz',
+        val2 = 'bazbaz',
+        Foo  = builder.build(
+        {
+            'protected static foo': function()
+            {
+                return val;
+            },
+        } ),
+
+        SubFoo = builder.build( Foo,
+        {
+            'public static bar': function()
+            {
+                return this.foo();
+            },
+
+            'protected static foo2': function()
+            {
+                return val2;
+            },
+
+            'public static bar2': function()
+            {
+                return this.foo2();
+            },
+        } ),
+
+        SubSubFoo = builder.build( SubFoo, {} )
+    ;
+
+    assert.equal( SubFoo.bar(), val,
+        "Subtypes inherit parents' protected static methods"
+    );
+
+    assert.equal( SubFoo.bar2(), val2,
+        "Static methods have access to other static methods in the same class"
+    );
+
+    // for extra assurance, to ensure our recursive implementation is correct
+    assert.equal( SubSubFoo.bar(), val,
+        "Sub-subtypes inherit parents' protected static methods"
+    );
+} )();
+
