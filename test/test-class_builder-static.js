@@ -464,6 +464,9 @@ var common    = require( './common' ),
     var val = 'foo',
         Foo = builder.build(
         {
+            'protected static prop': val,
+
+
             // the same rules should apply to methods
             'protected static baz': function()
             {
@@ -481,6 +484,16 @@ var common    = require( './common' ),
             {
                 return this.__self.baz();
             },
+
+            'public static staticGetProp': function()
+            {
+                return this.$('prop');
+            },
+
+            'public instGetProp': function()
+            {
+                return this.__self.$('prop');
+            },
         } );
 
     assert.equal( Foo.baz, undefined,
@@ -493,6 +506,14 @@ var common    = require( './common' ),
 
     assert.equal( Foo().instBaz(), val,
         "Protected methods are accessible to instance methods"
+    );
+
+    assert.equal( Foo.staticGetProp(), val,
+        "Protected static properties are accessible to static methods"
+    );
+
+    assert.equal( Foo().instGetProp(), val,
+        "Protected static properties are accessible to instance methods"
     );
 } )();
 
@@ -507,6 +528,8 @@ var common    = require( './common' ),
         val2 = 'bazbaz',
         Foo  = builder.build(
         {
+            'protected static prop': val,
+
             'protected static foo': function()
             {
                 return val;
@@ -529,6 +552,11 @@ var common    = require( './common' ),
             {
                 return this.foo2();
             },
+
+            'public static getProp': function()
+            {
+                return this.$('prop');
+            },
         } ),
 
         SubSubFoo = builder.build( SubFoo, {} )
@@ -545,6 +573,14 @@ var common    = require( './common' ),
     // for extra assurance, to ensure our recursive implementation is correct
     assert.equal( SubSubFoo.bar(), val,
         "Sub-subtypes inherit parents' protected static methods"
+    );
+
+    assert.equal( SubFoo.getProp(), val,
+        "Subtypes inherit parents' protected static properties"
+    );
+
+    assert.equal( SubSubFoo.getProp(), val,
+        "Sub-subtypes inherit parents' protected static properties"
     );
 } )();
 
