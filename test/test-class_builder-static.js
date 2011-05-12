@@ -528,6 +528,74 @@ var common    = require( './common' ),
 
 
 /**
+ * Private members should be available from within the class, but not outside of
+ * it
+ */
+( function testPrivateStaticMembersAreAvailableInsideClassOnly()
+{
+    var val = 'foo',
+        Foo = builder.build(
+        {
+            // the same rules should apply to methods
+            'private static baz': function()
+            {
+                return val;
+            },
+
+            // ensure method is accessible to static methods
+            'public static staticBaz': function()
+            {
+                return this.baz();
+            },
+
+            // ensure method is accessible to instance methods
+            'public instBaz': function()
+            {
+                return this.__self.baz();
+            },
+        } );
+
+    assert.equal( Foo.baz, undefined,
+        "Private methods should not be accessible outside the class"
+    );
+
+    assert.equal( Foo.staticBaz(), val,
+        "Private methods are accessible to static methods"
+    );
+
+    assert.equal( Foo().instBaz(), val,
+        "Private methods are accessible to instance methods"
+    );
+} )();
+
+
+/**
+ * Private static members should not be inherited by subtypes. Of course. Moving
+ * along...
+ */
+( function testPrivateStaticMembersAreNotInheritedBySubtypes()
+{
+    var Foo = builder.build(
+        {
+            'private static priv': function() {},
+        } ),
+
+        SubFoo = builder.build( Foo,
+        {
+            'public static getPriv': function()
+            {
+                return this.priv;
+            },
+        } )
+    ;
+
+    assert.equal( SubFoo.getPriv(), undefined,
+        "Private static methods should not be inherited by subtypes"
+    );
+} )();
+
+
+/**
  * Public and protected static methods should be able to be overridden by
  * subtypes. We needn't test private methods, as they are not inherited.
  */
