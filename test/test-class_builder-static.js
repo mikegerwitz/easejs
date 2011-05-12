@@ -72,6 +72,28 @@ var common    = require( './common' ),
 
 
 /**
+ * If supported by the environment, ensure that the accessor method used to
+ * access static properties is not enumerable. It's unnecessary clutter (and
+ * confusion) otherwise.
+ */
+( function testStaticPropertyAccessorIsNotEnumerable()
+{
+    var get = Object.getOwnPropertyDescriptor,
+        Foo = builder.build( {} );
+
+    // don't perform the test if unsupported
+    if ( fallback )
+    {
+        return;
+    }
+
+    assert.equal( get( Foo, '$' ).enumerable, false,
+        "Static property accessor method should not be enumerable"
+    );
+} )();
+
+
+/**
  * Static members, by their nature, should be accessible through the class
  * definition itself; that is, without instantiation. It should also not be
  * available through the generated prototype (and therefore, be unavailable to
