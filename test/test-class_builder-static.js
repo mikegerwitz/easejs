@@ -594,6 +594,9 @@ var common    = require( './common' ),
     var val = 'foo',
         Foo = builder.build(
         {
+            'private static prop': val,
+
+
             // the same rules should apply to methods
             'private static baz': function()
             {
@@ -611,6 +614,16 @@ var common    = require( './common' ),
             {
                 return this.__self.baz();
             },
+
+            'public static staticGetProp': function()
+            {
+                return this.$('prop');
+            },
+
+            'public instGetProp': function()
+            {
+                return this.__self.$('prop');
+            },
         } );
 
     assert.equal( Foo.baz, undefined,
@@ -624,6 +637,14 @@ var common    = require( './common' ),
     assert.equal( Foo().instBaz(), val,
         "Private methods are accessible to instance methods"
     );
+
+    assert.equal( Foo.staticGetProp(), val,
+        "Private static properties are accessible to static methods"
+    );
+
+    assert.equal( Foo().instGetProp(), val,
+        "Private static properties are accessible to instance methods"
+    );
 } )();
 
 
@@ -635,6 +656,7 @@ var common    = require( './common' ),
 {
     var Foo = builder.build(
         {
+            'private static prop': 'foo',
             'private static priv': function() {},
         } ),
 
@@ -644,11 +666,29 @@ var common    = require( './common' ),
             {
                 return this.priv;
             },
+
+            'public static staticGetProp': function()
+            {
+                return this.$('prop');
+            },
+
+            'public instGetProp': function()
+            {
+                return this.__self.$('prop');
+            },
         } )
     ;
 
     assert.equal( SubFoo.getPriv(), undefined,
         "Private static methods should not be inherited by subtypes"
+    );
+
+    assert.equal( SubFoo().instGetProp(), undefined,
+        "Private static properties should not be inherited by subtypes (inst)"
+    );
+
+    assert.equal( SubFoo.staticGetProp(), undefined,
+        "Private static properties should not be inherited by subtypes (static)"
     );
 } )();
 
