@@ -519,22 +519,96 @@ var common    = require( './common' ),
 
 
 /**
+ * Same as above, but with getters/setters. We can only run this test if
+ * getters/setters are supported by the engine running it.
+ */
+( function testProtectedStaticGettersSettersAreAccessibleInsideClassesOnly()
+{
+    // if unsupported, don't bother with the test
+    if ( fallback )
+    {
+        return;
+    }
+
+    // we must define in this manner so older engines won't blow up due to
+    // syntax errors
+    var def    = {
+            'public static getProp': function()
+            {
+                // getters/setters are not accessed using the accessor method
+                return this.foo;
+            },
+
+            'public static setProp': function( val )
+            {
+                this.foo = val;
+            },
+        },
+        val    = 'baz'
+        called = [];
+
+    Object.defineProperty( def, 'protected static foo', {
+        get: function() { return val; },
+        set: function() { called[ 0 ] = true; },
+
+        enumerable: true,
+    } );
+
+    // define the class
+    var Foo = builder.build( def );
+
+    assert.equal( Foo.getProp(), val,
+        "Protected static getters are accessible from within the class"
+    );
+
+    Foo.setProp( 'bla' );
+    assert.equal( called[ 0 ], true,
+        "Protected static setters are accessible from within the class"
+    );
+
+    assert.equal( Foo.foo, undefined,
+        "Protected static getters/getters are not public"
+    );
+} )();
+
+
+/**
  * As usual, protected members (in this case, static) should be inherited by
  * subtypes.
+ *
+ * Long function is long. Kids, don't do this at home.
  */
 ( function testProtectedStaticMembersAreInheritedBySubtypes()
 {
     var val  = 'baz',
         val2 = 'bazbaz',
-        Foo  = builder.build(
-        {
-            'protected static prop': val,
+        def = {
+        'protected static prop': val,
 
-            'protected static foo': function()
-            {
-                return val;
-            },
-        } ),
+        'protected static foo': function()
+        {
+            return val;
+        },
+    };
+
+    // also test getters/setters if supported
+    if ( !fallback )
+    {
+        Object.defineProperty( def, 'protected static bar', {
+            get: function() {},
+            set: function() {},
+
+            enumerable: true,
+        } );
+
+        // used to get the property descriptor of a protected property
+        def[ 'public static getPropDesc' ] = function( prop )
+        {
+            return Object.getOwnPropertyDescriptor( this, prop );
+        };
+    }
+
+    var Foo  = builder.build( def ),
 
         SubFoo = builder.build( Foo,
         {
@@ -582,6 +656,31 @@ var common    = require( './common' ),
     assert.equal( SubSubFoo.getProp(), val,
         "Sub-subtypes inherit parents' protected static properties"
     );
+
+    // getters/setters (if supported by engine)
+    if ( !fallback )
+    {
+        var super_data   = Foo.getPropDesc( 'bar' ),
+            sub_data     = SubFoo.getPropDesc( 'bar' ),
+            sub_sub_data = SubSubFoo.getPropDesc( 'bar' )
+        ;
+
+        // getters
+        assert.deepEqual( super_data.get, sub_data.get,
+            "Protected static getters are inherited by subtypes"
+        );
+        assert.deepEqual( super_data.get, sub_sub_data.get,
+            "Protected static getters are inherited by sub-subtypes"
+        );
+
+        // setters
+        assert.deepEqual( super_data.set, sub_data.set,
+            "Protected static setters are inherited by subtypes"
+        );
+        assert.deepEqual( super_data.set, sub_sub_data.set,
+            "Protected static setters are inherited by sub-subtypes"
+        );
+    }
 } )();
 
 
