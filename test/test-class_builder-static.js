@@ -753,17 +753,34 @@ var common    = require( './common' ),
  */
 ( function testPrivateStaticMembersAreNotInheritedBySubtypes()
 {
-    var Foo = builder.build(
-        {
-            'private static prop': 'foo',
-            'private static priv': function() {},
-        } ),
+    var def = {
+        'private static prop': 'foo',
+        'private static priv': function() {},
+    };
+
+    if ( !fallback )
+    {
+        Object.defineProperty( def, 'private static foo', {
+            get: function() { return 'foo'; },
+            set: function() {},
+
+            enumerable: true,
+        } );
+    }
+
+    var Foo = builder.build( def ),
 
         SubFoo = builder.build( Foo,
         {
             'public static getPriv': function()
             {
                 return this.priv;
+            },
+
+
+            'public static getGetSet': function()
+            {
+                return this.foo;
             },
 
             'public static staticGetProp': function()
@@ -782,12 +799,70 @@ var common    = require( './common' ),
         "Private static methods should not be inherited by subtypes"
     );
 
+    assert.equal( SubFoo.getGetSet(), undefined,
+        "Private static getters/setters should not be inherited by subtypes"
+    );
+
     assert.equal( SubFoo().instGetProp(), undefined,
         "Private static properties should not be inherited by subtypes (inst)"
     );
 
     assert.equal( SubFoo.staticGetProp(), undefined,
         "Private static properties should not be inherited by subtypes (static)"
+    );
+} )();
+
+
+/**
+ * Same as above, but with getters/setters. We can only run this test if
+ * getters/setters are supported by the engine running it.
+ */
+( function testPrivateStaticGettersSettersAreAccessibleInsideClassesOnly()
+{
+    // if unsupported, don't bother with the test
+    if ( fallback )
+    {
+        return;
+    }
+
+    // we must define in this manner so older engines won't blow up due to
+    // syntax errors
+    var def    = {
+            'public static getProp': function()
+            {
+                // getters/setters are not accessed using the accessor method
+                return this.foo;
+            },
+
+            'public static setProp': function( val )
+            {
+                this.foo = val;
+            },
+        },
+        val    = 'baz'
+        called = [];
+
+    Object.defineProperty( def, 'private static foo', {
+        get: function() { return val; },
+        set: function() { called[ 0 ] = true; },
+
+        enumerable: true,
+    } );
+
+    // define the class
+    var Foo = builder.build( def );
+
+    assert.equal( Foo.getProp(), val,
+        "Private static getters are accessible from within the class"
+    );
+
+    Foo.setProp( 'bla' );
+    assert.equal( called[ 0 ], true,
+        "Private static setters are accessible from within the class"
+    );
+
+    assert.equal( Foo.foo, undefined,
+        "Private static getters/getters are not public"
     );
 } )();
 
