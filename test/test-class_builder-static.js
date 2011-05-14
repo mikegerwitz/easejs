@@ -733,3 +733,32 @@ var common    = require( './common' ),
     );
 } )();
 
+
+
+/**
+ * This tests very closely to the implementation, which is not good. However,
+ * it's important to protecting the data. The accessor method works off of
+ * context, so it's important to ensure that the data will remain encapsulated
+ * if the user attempts to be tricky and bind to a supertype.
+ */
+( function testCannotExploitAccessorMethodToGainAccessToParentPrivateProps()
+{
+    var Foo = builder.build(
+        {
+            'private static foo': 'bar',
+        } ),
+
+        SubFoo = builder.build( Foo,
+        {
+            'public static getParentPrivate': function()
+            {
+                return this.$.call( Foo, 'foo' );
+            }
+        } )
+    ;
+
+    assert.equal( SubFoo.getParentPrivate(), undefined,
+        "Cannot exploit accses modifier to gain access to parent private props"
+    );
+} )();
+
