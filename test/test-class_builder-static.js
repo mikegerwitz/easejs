@@ -306,7 +306,7 @@ var common    = require( './common' ),
     {
         var super_data   = Object.getOwnPropertyDescriptor( Foo, 'bar' ),
             sub_data     = Object.getOwnPropertyDescriptor( SubFoo, 'bar' ),
-            sub_sub_data = Object.getOwnPropertyDescriptor( SubFoo, 'bar' )
+            sub_sub_data = Object.getOwnPropertyDescriptor( SubSubFoo, 'bar' )
         ;
 
         // getters
