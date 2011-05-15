@@ -73,6 +73,7 @@ ease.js, until such a point where prototypes are no longer adequate.
 * Inheritance::        Extending classes from another
 * Member Visibility::  Encapsulation is a core concept of Object-Oriented
                        programming
+* Static Members::     Members whose use do not require instantiation
 @end menu
 
 
@@ -992,4 +993,130 @@ Let's take a look at an example.
 
 Note that, in the above example, making the public @var{cannotMakeProtected}
 method protected would throw an error.
+
+
+@node Static Members
+@section Static Members
+@dfn{Static members} do not require instantiation of the containing class in
+order to be used, but may also be called by instances. They are attached to the
+class itself rather than an instance. Static members provide convenience under
+certain circumstances where class instantiation is unnecessary and permit
+sharing data between instances of a class. However, static members, when used
+improperly, can produce poorly designed classes and tightly coupled code that is
+also difficult to test. Static properties also introduce problems very similar
+to global variables.
+
+Let us consider an implementation of the factory pattern.  Class @var{BigBang}
+will declare two static methods in order to satisfy different means of
+instantiation: @var{fromBraneCollision()} and @var{fromBigCrunch()} (for the
+sake of the example, we're not going to address every theory). Let us also
+consider that we want to keep track of the number of big bangs in our universe
+(perhaps to study whether or not a "Big Crunch" could have potentially
+happened in the past) by incrementing a counter each time a new big bang occurs.
+Because we are using a static method, we cannot use a property of an instance in
+order to store this data.  Therefore, we will use a static property of class
+@var{BigBang}.
+
+@float Figure, f:static-ex
+@verbatim
+    var BigBang = Class( 'BigBang',
+    {
+        /**
+         * Number of big bangs that has occurred
+         * @type {number}
+         */
+        'private static _count': 0,
+
+        /**
+         * String representing the type of big bang
+         * @type {string}
+         */
+        'private _type': '',
+
+
+        /**
+         * Create a new big bang from the collision of two membranes
+         *
+         * @return  {BraneSet}  the set of branes that collided
+         *
+         * @return  {BigBang}  new big bang
+         */
+        'public static fromBraneCollision': function( brane_set )
+        {
+            // do initialization tasks...
+
+            return BigBang( 'brane', brane_set.getData() );
+        },
+
+
+        /**
+         * Create a new big bang following a "Big Crunch"
+         *
+         * @param  {BigCrunch}  prior crunch
+         *
+         * @return  {BigBang}  new big bang
+         */
+        'public static fromBigCrunch': function( crunch )
+        {
+            // do initialization tasks...
+
+            return BigBang( 'crunch', crunch.getData() );
+        },
+
+
+        /**
+         * Returns the total number of big bangs that have occurred
+         *
+         * @return  {number}  total number of big bangs
+         */
+        'public static getTotalCount': function()
+        {
+            return this.$('_count');
+        }
+
+
+        /**
+         * Construct a new big bang
+         *
+         * @param  {string}  type  big bang type
+         * @param  {object}  data  initialization data
+         *
+         * @return  {undefined}
+         */
+        'public __construct': function( type, data )
+        {
+            this._type = type;
+
+            // do complicated stuff with data
+
+            // increment big bang count
+            this.__self.$( '_count',
+                this.__self.$('count') + 1
+            );
+        },
+    } );
+
+    // create one of each
+    var brane_bang  = BigBang.fromBraneCollision( branes ),
+        crunch_bang = BigBang.fromBigCrunch( crunch_incident );
+
+    console.log( "Total number of big bangs: %d", BigBang.getTotalCount() );
+    // Total number of big bangs: 2
+@end verbatim
+@caption{Static member example using the factory pattern}
+@end float
+
+Due to limitations of pre-ECMAScript 5 implementations, ease.js's static
+implementation must be broken into two separate parts: properties and methods.
+
+@menu
+* Static Properties::
+* Static Methods::
+@end menu
+
+@node Static Properties
+@subsection Static Properties
+
+@node Static Methods
+@subsection Static Methods
 
