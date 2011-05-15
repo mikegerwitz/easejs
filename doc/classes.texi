@@ -1008,7 +1008,7 @@ to global variables.
 
 Let us consider an implementation of the factory pattern.  Class @var{BigBang}
 will declare two static methods in order to satisfy different means of
-instantiation: @var{fromBraneCollision()} and @var{fromBigCrunch()} (for the
+instantiation: @code{fromBraneCollision()} and @code{fromBigCrunch()} (for the
 sake of the example, we're not going to address every theory). Let us also
 consider that we want to keep track of the number of big bangs in our universe
 (perhaps to study whether or not a "Big Crunch" could have potentially
@@ -1110,13 +1110,52 @@ Due to limitations of pre-ECMAScript 5 implementations, ease.js's static
 implementation must be broken into two separate parts: properties and methods.
 
 @menu
-* Static Properties::
 * Static Methods::
+* Static Properties::
 @end menu
-
-@node Static Properties
-@subsection Static Properties
 
 @node Static Methods
 @subsection Static Methods
+In @ref{f:static-ex}, we implemented three static methods: two factory methods,
+@code{fromBraneCollision()} and @code{FromBigCrunch()}, and one getter method to
+retrieve the total number of big bangs, @code{getTotalCount()}. These methods are
+very similar to instance methods we are already used to, with a few important
+differences:
+
+@enumerate
+@item
+Static methods are declared with the @code{static} keyword.
+
+@item
+In the body, @code{this} is bound to the class itself, rather than the instance.
+
+@item
+Static methods cannot call any non-static methods of the same class without
+first instantiating it.
+@end enumerate
+
+The final rule above is not true when the situation is reversed. Non-static
+methods @emph{can} call static methods through use of the @var{__self} object,
+which is a reference to the class itself. That is, @var{this} in a static method
+is the same object as @var{this.__self} in a non-static method. This is
+demonstrated by @code{getTotalCount()}
+
+@verbatim
+    this.$('_count')
+@end verbatim
+
+and @code{__construct()}.
+
+@verbatim
+    this.__self.$('_count')
+@end verbatim
+
+To help remember @var{__self}, consider what the name states. A class is a
+definition used to create an object. The body of a method is a definition, which
+is defined on the class. Therefore, even though the body of a method may be
+called in the context of an instance, it is still part of the class. As such,
+@var{__self} refers to the class.
+
+@node Static Properties
+@subsection Static Properties
 
