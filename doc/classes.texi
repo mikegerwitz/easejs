@@ -1158,4 +1158,62 @@ called in the context of an instance, it is still part of the class. As such,
 
 @node Static Properties
 @subsection Static Properties
+You have likely noticed by now that static properties are handled a bit
+differently than both static methods and non-static properties. This difference
+is due to pre-ECMAScript 5 limitations and is discussed at length in the
+@ref{Static Implementation} section.
+
+Static properties are read from and written to using the @dfn{static accessor
+method} @code{$()}. This method name was chosen because the @code{$} prefix is
+common in scripting languages such as BASH, Perl (for scalars) and PHP. The
+accessor method accepts two arguments, the second being optional. If only the
+first argument is provided, the accessor method acts as a getter, as in
+@ref{f:static-ex}'s @code{getTotalCount()}:
+
+@verbatim
+    return this.$('_count');
+@end verbatim
+
+If the second argument is provided, it acts as a setter, as in
+@code{__construct()}:
+
+@verbatim
+    this.__self.$( '_count',
+        this.__self.$('count') + 1
+    );
+@end verbatim
+
+Setting @code{undefined} values is supported. The @code{delete} operator is not
+supported, as its use is both restricted by the language itself and doesn't make
+sense to use in this context. As hinted by the example above, the increment and
+decrement operators (@code{++} and @code{--}) are not supported because
+JavaScript does not permit returning values by reference.
+
+It is important to understand that, currently, the accessor method cannot be
+omitted. Consider the following example:
+
+@float Figure, f:static-accessor
+@verbatim
+    var Foo = Class( 'Foo',
+        {
+            'public static bar': 'baz',
+        },
+
+        SubFoo = Class( 'SubFoo' ).extend( Foo, {} )
+    ;
+
+    // correct
+    Foo.$( 'bar, 'baz2' );
+    Foo.$('bar');               // baz2
+    SubFoo.$('bar');            // baz2
+    SubFoo.$( 'bar', 'baz3' );
+    Foo.$('bar');               // baz3
+
+    // INCORRECT
+    Foo.bar = 'baz2';
+    Foo.bar;                    // baz2
+    SubFoo.bar;                 // undefined
+@end verbatim
+@caption{Static accessor method cannot be omitted}
+@end float
 
