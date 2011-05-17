@@ -936,3 +936,66 @@ var common    = require( './common' ),
     );
 } )();
 
+
+/**
+ * We support the concept of late static binding. That is, static members can be
+ * overridden by subtypes in the same way that non-static members can. This
+ * can be compared to Java, which only supports static *hiding*, not overriding.
+ */
+( function testCanOverrideStaticMembers()
+{
+    var val_orig = 'foobaz',
+        val      = 'foobar',
+
+        Foo = builder.build(
+        {
+            'public static prop': val_orig,
+
+            'public static foo': function()
+            {
+                return this.bar();
+            },
+
+            'public static bar': function()
+            {
+                return val_orig;
+            },
+
+            'public static baz': function()
+            {
+                // should return overridden val
+                return this.$( 'prop' );
+            },
+        } ),
+
+        SubFoo = builder.build( Foo,
+        {
+            'public static prop': val,
+
+            // override parent static method (this is truly overriding, not
+            // hiding)
+            'public static bar': function()
+            {
+                return val;
+            },
+        } )
+    ;
+
+    assert.equal( SubFoo.bar(), val,
+        "System supports overriding static methods"
+    );
+
+    assert.equal( SubFoo.baz(), val,
+        "System supports overriding static properties"
+    );
+
+    // ensure we didn't negatively impact the parent (crazy things can happen
+    // when you screw up an implementation)
+    assert.equal( Foo.bar(), val_orig,
+        "Subtypes' method overrides do not impact parent"
+    );
+    assert.equal( Foo.baz(), val_orig,
+        "Subtypes' property overrides do not impact parent"
+    );
+} )();
+
