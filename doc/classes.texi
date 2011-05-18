@@ -1112,6 +1112,7 @@ implementation must be broken into two separate parts: properties and methods.
 @menu
 * Static Methods::
 * Static Properties::
+* Late Static Binding::  Static members are not strictly static
 @end menu
 
 @node Static Methods
@@ -1216,4 +1217,81 @@ omitted. Consider the following example:
 @end verbatim
 @caption{Static accessor method cannot be omitted}
 @end float
+
+@node Late Static Binding
+@subsection Late Static Binding
+Static members in ease.js are not truly ``static''. Instead, the concept of
+@dfn{late static binding} is adopted, which exists somewhere between static and
+dynamic binding. Subclasses are free to override static members just as they
+would non-static, similar to PHP's @var{static::}. This is in contrast to
+languages like Java that support only hiding, not overriding, of static members.
+
+Static members are not bound to the class when declared. Instead, the binding
+takes place when a method is called. This late binding is the same type of
+binding that occurs with non-static members. The term ``late static binding`` is
+adopted rather than simply using ``dynamic binding`` because it is important to
+make the distinction that the members are still bound in a static-like manner to
+the class itself.
+
+Because late static binding permits overriding static members, each @ref{Member
+Visibility,level of visibility} is supported. To demonstrate what late static
+binding implies, let's consider altering our example from @ref{f:static-ex}. We
+will add an additional static method, @code{BigBang.create()}, which the factory
+methods will use to instantiate the object. This will permit subtypes to
+override the implementation. We will then create a subtype,
+@var{UnstableBigBang}, which will create a big bang that's destined to create an
+unstable and inhabitable universe.
+
+@float Figure, f:static-binding
+@verbatim
+    var BigBang = Class( 'BigBang',
+        {
+            // ...
+
+            'public static fromBraneCollision': function( brane_set )
+            {
+                // do initialization tasks...
+
+                return this.create( 'brane', brane_set.getData() );
+            },
+
+            'protected static create': function( id, data )
+            {
+                console.log( 'New BigBang' );
+                return BigBang( id, data );
+            },
+
+            // ...
+        } ),
+
+        UnstableBigBang = Class( 'UnstableBigBang' ).extend( BigBang
+        {
+            'protected static create': function( id, data )
+            {
+                var bang = BigBang( id, data );
+                bang.doom();
+
+                console.log( 'BigBang is doomed.' );
+
+                return bang;
+            },
+        } )
+    ;
+
+    BigBang.fromBraneCollision( brane_set );
+    // Output: New BigBang
+
+    UnstableBigBang.fromBraneCollision( brane_set );
+    // Output: BigBang is doomed.
+@end verbatim
+@caption{Demonstrating late static binding by overriding a static method}
+@end float
+
+Method @code{BigBang.fromBraneCollision()} calls static method @var{create()},
+which is overridden by subtype @var{UnstableBigBang}. Because @var{this} is
+bound when the method is called (``late''), rather than being statically bound
+to the original @code{create()}, @code{UnstableBigBang.create()} is called. Had
+ease.js implemented true static binding, the results would be similar to Java's
+concept of static @emph{hiding}, which would cause ``New BigBang`` to be output
+twice instead of ``BigBang is doomed''.
 
