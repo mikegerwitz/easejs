@@ -103,3 +103,27 @@ var common  = require( './common' ),
     );
 } )();
 
+
+/**
+ * As the name implies, constant properties should not be writable.
+ */
+( function testConstKeywordCreatesImmutableProperty()
+{
+    try
+    {
+        // this should fail (trying to alter const prop foo)
+        builder.build( { 'const foo': 'bar'  } ).$( 'foo', 'baz' );
+    }
+    catch ( e )
+    {
+        assert.ok(
+            e.message.search( 'foo' ) !== -1,
+            "Const modification error should contain name of property"
+        );
+
+        return;
+    }
+
+    assert.fail( "Constant properties should not be writable" );
+} )();
+
