@@ -22,10 +22,9 @@
  * @package test
  */
 
-var common    = require( './common' ),
-    assert    = require( 'assert' ),
-    builder   = common.require( 'class_builder' ),
-    fallback  = common.require( 'util' ).definePropertyFallback()
+var common  = require( './common' ),
+    assert  = require( 'assert' ),
+    builder = common.require( 'class_builder' )
 ;
 
 
