@@ -56,3 +56,31 @@ var common  = require( './common' ),
     assert.fail( "Should not be able to declare constant methods" );
 } )();
 
+
+/**
+ * The const keyword implies static. Using static along with it is redundant and
+ * messy. Disallow it.
+ */
+( function testConstKeywordCannotBeUsedWithStatic()
+{
+    try
+    {
+        // should fail
+        builder.build(
+        {
+            'static const foo': 'val',
+        } );
+    }
+    catch ( e )
+    {
+        assert.ok(
+            e.message.search( 'foo' ) !== -1,
+            "Static const method error message should contain name of property"
+        );
+
+        return;
+    }
+
+    assert.fail( "Should not be able to use static keyword with const" );
+} )();
+
