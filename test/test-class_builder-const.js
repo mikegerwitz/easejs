@@ -1,0 +1,58 @@
+/**
+ * Tests const keyword
+ *
+ *  Copyright (C) 2010 Mike Gerwitz
+ *
+ *  This file is part of ease.js.
+ *
+ *  ease.js is free software: you can redistribute it and/or modify it under the
+ *  terms of the GNU Lesser General Public License as published by the Free
+ *  Software Foundation, either version 3 of the License, or (at your option)
+ *  any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT
+ *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
+ *  for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author  Mike Gerwitz
+ * @package test
+ */
+
+var common  = require( './common' ),
+    assert  = require( 'assert' ),
+    builder = common.require( 'class_builder' )
+;
+
+
+/**
+ * The `const' keyword does not make sense with methods, as they are always
+ * immutable. Methods of a class cannot be redefined after the class definition.
+ * They may only be overridden by subtypes.
+ */
+( function testConstKeywordCannotBeUsedWithMethods()
+{
+    try
+    {
+        // attempt to create a constant method (should fail)
+        builder.build(
+        {
+            'const foo': function() {},
+        } );
+    }
+    catch ( e )
+    {
+        assert.ok(
+            e.message.search( 'foo' ) !== -1,
+            "Const method error message should contain name of method"
+        );
+
+        return;
+    }
+
+    assert.fail( "Should not be able to declare constant methods" );
+} )();
+
