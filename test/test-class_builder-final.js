@@ -61,3 +61,35 @@ var common    = require( './common' ),
     assert.fail( 'Should not be able to override final methods' );
 } )();
 
+
+/**
+ * Due to our static implementation (late static binding), the use of 'final'
+ * with properties doesn't make much sense. We have to deal with different
+ * problems than languages like Java that truly bind members statically. Consult
+ * the documentation for rationale.
+ *
+ * See also const keyword.
+ */
+( function testFinalKeywordCannotBeUsedWithProperties()
+{
+    try
+    {
+        // attempt to define a 'final' property (should fail)
+        builder.build(
+        {
+            'final public foo': 'bar',
+        } );
+    }
+    catch ( e )
+    {
+        assert.ok(
+            e.message.search( 'foo' ) !== -1,
+            "Final property error message contains name of method"
+        );
+
+        return;
+    }
+
+    assert.fail( "Should not be able to use final keyword with properties" );
+} )();
+
