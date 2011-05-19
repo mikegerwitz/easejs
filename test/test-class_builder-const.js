@@ -84,3 +84,22 @@ var common  = require( './common' ),
     assert.fail( "Should not be able to use static keyword with const" );
 } )();
 
+
+/**
+ * The const keyword should result in a static property. The rationale for this
+ * is that, if a value is constant, then instances do not make sense.
+ */
+( function testConstKeywordDeclaresPropertiesAsStatic()
+{
+    var val = 'baz',
+        Foo = builder.build(
+        {
+            'const foo': val,
+        } )
+    ;
+
+    assert.equal( val, Foo.$('foo'),
+        "Const keyword should declare properties as static"
+    );
+} )();
+
