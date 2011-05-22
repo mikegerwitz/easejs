@@ -68,120 +68,175 @@ var ConcreteFoo = AbstractFoo.extend(
 });
 
 
-assert.ok(
-    ( Foo.isAbstract instanceof Function ),
-    "All classes should have an isAbstract() method"
-);
-
-assert.equal(
-    Foo.isAbstract(),
-    false,
-    "Classes are not abstract if they contain no abstract methods"
-);
-
-assert.equal(
-    AbstractFoo.isAbstract(),
-    true,
-    "Classes should be considered abstract if they contain any abstract methods"
-);
-
-assert.equal(
-    SubAbstractFoo.isAbstract(),
-    true,
-    "Subtypes of abstract types are abstract if they don't provide a " +
-        "concrete implementation for all abstract methods"
-);
-
-assert.equal(
-    ConcreteFoo.isAbstract(),
-    false,
-    "Subtypes of abstract types are not abstract if they provide concrete " +
-        "implementations of all abstract methods"
-);
-
-assert.throws( function()
+/**
+ * All classes should have a method to determine if they are abstract.
+ */
+( function testAllClassesHaveAMethodToDetmineIfAbstract()
 {
-    new AbstractFoo();
-    new SubAbstractFoo();
-}, Error, "Abstract classes cannot be instantiated" );
-
-assert.ok(
-    new ConcreteFoo(),
-    "Concrete subclasses can be instantiated"
-);
-
-ctor_called = false;
-new ConcreteFoo();
-assert.equal(
-    ctor_called,
-    true,
-    "Can call constructors of abstract supertypes"
-);
+    assert.ok(
+        ( Class( {} ).isAbstract instanceof Function ),
+        "All classes should have an isAbstract() method"
+    );
+} )();
 
 
-assert.throws( function()
+( function testClassesAreNotConsideredToBeAbstractIfTheyHaveNoAbstractMethods()
 {
-    AbstractFoo.extend(
+    assert.equal(
+        Class( {} ).isAbstract(),
+        false,
+        "Classes are not abstract if they contain no abstract methods"
+    );
+} )();
+
+
+( function testClassesShouldBeConsideredAbstractIfTheyContainAbstractMethods()
+{
+    assert.equal(
+        AbstractFoo.isAbstract(),
+        true,
+        "Classes should be considered abstract if they contain any abstract methods"
+    );
+} )();
+
+
+( function testSubtypesAreAbstractIfNoConcreteMethodIsProvided()
+{
+    assert.equal(
+        SubAbstractFoo.isAbstract(),
+        true,
+        "Subtypes of abstract types are abstract if they don't provide a " +
+            "concrete implementation for all abstract methods"
+    );
+} )();
+
+
+( function testSubtypesAreNotConisderedAbstractIfConcreteImplIsProvided()
+{
+    assert.equal(
+        ConcreteFoo.isAbstract(),
+        false,
+        "Subtypes of abstract types are not abstract if they provide concrete " +
+            "implementations of all abstract methods"
+    );
+} )();
+
+
+( function testAbstractClassesCannotBeInstantiated()
+{
+    assert.throws( function()
     {
-        // incorrect number of arguments
-        method: function()
-        {
-        },
-    });
-}, Error, "Concrete methods must implement the proper number of argments" );
+        // both should fail
+        AbstractFoo();
+        SubAbstractFoo();
+    }, Error, "Abstract classes cannot be instantiated" );
+} )();
 
-assert.throws(
-    function()
+
+( function testConcreteSubclassesCanBeInstantiated()
+{
+    assert.ok(
+        ConcreteFoo(),
+        "Concrete subclasses can be instantiated"
+    );
+} )();
+
+
+( function testCanCallConstructorsOfAbstractSupertypes()
+{
+    ctor_called = false;
+    ConcreteFoo();
+
+    assert.equal(
+        ctor_called,
+        true,
+        "Can call constructors of abstract supertypes"
+    );
+} )();
+
+
+( function testConcreteMethodsMustImplementTheProperNumberOfArguments()
+{
+    assert.throws( function()
     {
         AbstractFoo.extend(
         {
             // incorrect number of arguments
-            'abstract method': [],
-        });
-    },
-    TypeError,
-    "Abstract methods of subtypes must implement the proper number of argments"
-);
-
-assert.doesNotThrow(
-    function()
-    {
-        AbstractFoo.extend(
-        {
-            // incorrect number of arguments
-            'abstract method': [ 'one', 'two', 'three', 'four' ],
-        });
-    },
-    Error,
-    "Abstract methods of subtypes may implement additional arguments, so long" +
-        "as they implement at least the required number of arguments as defined by " +
-        "it supertype"
-);
-
-assert.doesNotThrow(
-    function()
-    {
-        AbstractFoo.extend(
-        {
-            second: function( foo )
+            method: function()
             {
             },
         });
-    },
-    Error,
-    "Concrete methods needn't implement the proper number of arguments if " +
-        "no definition was provided"
-);
+    }, Error, "Concrete methods must implement the proper number of argments" );
+} )();
 
 
-assert.throws( function()
+( function testAbstractMethodsOfSubtypesMustImplementProperNumberOfArguments()
 {
-    Class.extend(
+    assert.throws(
+        function()
+        {
+            AbstractFoo.extend(
+            {
+                // incorrect number of arguments
+                'abstract method': [],
+            });
+        },
+        TypeError,
+        "Abstract methods of subtypes must implement the proper number of " +
+            "argments"
+    );
+} )();
+
+
+( function testAbstractMembersMayImplementMoreArgumentsThanSupertype()
+{
+    assert.doesNotThrow(
+        function()
+        {
+            AbstractFoo.extend(
+            {
+                // incorrect number of arguments
+                'abstract method': [ 'one', 'two', 'three', 'four' ],
+            });
+        },
+        Error,
+        "Abstract methods of subtypes may implement additional arguments, " +
+            "so long as they implement at least the required number of " +
+            "arguments as defined by it supertype"
+    );
+} )();
+
+
+( function testConcreteMethodsHaveNoArgumentRequirementsIfNoDefinitionGiven()
+{
+    assert.doesNotThrow(
+        function()
+        {
+            AbstractFoo.extend(
+            {
+                second: function( foo )
+                {
+                },
+            });
+        },
+        Error,
+        "Concrete methods needn't implement the proper number of arguments " +
+            "if no definition was provided"
+    );
+} )();
+
+
+( function testAbstractMethodsMustBeDeclaredAsArrays()
+{
+    assert.throws( function()
     {
-        // not an array (invalid)
-        'abstract foo': 'scalar',
-    } );
-}, TypeError, "Abstract methods must be declared as arrays" );
+        Class.extend(
+        {
+            // not an array (invalid)
+            'abstract foo': 'scalar',
+        } );
+    }, TypeError, "Abstract methods must be declared as arrays" );
+} )();
 
 
 /**
