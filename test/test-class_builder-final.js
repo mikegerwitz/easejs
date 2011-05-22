@@ -24,7 +24,10 @@
 
 var common  = require( './common' ),
     assert  = require( 'assert' ),
-    builder = common.require( 'class_builder' )
+    builder = common.require( 'class_builder' ),
+
+    Class      = common.require( 'class' )
+    FinalClass = common.require( 'class_final' )
 ;
 
 
@@ -83,12 +86,74 @@ var common  = require( './common' ),
     {
         assert.ok(
             e.message.search( 'foo' ) !== -1,
-            "Final property error message contains name of method"
+            "Final property error message contains name of property"
         );
 
         return;
     }
 
     assert.fail( "Should not be able to use final keyword with properties" );
+} )();
+
+
+/**
+ * The 'abstract' keyword's very point is to state that no definition is
+ * provided and that a subtype must provide one. Therefore, declaring something
+ * 'abstract final' is rather contradictory and should not be permitted.
+ */
+( function testFinalyKeywordCannotBeUsedWithAbstract()
+{
+    try
+    {
+        // should fail
+        builder.build( { 'abstract final foo': [] } );
+    }
+    catch ( e )
+    {
+        assert.ok(
+            e.message.search( 'foo' ) !== -1,
+            "Abstract final error message contains name of method"
+        );
+
+        return;
+    }
+
+    assert.fail( "Should not be able to use final keyword with abstract" );
+} )();
+
+
+/**
+ * Ensure that FinalClass properly forwards data to create a new Class.
+ */
+( function testFinalClassesAreValidClasses()
+{
+    assert.ok( Class.isClass( FinalClass( {} ) ),
+        "Final classes should generate valid classes"
+    );
+} )();
+
+
+/**
+ * When a class is declared as final, it should prevent it from ever being
+ * extended. Ever.
+ */
+( function testFinalClassesCannotBeExtended()
+{
+    try
+    {
+        // this should fail
+        FinalClass( 'Foo', {} ).extend( {} );
+    }
+    catch ( e )
+    {
+        assert.ok(
+            e.message.search( 'Foo' ) !== -1,
+            "Final class error message should contain name of class"
+        );
+
+        return;
+    }
+
+    assert.fail( "Should not be able to extend final classes" );
 } )();
 

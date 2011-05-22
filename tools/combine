@@ -29,7 +29,7 @@ RMTRAIL="$PATH_TOOLS/rmtrail"
 
 # order matters
 CAT_MODULES="prop_parser util propobj member_builder class_builder"
-CAT_MODULES="$CAT_MODULES class interface"
+CAT_MODULES="$CAT_MODULES class class_final interface"
 
 ##
 # Output template header
