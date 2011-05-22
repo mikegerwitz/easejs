@@ -25,8 +25,9 @@
 var common = require( './common' ),
     assert = require( 'assert' ),
 
-    Class     = common.require( 'class' ),
-    Interface = common.require( 'interface' )
+    Class         = common.require( 'class' ),
+    AbstractClass = common.require( 'class_abstract' ),
+    Interface     = common.require( 'interface' )
 ;
 
 
@@ -128,7 +129,7 @@ var common = require( './common' ),
 
     // abstract
     assert.equal(
-        Class( { 'abstract foo': [] } ).toString(),
+        AbstractClass( { 'abstract foo': [] } ).toString(),
         '(AbstractClass)',
         "Converting abstract anonymous class to string yields class string"
     );
@@ -152,7 +153,7 @@ var common = require( './common' ),
 
     // abstract
     assert.equal(
-        Class( name, { 'abstract foo': [] } ).toString(),
+        AbstractClass( name, { 'abstract foo': [] } ).toString(),
         name,
         "Converting abstract named class to string yields string with name " +
             "of class"

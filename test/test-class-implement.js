@@ -24,8 +24,11 @@
 
 var common    = require( './common' ),
     assert    = require( 'assert' ),
-    Class     = common.require( 'class' ),
-    Interface = common.require( 'interface' );
+
+    Class         = common.require( 'class' ),
+    Interface     = common.require( 'interface' ),
+    AbstractClass = common.require( 'class_abstract' )
+;
 
 
 var Type = Interface.extend( {
@@ -97,7 +100,7 @@ var Type = Interface.extend( {
  */
 ( function testAbstractMethodsCopiedIntoNewClassUsingEmptyBase()
 {
-    Foo = Class.implement( Type, Type2 ).extend( {} );
+    Foo = AbstractClass.implement( Type, Type2 ).extend( {} );
 
     assert.ok(
         ( ( Foo.prototype.foo instanceof Function )
@@ -136,7 +139,7 @@ var Type = Interface.extend( {
 
 ( function testAbstractMethodsCopiedIntoNewClassUsingExistingBase()
 {
-    PlainFoo2 = PlainFoo.implement( Type, Type2 ).extend( {} );
+    PlainFoo2 = AbstractClass.implement( Type, Type2 ).extend( PlainFoo, {} );
 
     assert.ok(
         ( ( PlainFoo2.prototype.foo instanceof Function )
@@ -224,7 +227,7 @@ var Type = Interface.extend( {
         function()
         {
             // this /should/ work
-            Class.implement( Type ).extend( PlainFoo, {} );
+            AbstractClass.implement( Type ).extend( PlainFoo, {} );
         },
         Error,
         "Can specify parent for exetnd() when implementing atop an " +

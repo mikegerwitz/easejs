@@ -24,8 +24,103 @@
 
 var common = require( './common' ),
     assert = require( 'assert' ),
-    Class  = common.require( 'class' ),
-    util   = common.require( 'util' );
+    util   = common.require( 'util' ),
+
+    Class         = common.require( 'class' ),
+    AbstractClass = common.require( 'class_abstract' )
+;
+
+
+/**
+ * In order to ensure the code documents itself, we should require that all
+ * classes containing abstract members must themselves be declared as abstract.
+ * Otherwise, you are at the mercy of the developer's documentation/comments to
+ * know whether or not the class is indeed abstract without looking through its
+ * definition.
+ */
+( function testMustDeclareClassesWithAbstractMembersAsAbstract()
+{
+    try
+    {
+        // should fail; class not declared as abstract
+        Class( 'Foo',
+        {
+            'abstract foo': [],
+        } );
+    }
+    catch ( e )
+    {
+        assert.ok(
+            e.message.search( 'Foo' ) !== -1,
+            "Abstract class declaration error should contain class name"
+        );
+
+        return;
+    }
+
+    assert.fail(
+        "Should not be able to declare abstract members unless class is also " +
+        "declared as abstract"
+    );
+} )();
+
+
+/**
+ * Abstract members should be permitted if the class itself is declared as
+ * abstract
+ */
+( function testCanDeclareClassAsAbstract()
+{
+    AbstractClass(
+    {
+        'abstract foo': [],
+    } );
+} )();
+
+
+/**
+ * If a class is declared as abstract, it should contain at least one abstract
+ * method. Otherwise, the abstract definition is pointless and unnecessarily
+ * confusing. The whole point of the declaration is self-documenting code.
+ */
+( function testAbstractClassesMustContainAbstractMethods()
+{
+    try
+    {
+        // should fail; class not declared as abstract
+        AbstractClass( 'Foo', {} );
+    }
+    catch ( e )
+    {
+        assert.ok(
+            e.message.search( 'Foo' ) !== -1,
+            "Abstract class declaration error should contain class name"
+        );
+
+        return;
+    }
+
+    assert.fail(
+        "Abstract classes should contain at least one abstract method"
+    );
+} )();
+
+
+( function testAbstractClassContainsExtendMethod()
+{
+    assert.ok( typeof AbstractClass.extend === 'function',
+        "AbstractClass contains extend method"
+    );
+} )();
+
+
+( function testAbstractClassContainsImplementMethod()
+{
+    assert.ok( typeof AbstractClass.implement === 'function',
+        "AbstractClass contains implement method"
+    );
+} )();
+
 
 // not abstract
 var Foo = Class.extend( {} );
@@ -33,7 +128,7 @@ var Foo = Class.extend( {} );
 // abstract (ctor_called is not a class member to ensure that visibility bugs do
 // not impact our test)
 var ctor_called = false,
-    AbstractFoo = Class.extend(
+    AbstractFoo = AbstractClass.extend(
     {
         __construct: function()
         {
@@ -48,7 +143,7 @@ var ctor_called = false,
 
 // still abstract (didn't provide a concrete implementation of both abstract
 // methods)
-var SubAbstractFoo = AbstractFoo.extend(
+var SubAbstractFoo = AbstractClass.extend( AbstractFoo,
 {
     second: function()
     {
@@ -56,7 +151,7 @@ var SubAbstractFoo = AbstractFoo.extend(
 });
 
 // concrete
-var ConcreteFoo = AbstractFoo.extend(
+var ConcreteFoo = Class.extend( AbstractFoo,
 {
     method: function( one, two, three )
     {
@@ -193,7 +288,7 @@ var ConcreteFoo = AbstractFoo.extend(
     assert.doesNotThrow(
         function()
         {
-            AbstractFoo.extend(
+            AbstractClass.extend( AbstractFoo,
             {
                 // incorrect number of arguments
                 'abstract method': [ 'one', 'two', 'three', 'four' ],
@@ -212,7 +307,7 @@ var ConcreteFoo = AbstractFoo.extend(
     assert.doesNotThrow(
         function()
         {
-            AbstractFoo.extend(
+            AbstractClass.extend( AbstractFoo,
             {
                 second: function( foo )
                 {
@@ -257,7 +352,8 @@ var ConcreteFoo = AbstractFoo.extend(
 {
     assert.doesNotThrow( function()
     {
-        SubAbstractFoo.extend( {
+        Class.extend( SubAbstractFoo,
+        {
             // concrete, so the result would otherwise not be abstract
             'method': function( one, two, three ) {},
 
