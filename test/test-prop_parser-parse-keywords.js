@@ -52,3 +52,42 @@ var common = require( './common' ),
     );
 } )();
 
+
+/**
+ * In an effort to prevent unnecessary bugs, notify the user when they use a
+ * keyword that is not recognized.
+ */
+( function testOnlyPermitsKnownKeywords()
+{
+    assert.doesNotThrow( function()
+    {
+        // Odd seeing these all together, isn't it? Note that this is not at all
+        // valid, but the prop parser doesn't care what appears together.
+        parse( 'public protected private static final abstract const var' );
+    }, Error, "Known keywords are permitted by the parser" );
+
+    var oddword = 'foobunny',
+        oddname = 'moobunny';
+
+    try
+    {
+        // remember, the last part of the string is the var name and is not
+        // considered to be a keyword
+        parse( oddword + ' ' + oddname );
+    }
+    catch ( e )
+    {
+        assert.ok( e.message.search( oddword ) !== -1,
+            "Error message contains unrecognized keyword"
+        );
+
+        assert.ok( e.message.search( oddname ) !== -1,
+            "Error message contains name"
+        );
+
+        return;
+    }
+
+    assert.fail( "Should not permit unknown keywords" );
+} )();
+
