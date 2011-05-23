@@ -65,9 +65,39 @@ module.assert = { exports: {
     },
 
 
+    // dumbed down impl which works for what we use
     deepEqual: function ( val, cmp, err )
     {
-        // todo: not yet implemented
+        if ( val == cmp )
+        {
+            return;
+        }
+
+        if ( cmp instanceof Array )
+        {
+            var i   = 0,
+                len = cmp.length;
+
+            for ( ; i < len; i++ )
+            {
+                // recurse
+                module.assert.exports.deepEqual( val[ i ], cmp[ i ], err );
+            }
+
+            return;
+        }
+        else if ( cmp instanceof Object )
+        {
+            for ( var i in cmp )
+            {
+                // recurse
+                module.assert.exports.deepEqual( val[ i ], cmp[ i ], err );
+            }
+
+            return;
+        }
+
+        failAssertion( err );
     },
 
 
