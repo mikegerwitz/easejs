@@ -106,14 +106,27 @@ var common = require( './common' ),
 } )();
 
 
-( function testAbstractClassContainsExtendMethod()
+/**
+ * Just as Class contains an extend method, so should AbstractClass.
+ */
+( function testAbstractClassExtendMethodReturnsNewClass()
 {
     assert.ok( typeof AbstractClass.extend === 'function',
         "AbstractClass contains extend method"
     );
+
+    assert.ok(
+        Class.isClass(
+            AbstractClass.extend( { 'abstract foo': [] } )
+        ),
+        "Abstract class extend method returns class"
+    );
 } )();
 
 
+/**
+ * Just as Class contains an implement method, so should AbstractClass.
+ */
 ( function testAbstractClassContainsImplementMethod()
 {
     assert.ok( typeof AbstractClass.implement === 'function',
@@ -361,5 +374,53 @@ var ConcreteFoo = Class.extend( AbstractFoo,
             'toString': function() {},
         })();
     }, Error, "Should not throw error if overriding a prototype method" );
+} )();
+
+
+/**
+ * Ensure we support named abstract class extending
+ */
+( function testCanCreateNamedAbstractSubtypes()
+{
+    assert.doesNotThrow( function()
+    {
+        var cls = AbstractClass( 'NamedSubFoo' ).extend( AbstractFoo, {} );
+    }, Error, "Can create named abstract subtypes" );
+} )();
+
+
+/**
+ * Abstract classes, when extended, should yield a concrete class by default.
+ * Otherwise, the user should once again use AbstractClass to clearly state that
+ * the subtype is abstract.
+ */
+( function testExtendingAbstractClassIsNotAbstractByDefault()
+{
+    var cls_named  = AbstractClass( 'NamedSubFoo' ).extend( AbstractFoo, {} ),
+        anon_named = AbstractClass.extend( AbstractFoo, {} );
+
+    // named
+    assert.throws(
+        function()
+        {
+            // should throw an error, since we're not declaring it as abstract
+            // and we're not providing a concrete impl
+            Class.isAbstract( cls_named.extend( {} ) );
+        },
+        TypeError,
+        "Extending named abstract classes should be concrete by default"
+    );
+
+    // anonymous
+    assert.throws(
+        function()
+        {
+            // should throw an error, since we're not declaring it as abstract
+            // and we're not providing a concrete impl
+            Class.isAbstract( AbstractFoo.extend( {} ) );
+        },
+        TypeError,
+        "Extending anonymous abstract classes should be concrete by default"
+    );
 } )();
 
