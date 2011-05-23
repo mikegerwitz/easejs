@@ -110,13 +110,16 @@ planned features and should be available shortly.**
 
 ### Abstract Classes
 Abstract classes require that their subtypes implement certain methods. They
-cannot be instantiated. Classes are automatically considered to be abstract if
-they contain one or more abstract methods.
+cannot be instantiated. Classes are considered to be abstract if they contain
+one or more abstract methods and are declared using `AbstractClass` rather than
+`Class`. If a class contains abstract methods but is not declared abstract, an
+error will result. Similarily, if a class is declared to be abstract and
+contains *no* abstract methods, an error will be thrown.
 
 ````javascript
     var Class = require( 'easejs' ).Class;
 
-    var AbstractFoo = Class(
+    var AbstractFoo = AbstractClass(
     {
         // a function may be provided if you wish the subtypes to implement a
         // certain number of arguments
@@ -134,12 +137,12 @@ will be thrown. This ensures consistency between supertypes and their subtypes.
 Abstract classes can be extended from just as an other class. In order for its
 subtype to be instantiated, it must provide concrete implementations of each
 abstract method. If any methods are left as abstract, then the subtype too will
-be considered abstract.
+be considered abstract and must be declared as such.
 
 ````javascript
     // can be instantiated because concrete methods are supplied for both
     // abstract methods
-    var ConcreteFoo = AbstractFoo.extend(
+    var ConcreteFoo = Class.extend( AbstractFoo,
     {
         'public fooBar': function( arg )
         {
@@ -151,23 +154,13 @@ be considered abstract.
     });
 
     // cannot be instantiated because one abstract method remains
-    var StillAbstractFoo = AbstractFoo.extend(
+    var StillAbstractFoo = AbstractClass.extend( AbstractFoo,
     {
         'public fooBar': function( arg )
         {
         },
     });
 ````
-
-You may determine if a class is abstract by calling its `isAbstract()` method.
-The abstract methods are available as a read-only `abstractMethods` property.
-
-    Foo.isAbstract();              // false
-    SubFoo.isAbstract();           // false
-    AbstractFoo.isAbstract();      // true
-    Concretefoo.isAbstract();      // false
-    StillAbstractFoo.isAbstract(); // true
-
 
 ### Interfaces
 Interfaces can be declared in a very similar manner to classes. All members of
@@ -188,6 +181,9 @@ To implement an interface, use the `implement()` class method:
         'public foo': function() {}
     });
 ````
+
+Note that, if a concrete implementation for each method is not provided, the
+implementing type must be declared abstract.
 
 
 ## Use of Reserved Words
