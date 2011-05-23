@@ -23,6 +23,7 @@ PATH_LIB="$PATH_TOOLS/../lib"
 PATH_TEST="$PATH_TOOLS/../test"
 MODULE_EXT='js'
 TPL_PATH="$PATH_TOOLS/combine.tpl"
+TPL_LICENSE_PATH="$PATH_TOOLS/license.tpl"
 TPL_TEST_PATH="$PATH_TOOLS/combine-test.tpl"
 TPL_VAR='/**{CONTENT}**/'
 RMTRAIL="$PATH_TOOLS/rmtrail"
@@ -36,6 +37,9 @@ CAT_MODULES="$CAT_MODULES class class_final class_abstract interface"
 ##
 tpl_header()
 {
+    # prepend license
+    cat "$TPL_LICENSE_PATH"
+
     # cut out the top of the template (before the content location)
     cat "$TPL_PATH" \
         | awk "{
@@ -64,9 +68,13 @@ tpl_footer()
         }"
 }
 
-# ensure we can locate our template (should be in the /tools dir)
+# ensure we can locate our templates (should be in the /tools dir)
 if [ ! -f "$TPL_PATH" ]; then
     echo "Error: combine.tpl not found ($TPL_PATH)"
+    exit 1
+fi
+if [ ! -f "$TPL_PATH" ]; then
+    echo "Error: license.tpl not found ($TPL_PATH)"
     exit 1
 fi
 
