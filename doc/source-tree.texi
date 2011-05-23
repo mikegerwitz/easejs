@@ -171,6 +171,11 @@ It does not, for example, check to ensure that it is not removing commas from
 within strings. This would not be a difficult addition, but is currently
 unnecessary. Use caution when using this tool outside of ease.js.
 
+@item minify.js
+Responsible for receiving input from stdin and writing minified output to
+stdout. This script uses UglifyJS to minify source files for distribution,
+improving download times.
+
 @item browser-test.html
 Skeleton page to be used after the build process. Runs ease.js unit tests in the
 web browser and reports any failures. This is very important to ensure that
@@ -187,6 +192,12 @@ Contains the basic functionality required to get CommonJS modules working
 client-side. This is a very basic implementation, only doing what is necessary
 for ease.js to work properly. It is not meant to be a solution for all of your
 client-side CommonJS problems.
+
+@item license.tpl
+Contains the license that is to appear atop every combined file, including
+minified. The original text must remain in tact. If you make changes to the
+source code, you are welcome to add additional text. See the @file{LICENSE} file
+in the root directory for more information on what is permitted.
 @end table
 
 While the tools may be useful outside of ease.js in some regard, please note

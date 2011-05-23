@@ -88,6 +88,11 @@ tests within the browser. The output is stored in the @file{build/} directory.
 The unit tests can be run by opening the @file{build/browser-test.html} file in your
 web browser.
 
+@item min
+Runs @command{combine} and minifies the resulting combined files. These files
+are output in the @file{build/} directory and are useful for distribution. It is
+recommended that you use the minified files in production.
+
 @item test
 Run unit tests. This will first perform the @command{combine} process and will
 also run the tests for the combined script, ensuring that it was properly
