@@ -157,3 +157,27 @@ var common  = require( './common' ),
     assert.fail( "Should not be able to extend final classes" );
 } )();
 
+
+/**
+ * Ensure we're able to create final classes by extending existing classes.
+ */
+( function testCanCreateFinalSubtypes()
+{
+    var Foo        = builder.build( {} ),
+        FinalNamed = FinalClass( 'FinalNamed' ).extend( Foo, {} ),
+        FinalAnon  = FinalClass.extend( Foo, {} )
+    ;
+
+    // named
+    assert.throws( function()
+    {
+        FinalNamed.extend( {} );
+    }, Error, "Cannot extend final named subtype" );
+
+    // anonymous
+    assert.throws( function()
+    {
+        FinalAnon.extend( {} );
+    }, Error, "Cannot extend final anonymous subtype" );
+} )();
+
