@@ -129,6 +129,10 @@ doc-info: $(PATH_DOC_OUTPUT_INFO)
 doc-plain: $(PATH_DOC_OUTPUT_PLAIN)
 doc-html: $(PATH_DOC_OUTPUT_HTML)/index.html $(PATH_DOC_OUTPUT_HTML1)
 
+min: build/ease.min.js build/ease-full.min.js
+build/%.min.js: build/%.js
+	node $(PATH_TOOLS)/minify.js < $< > $@
+
 # clean up build dir
 clean:
 	rm -rf "${PATH_BUILD}"
