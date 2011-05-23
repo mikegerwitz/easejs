@@ -373,3 +373,31 @@ for ( var i = 0; i < class_count; i++ )
     );
 } )();
 
+
+/**
+ * Previously, when attempting to extend from an invalid supertype, you'd get a
+ * CALL_NON_FUNCTION_AS_CONSTRUCTOR error, which is not very helpful to someone
+ * who is not familiar with the ease.js internals. Let's provide a more useful
+ * error that clearly states what's going on.
+ */
+( function testExtendingFromNonCtorOrClassProvidesUsefulError()
+{
+    try
+    {
+        // invalid supertype
+        Class.extend( 'oops', {} );
+    }
+    catch ( e )
+    {
+        assert.ok( e.message.search( 'extend from' ),
+            "Error message for extending from non-ctor or class makes sense"
+        );
+
+        return;
+    }
+
+    assert.fail(
+        "Attempting to extend from non-ctor or class should throw exception"
+    );
+} )();
+
