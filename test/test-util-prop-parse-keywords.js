@@ -129,12 +129,12 @@ var common = require( './common' ),
     var data = {
             'public foo': '',
             'const foo2': '',
-            'public bogus keywords foo3': '',
+            'public private const foo3': '',
 
             'public static final method': function() {},
 
-            // tricky tricky
-            'lots    of   spaces': function() {},
+            // tricky tricky (lots of spaces)
+            'public  const   spaces': function() {},
         },
 
         parsed_keywords = {},
@@ -142,11 +142,11 @@ var common = require( './common' ),
         expected = {
             foo:  { 'public': true },
             foo2: { 'const': true },
-            foo3: { 'public': true, 'bogus': true, 'keywords': true },
+            foo3: { 'public': true, 'private': true, 'const': true },
 
             method: { 'public': true, 'static': true, 'final': true },
 
-            spaces: { 'lots': true, 'of': true },
+            spaces: { 'public': true, 'const': true },
         }
     ;
 

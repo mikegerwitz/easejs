@@ -38,7 +38,7 @@ var common    = require( './common' ),
     var val = [ 'baz' ],
         Foo = builder.build(
         {
-            'public function test': function()
+            'public test': function()
             {
                 return this.__self;
             },
