@@ -6,11 +6,29 @@
  */
 
 // uses UglifyJS
-var parser = require( 'uglify-js' ).parser,
-    uglify = require( 'uglify-js' ).uglify,
+var uglify,
+    FILE_ROOT = '../build/';
 
-    FILE_ROOT = '../build/'
-;
+try
+{
+    // attempt to load UglifyJS
+    var uglify = require( 'uglify-js' );
+}
+catch ( e )
+{
+    // if there's a problem loading it, let the user know what they probably
+    // need to do
+    process.stderr.write(
+        "Unable to located UglifyJS. Please run:\n\n" +
+        "  $ npm install uglify-js\n\n" +
+        "and then try again.\n"
+    );
+
+    process.exit( 1 );
+}
+
+var parser = uglify.parser,
+    uglify = uglify.uglify;
 
 // we should receive the file via stdin
 var data = '';
