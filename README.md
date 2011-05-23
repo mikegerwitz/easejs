@@ -39,6 +39,7 @@ examples below, [Node.js](http://nodejs.org) is used.
 The constructor is provided as the `__construct()` method (influenced by
 [PHP](http://php.net)).
 
+````javascript
     var Class = require( 'easejs' ).Class;
 
     // anonymous class definition
@@ -61,15 +62,18 @@ The constructor is provided as the `__construct()` method (influenced by
             return this._name;
         }
     });
+````
 
 The above creates an anonymous class and stores it in the variable ``Dog``. You
 have the option of naming class in order to provide more useful error messages
 and toString() output:
 
+````javascript
     var Dog = Class( 'Dog',
     {
         // ...
     });
+````
 
 ### Extending Classes
 Classes may inherit from one-another. If the supertype was created using
@@ -86,6 +90,7 @@ interfaces and traits.
 **Note that interfaces, traits and mixins are not yet available. They are
 planned features and should be available shortly.**
 
+````javascript
     var SubFoo = Foo.extend(
     {
         'public anotherMethod': function()
@@ -101,12 +106,14 @@ planned features and should be available shortly.**
         {
         },
     });
+````
 
 ### Abstract Classes
 Abstract classes require that their subtypes implement certain methods. They
 cannot be instantiated. Classes are automatically considered to be abstract if
 they contain one or more abstract methods.
 
+````javascript
     var Class = require( 'easejs' ).Class;
 
     var AbstractFoo = Class(
@@ -118,6 +125,7 @@ they contain one or more abstract methods.
         // alternatively, you needn't supply implementation details
         'abstract public fooBar2': [],
     });
+````
 
 If the abstract method provides implementation details (as shown by
 `fooBar()`, subtypes must implement at least that many arguments or an exception
@@ -128,6 +136,7 @@ subtype to be instantiated, it must provide concrete implementations of each
 abstract method. If any methods are left as abstract, then the subtype too will
 be considered abstract.
 
+````javascript
     // can be instantiated because concrete methods are supplied for both
     // abstract methods
     var ConcreteFoo = AbstractFoo.extend(
@@ -148,6 +157,7 @@ be considered abstract.
         {
         },
     });
+````
 
 You may determine if a class is abstract by calling its `isAbstract()` method.
 The abstract methods are available as a read-only `abstractMethods` property.
@@ -163,17 +173,21 @@ The abstract methods are available as a read-only `abstractMethods` property.
 Interfaces can be declared in a very similar manner to classes. All members of
 an interface must be declared as abstract.
 
+````javascript
     var MyType = Interface(
     {
         'abstract public foo': []
     });
+````
 
 To implement an interface, use the `implement()` class method:
 
+````javascript
     var ConcreteType = Class.implement( MyType ).extend(
     {
         'public foo': function() {}
     });
+````
 
 
 ## Use of Reserved Words
