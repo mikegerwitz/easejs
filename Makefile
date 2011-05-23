@@ -38,7 +38,7 @@ COMBINE=${PATH_TOOLS}/combine
 .PHONY: combine doc test test-combine
 
 
-default: combine
+default: combine min
 all:     combine doc
 
 # create build dir

@@ -34,7 +34,8 @@ var common  = require( './common' ),
     };
 
 
-var files = [ 'ease.js', 'ease-full.js' ],
+// test all combined files, including minified files
+var files = [ 'ease.js', 'ease-full.js', 'ease.min.js', 'ease-full.min.js' ],
     file  = '',
     i     = files.length;
 
@@ -52,7 +53,8 @@ while ( i-- )
     {
         // if the file doesn't exit, just skip the test
         console.log(
-            "Combined file not found. Test skipped. Please run `make combined`."
+            "Combined/minified file not found. Test skipped. Please run " +
+            "`make min`."
         );
         process.exit( 0 );
     }
@@ -92,7 +94,7 @@ while ( i-- )
     } );
 
     // the full file has tests included to be run client-side
-    if ( file === 'ease-full.js' )
+    if ( file.match( /ease-full/ ) )
     {
         assert.ok(
             ( typeof sandbox.easejs.runTests === 'function' ),
