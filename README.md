@@ -117,7 +117,7 @@ error will result. Similarily, if a class is declared to be abstract and
 contains *no* abstract methods, an error will be thrown.
 
 ````javascript
-    var Class = require( 'easejs' ).Class;
+    var AbstractClass = require( 'easejs' ).AbstractClass;
 
     var AbstractFoo = AbstractClass(
     {

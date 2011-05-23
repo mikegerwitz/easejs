@@ -78,7 +78,12 @@ while ( i-- )
         "'easejs' namespace is defined within combined file"
     );
 
-    [ 'Class', 'Interface' ].forEach( function( item )
+    [
+        'Class',
+        'AbstractClass',
+        'FinalClass',
+        'Interface'
+    ] .forEach( function( item )
     {
         assert.ok(
             sandbox.easejs[ item ],
