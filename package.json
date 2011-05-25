@@ -1,25 +1,46 @@
 {
-    "name":        "easejs",
-    "description": "A basic collection of CommonJS modules intended to \"ease\" the transition into Javascript from other Object-Oriented languages",
-    "version":     "0.1.0-pre",
-    "author":      "Mike Gerwitz <mike@mikegerwitz.com>",
+  "name":        "easejs",
+  "description": "A basic collection of CommonJS modules intended to \"ease\" the transition into JavaScript from other Object-Oriented languages.",
+  "version":     "0.1.0",
+  "author":      "Mike Gerwitz <mike@mikegerwitz.com> (http://mikegerwitz.com)",
+  "homepage":    "http://easejs.org",
 
-    "repository": {
-        "type": "git",
-        "url":  "git://github.com/mikegerwitz/easejs.git"
-    },
+  "repository": {
+    "type": "git",
+    "url":  "git://github.com/mikegerwitz/easejs.git"
+  },
 
-    "tags": [
-        "object oriented",
-        "oo",
-        "util",
-        "utility",
-        "lib",
-        "library",
-        "framework",
-        "classes",
-        "interfaces",
-        "protected members",
-        "inheritance"
-    ]
+  "engines": {
+    "node": ">0.0.0"
+  },
+
+  "dependencies": {},
+  "devDependencies": {
+    "uglify-js": ">=1.0.2"
+  },
+
+  "licenses": [
+    {
+      "type": "GPLv3+",
+      "url": "http://www.gnu.org/licenses/gpl.html"
+    }
+  ],
+
+  "scripts": {
+    "test": "make test"
+  },
+
+  "tags": [
+      "object oriented",
+      "oo",
+      "oop",
+      "lib",
+      "library",
+      "framework",
+      "classes",
+      "classical",
+      "interfaces",
+      "protected members",
+      "inheritance"
+  ]
 }
