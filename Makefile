@@ -37,11 +37,11 @@ doc_replace := s/<\/body>/<script type="text\/javascript" \
 COMBINE=${PATH_TOOLS}/combine
 
 
-.PHONY: combine doc test test-combine
+.PHONY: combine min doc test test-combine
 
 
 default: combine min
-all:     combine doc
+all:     combine min doc
 
 # create build dir
 $(PATH_BUILD):
