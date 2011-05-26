@@ -114,8 +114,17 @@ will likely be able to run the following command to get started:
   $ sudo apt-get install texlive texinfo
 @end example
 
+@item install
+Installs info documentation. Must first build @command{doc-info}. After
+installation, the manual may be viewed from the command line with: @samp{info
+easejs}.
+
+@item uninstall
+Removes everything from the system that was installed with @command{make
+install}.
+
 @item all
-Runs all targets, except for clean.
+Runs all targets, except for clean, install and uninstall.
 
 @item clean
 Cleans up after the build process by removing the @file{build/} directory.
