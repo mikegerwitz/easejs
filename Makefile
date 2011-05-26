@@ -136,7 +136,7 @@ build/%.min.js: build/%.js
 	cat $(path_tools)/license.tpl > $@
 	node $(path_tools)/minify.js < $< >> $@
 
-install: all
+install: doc-info
 	[ -d $(path_info_install) ] || mkdir -p $(path_info_install)
 	cp $(path_doc_output_info) $(path_info_install)
 
