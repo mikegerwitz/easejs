@@ -12,7 +12,7 @@ PERF_TESTS := $(shell find "$(PATH_PERF_TEST)" -name 'perf-*.js')
 
 PATH_DOC=./doc
 PATH_DOC_OUTPUT=${PATH_BUILD}/doc
-PATH_DOC_OUTPUT_INFO=${PATH_DOC_OUTPUT}/manual.info
+PATH_DOC_OUTPUT_INFO=${PATH_DOC_OUTPUT}/easejs.info
 PATH_DOC_OUTPUT_PLAIN=${PATH_DOC_OUTPUT}/manual.txt
 PATH_DOC_OUTPUT_HTML=${PATH_DOC_OUTPUT}/manual
 PATH_DOC_OUTPUT_HTML1=${PATH_DOC_OUTPUT}/manual.html
@@ -22,6 +22,8 @@ PATH_DOC_INTERACTIVE_SRC=$(PATH_DOC)/interactive.js
 PATH_DOC_INTERACTIVE_DEST=$(PATH_DOC_OUTPUT)/interactive.js \
 	$(PATH_DOC_OUTPUT_HTML)/interactive.js
 PATH_MANUAL_TEXI=${PATH_DOC}/manual.texi
+
+path_info_install := /usr/local/share/info
 
 src_js := index.js $(wildcard $(PATH_LIB)/*.js)
 src_tests := index.js $(wildcard $(PATH_TEST)/test-*)
@@ -133,6 +135,13 @@ min: build/ease.min.js build/ease-full.min.js
 build/%.min.js: build/%.js
 	cat $(PATH_TOOLS)/license.tpl > $@
 	node $(PATH_TOOLS)/minify.js < $< >> $@
+
+install: all
+	[ -d $(path_info_install) ] || mkdir -p $(path_info_install)
+	cp $(PATH_DOC_OUTPUT_INFO) $(path_info_install)
+
+uninstall:
+	rm $(path_info_install)/easejs.info
 
 # clean up build dir
 clean:
