@@ -1240,7 +1240,7 @@ will add an additional static method, @code{BigBang.create()}, which the factory
 methods will use to instantiate the object. This will permit subtypes to
 override the implementation. We will then create a subtype,
 @var{UnstableBigBang}, which will create a big bang that's destined to create an
-unstable and inhabitable universe.
+unstable and uninhabitable universe.
 
 @float Figure, f:static-binding
 @verbatim
