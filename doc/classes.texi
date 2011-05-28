@@ -69,11 +69,13 @@ addresses. We will also see how to declare the classes using both prototypes and
 ease.js, until such a point where prototypes are no longer adequate.
 
 @menu
-* Declaring Classes::  Learn how to declare a class with ease.js
-* Inheritance::        Extending classes from another
-* Member Visibility::  Encapsulation is a core concept of Object-Oriented
-                       programming
-* Static Members::     Members whose use do not require instantiation
+* Declaring Classes::         Learn how to declare a class with ease.js
+* Inheritance::               Extending classes from another
+* Member Visibility::         Encapsulation is a core concept of Object-Oriented
+                              programming
+* Static Members::            Members whose use do not require instantiation
+* Final Classes and Methods:: Declaring classes and methods that cannot be
+*                             overridden
 @end menu
 
 
@@ -1294,4 +1296,98 @@ to the original @code{create()}, @code{UnstableBigBang.create()} is called. Had
 ease.js implemented true static binding, the results would be similar to Java's
 concept of static @emph{hiding}, which would cause ``New BigBang`` to be output
 twice instead of ``BigBang is doomed''.
+
+@node Final Classes and Methods
+@section Final Classes and Methods
+The @dfn{final} keyword is used to denote a class or method that cannot be
+overridden by subtypes. This keyword can be used to ensure that the
+implementation cannot be altered and is guaranteed to be in a consistent state.
+If the final keyword is @emph{not} used, then the developer should be mindful of
+how subtypes may alter the logic by overriding members.
+
+Unlike Java, the final keyword cannot be used on properties. Consider using the
+@code{const} keyword instead. Much @emph{like} Java, classes and methods are
+@emph{not} final by default. This is in contrast to C++, where members must be
+explicitly declared as ``virtual'' in order to be overridden.
+
+Members may be declared as final by simply prefixing the definition with the
+@code{final} keyword. Consider the following example in which we define class
+@var{ChocolateFactory}. The factory is able to accommodate different types of
+chocolate by allowing the process at each station to be altered, but the order
+in which the chocolate reaches these stations @emph{cannot} be altered. In order
+to ensure this order is preserved, we will declare our template method,
+@code{create()}, as final. We will then permit subtypes to override the methods
+that represent each of the stations, permitting different types of chocolate to
+be produced.
+
+@float Figure, f:final-methods
+@verbatim
+    var ChocolateFactory = Class( 'ChocolateFactory',
+        'final public create': function()
+        {
+            this.initFactory();
+            this.combineIngredients();
+
+            return this.shapePieces();
+        },
+
+        'protected initFactory': function()
+        {
+        },
+
+        'protected combineIngredients': function()
+        {
+        },
+
+        'protected shapePieces': function()
+        {
+        },
+    );
+@end verbatim
+@caption{Using final methods to prevent subtypes from altering an
+implementation}
+@end float
+
+In the above example, subtypes would receive an error if they attempted to
+override the @code{create()} method. They are, however, permitted to override
+the other methods.
+
+Now let us consider an alternative implementation. Rather than permitting
+subtypes to override functionality, we may decide to use various chocolate
+strategies (Strategy pattern, GoF). In this case, we wish to declare the class
+as final, preventing it from being overridden. Instead, we will accept a
+strategy representing the type of chocolate to be created.
+
+@float Figure, f:final-class
+@verbatim
+    // declare the class as final
+    var ChocolateFactory = FinalClass( 'ChocolateFactory',
+        'private _strategy': null,
+
+        'public __construct': function( strategy )
+        {
+            this._strategy = strategy;
+        },
+
+        'public create': function()
+        {
+            this._strategy.initFactory();
+            this._strategy.combineIngredients();
+
+            return this._strategy.shapePieces();
+        },
+    );
+
+    // assuming MilkChocolate, DarkChocolate and WhiteChocolate are all
+    // strategies
+    ChocolateFactory( MilkChocolate() ).create();
+    ChocolateFactory( DarkChocolate() ).create();
+    ChocolateFactory( WhiteChocolate() ).create();
+@end verbatim
+@caption{Declaring final classes}
+@end float
+
+Any attempt to override @var{ChocolateFactory} would produce an error. Note
+that, because the class is declared as final, it is unnecessary (and redundant,
+though not disallowed) to declare its methods as final.
 
