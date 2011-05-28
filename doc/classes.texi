@@ -1287,7 +1287,7 @@ unstable and uninhabitable universe.
 @caption{Demonstrating late static binding by overriding a static method}
 @end float
 
-Method @code{BigBang.fromBraneCollision()} calls static method @var{create()},
+Method @code{BigBang.fromBraneCollision()} calls static method @code{create()},
 which is overridden by subtype @var{UnstableBigBang}. Because @var{this} is
 bound when the method is called (``late''), rather than being statically bound
 to the original @code{create()}, @code{UnstableBigBang.create()} is called. Had
