@@ -1115,6 +1115,7 @@ implementation must be broken into two separate parts: properties and methods.
 * Static Methods::
 * Static Properties::
 * Late Static Binding::  Static members are not strictly static
+* Constants::            Immutable static properties
 @end menu
 
 @node Static Methods
@@ -1297,6 +1298,74 @@ ease.js implemented true static binding, the results would be similar to Java's
 concept of static @emph{hiding}, which would cause ``New BigBang`` to be output
 twice instead of ``BigBang is doomed''.
 
+@node Constants
+@subsection Constants
+@dfn{Constants}, in terms of classes, are immutable static properties. This
+means that, once defined, a constant cannot be modified. Since the value is
+immutable, it does not make sense to create instances of the property. As such,
+constant values are implicitly static. This ensures that each instance, as well
+as any static access, references the exact same value. This is especially
+important for objects and arrays.
+
+One important difference between other languages, such as PHP, is that ease.js
+supports the @ref{Member Visibility, visibility modifiers} in conjunction with
+the @code{const} keyword. That is, you can have public, protected and private
+constants. Constants are public by default, like every other type of member.
+This feature permits encapsulating constant values, which is important if you
+want an immutable value that shouldn't be exposed to the rest of the world (e.g.
+a service URL, file path, etc). Consider the following example in which we have
+a class responsible for reading mount mounts from @file{/etc/fstab}:
+
+@float Figure, f:const-ex
+@verbatim
+    Class( 'MountPointIterator',
+    {
+        'private const _PATH': '/etc/fstab',
+
+        'private _mountPoints': [],
+
+
+        'public __construct': function()
+        {
+            var data = fs.readFileSync( this.$('_PATH') );
+            this._parseMountPoints( data );
+        },
+
+        // ...
+    } );
+@end verbatim
+@caption{Using the @code{const} keyword}
+@end float
+
+In the above example, attempting to access the @var{_PATH} constant from outside
+the class would return @code{undefined}. Had the constant been declared as
+public, or had the visibility modifier omitted, it could have been accessed just
+like any other static property:
+
+@verbatim
+    // if PATH were a public constant value
+    MountPointIterator.$('PATH');
+@end verbatim
+
+Any attempts to modify the value of a constant will result in an exception. This
+will also work in pre-ES5 engines due to use of the @ref{Static Properties,
+static accessor method} (@code{$()}).
+
+It is important to note that constants prevent the @emph{value of the property}
+from being reassigned. It @emph{does not} prevent modification of the value that
+is @emph{referenced} by the property. For example, if we had a constant
+@var{foo}, which references an object, such that
+
+@verbatim
+    'const foo': { a: 'b' }
+@end verbatim
+
+it is perfectly legal to alter the object:
+
+@verbatim
+    MyClass.$('foo').a = 'c';
+@end verbatim
+
 @node Final Classes and Methods
 @section Final Classes and Methods
 The @dfn{final} keyword is used to denote a class or method that cannot be
@@ -1306,9 +1375,9 @@ If the final keyword is @emph{not} used, then the developer should be mindful of
 how subtypes may alter the logic by overriding members.
 
 Unlike Java, the final keyword cannot be used on properties. Consider using the
-@code{const} keyword instead. Much @emph{like} Java, classes and methods are
-@emph{not} final by default. This is in contrast to C++, where members must be
-explicitly declared as ``virtual'' in order to be overridden.
+@code{@ref{Constants, const}} keyword instead. Much @emph{like} Java, classes
+and methods are @emph{not} final by default. This is in contrast to C++, where
+members must be explicitly declared as ``virtual'' in order to be overridden.
 
 Members may be declared as final by simply prefixing the definition with the
 @code{final} keyword. Consider the following example in which we define class
