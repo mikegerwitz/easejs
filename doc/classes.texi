@@ -75,7 +75,7 @@ ease.js, until such a point where prototypes are no longer adequate.
                               programming
 * Static Members::            Members whose use do not require instantiation
 * Final Classes and Methods:: Declaring classes and methods that cannot be
-*                             overridden
+                              overridden
 @end menu
 
 
