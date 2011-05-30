@@ -1,5 +1,5 @@
 /**
- * Tests static members (this includes constants)
+ * Tests static members
  *
  *  Copyright (C) 2010 Mike Gerwitz
  *

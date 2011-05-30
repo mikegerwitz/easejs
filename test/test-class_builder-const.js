@@ -127,3 +127,70 @@ var common  = require( './common' ),
     assert.fail( "Constant properties should not be writable" );
 } )();
 
+
+/**
+ * Unlike other languages such as PHP, the const keyword can have different
+ * levels of visibility.
+ */
+( function testVisibilityModifiersArePermittedWithConstKeyword()
+{
+    var protval = 'bar',
+        privval = 'baz',
+
+        Foo = builder.build(
+        {
+            'protected const prot': protval,
+            'private   const priv': privval,
+
+            'public static getProt': function()
+            {
+                return this.$('prot');
+            },
+
+            'public static getPriv': function()
+            {
+                return this.$('priv');
+            },
+        } ),
+
+        // be sure to override each method to ensure we're checking references
+        // on the subtype, *not* the parent type
+        SubFoo = builder.build( Foo,
+        {
+            'public static getProt': function()
+            {
+                return this.$('prot');
+            },
+
+            'public static getPriv': function()
+            {
+                return this.$('priv');
+            },
+        } )
+    ;
+
+    assert.equal( Foo.$('prot'), undefined,
+        "Protected constants are not available publicly"
+    );
+
+    assert.equal( Foo.$('priv'), undefined,
+        "Private constants are not available publicly"
+    );
+
+    assert.equal( Foo.getProt(), protval,
+        "Protected constants are available internally"
+    );
+
+    assert.equal( Foo.getPriv(), privval,
+        "Private constants are available internally"
+    );
+
+    assert.equal( SubFoo.getProt(), protval,
+        "Protected constants are available to subtypes internally"
+    );
+
+    assert.equal( SubFoo.getPriv(), undefined,
+        "Private constants are NOT available to subtypes internally"
+    );
+} )();
+
