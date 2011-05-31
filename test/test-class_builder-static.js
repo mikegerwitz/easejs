@@ -237,7 +237,9 @@ var common    = require( './common' ),
     // call the static method
     Foo.foo();
 
-    assert.notEqual( result, Foo,
+    // note that the objects themselves aren't the same, due to the property
+    // object
+    assert.equal( result.foo, Foo.foo,
         "Static members are bound to class definition rather than instance"
     );
 } )();
