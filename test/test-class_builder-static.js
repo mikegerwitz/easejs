@@ -940,11 +940,10 @@ var common    = require( './common' ),
 
 
 /**
- * We support the concept of late static binding. That is, static members can be
- * overridden by subtypes in the same way that non-static members can. This
- * can be compared to Java, which only supports static *hiding*, not overriding.
+ * Static members cannot be overridden. Instead, static members can be *hidden*
+ * if a member of the same name is defined by a subtype.
  */
-( function testCanOverrideStaticMembers()
+( function testCannotOverrideStaticMembers()
 {
     var val_orig = 'foobaz',
         val      = 'foobar',
@@ -965,7 +964,6 @@ var common    = require( './common' ),
 
             'public static baz': function()
             {
-                // should return overridden val
                 return this.$( 'prop' );
             },
         } ),
@@ -980,24 +978,66 @@ var common    = require( './common' ),
             {
                 return val;
             },
+
+            'public static getProp': function()
+            {
+                return this.$( 'prop' );
+            }
         } )
     ;
 
+    // cannot override
+    assert.notEqual( SubFoo.foo(), val,
+        "System does not support overriding static methods"
+    );
+    assert.notEqual( SubFoo.baz(), val,
+        "System does not support overriding static properties"
+    );
+
+    // but we can hide them
     assert.equal( SubFoo.bar(), val,
-        "System supports overriding static methods"
+        "System supports static method hiding"
+    );
+    assert.equal( SubFoo.getProp(), val,
+        "System supports static property hiding"
+    );
+} )();
+
+
+/**
+ * Since members are statically bound, calls to parent methods should retain
+ * access to their private members.
+ */
+( function testCallsToParentStaticMethodsRetainPrivateMemberAccess()
+{
+    var val = 'foobar',
+        Foo = builder.build(
+        {
+            'private static _priv': val,
+
+            'public static getPriv': function()
+            {
+                return this.$('_priv');
+            },
+        } ),
+
+        SubFoo = builder.build( Foo,
+        {
+            'public static getPriv2': function()
+            {
+                return this.getPriv();
+            },
+        } )
+    ;
+
+    assert.equal( SubFoo.getPriv(), val,
+        'Calls to parent static methods should retain access to their own ' +
+        'private members when called externally'
     );
 
-    assert.equal( SubFoo.baz(), val,
-        "System supports overriding static properties"
-    );
-
-    // ensure we didn't negatively impact the parent (crazy things can happen
-    // when you screw up an implementation)
-    assert.equal( Foo.bar(), val_orig,
-        "Subtypes' method overrides do not impact parent"
-    );
-    assert.equal( Foo.baz(), val_orig,
-        "Subtypes' property overrides do not impact parent"
+    assert.equal( SubFoo.getPriv2(), val,
+        'Calls to parent static methods should retain access to their own ' +
+        'private members when called internally'
     );
 } )();
 
