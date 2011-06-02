@@ -58,8 +58,8 @@ var easejs = {};
 
     // the following should match the exports of /index.js
     ns_exports.Class         = module['class'].exports;
-    ns_exports.AbstractClass = module['class_final'].exports;
-    ns_exports.FinalClass    = module['class_abstract'].exports;
+    ns_exports.AbstractClass = module['class_abstract'].exports;
+    ns_exports.FinalClass    = module['class_final'].exports;
     ns_exports.Interface     = module['interface'].exports;
 } )( easejs );
 
