@@ -4,20 +4,29 @@
  * Inspired by Tango Icon Theme
  */
 
-html {
-  background-color: #eeeeec;
+html, body {
+  background-color: #efefef;
 }
 
 body {
-  background-color: white;
-  border-color:     #babdb6;
-  border-width:     0px 1px 1px 1px;
-  border-style:     solid;
+  border-color: #babdb6;
+  border-width: 0px 1px 1px 1px;
+  border-style: solid;
 
   margin: 0px 5em;
   padding: 1em;
 
-  font-family: arial, serif;
+  font-size:   13px;
+}
+
+body, .float-caption
+{
+  font-family: arial, sans-serif;
+}
+
+.float, var
+{
+  font-family: 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', Courier, monospace;
 }
 
 dfn {
@@ -30,11 +39,16 @@ var {
 }
 
 .float {
-  border: 1px solid #babdb6;
+  background-color: #eeeeec;
+
+  font-size: 12px;
+  color:     #222;
+
+  border:  1px solid #babdb6;
   padding: 0.5em;
 }
 
 .float-caption {
-  font-size: 0.9em;
+  color: black;
 }
 
