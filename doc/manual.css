@@ -4,11 +4,13 @@
  * Inspired by Tango Icon Theme
  */
 
-html, body {
+html {
   background-color: #efefef;
 }
 
 body {
+  background-color: white;
+
   border-color: #babdb6;
   border-width: 0px 1px 1px 1px;
   border-style: solid;
@@ -39,16 +41,32 @@ var {
 }
 
 .float {
-  background-color: #eeeeec;
+  border:  1px solid #babdb6;
+  padding: 0px;
+}
+
+.float img {
+  padding: 1em;
+}
+
+/* for code samples */
+.float .verbatim {
+  background-color: #fafafc;
 
   font-size: 12px;
   color:     #222;
 
-  border:  1px solid #babdb6;
-  padding: 0.5em;
+  border-bottom: 1px dashed #babdb6;
+
+  margin:  0px;
+  padding: 0.5em 0.5em 1em 0.5em;
 }
 
 .float-caption {
-  color: black;
+  margin:  0px;
+  padding: 0.5em;
+  color:   black;
+
+  line-height: 0.5em;
 }
 
