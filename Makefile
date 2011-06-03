@@ -98,7 +98,7 @@ $(path_doc_output_plain): $(doc_imgs_txt) | mkbuild-doc
 	makeinfo --plain -I "$(path_doc)" "${path_manual_texi}" > $@
 
 # doc html (multiple pages)
-$(path_doc_output_html)/index.html: $(doc_src) \
+$(path_doc_output_html)/index.html: $(doc_src) $(path_doc_css) \
 | $(path_doc_output_html)/img $(path_doc_output_html)/interactive.js \
 mkbuild-doc doc-img
 	makeinfo --html --css-include="${path_doc_css}" \
@@ -106,7 +106,7 @@ mkbuild-doc doc-img
 	sed -i '$(doc_replace)' $(path_doc_output_html)/*.htm?
 
 # doc html (single page)
-$(path_doc_output_html1): $(doc_src) \
+$(path_doc_output_html1): $(doc_src) $(path_doc_css) \
 | $(path_doc_output)/img $(path_doc_output)/interactive.js mkbuild-doc doc-img
 	makeinfo --no-split --html --css-include="${path_doc_css}" \
 		-I "$(path_doc)" -o - "${path_manual_texi}" \
