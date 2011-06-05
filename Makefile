@@ -18,6 +18,7 @@ path_doc_output_html=${path_doc_output}/manual
 path_doc_output_html1=${path_doc_output}/manual.html
 path_doc_css=${path_doc}/manual.css
 path_doc_img=${path_doc}/img
+path_doc_css_ref=manual.css
 path_manual_texi=${path_doc}/manual.texi
 
 path_info_install := /usr/local/share/info
@@ -98,8 +99,9 @@ $(path_doc_output_plain): $(doc_imgs_txt) | mkbuild-doc
 # doc html (multiple pages)
 $(path_doc_output_html)/index.html: $(doc_src) $(path_doc_css) \
 | $(path_doc_output_html)/img $(path_doc_output_html)/interactive.js \
-$(path_doc_output_html)/highlight.pack.js mkbuild-doc doc-img
-	makeinfo --html --css-include="${path_doc_css}" \
+$(path_doc_output_html)/highlight.pack.js \
+$(path_doc_output_html)/$(path_doc_css_ref) mkbuild-doc doc-img
+	makeinfo --html --css-ref="$(path_doc_css_ref)" \
 		-I "$(path_doc)" -o "${path_doc_output_html}" "${path_manual_texi}"
 	sed -i '$(doc_replace)' $(path_doc_output_html)/*.htm?
 
@@ -125,6 +127,11 @@ $(path_doc_output_html)/%.js: $(path_doc)/%.js
 	cp $< $@
 $(path_doc_output)/%.js: $(path_doc)/%.js
 	cp $< $@
+
+# doc css
+$(path_doc_output_html)/%.css: $(path_doc)/%.css
+	cp $< $@
+
 
 doc-img: $(doc_imgs)
 doc-pdf: $(path_doc_output)/manual.pdf
