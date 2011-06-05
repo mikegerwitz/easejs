@@ -154,10 +154,13 @@ Let's assume that you have installed ease.js somewhere that is accessible to
 @code{require.paths}. If you used a tool such as @command{npm}, this should have
 been done for you.
 
-@example
+@float Figure, f:inc-serverside
+@verbatim
 /** example-include.js **/
 var easejs = require( 'easejs' );
-@end example
+@end verbatim
+@caption{Including ease.js via require()}
+@end float
 
 It's important to understand what exactly the above command is doing. We are
 including the @file{easejs/} directory (adjust your path as needed). Inside that
@@ -177,13 +180,16 @@ In order for ease.js to operate within the client, you must either download
 @file{ease.js} or @ref{Building, build it yourself}. Let's assume that you have
 placed @file{ease.js} within the @file{scripts/} directory of your web root.
 
-@example
-  <!-- to simply use ease.js -->
-  <script type="text/javascript" src="/scripts/ease.js"></script>
+@float Figure, f:inc-clientside
+@verbatim
+<!-- to simply use ease.js -->
+<script type="text/javascript" src="/scripts/ease.js"></script>
 
-  <!-- to include both the framework and the unit tests -->
-  <script type="text/javascript" src="/scripts/ease-full.js"></script>
-@end example
+<!-- to include both the framework and the unit tests -->
+<script type="text/javascript" src="/scripts/ease-full.js"></script>
+@end verbatim
+@caption{Including ease.js client-side}
+@end float
 
 Likely, you only want the first one. The unit tests can more easily be run by
 loading @file{build/browser-test.html} in your web browser (@pxref{Building}).

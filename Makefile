@@ -18,9 +18,6 @@ path_doc_output_html=${path_doc_output}/manual
 path_doc_output_html1=${path_doc_output}/manual.html
 path_doc_css=${path_doc}/manual.css
 path_doc_img=${path_doc}/img
-path_doc_interactive_src=$(path_doc)/interactive.js
-path_doc_interactive_dest=$(path_doc_output)/interactive.js \
-	$(path_doc_output_html)/interactive.js
 path_manual_texi=${path_doc}/manual.texi
 
 path_info_install := /usr/local/share/info
@@ -32,6 +29,7 @@ doc_imgs := $(patsubst %.dia, %.png, $(wildcard $(path_doc_img)/*.dia))
 doc_imgs_txt := $(patsubst %.dia, %.png, $(wildcard $(path_doc_img)/*.txt))
 
 doc_replace := s/<\/body>/<script type="text\/javascript" \
+	src="highlight.pack.js"><\/script><script type="text\/javascript" \
 	src="interactive.js"><\/script><\/body>/
 
 combine=${path_tools}/combine
@@ -100,14 +98,15 @@ $(path_doc_output_plain): $(doc_imgs_txt) | mkbuild-doc
 # doc html (multiple pages)
 $(path_doc_output_html)/index.html: $(doc_src) $(path_doc_css) \
 | $(path_doc_output_html)/img $(path_doc_output_html)/interactive.js \
-mkbuild-doc doc-img
+$(path_doc_output_html)/highlight.pack.js mkbuild-doc doc-img
 	makeinfo --html --css-include="${path_doc_css}" \
 		-I "$(path_doc)" -o "${path_doc_output_html}" "${path_manual_texi}"
 	sed -i '$(doc_replace)' $(path_doc_output_html)/*.htm?
 
 # doc html (single page)
 $(path_doc_output_html1): $(doc_src) $(path_doc_css) \
-| $(path_doc_output)/img $(path_doc_output)/interactive.js mkbuild-doc doc-img
+| $(path_doc_output)/img $(path_doc_output)/interactive.js \
+$(path_doc_output)/highlight.pack.js mkbuild-doc doc-img
 	makeinfo --no-split --html --css-include="${path_doc_css}" \
 		-I "$(path_doc)" -o - "${path_manual_texi}" \
 		| sed '$(doc_replace)' \
@@ -122,7 +121,9 @@ $(path_doc_output_html)/img: $(path_doc_output)/img
 	ln -s ../img $@
 
 # interactive html doc (js)
-$(path_doc_interactive_dest): $(path_doc_interactive_src)
+$(path_doc_output_html)/%.js: $(path_doc)/%.js
+	cp $< $@
+$(path_doc_output)/%.js: $(path_doc)/%.js
 	cp $< $@
 
 doc-img: $(doc_imgs)

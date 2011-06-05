@@ -23,3 +23,32 @@ head.appendChild( sjquery );
 head.appendChild( sjquery_ui );
 head.appendChild( css );
 
+// will call callback when jQuery has been loaded
+function jqueryCheck( callback )
+{
+    if ( typeof $ === 'undefined' )
+    {
+        // check again in 50ms
+        setTimeout( function()
+        {
+            jqueryCheck( callback );
+        }, 50 );
+
+        return;
+    }
+
+    callback();
+}
+
+jqueryCheck( function()
+{
+    $( document ).ready( function()
+    {
+        // syntax highlighting for code samples
+        $( '.verbatim, .samp, .code, .example' ).each( function( i, element )
+        {
+            hljs.highlightBlock( element, '    ' );
+        } );
+    } );
+} );
+
