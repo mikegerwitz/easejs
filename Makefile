@@ -21,6 +21,8 @@ combine=${path_tools}/combine
 default: combine min
 all:     combine min doc
 
+mkbuild: $(path_build)
+
 # create build dir
 $(path_build):
 	mkdir -p "$(path_build)"

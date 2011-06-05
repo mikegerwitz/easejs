@@ -37,7 +37,6 @@ mkbuild-doc: $(path_doc_output)
 
 $(path_doc_output):
 	[ -d $(path_doc_output) ] || mkdir -p "$(path_doc_output)"
-mkbuild: $(path_build)
 
 # doc images
 $(path_doc)/img/%.png: $(path_doc)/img/%.dia
