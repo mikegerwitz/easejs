@@ -22,6 +22,7 @@ Current support includes:
 @item Abstract classes and methods
 @item Interfaces
 @item Visibility (public, protected and private members)
+@item Static, constant and final members
 @end itemize
 
 While the current focus of the project is Object-Oriented design, it is likely

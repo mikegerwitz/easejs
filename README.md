@@ -20,6 +20,13 @@ that ease.js will expand to other paradigms in the future.
 **This project is still under development. Please read the manual for more
 information.**
 
+## Full Documentation
+Full documentation is available at the following URL:
+
+http://easejs.org/manual/ (Multiple Pages)
+
+http://easejs.org/manual.html (Single Page)
+
 ## Why ease.js?
 There are already plenty of other means of achieving each of this project's
 goals, so what's the point of ease.js? The aim of the project is to provide a
