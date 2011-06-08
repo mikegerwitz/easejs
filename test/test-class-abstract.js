@@ -107,6 +107,28 @@ var common = require( './common' ),
 
 
 /**
+ * Abstract methods should remain virtual until they are overridden. That is, if
+ * a subtype doesn't provide a concrete implementation, it should still be
+ * considered virtual.
+ */
+( function testAbstractMethodsCanBeOverriddenBySubSubTypes()
+{
+    var AbstractFoo = AbstractClass( 'Foo',
+        {
+            'abstract foo': [],
+        } ),
+
+        SubAbstractFoo = AbstractClass.extend( AbstractFoo, {} ),
+
+        ConcreteFoo = Class.extend( SubAbstractFoo,
+        {
+            'foo': function() {},
+        } )
+    ;
+} )();
+
+
+/**
  * Just as Class contains an extend method, so should AbstractClass.
  */
 ( function testAbstractClassExtendMethodReturnsNewClass()

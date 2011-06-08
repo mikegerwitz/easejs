@@ -47,7 +47,7 @@ var common    = require( './common' ),
         'private privf':   privf,
 
 
-        'public getProp': function( name )
+        'virtual public getProp': function( name )
         {
             // return property, allowing us to break encapsulation for
             // protected/private properties (for testing purposes)
@@ -79,7 +79,7 @@ var common    = require( './common' ),
         },
 
 
-        'public getSelfOverride': function()
+        'virtual public getSelfOverride': function()
         {
             // override me
         },
@@ -516,7 +516,7 @@ var common    = require( './common' ),
         Class(
         {
             'protected foo': 'bar',
-            'protected baz': function() {},
+            'virtual protected baz': function() {},
         } ).extend( {
             'public foo': 'bar',
             'public baz': function() {},
@@ -529,7 +529,7 @@ var common    = require( './common' ),
         Class(
         {
             'protected foo': 'bar',
-            'protected baz': function() {},
+            'virtual protected baz': function() {},
         } ).extend( {
             'protected foo': 'bar',
             'protected baz': function() {},
@@ -621,7 +621,7 @@ var common    = require( './common' ),
 {
     var val = 'foobar',
         result = Class( {
-            'protected foo': function()
+            'virtual protected foo': function()
             {
                 return val;
             },
@@ -672,7 +672,7 @@ var common    = require( './common' ),
     // get the result of invoking overridden foo()
     var result = Class(
         {
-            'protected foo': function()
+            'virtual protected foo': function()
             {
                 return false;
             },
@@ -739,7 +739,7 @@ var common    = require( './common' ),
     var val    = 'foobar',
         result = Class(
         {
-            'protected foo': function() {},
+            'virtual protected foo': function() {},
         } ).extend(
         {
             // provide concrete implementation

@@ -66,23 +66,139 @@ mb_common.assertCommon();
 
 
 /**
+ * Unlike Java, PHP, Python and similar languages, methods in ease.js are *not*
+ * virtual by default. In order to make them override-able, the 'virtual'
+ * keyword must be specified for that method in the supertype.
+ *
+ * Therefore, let's ensure that non-virtual methods cannot be overridden.
+ */
+( function testCannotOverrideNonVirtualMethod()
+{
+    mb_common.value = function() {};
+    mb_common.buildMemberQuick();
+
+    try
+    {
+        // attempt to override (should throw exception; non-virtual)
+        mb_common.buildMemberQuick( {}, true );
+
+        // should not get to this point
+        assert.fail( "Should not be able to override non-virtual method" );
+    }
+    catch ( e )
+    {
+        // ensure we have the correct error
+        assert.ok(
+            e.message.search( 'virtual' ) !== -1,
+            "Error message for non-virtual override should mention virtual"
+        );
+
+        assert.ok(
+            e.message.search( mb_common.name ) !== -1,
+            "Method name should be provided in non-virtual error message"
+        );
+    }
+} )();
+
+
+/**
+ * Working off of what was said in the test directly above, we *should* be able
+ * to override virtual methods.
+ */
+( function testCanOverrideVirtualMethods()
+{
+    // build a virtual method
+    mb_common.value = function() {};
+    mb_common.buildMemberQuick( { 'virtual': true } );
+
+    // attempt to override it
+    assert.doesNotThrow( function()
+    {
+        mb_common.buildMemberQuick( {}, true );
+    }, Error, "Should be able to override virtual methods" );
+} )();
+
+
+/**
+ * Unlike languages like C++, ease.js does not automatically mark overridden
+ * methods as virtual. C# and some other languages offer a 'seal' keyword or
+ * similar in order to make overridden methods non-virtual. In that sense,
+ * ease.js will "seal" overrides by default.
+ */
+( function testOverriddenMethodsAreNotVirtualByDefault()
+{
+    // build a virtual method
+    mb_common.value = function() {};
+    mb_common.buildMemberQuick( { 'virtual': true } );
+
+    // override it (non-virtual)
+    mb_common.buildMemberQuick( {}, true );
+
+    // attempt to override again (should fail)
+    assert.throws( function()
+    {
+        mb_common.buildMemberQuick( {}, true );
+    }, TypeError, "Overrides are not declared as virtual by default" );
+} )();
+
+
+/**
+ * Given the test directly above, we can therefore assume that it should be
+ * permitted to declare overridden methods as virtual.
+ */
+( function testCanDeclareOverridesAsVirtual()
+{
+    // build a virtual method
+    mb_common.value = function() {};
+    mb_common.buildMemberQuick( { 'virtual': true } );
+
+    // override it (virtual)
+    mb_common.buildMemberQuick( { 'virtual': true }, true );
+
+    // attempt to override again
+    assert.doesNotThrow( function()
+    {
+        mb_common.buildMemberQuick( {}, true );
+    }, Error, "Can override an override if declared virtual" );
+} )();
+
+
+/**
+ * Abstract members exist to be overridden. As such, they should be considered
+ * virtual.
+ */
+( function testAbstractMethodsAreConsideredVirtual()
+{
+    // build abstract method
+    mb_common.value = function() {};
+    mb_common.buildMemberQuick( { 'abstract': true } );
+
+    // we should be able to override it
+    assert.doesNotThrow( function()
+    {
+        mb_common.buildMemberQuick( {}, true );
+    }, Error, "Can overrde abstract methods" );
+} )();
+
+
+/**
  * To ensure interfaces of subtypes remain compatible with that of their
  * supertypes, the parameter lists must match and build upon each other.
  */
 ( function testMethodOverridesMustHaveEqualOrGreaterParameters()
 {
     mb_common.value = function( one, two ) {};
-    mb_common.buildMemberQuick();
+    mb_common.buildMemberQuick( { 'virtual': true } );
 
     assert.doesNotThrow( function()
     {
-        mb_common.buildMemberQuick( {}, true );
+        mb_common.buildMemberQuick( { 'virtual': true }, true );
     }, TypeError, "Method can have equal number of parameters" );
 
     assert.doesNotThrow( function()
     {
         mb_common.value = function( one, two, three ) {};
-        mb_common.buildMemberQuick( {}, true );
+        mb_common.buildMemberQuick( { 'virtual': true }, true );
     }, TypeError, "Method can have greater number of parameters" );
 
     assert.throws( function()
@@ -112,7 +228,7 @@ mb_common.assertCommon();
         orig_called = true;
     };
 
-    mb_common.buildMemberQuick();
+    mb_common.buildMemberQuick( { 'virtual': true } );
 
     // override method
     mb_common.value = function()
@@ -168,6 +284,10 @@ mb_common.assertCommon();
     {
         super_called = true;
     };
+
+    // XXX: Bad idea. Set the keyword in another manner. This is likely to break
+    // in the future.
+    members['public'].foo.___$$keywords$$ = { 'virtual': true };
 
     // override
     builder.buildMethod( members, {}, 'foo', newfunc, {}, instCallback );
@@ -236,7 +356,7 @@ mb_common.assertCommon();
             return instance;
         },
 
-        members = { 'public': {}, 'protected': {}, 'private': {} }
+        members = builder.initMembers()
     ;
 
     // set instance values
@@ -249,7 +369,7 @@ mb_common.assertCommon();
         exports.meta,
         'func',
         func,
-        [ 'public' ],
+        { 'virtual': true },
         instCallback
     );
 
@@ -265,7 +385,7 @@ mb_common.assertCommon();
         exports.meta,
         'func',
         func2,
-        [ 'public' ],
+        {},
         instCallback
     );
 

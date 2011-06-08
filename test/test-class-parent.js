@@ -34,13 +34,13 @@ var common = require( './common' ),
 
     Foo = Class.extend(
     {
-        myMethod: function()
+        'virtual myMethod': function()
         {
             hitMethod = true;
             return this;
         },
 
-        myMethod2: function( arg )
+        'virtual myMethod2': function( arg )
         {
             hitMethod2 = true;
             method2Arg = arg;

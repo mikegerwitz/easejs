@@ -175,7 +175,8 @@ var Type = Interface.extend( {
             foo2: function() {},
         }),
 
-        concrete_inst = new ConcreteFoo();
+        concrete_inst = ConcreteFoo()
+    ;
 
     assert.ok(
         ( concrete_inst.isInstanceOf( Type )
