@@ -135,9 +135,18 @@ Classes}). Indeed, we can do whatever scoping that JavaScript permits.
 Memory management is perhaps one of the most important considerations.
 Initially, ease.js encapsulated class metadata and visibility structures.
 However, it quickly became apparent that this method of storing data, although
-excellent for protecting data from being manipulated, caused what appeared to be
+excellent for protecting it from being manipulated, caused what appeared to be
 memory leaks in long-running software. These were in fact not memory leaks, but
-ease.js was keeping references to class data with no idea when to free them.
+ease.js keeping references to class data with no idea when to free them.
+
+To solve this issue, all class data is stored within the class itself (that is,
+the constructor in JavaScript terms). They are stored in obscure variables that
+are non-enumerable and subject to change in future releases. This ensures that
+developers cannot rely on using them for reflection purposes or for manipulating
+class data during runtime. This is important, since looking at such members can
+give access to protected and private instance data. In the future, the names may
+be randomly chosen at runtime to further mitigate exploits. Until that time,
+developers should be aware of potential security issues.
 
 If the globally accessible model would have been adopted (storing classes
 internally by class name rather than in variables), classes would not have been
