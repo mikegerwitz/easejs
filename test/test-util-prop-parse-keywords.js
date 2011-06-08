@@ -131,7 +131,7 @@ var common = require( './common' ),
             'const foo2': '',
             'public private const foo3': '',
 
-            'public static final method': function() {},
+            'public static virtual method': function() {},
 
             // tricky tricky (lots of spaces)
             'public  const   spaces': function() {},
@@ -144,7 +144,7 @@ var common = require( './common' ),
             foo2: { 'const': true },
             foo3: { 'public': true, 'private': true, 'const': true },
 
-            method: { 'public': true, 'static': true, 'final': true },
+            method: { 'public': true, 'static': true, 'virtual': true },
 
             spaces: { 'public': true, 'const': true },
         }

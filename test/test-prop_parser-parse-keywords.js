@@ -26,7 +26,7 @@ var common = require( './common' ),
     assert = require( 'assert' ),
     parse  = common.require( 'prop_parser' ).parseKeywords,
 
-    data     = parse( 'final static abstract foo' ),
+    data     = parse( 'virtual static abstract foo' ),
     keywords = data.keywords
 ;
 
@@ -44,7 +44,7 @@ var common = require( './common' ),
 ( function testProperlyRetrievesAllKeywords()
 {
     assert.ok(
-        ( ( keywords['final'] === true )
+        ( ( keywords['virtual'] === true )
             && ( keywords['static'] === true )
             && ( keywords['abstract'] === true )
         ),
@@ -63,7 +63,7 @@ var common = require( './common' ),
     {
         // Odd seeing these all together, isn't it? Note that this is not at all
         // valid, but the prop parser doesn't care what appears together.
-        parse( 'public protected private static final abstract const var' );
+        parse( 'public protected private static virtual abstract const var' );
     }, Error, "Known keywords are permitted by the parser" );
 
     var oddword = 'foobunny',
