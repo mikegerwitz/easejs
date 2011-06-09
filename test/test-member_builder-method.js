@@ -81,9 +81,6 @@ mb_common.assertCommon();
     {
         // attempt to override (should throw exception; non-virtual)
         mb_common.buildMemberQuick( {}, true );
-
-        // should not get to this point
-        assert.fail( "Should not be able to override non-virtual method" );
     }
     catch ( e )
     {
@@ -97,7 +94,11 @@ mb_common.assertCommon();
             e.message.search( mb_common.name ) !== -1,
             "Method name should be provided in non-virtual error message"
         );
+
+        return;
     }
+
+    assert.fail( "Should not be permitted to override non-virtual methods" );
 } )();
 
 
