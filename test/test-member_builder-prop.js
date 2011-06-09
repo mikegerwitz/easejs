@@ -66,3 +66,29 @@ mb_common.assertCommon();
     }, TypeError, "Cannot declare abstract property" );
 } )();
 
+
+/**
+ * Properties, unlike methods, are virtual by default. If a property's value can
+ * be reassigned, why would a subclass not be able to reassign it? If one wishes
+ * to prevent a property's value from changing, they should use the visibility
+ * modifiers or declare the property as a constant.
+ */
+( function testCannotDeclareVirtualProperty()
+{
+    try
+    {
+        mb_common.buildMemberQuick( { 'virtual': true } );
+    }
+    catch ( e )
+    {
+        assert.ok(
+            e.message.search( mb_common.name ) !== -1,
+            "Virtual property error message should contain property name"
+        );
+
+        return;
+    }
+
+    assert.fail( "Should not be permitted to declare virtual properties" );
+} )();
+
