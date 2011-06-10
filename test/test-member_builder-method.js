@@ -183,6 +183,34 @@ mb_common.assertCommon();
 
 
 /**
+ * Static methods cannot realistically be declared as virtual; it doesn't make
+ * sense. Virtual implies that the method may be overridden, but static methods
+ * cannot be overridden. Only hidden.
+ */
+( function testCannotDeclareStaticMethodsAsVirtual()
+{
+    mb_common.value = function() {};
+
+    try
+    {
+        // attempt to build a virtual static method (should throw exception)
+        mb_common.buildMemberQuick( { 'static': true, 'virtual': true } );
+    }
+    catch ( e )
+    {
+        assert.ok(
+            e.message.search( mb_common.name ) !== -1,
+            "Method name should be provided in virtual static error message"
+        );
+
+        return;
+    }
+
+    assert.fail( "Should not be permitted to declare a virtual static method" );
+} )();
+
+
+/**
  * To ensure interfaces of subtypes remain compatible with that of their
  * supertypes, the parameter lists must match and build upon each other.
  */
