@@ -91,11 +91,11 @@ as the first argument to `Class.extend()`.
 Multiple inheritance is not supported. ease.js is very generous with the options
 it provides to developers as alternatives, so pick whichever flavor your are
 most comfortable with: interfaces, traits or mixins. Multiple inheritance will
-not be added in the future due to its problems which have been addressed by
+*not* be added in the future due to problems which have been addressed by
 interfaces and traits.
 
-**Note that interfaces, traits and mixins are not yet available. They are
-planned features and should be available shortly.**
+**Note that traits and mixins are not yet available. They are
+planned features and will be available in the future.**
 
 ````javascript
     var SubFoo = Foo.extend(
