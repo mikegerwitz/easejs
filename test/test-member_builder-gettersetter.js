@@ -56,15 +56,41 @@ function setUp()
 /**
  * Partially applied function to quickly build getter from common test data
  */
-function buildGetterSetterQuick( keywords, val )
+function buildGetterSetterQuick( keywords, val, preserve_prior, use )
 {
+    preserve_prior = !!preserve_prior;
+    use            = ( use === undefined ) ? 0 : +use;
+
     keywords = keywords || {};
     val      = val || value;
 
-    setUp();
+    if ( !preserve_prior )
+    {
+        setUp();
+    }
 
-    buildGetter( members, meta, name, val, keywords );
-    buildSetter( members, meta, name, val, keywords );
+    if ( use == 0 || use == 1 )
+    {
+        buildGetter( members, meta, name, val, keywords );
+    }
+    if ( use == 0 || use == 2 )
+    {
+        buildSetter( members, meta, name, val, keywords );
+    }
+}
+
+
+function testEach( test )
+{
+    test( 'getter', function( keywords, val, preserve )
+    {
+        buildGetterSetterQuick.call( this, keywords, val, preserve, 1 );
+    } );
+
+    test( 'setter', function( keywords, val, preserve )
+    {
+        buildGetterSetterQuick.call( this, keywords, val, preserve, 2 );
+    } );
 }
 
 
@@ -175,4 +201,30 @@ function assertOnlyVisibility( vis, name, value, message )
     }, TypeError, "Cannot specify multiple visibility keywords (2)" );
 
 } )();
+
+
+/**
+ * Getters/setters should not be able to override methods, for the obvious
+ * reason that they are two different types and operate entirely differently. Go
+ * figure.
+ */
+testEach( function testCannotOverrideMethodWithGetterOrSetter( type, build )
+{
+    setUp();
+
+    // method
+    members[ 'public' ][ name ] = function() {};
+
+    try
+    {
+        // attempt to override method with getter/setter (should fail)
+        build( { 'public': true }, null, true );
+    }
+    catch ( e )
+    {
+        return;
+    }
+
+    assert.fail( type + " should not be able to override methods");
+} );
 
