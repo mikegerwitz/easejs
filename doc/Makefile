@@ -15,8 +15,6 @@ path_manual_texi=${path_doc}/manual.texi
 
 path_info_install := /usr/local/share/info
 
-src_js := index.js $(wildcard $(path_lib)/*.js)
-src_tests := index.js $(wildcard $(path_test)/test-*)
 doc_src := $(wildcard $(path_doc)/*.texi)
 doc_imgs := $(patsubst %.dia, %.png, $(wildcard $(path_doc_img)/*.dia))
 doc_imgs_txt := $(patsubst %.dia, %.png, $(wildcard $(path_doc_img)/*.txt))
