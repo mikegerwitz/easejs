@@ -222,6 +222,9 @@ testEach( function testCannotOverrideMethodWithGetterOrSetter( type, build )
     }
     catch ( e )
     {
+        assert.ok( e.message.search( name ) !== -1,
+            "Method override error message should contain getter/setter name"
+        );
         return;
     }
 
