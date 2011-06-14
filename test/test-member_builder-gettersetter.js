@@ -231,3 +231,33 @@ testEach( function testCannotOverrideMethodWithGetterOrSetter( type, build )
     assert.fail( type + " should not be able to override methods");
 } );
 
+
+/**
+ * Getters/setters should not be able to override properties. While, at first,
+ * this concept may seem odd, keep in mind that the parent would likely not
+ * expect a subtype to be able to override property assignments. This could open
+ * up holes to exploit the parent class.
+ */
+testEach( function testCannotOverridePropertiesWithGetterOrSetter( type, build )
+{
+    setUp();
+
+    // declare a property
+    members[ 'public' ][ name ] = 'foo';
+
+    try
+    {
+        // attempt to override property with getter/setter (should fail)
+        build( { 'public': true }, null, true );
+    }
+    catch ( e )
+    {
+        assert.ok( e.message.search( name ) !== -1,
+            "Property override error message should contain getter/setter name"
+        );
+        return;
+    }
+
+    assert.fail( type + " should not be able to override properties" );
+} );
+
