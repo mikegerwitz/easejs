@@ -291,3 +291,75 @@ mb_common.assertCommon();
     }, TypeError, "Cannot declare private abstract method" );
 } )();
 
+
+/**
+ * While getters are technically methods, it doesn't make sense to override
+ * getters/setters with methods because they are fundamentally different.
+ */
+( function testCannotOverrideGetters()
+{
+    mb_common.members[ 'public' ] = {};
+    Object.defineProperty( mb_common.members[ 'public' ], mb_common.name, {
+        get: function() {},
+    } );
+
+    try
+    {
+        mb_common.value = function() {};
+        mb_common.buildMemberQuick( {}, true );
+    }
+    catch ( e )
+    {
+        assert.ok( e.message.search( mb_common.name ) !== -1,
+            "Method override getter failure should contain method name"
+        );
+
+        // ensure we have the correct error
+        assert.ok( e.message.search( 'getter' ) !== -1,
+            "Proper error is thrown for getter override failure"
+        );
+
+        return;
+    }
+
+    assert.fail(
+        "Should not be permitted to override getters with methods"
+    );
+} )();
+
+
+/**
+ * While setters are technically methods, it doesn't make sense to override
+ * getters/setters with methods because they are fundamentally different.
+ */
+( function testCannotOverrideSetters()
+{
+    mb_common.members[ 'public' ] = {};
+    Object.defineProperty( mb_common.members[ 'public' ], mb_common.name, {
+        set: function() {},
+    } );
+
+    try
+    {
+        mb_common.value = function() {};
+        mb_common.buildMemberQuick( {}, true );
+    }
+    catch ( e )
+    {
+        assert.ok( e.message.search( mb_common.name ) !== -1,
+            "Method override setter failure should contain method name"
+        );
+
+        // ensure we have the correct error
+        assert.ok( e.message.search( 'setter' ) !== -1,
+            "Proper error is thrown for setter override failure"
+        );
+
+        return;
+    }
+
+    assert.fail(
+        "Should not be permitted to override setters with methods"
+    );
+} )();
+
