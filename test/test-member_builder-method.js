@@ -25,7 +25,8 @@
 var common    = require( './common' ),
     assert    = require( 'assert' ),
     mb_common = require( __dirname + '/inc-member_builder-common' ),
-    builder   = common.require( 'member_builder' )
+    builder   = common.require( 'member_builder' ),
+    util      = common.require( 'util' )
 ;
 
 mb_common.funcVal     = 'foobar';
@@ -298,6 +299,11 @@ mb_common.assertCommon();
  */
 ( function testCannotOverrideGetters()
 {
+    if ( util.definePropertyFallback() )
+    {
+        return;
+    }
+
     mb_common.members[ 'public' ] = {};
     Object.defineProperty( mb_common.members[ 'public' ], mb_common.name, {
         get: function() {},
@@ -334,6 +340,11 @@ mb_common.assertCommon();
  */
 ( function testCannotOverrideSetters()
 {
+    if ( util.definePropertyFallback() )
+    {
+        return;
+    }
+
     mb_common.members[ 'public' ] = {};
     Object.defineProperty( mb_common.members[ 'public' ], mb_common.name, {
         set: function() {},
