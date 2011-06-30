@@ -32,6 +32,23 @@ var common  = require( './common' ),
 
 
 /**
+ * Return the console object, without throwing errors if it does not exist
+ *
+ * @return {Object} console
+ */
+function backupConsole()
+{
+    // ensure that we don't throw errors if console is not defined
+    if ( typeof console !== 'undefined' )
+    {
+        return console;
+    }
+
+    return undefined;
+}
+
+
+/**
  * The log warning handler should log warnings to the console
  */
 ( function testLogWarningHandlerLogsMessageToConsole()
@@ -39,7 +56,7 @@ var common  = require( './common' ),
     var logged = false,
 
         // back up console ref
-        console_ = console
+        console_ = backupConsole()
     ;
 
     // mock console
@@ -74,7 +91,7 @@ var common  = require( './common' ),
 ( function testLogWarningHandlerHandlesMissingConsole()
 {
     // back up console
-    var console_ = console;
+    var console_ = backupConsole();
 
     // destroy it
     console = undefined;
@@ -95,7 +112,7 @@ var common  = require( './common' ),
 ( function testLogWarningHandlerWillFallBackToLogMethodIfWarnIsMissing()
 {
     // back up and overwrite console to contain only log()
-    var console_ = console,
+    var console_ = backupConsole(),
         given    = '';
 
     console = {
@@ -149,7 +166,7 @@ var common  = require( './common' ),
 ( function testDismissWarningHandlerShouldDoNothing()
 {
     // destroy the console to ensure nothing is logged
-    var console_ = console;
+    var console_ = backupConsole();
     console = undefined;
 
     // don't catch anything, to ensure no errors occur and that no exceptions
