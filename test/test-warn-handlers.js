@@ -138,3 +138,25 @@ var common  = require( './common' ),
     assert.fail( "Wrapped exception should be thrown" );
 } )();
 
+
+/**
+ * The 'dismiss' error handler is a pretty basic concept. Simply do nothing. We
+ * don't want to log, we don't want to throw anything, we just want to pretend
+ * nothing ever happened and move on our merry way. This is intended for use in
+ * production environments where providing warnings may provide too much insight
+ * into the software.
+ */
+( function testDismissWarningHandlerShouldDoNothing()
+{
+    // destroy the console to ensure nothing is logged
+    var console_ = console;
+    console = undefined;
+
+    // don't catch anything, to ensure no errors occur and that no exceptions
+    // are thrown
+    warn.handlers.dismiss( warning );
+
+    // restore console
+    console = console_;
+} )();
+
