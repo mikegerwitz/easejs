@@ -116,3 +116,25 @@ var common  = require( './common' ),
     console = console_;
 } )();
 
+
+/**
+ * The throwError warning handler should throw the wrapped error as an exception
+ */
+( function testThrowErrorWarningHandlerThrowsWrappedError()
+{
+    try
+    {
+        warn.handlers.throwError( warning );
+    }
+    catch ( e )
+    {
+        assert.deepEqual( e, warning.getError(),
+            "Wrapped exception should be thrown"
+        );
+
+        return;
+    }
+
+    assert.fail( "Wrapped exception should be thrown" );
+} )();
+
