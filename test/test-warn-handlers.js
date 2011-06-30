@@ -1,0 +1,118 @@
+/**
+ * Tests core warning handlers
+ *
+ *  Copyright (C) 2010 Mike Gerwitz
+ *
+ *  This file is part of ease.js.
+ *
+ *  ease.js is free software: you can redistribute it and/or modify it under the
+ *  terms of the GNU Lesser General Public License as published by the Free
+ *  Software Foundation, either version 3 of the License, or (at your option)
+ *  any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT
+ *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
+ *  for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author  Mike Gerwitz
+ * @package test
+ */
+
+var common  = require( './common' ),
+    assert  = require( 'assert' ),
+    warn    = common.require( 'warn' ),
+    Warning = warn.Warning,
+
+    warning = Warning( Error( 'gninraw' ) )
+;
+
+
+/**
+ * The log warning handler should log warnings to the console
+ */
+( function testLogWarningHandlerLogsMessageToConsole()
+{
+    var logged = false,
+
+        // back up console ref
+        console_ = console
+    ;
+
+    // mock console
+    console = {
+        warn: function( message )
+        {
+            assert.equal( message, warning.message,
+                "Should log proper message to console"
+            );
+
+            logged = true;
+        },
+    };
+
+    // call handler with the warning
+    warn.handlers.log( warning );
+
+    assert.equal( logged, true,
+        "Message should be logged to console"
+    );
+
+    // restore console
+    console = console_;
+} )();
+
+
+/**
+ * Some environments may not have a console reference, or they may not have
+ * console.warn. In this case, we just want to make sure we don't throw an error
+ * when attempting to invoke undefined, or access a property of undefined.
+ */
+( function testLogWarningHandlerHandlesMissingConsole()
+{
+    // back up console
+    var console_ = console;
+
+    // destroy it
+    console = undefined;
+
+    // attempt to log
+    warn.handlers.log( warning );
+
+    // restore console
+    console = console_;
+} )();
+
+
+/**
+ * Furthermore, an environment may implement console.log(), but not
+ * console.warn(). By default, we use warn(), so let's ensure we can fall back
+ * to log() if warn() is unavailable.
+ */
+( function testLogWarningHandlerWillFallBackToLogMethodIfWarnIsMissing()
+{
+    // back up and overwrite console to contain only log()
+    var console_ = console,
+        given    = '';
+
+    console = {
+        log: function( message )
+        {
+            given = message;
+        }
+    };
+
+    // attempt to log
+    warn.handlers.log( warning );
+
+    assert.equal( given, warning.message,
+        "Should fall back to log() and log proper message"
+    );
+
+    // restore console
+    console = console_;
+} )();
+
