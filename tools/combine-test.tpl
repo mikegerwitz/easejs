@@ -73,7 +73,7 @@ module.assert = { exports: {
             return;
         }
 
-        if ( cmp instanceof Array )
+        if ( ( cmp instanceof Array ) && ( val instanceof Array ) )
         {
             var i   = 0,
                 len = cmp.length;
@@ -86,7 +86,7 @@ module.assert = { exports: {
 
             return;
         }
-        else if ( cmp instanceof Object )
+        else if ( ( typeof cmp === 'object' ) && ( typeof val === 'object' ) )
         {
             for ( var i in cmp )
             {

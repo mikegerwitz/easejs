@@ -10,6 +10,9 @@ path_perf_test=${path_test}/perf
 
 perf_tests := $(shell find "$(path_perf_test)" -name 'perf-*.js')
 
+src_js := index.js $(wildcard $(path_lib)/*.js)
+src_tests := index.js $(wildcard $(path_test)/test-*)
+
 path_doc := ./doc
 
 combine=${path_tools}/combine
