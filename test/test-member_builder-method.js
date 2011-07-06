@@ -26,7 +26,10 @@ var common    = require( './common' ),
     assert    = require( 'assert' ),
     mb_common = require( __dirname + '/inc-member_builder-common' ),
     builder   = common.require( 'member_builder' ),
-    util      = common.require( 'util' )
+    util      = common.require( 'util' ),
+
+    warn    = common.require( 'warn' ),
+    Warning = warn.Warning
 ;
 
 mb_common.funcVal     = 'foobar';
@@ -73,43 +76,6 @@ mb_common.assertCommon();
 
 
 /**
- * Unlike Java, PHP, Python and similar languages, methods in ease.js are *not*
- * virtual by default. In order to make them override-able, the 'virtual'
- * keyword must be specified for that method in the supertype.
- *
- * Therefore, let's ensure that non-virtual methods cannot be overridden.
- */
-( function testCannotOverrideNonVirtualMethod()
-{
-    mb_common.value = function() {};
-    mb_common.buildMemberQuick();
-
-    try
-    {
-        // attempt to override (should throw exception; non-virtual)
-        mb_common.buildMemberQuick( {}, true );
-    }
-    catch ( e )
-    {
-        // ensure we have the correct error
-        assert.ok(
-            e.message.search( 'virtual' ) !== -1,
-            "Error message for non-virtual override should mention virtual"
-        );
-
-        assert.ok(
-            e.message.search( mb_common.name ) !== -1,
-            "Method name should be provided in non-virtual error message"
-        );
-
-        return;
-    }
-
-    assert.fail( "Should not be permitted to override non-virtual methods" );
-} )();
-
-
-/**
  * Working off of what was said in the test directly above, we *should* be able
  * to override virtual methods.
  */
@@ -143,10 +109,16 @@ mb_common.assertCommon();
     mb_common.buildMemberQuick( {}, true );
 
     // attempt to override again (should fail)
-    assert.throws( function()
+    try
     {
         mb_common.buildMemberQuick( {}, true );
-    }, TypeError, "Overrides are not declared as virtual by default" );
+    }
+    catch ( e )
+    {
+        return;
+    }
+
+    assert.fail( "Overrides should not be declared as virtual by default" );
 } )();
 
 

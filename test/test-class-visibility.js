@@ -559,7 +559,7 @@ var common    = require( './common' ),
     {
         Class(
         {
-            'public baz': function() {},
+            'virtual public baz': function() {},
         } ).extend( {
             'protected baz': function() {},
         } );
@@ -581,7 +581,7 @@ var common    = require( './common' ),
     {
         Class(
         {
-            'public baz': function() {},
+            'virtual public baz': function() {},
         } ).extend( {
             'private baz': function() {},
         } );
@@ -603,7 +603,7 @@ var common    = require( './common' ),
     {
         Class(
         {
-            'protected baz': function() {},
+            'virtual protected baz': function() {},
         } ).extend( {
             'private baz': function() {},
         } );
