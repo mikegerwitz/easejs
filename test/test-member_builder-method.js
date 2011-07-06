@@ -55,7 +55,13 @@ mb_common.assertCommon();
 {
     mb_common.value   = 'moofoo';
     mb_common.funcVal = undefined;
+
+    // temporarily alter builder
+    mb_common.buildMember = builder.buildProp;
     mb_common.buildMemberQuick();
+
+    // restore builder
+    mb_common.buildMember = builder.buildMethod;
 
     assert.throws( function()
     {
