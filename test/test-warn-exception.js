@@ -29,13 +29,23 @@ var common  = require( './common' ),
 
 
 /**
- * Warning's prototype should be Error to ensure instanceof() checks work
- * properly
+ * Warning should be a subtype of Error
  */
-( function testWarningIsAvailableAndHasErrorAsPrototype()
+( function testWarningIsAvailableAndHasErrorPrototype()
 {
-    assert.ok( ( Warning.prototype instanceof Error ),
+    assert.ok( ( Warning( Error() ) instanceof Error ),
         "Warning should be an instance of Error"
+    );
+} )();
+
+
+/**
+ * Make clear that we're working with a warning
+ */
+( function testWarningShouldAlterErrorName()
+{
+    assert.equal( Warning( Error() ).name, 'Warning',
+        "Warning name should be properly set"
     );
 } )();
 
