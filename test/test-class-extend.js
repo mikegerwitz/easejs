@@ -401,3 +401,35 @@ for ( var i = 0; i < class_count; i++ )
     );
 } )();
 
+
+/**
+ * Only virtual methods may be overridden.
+ */
+( function testCannotOverrideNonVirtualMethod()
+{
+    try
+    {
+        var Foo = Class(
+            {
+                // non-virtual
+                'public foo': function() {},
+            } ),
+
+            SubFoo = Foo.extend(
+            {
+                // should fail (cannot override non-virtual method)
+                'override public foo': function() {},
+            } );
+    }
+    catch ( e )
+    {
+        assert.ok( e.message.search( 'foo' ),
+            "Non-virtual override error message should contain name of method"
+        );
+
+        return;
+    }
+
+    assert.fail( "Should not be permitted to override non-virtual method" );
+} )();
+

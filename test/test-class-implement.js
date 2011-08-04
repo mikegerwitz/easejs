@@ -171,8 +171,8 @@ var Type = Interface.extend( {
     // concrete implementation so that we can instantiate it
     var ConcreteFoo = Foo.extend(
         {
-            'override foo':  function() {},
-            'override foo2': function() {},
+            'foo':  function() {},
+            'foo2': function() {},
         }),
 
         concrete_inst = ConcreteFoo()

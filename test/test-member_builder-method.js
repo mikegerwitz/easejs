@@ -145,7 +145,8 @@ mb_common.assertCommon();
 
 /**
  * Abstract members exist to be overridden. As such, they should be considered
- * virtual.
+ * virtual. In addition, we should be able to override them WITHOUT the override
+ * keyword, since no concrete implementation was previously provided.
  */
 ( function testAbstractMethodsAreConsideredVirtual()
 {
@@ -153,10 +154,10 @@ mb_common.assertCommon();
     mb_common.value = function() {};
     mb_common.buildMemberQuick( { 'abstract': true } );
 
-    // we should be able to override it
+    // we should be able to override it without the override keyword
     assert.doesNotThrow( function()
     {
-        mb_common.buildMemberQuick( { 'override': true }, true );
+        mb_common.buildMemberQuick( {}, true );
     }, Error, "Can overrde abstract methods" );
 } )();
 
@@ -200,13 +201,19 @@ mb_common.assertCommon();
 
     assert.doesNotThrow( function()
     {
-        mb_common.buildMemberQuick( { 'override': true }, true );
+        mb_common.buildMemberQuick(
+            { 'virtual': true, 'override': true },
+            true
+        );
     }, TypeError, "Method can have equal number of parameters" );
 
     assert.doesNotThrow( function()
     {
         mb_common.value = function( one, two, three ) {};
-        mb_common.buildMemberQuick( { 'override': true }, true );
+        mb_common.buildMemberQuick(
+            { 'virtual': true, 'override': true },
+            true
+        );
     }, TypeError, "Method can have greater number of parameters" );
 
     assert.throws( function()
