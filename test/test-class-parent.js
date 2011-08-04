@@ -51,12 +51,12 @@ var common = require( './common' ),
 
     SubFoo = Foo.extend(
     {
-        myMethod: function()
+        'override myMethod': function()
         {
             return this;
         },
 
-        myMethod2: function( arg )
+        'override myMethod2': function( arg )
         {
             return this.__super( arg );
         },

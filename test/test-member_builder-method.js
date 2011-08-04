@@ -88,7 +88,7 @@ mb_common.assertCommon();
     // attempt to override it
     assert.doesNotThrow( function()
     {
-        mb_common.buildMemberQuick( {}, true );
+        mb_common.buildMemberQuick( { 'override': true }, true );
     }, Error, "Should be able to override virtual methods" );
 } )();
 
@@ -106,7 +106,7 @@ mb_common.assertCommon();
     mb_common.buildMemberQuick( { 'virtual': true } );
 
     // override it (non-virtual)
-    mb_common.buildMemberQuick( {}, true );
+    mb_common.buildMemberQuick( { 'override': true }, true );
 
     // attempt to override again (should fail)
     try
@@ -133,12 +133,12 @@ mb_common.assertCommon();
     mb_common.buildMemberQuick( { 'virtual': true } );
 
     // override it (virtual)
-    mb_common.buildMemberQuick( { 'virtual': true }, true );
+    mb_common.buildMemberQuick( { 'virtual': true, 'override': true }, true );
 
     // attempt to override again
     assert.doesNotThrow( function()
     {
-        mb_common.buildMemberQuick( {}, true );
+        mb_common.buildMemberQuick( { 'override': true }, true );
     }, Error, "Can override an override if declared virtual" );
 } )();
 
@@ -156,7 +156,7 @@ mb_common.assertCommon();
     // we should be able to override it
     assert.doesNotThrow( function()
     {
-        mb_common.buildMemberQuick( {}, true );
+        mb_common.buildMemberQuick( { 'override': true }, true );
     }, Error, "Can overrde abstract methods" );
 } )();
 
@@ -200,19 +200,19 @@ mb_common.assertCommon();
 
     assert.doesNotThrow( function()
     {
-        mb_common.buildMemberQuick( { 'virtual': true }, true );
+        mb_common.buildMemberQuick( { 'override': true }, true );
     }, TypeError, "Method can have equal number of parameters" );
 
     assert.doesNotThrow( function()
     {
         mb_common.value = function( one, two, three ) {};
-        mb_common.buildMemberQuick( { 'virtual': true }, true );
+        mb_common.buildMemberQuick( { 'override': true }, true );
     }, TypeError, "Method can have greater number of parameters" );
 
     assert.throws( function()
     {
         mb_common.value = function( one ) {};
-        mb_common.buildMemberQuick( {}, true );
+        mb_common.buildMemberQuick( { 'override': true }, true );
     }, TypeError, "Method cannot have lesser number of parameters" );
 } )();
 
@@ -255,7 +255,7 @@ mb_common.assertCommon();
         );
     };
 
-    mb_common.buildMemberQuick( {}, true );
+    mb_common.buildMemberQuick( { 'override': true }, true );
 
     // invoke the method
     mb_common.members[ 'public' ][ mb_common.name ]();
@@ -298,7 +298,14 @@ mb_common.assertCommon();
     members['public'].foo.___$$keywords$$ = { 'virtual': true };
 
     // override
-    builder.buildMethod( members, {}, 'foo', newfunc, {}, instCallback );
+    builder.buildMethod(
+        members,
+        {},
+        'foo',
+        newfunc,
+        { 'override': true },
+        instCallback
+    );
 
     // call the overriding method
     members[ 'public' ].foo();
@@ -393,7 +400,7 @@ mb_common.assertCommon();
         exports.meta,
         'func',
         func2,
-        {},
+        { 'override': true },
         instCallback
     );
 

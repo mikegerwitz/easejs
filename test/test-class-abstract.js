@@ -122,6 +122,8 @@ var common = require( './common' ),
 
         ConcreteFoo = Class.extend( SubAbstractFoo,
         {
+            // we should NOT need the override keyword for concrete
+            // implementations of abstract super methods
             'foo': function() {},
         } )
     ;

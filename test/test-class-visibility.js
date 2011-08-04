@@ -110,7 +110,7 @@ var common    = require( './common' ),
     SubFoo  = Foo.extend({
         'private _pfoo': 'baz',
 
-        'public getSelfOverride': function()
+        'override public getSelfOverride': function()
         {
             // return this from overridden method
             return this;
@@ -120,7 +120,7 @@ var common    = require( './common' ),
         /**
          * We have to override this so that 'this' is not bound to the supertype
          */
-        'public getProp': function( name )
+        'override public getProp': function( name )
         {
             // return property, allowing us to break encapsulation for
             // protected/private properties (for testing purposes)
@@ -519,7 +519,7 @@ var common    = require( './common' ),
             'virtual protected baz': function() {},
         } ).extend( {
             'public foo': 'bar',
-            'public baz': function() {},
+            'override public baz': function() {},
         } );
     }, Error, "Can escalate visibility of subtype members" );
 
@@ -532,7 +532,7 @@ var common    = require( './common' ),
             'virtual protected baz': function() {},
         } ).extend( {
             'protected foo': 'bar',
-            'protected baz': function() {},
+            'override protected baz': function() {},
         } );
     }, Error, "Can retain level of visibility for subtype members" );
 } )();
@@ -628,7 +628,7 @@ var common    = require( './common' ),
         } ).extend(
         {
             // we override to public just so we can call it externally
-            'public foo': function()
+            'override public foo': function()
             {
                 return this.__super();
             },
@@ -679,7 +679,7 @@ var common    = require( './common' ),
         } ).extend(
         {
             // override and escalate visibility of method foo()
-            'public foo': function()
+            'override public foo': function()
             {
                 return true;
             },
@@ -743,7 +743,7 @@ var common    = require( './common' ),
         } ).extend(
         {
             // provide concrete implementation
-            'protected foo': function()
+            'override protected foo': function()
             {
                 return val;
             },
