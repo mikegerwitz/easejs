@@ -41,10 +41,10 @@ function restoreWarningHandler()
 /**
  * If a non-virtual method is implicitly hidden (redefined without the 'new'
  * keyword), a warning should be provided. This will ensure that, should a
- * parent introduce a method that is already defined by a supertype, the
+ * parent introduce a method that is already defined by a subtype, the
  * developer of the subtype is made aware of the issue.
  */
-( function testThrowsWarningWhenHidingSuperMethod()
+( function testThrowsWarningWhenHidingNonVirtualSuperMethod()
 {
     var thrown = false;
 
@@ -55,7 +55,7 @@ function restoreWarningHandler()
 
         assert.ok(
             ( e.message.search( 'foo' ) !== -1 ),
-            "Method hiding warning should contain method name"
+            "Non-virtual method hiding warning should contain method name"
         );
     } );
 
@@ -65,13 +65,52 @@ function restoreWarningHandler()
         'public foo': function() {},
     } );
 
-    // hide the non-virtual method
+    // implicitly hide the non-virtual method
     builder.build( Foo,
     {
         'public foo': function() {},
     } );
 
-    assert.equal( thrown, true, "No warning was thrown" );
+    assert.equal( thrown, true,
+        "No warning for implicit non-virtual hiding was thrown"
+    );
+} )();
+
+
+/**
+ * Same concept as above. The API of the supertype could just as easily be
+ * changed to include a virtual method that has already been implemented by the
+ * subtype. The default behavior is to hide the method of the supertype.
+ */
+( function testThrowsWarningWhenHidingVirtualSuperMethod()
+{
+    var thrown = false;
+
+    // mock the warning handler to ensure a warning is thrown
+    warn.setHandler( function( e )
+    {
+        thrown = true;
+
+        assert.ok(
+            ( e.message.search( 'foo' ) !== -1 ),
+            "Virtual method hiding warning should contain method name"
+        );
+    } );
+
+    var Foo = builder.build(
+    {
+        'virtual public foo': function() {},
+    } );
+
+    // implicitly hide the virtual method
+    builder.build( Foo,
+    {
+        'public foo': function() {},
+    } );
+
+    assert.equal( thrown, true,
+        "No warning for implicit virtual hiding was thrown"
+    );
 } )();
 
 
