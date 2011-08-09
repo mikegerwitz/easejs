@@ -24,7 +24,11 @@
 
 var common  = require( './common' ),
     assert  = require( 'assert' ),
-    builder = common.require( 'class_builder' )
+
+    ClassBuilder = common.require( 'ClassBuilder' ),
+    builder      = ClassBuilder(
+        common.require( 'member_builder' )
+    )
 ;
 
 
@@ -35,7 +39,7 @@ var common  = require( './common' ),
  */
 ( function testCanRetrieveListOfReservedMembers()
 {
-    var reserved = builder.getReservedMembers();
+    var reserved = ClassBuilder.getReservedMembers();
 
     assert.ok( reserved instanceof Object,
         "Can retrieve hash of reserved members"
@@ -60,10 +64,10 @@ var common  = require( './common' ),
     var val = 'foo';
 
     // attempt to add to list
-    builder.getReservedMembers().foo = val;
+    ClassBuilder.getReservedMembers().foo = val;
 
     assert.notEqual(
-        builder.getReservedMembers().foo,
+        ClassBuilder.getReservedMembers().foo,
         val,
         "Cannot alter internal list of reserved members"
     );
@@ -76,7 +80,7 @@ var common  = require( './common' ),
  */
 ( function testAllReservedMembersAreActuallyReserved()
 {
-    var reserved = builder.getReservedMembers(),
+    var reserved = ClassBuilder.getReservedMembers(),
         count    = 0;
 
     // test each of the reserved members
@@ -126,7 +130,7 @@ var common  = require( './common' ),
  */
 ( function testCanRetrieveListOfForcedPublicMethods()
 {
-    var pub   = builder.getForcedPublicMethods(),
+    var pub   = ClassBuilder.getForcedPublicMethods(),
         count = 0;
 
     assert.ok( pub instanceof Object,
@@ -153,10 +157,10 @@ var common  = require( './common' ),
     var val = 'foo';
 
     // attempt to add to list
-    builder.getForcedPublicMethods().foo = val;
+    ClassBuilder.getForcedPublicMethods().foo = val;
 
     assert.notEqual(
-        builder.getForcedPublicMethods().foo,
+        ClassBuilder.getForcedPublicMethods().foo,
         val,
         "Cannot alter internal list of forced-public methods"
     );
@@ -169,7 +173,7 @@ var common  = require( './common' ),
  */
 ( function testAllForcedPublicMethodsAreForcedToPublic()
 {
-    var pub = builder.getForcedPublicMethods();
+    var pub = ClassBuilder.getForcedPublicMethods();
 
     // test each of the reserved members
     for ( name in pub )
