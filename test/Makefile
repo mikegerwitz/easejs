@@ -1,6 +1,7 @@
 
 tests := $(shell find . \
 	-name 'test-*' \
+	-o -name '*Test.*' \
 	-a ! -name 'test-combine*.js'\
 )
 tests_combine := test-combine*.js
@@ -11,7 +12,7 @@ tests_combine := test-combine*.js
 default: $(tests) combine
 combine: $(tests_combine)
 
-test-%.js: FORCE
+%.js: FORCE
 	node --stack_trace_limit=20 $@
 test-%: FORCE
 	./$@
