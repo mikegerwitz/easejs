@@ -56,6 +56,15 @@ module.assert = { exports: {
     },
 
 
+    notStrictEqual: function( val, cmp, err )
+    {
+        if ( val === cmp )
+        {
+            failAssertion( err );
+        }
+    },
+
+
     notEqual: function ( val, cmp, err )
     {
         if ( val === cmp )
