@@ -29,9 +29,10 @@ TPL_VAR='/**{CONTENT}**/'
 RMTRAIL="$PATH_TOOLS/rmtrail"
 
 # order matters
-CAT_MODULES="warn prop_parser util propobj VisibilityObjectFactory"
-CAT_MODULES="$CAT_MODULES member_builder ClassBuilder"
-CAT_MODULES="$CAT_MODULES class class_final class_abstract interface"
+CAT_MODS="warn prop_parser util propobj VisibilityObjectFactory"
+CAT_MODS="$CAT_MODS FallbackVisibilityObjectFactory member_builder"
+CAT_MODS="$CAT_MODS ClassBuilder VisibilityObjectFactoryFactory"
+CAT_MODS="$CAT_MODS class class_final class_abstract interface"
 
 ##
 # Output template header
@@ -84,7 +85,7 @@ fi
 tpl_header
 
 # output each of the modules
-for module in $CAT_MODULES; do
+for module in $CAT_MODS; do
     filename="$PATH_LIB/$module.$MODULE_EXT"
 
     if [ ! -f "$filename" ]; then
