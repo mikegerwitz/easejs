@@ -26,7 +26,7 @@ var common    = require( './common' ),
     assert    = require( 'assert' ),
     Class     = common.require( 'class' ),
     Interface = common.require( 'interface' ),
-    propobj   = common.require( 'propobj' ),
+    util      = common.require( 'util' ),
 
     pub  = 'foo',
     prot = 'bar',
@@ -221,7 +221,7 @@ var common    = require( './common' ),
 {
     // browsers that do not support the property proxy will not support
     // encapsulating properties
-    if ( !( propobj.supportsPropProxy() ) )
+    if ( util.definePropertyFallback() )
     {
         return;
     }
@@ -322,7 +322,7 @@ var common    = require( './common' ),
 {
     // browsers that do not support the property proxy will not support
     // encapsulating properties
-    if ( !( propobj.supportsPropProxy() ) )
+    if ( util.definePropertyFallback() )
     {
         return;
     }
@@ -482,7 +482,7 @@ var common    = require( './common' ),
 {
     // browsers that do not support the property proxy will not support
     // encapsulating properties
-    if ( !( propobj.supportsPropProxy() ) )
+    if ( util.definePropertyFallback() )
     {
         return;
     }

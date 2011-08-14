@@ -29,7 +29,7 @@ TPL_VAR='/**{CONTENT}**/'
 RMTRAIL="$PATH_TOOLS/rmtrail"
 
 # order matters
-CAT_MODS="warn prop_parser util propobj VisibilityObjectFactory"
+CAT_MODS="warn prop_parser util VisibilityObjectFactory"
 CAT_MODS="$CAT_MODS FallbackVisibilityObjectFactory member_builder"
 CAT_MODS="$CAT_MODS ClassBuilder VisibilityObjectFactoryFactory"
 CAT_MODS="$CAT_MODS class class_final class_abstract interface"
