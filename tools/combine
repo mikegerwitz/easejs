@@ -28,11 +28,17 @@ TPL_TEST_PATH="$PATH_TOOLS/combine-test.tpl"
 TPL_VAR='/**{CONTENT}**/'
 RMTRAIL="$PATH_TOOLS/rmtrail"
 
-# order matters
-CAT_MODS="warn prop_parser util VisibilityObjectFactory"
-CAT_MODS="$CAT_MODS FallbackVisibilityObjectFactory member_builder"
-CAT_MODS="$CAT_MODS ClassBuilder VisibilityObjectFactoryFactory"
-CAT_MODS="$CAT_MODS class class_final class_abstract interface"
+# determine the order in which modules must be concatenated; order matters to
+# ensure dependencies are loaded before the module that depends on them
+CAT_MODULES=$(
+    cd "$PATH_TOOLS/../" &&
+    grep -rIo ' require(.*)' lib/ \
+        | sed "s/^lib\///;s/\.js://;s/require(.*'\/\(.*\)'.*/\1/" \
+        | node tools/combine-order.js
+) || {
+    echo "Failed to get module list" >&2
+    exit 3
+}
 
 ##
 # Output template header
@@ -85,7 +91,7 @@ fi
 tpl_header
 
 # output each of the modules
-for module in $CAT_MODS; do
+for module in $CAT_MODULES; do
     filename="$PATH_LIB/$module.$MODULE_EXT"
 
     if [ ! -f "$filename" ]; then
