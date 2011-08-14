@@ -110,6 +110,7 @@ if [ "$INC_TEST" ]; then
     # note that not all tests are included
     TEST_CASES=$( find $PATH_TEST \
         \( -name 'test-*.js' \
+            -o -name '*Test*.js' \
             -o -name 'inc-*.js' \
         \) \
         -exec basename {} \; \
