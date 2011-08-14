@@ -26,8 +26,10 @@ var common = require( './common' ),
     assert = require( 'assert' ),
     util   = common.require( 'util' ),
 
-    buildGetter = common.require( 'member_builder' ).buildGetter,
-    buildSetter = common.require( 'member_builder' ).buildSetter,
+    builder = common.require( 'MemberBuilder' )(),
+
+    buildGetter = builder.buildGetter,
+    buildSetter = builder.buildSetter,
 
     // member visibility types are quoted because they are reserved keywords
     members = {},

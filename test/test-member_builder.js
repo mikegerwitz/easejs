@@ -24,7 +24,8 @@
 
 var common  = require( './common' ),
     assert  = require( 'assert' ),
-    builder = common.require( 'member_builder' );
+    builder = common.require( 'MemberBuilder' )()
+;
 
 
 ( function testCanEmptyMemberObject()

@@ -25,7 +25,7 @@
 var common    = require( './common' ),
     assert    = require( 'assert' ),
     mb_common = require( __dirname + '/inc-member_builder-common' ),
-    builder   = common.require( 'member_builder' ),
+    builder   = common.require( 'MemberBuilder' )(),
     util      = common.require( 'util' )
 ;
 

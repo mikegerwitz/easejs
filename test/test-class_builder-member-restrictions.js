@@ -27,7 +27,7 @@ var common  = require( './common' ),
 
     ClassBuilder = common.require( 'ClassBuilder' ),
     builder      = ClassBuilder(
-        common.require( 'member_builder' ),
+        common.require( 'MemberBuilder' )(),
         common.require( 'VisibilityObjectFactoryFactory' ).fromEnvironment()
     )
 ;
