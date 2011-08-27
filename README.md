@@ -27,6 +27,10 @@ http://easejs.org/manual/ (Multiple Pages)
 
 http://easejs.org/manual.html (Single Page)
 
+## Bug Reports / Feature Requests
+Please direct bug reports and feature requests to the bug tracker located at
+http://easejs.org/bugs/
+
 ## Why ease.js?
 There are already plenty of other means of achieving each of this project's
 goals, so what's the point of ease.js? The aim of the project is to provide a
