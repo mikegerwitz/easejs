@@ -30,7 +30,7 @@ RMTRAIL="$PATH_TOOLS/rmtrail"
 
 # determine the order in which modules must be concatenated; order matters to
 # ensure dependencies are loaded before the module that depends on them
-CAT_MODULES=$(
+cat_modules=$(
     cd "$PATH_TOOLS/../" &&
     grep -rIo ' require(.*)' lib/ \
         | sed "s/^lib\///;s/\.js://;s/require(.*'\/\(.*\)'.*/\1/" \
@@ -39,6 +39,24 @@ CAT_MODULES=$(
     echo "Failed to get module list" >&2
     exit 3
 }
+
+# get a list of all available modules
+all_modules=$(
+    cd "$PATH_LIB" &&
+    ls -1 *.js \
+    | sed 's/\.js$//'
+)
+
+# get lsit of modules that haven't been
+remain_modules=$(
+    echo "$cat_modules
+$all_modules" \
+    | sort \
+    | uniq -u
+)
+
+cat_modules="$cat_modules
+$remain_modules"
 
 ##
 # Output template header
@@ -91,7 +109,7 @@ fi
 tpl_header
 
 # output each of the modules
-for module in $CAT_MODULES; do
+for module in $cat_modules; do
     filename="$PATH_LIB/$module.$MODULE_EXT"
 
     if [ ! -f "$filename" ]; then
