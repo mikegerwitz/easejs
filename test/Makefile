@@ -1,8 +1,8 @@
 
 tests := $(shell find . \
 	-name 'test-*' \
-	-o -name '*Test.*' \
 	-a ! -name 'test-combine*.js'\
+	-o -name '*Test.*' \
 )
 tests_combine := test-combine*.js
 
