@@ -64,11 +64,11 @@ var common = require( './common' ),
         method       = function() {},
         super_method = function() {},
         cid          = 55,
+        getInst      = function() {},
         retval       = 'foobar';
 
     var result = Sut(
-        function() {},
-        function( given_method, given_super, given_cid )
+        function( given_method, given_super, given_cid, givenGetInst )
         {
             called = true;
 
@@ -84,9 +84,13 @@ var common = require( './common' ),
                 "Factory method should be provided with cid"
             );
 
+            assert.equal( givenGetInst, getInst,
+                "Factory method should be provided with proper inst function"
+            );
+
             return retval;
         }
-    ).wrapMethod( method, super_method, cid );
+    ).wrapMethod( method, super_method, cid, getInst );
 
     // we'll include this in addition to the following assertion (which is
     // redundant) to make debugging more clear
@@ -96,32 +100,6 @@ var common = require( './common' ),
 
     assert.equal( result, retval,
         "Should return value from factory function"
-    );
-} )();
-
-
-/**
- * The instance function, which should be made available to the factory
- * function, is used to retrieve the visibility object associated with the
- * instance that the context is associated with.
- */
-( function testProvidedFactoryFunctionIsCalledWithInstanceFunction()
-{
-    var called = false;
-
-    Sut(
-        function()
-        {
-            called = true;
-        },
-        function( _, __, ___, inst )
-        {
-            inst();
-        }
-    ).wrapMethod( null, null, 0 );
-
-    assert.equal( called, true,
-        "Instance callback should be provided to factory function"
     );
 } )();
 
