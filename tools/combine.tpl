@@ -42,7 +42,7 @@ var easejs = {};
     {
         // remove the './' directory prefix (every module is currently included
         // via a relative path)
-        var id_clean = module_id.replace( /^.\//, '' );
+        var id_clean = module_id.replace( /^\.?\//, '' );
 
         // attempt to retrieve the module
         var mod = module[ id_clean ];
