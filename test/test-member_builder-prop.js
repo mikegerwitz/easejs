@@ -25,13 +25,28 @@
 var common    = require( './common' ),
     assert    = require( 'assert' ),
     mb_common = require( __dirname + '/inc-member_builder-common' ),
-    builder   = common.require( 'MemberBuilder' )(),
-    util      = common.require( 'util' )
+    util      = common.require( 'util' ),
+
+    // XXX: get rid of this disgusting mess; we're mid-refactor and all these
+    // dependencies should not be necessary for testing
+    MethodWrapperFactory = common.require( '/MethodWrapperFactory' ),
+    wrappers             = common.require( '/MethodWrappers' ).standard,
+
+    builder = common.require( '/MemberBuilder' )(
+        MethodWrapperFactory( wrappers.wrapNew ),
+        MethodWrapperFactory( wrappers.wrapOverride )
+    )
 ;
 
 
 mb_common.value       = { baj: 'baz' };
 mb_common.buildMember = builder.buildProp
+
+// must wrap to call in proper context
+var builder_method = function()
+{
+    builder.buildMethod.apply( builder, arguments );
+}
 
 // do assertions common to all member builders
 mb_common.assertCommon();
@@ -40,7 +55,7 @@ mb_common.assertCommon();
 ( function testCannotOverrideMethodWithProperty()
 {
     // add a method
-    mb_common.buildMember = builder.buildMethod;
+    mb_common.buildMember = builder_method;
     mb_common.value       = function() {};
     mb_common.buildMemberQuick();
 

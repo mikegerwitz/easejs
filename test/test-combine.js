@@ -35,13 +35,14 @@ var common  = require( './common' ),
 
 
 // test all combined files, including minified files
-var files = [ 'ease.js', 'ease-full.js', 'ease.min.js', 'ease-full.min.js' ],
+var files = [ 'ease.js', 'ease-full.js'],
     file  = '',
     i     = files.length;
 
 while ( i-- )
 {
     file = files[ i ];
+    console.log( file );
 
     // attempt to read the combined file
     try

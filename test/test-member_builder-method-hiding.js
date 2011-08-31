@@ -25,9 +25,19 @@
 var common  = require( './common' ),
     assert  = require( 'assert' ),
     warn    = common.require( 'warn' )
-    builder = common.require( 'ClassBuilder' )(
-        common.require( 'MemberBuilder' )(),
-        common.require( 'VisibilityObjectFactoryFactory' ).fromEnvironment()
+
+    // XXX: get rid of this disgusting mess; we're mid-refactor and all these
+    // dependencies should not be necessary for testing
+    ClassBuilder         = common.require( '/ClassBuilder' ),
+    MethodWrapperFactory = common.require( '/MethodWrapperFactory' ),
+    wrappers             = common.require( '/MethodWrappers' ).standard,
+
+    builder = ClassBuilder(
+        common.require( '/MemberBuilder' )(
+            MethodWrapperFactory( wrappers.wrapNew ),
+            MethodWrapperFactory( wrappers.wrapOverride )
+        ),
+        common.require( '/VisibilityObjectFactoryFactory' ).fromEnvironment()
     )
 ;
 

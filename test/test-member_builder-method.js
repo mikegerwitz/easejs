@@ -25,8 +25,17 @@
 var common    = require( './common' ),
     assert    = require( 'assert' ),
     mb_common = require( __dirname + '/inc-member_builder-common' ),
-    builder   = common.require( 'MemberBuilder' )(),
     util      = common.require( 'util' ),
+
+    // XXX: get rid of this disgusting mess; we're mid-refactor and all these
+    // dependencies should not be necessary for testing
+    MethodWrapperFactory = common.require( '/MethodWrapperFactory' ),
+    wrappers             = common.require( '/MethodWrappers' ).standard,
+
+    builder = common.require( '/MemberBuilder' )(
+        MethodWrapperFactory( wrappers.wrapNew ),
+        MethodWrapperFactory( wrappers.wrapOverride )
+    ),
 
     warn    = common.require( 'warn' ),
     Warning = warn.Warning
@@ -34,7 +43,12 @@ var common    = require( './common' ),
 
 mb_common.funcVal     = 'foobar';
 mb_common.value       = function() { return mb_common.funcVal; };
-mb_common.buildMember = builder.buildMethod;
+
+// must wrap to call in proper context
+var builder_method = mb_common.buildMember = function()
+{
+    builder.buildMethod.apply( builder, arguments );
+}
 
 // do assertions common to all member builders
 mb_common.assertCommon();
@@ -64,7 +78,7 @@ mb_common.assertCommon();
     mb_common.buildMemberQuick();
 
     // restore builder
-    mb_common.buildMember = builder.buildMethod;
+    mb_common.buildMember = builder_method;
 
     assert.throws( function()
     {
