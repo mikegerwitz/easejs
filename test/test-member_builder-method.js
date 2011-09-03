@@ -27,18 +27,12 @@ var common    = require( './common' ),
     mb_common = require( __dirname + '/inc-member_builder-common' ),
     util      = common.require( 'util' ),
 
-    // XXX: get rid of this disgusting mess; we're mid-refactor and all these
-    // dependencies should not be necessary for testing
-    MethodWrapperFactory = common.require( '/MethodWrapperFactory' ),
-    wrappers             = common.require( '/MethodWrappers' ).standard,
-
-    builder = common.require( '/MemberBuilder' )(
-        MethodWrapperFactory( wrappers.wrapNew ),
-        MethodWrapperFactory( wrappers.wrapOverride )
+    // stub factories used for testing
+    stubFactory= common.require( '/MethodWrapperFactory' )(
+         function( func ) { return func; }
     ),
 
-    warn    = common.require( 'warn' ),
-    Warning = warn.Warning
+    builder = common.require( '/MemberBuilder' )( stubFactory, stubFactory )
 ;
 
 mb_common.funcVal     = 'foobar';
