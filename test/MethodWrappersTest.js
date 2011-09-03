@@ -30,6 +30,55 @@ var common = require( './common' ),
 
 
 /**
+ * The __super property is defined for method overrides and permits invoking the
+ * overridden method (method of the supertype).
+ *
+ * In this test, we are not looking to assert that __super matches the super
+ * method. Rather, we want to ensure it /invokes/ it. This is because the super
+ * method may be wrapped to provide additional functionality. We don't know, we
+ * don't care. We just want to make sure it's functioning properly.
+ */
+( function testOverridenMethodShouldContainReferenceToSuperMethod()
+{
+    var orig_called = false,
+        getInst     = function() {},
+
+        // "super" method
+        method = sut.standard.wrapNew(
+            function()
+            {
+                orig_called = true;
+            },
+            null, 0, getInst
+        ),
+
+        // override method
+        override = sut.standard.wrapOverride(
+            function()
+            {
+                assert.notEqual(
+                    this.__super,
+                    undefined,
+                    "__super is defined for overridden method"
+                );
+
+                this.__super();
+                assert.equal(
+                    orig_called,
+                    true,
+                    "Invoking __super calls super method"
+                );
+            },
+            method, 0, getInst
+        )
+    ;
+
+    // invoke the method to run the above assertions
+    override();
+} )();
+
+
+/**
  * If the method is called when bound to a different context (e.g. for
  * protected/private members), __super may not be properly bound.
  *
