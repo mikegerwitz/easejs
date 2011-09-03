@@ -30,6 +30,56 @@ var common = require( './common' ),
 
 
 /**
+ * The wrappers accept a function that should return the instance to be bound to
+ * 'this' when invoking a method. This has some important consequences, such as
+ * the ability to implement protected/private members.
+ */
+( function testMethodInvocationBindsThisToPassedInstance()
+{
+    var instance = function() {},
+        val      = 'fooboo',
+        val2     = 'fooboo2',
+        iid      = 1,
+        called   = false,
+
+        getInst = function()
+        {
+            called = true;
+            return instance;
+        }
+
+        method = sut.standard.wrapNew(
+            function()
+            {
+                return this.foo;
+            },
+            null, 0, getInst
+        ),
+
+        override = sut.standard.wrapOverride(
+            function()
+            {
+                return this.foo2;
+            },
+            method, 0, getInst
+        )
+    ;
+
+    // set instance values
+    instance.foo  = val;
+    instance.foo2 = val2;
+
+    assert.equal( method(), val,
+        "Calling method will bind 'this' to passed instance"
+    );
+
+    assert.equal( override(), val2,
+        "Calling method override will bind 'this' to passed instance"
+    );
+} )();
+
+
+/**
  * The __super property is defined for method overrides and permits invoking the
  * overridden method (method of the supertype).
  *
