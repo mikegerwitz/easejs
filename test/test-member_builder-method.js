@@ -284,68 +284,6 @@ mb_common.assertCommon();
 
 
 /**
- * If the method is called when bound to a different context (e.g. for
- * protected/private members), __super may not be properly bound.
- *
- * This test is in response to a bug found after implementing visibility
- * support. The __super() method was previously defined on 'this', which may or
- * may not be the context that is actually used. Likely, it's not.
- */
-( function testSuperMethodWorksProperlyWhenContextDiffers()
-{
-    var members      = builder.initMembers(),
-        super_called = false,
-        retobj       = {},
-        instCallback = function()
-        {
-            return retobj;
-        },
-
-        // the overriding method
-        newfunc = function()
-        {
-            this.__super();
-        }
-    ;
-
-    // super method to be overridden
-    members[ 'public' ].foo = function()
-    {
-        super_called = true;
-    };
-
-    // XXX: Bad idea. Set the keyword in another manner. This is likely to break
-    // in the future.
-    members['public'].foo.___$$keywords$$ = { 'virtual': true };
-
-    // override
-    builder.buildMethod(
-        members,
-        {},
-        'foo',
-        newfunc,
-        { 'override': true },
-        instCallback
-    );
-
-    // call the overriding method
-    members[ 'public' ].foo();
-
-    // ensure that the super method was called
-    assert.equal( super_called, true,
-        "__super() method is called even when context differs"
-    );
-
-    // finally, ensure that __super is no longer set on the returned object
-    // after the call to ensure that the caller cannot break encapsulation by
-    // stealing a method reference (sneaky, sneaky)
-    assert.equal( retobj.__super, undefined,
-        "__super() method is unset after being called"
-    );
-} )();
-
-
-/**
  * Once a concrete implementation has been defined for a method, a subtype
  * cannot make it abstract.
  */
