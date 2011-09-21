@@ -1,9 +1,8 @@
 # ease.js
 
-ease.js is a basic collection of CommonJS modules intended to "ease" the
-transition into JavaScript from other Object-Oriented languages. It provides an
-intuitive means of achieving classical inheritance and has planned support
-traits/mixins.
+ease.js is a collection of CommonJS modules intended to "ease" the transition
+into JavaScript from other Object-Oriented languages. It provides an intuitive
+means of achieving classical inheritance and has planned support traits/mixins.
 
 Current support includes:
 
@@ -12,13 +11,20 @@ Current support includes:
 * Abstract classes and methods
 * Interfaces
 * Visibility (public, protected and private members)
-* Static, constant and final members
+* Static, constant and final members (**important: see virtual/master branch**)
 
 While the current focus of the project is Object-Oriented design, it is likely
 that ease.js will expand to other paradigms in the future.
 
 **This project is still under development. Please read the manual for more
 information.**
+
+**Release/npm Note:** The first release of ease.js (and subsequently,
+availability on npm) will come once the features are solidified and committed
+to. This is to ensure adoption is not stifled by design alterations. Version
+0.1.0 release is near; please see the
+[v0.1.0 roadmap](http://easejs.org/bugs/roadmap_page.php?version_id=1) for
+out-standing issues.
 
 ## Full Documentation
 Full documentation is available at the following URL:
@@ -27,12 +33,44 @@ http://easejs.org/manual/ (Multiple Pages)
 
 http://easejs.org/manual.html (Single Page)
 
+## Bug Reports / Feature Requests
+Please direct bug reports and feature requests to the bug tracker located at
+http://easejs.org/bugs/
+
 ## Why ease.js?
-There are already plenty of other means of achieving each of this project's
-goals, so what's the point of ease.js? The aim of the project is to provide a
-lightweight library in a CommonJS format which also addresses ES5 issues and is
-an all-inclusive solution to OO techniques. It satisfies primarily a personal
-itch.
+There are already a number of libraries/frameworks that permit basic classical
+Object-Oriented development, so why ease.js? While many of the existing
+solutions certainly provide viable solutions, they are largely incomplete. Until
+the appearance of ECMAScript 5, many of the features enjoyed by classical OO
+developers were elusive to JavaScript.  The aim of this project is to provide an
+intuitive framework in a CommonJS format which also addresses ES5 issues and is
+an all-inclusive solution to OO techniques.
+
+ECMAScript reserves certain keywords that hint at classical OO in future
+versions, but said features are uncertain. ease.js will satisfy the classical OO
+itch until the time where ECMAScript itself includes it, at which time ease.js
+will still be useful for providing a transition in order to support older
+browsers. ease.js may also be useful in the future to augment the feature set of
+whatever native ECMAScript implementation is decided upon.
+
+### Why Classical OOP in JavaScript?
+ease.js was created (historically) for a number of reasons:
+
+* To "ease" Object-Oriented developers into JavaScript by providing a familiar
+  environment.
+* To provide the maintenance and development benefits of classical OOP.
+* To provide features missing from the language, such as proper encapsulation
+  through private/protected members, interfaces, traits, intuitive inheritance,
+  etc.
+* To encapsulate the hacks commonly used to perform the above tasks.
+
+Many JS purists believe that classical Object-Oriented programming should be
+left out of the language and one should stick strictly to prototypal
+development. While the two are related (both Object-Oriented), they can be
+applied to different problem domains in order to achieve results that are more
+natural or intuitive to developers. ease.js works seamlessly with existing
+prototypes, allowing the developer to choose whether or not they want to use
+"classes".
 
 
 ## How to Use
