@@ -12,7 +12,7 @@ Current support includes:
 * Abstract classes and methods
 * Interfaces
 * Visibility (public, protected and private members)
-* Static, constant and final members
+* Static, constant and final members (**important: see virtual/master branch**)
 
 While the current focus of the project is Object-Oriented design, it is likely
 that ease.js will expand to other paradigms in the future.
