@@ -135,12 +135,14 @@ if [ "$INC_TEST" ]; then
     TEST_CASES=$( find $PATH_TEST \
         \( -name 'test-*.js' \
             -o -name '*Test*.js' \
-            -o -name 'inc-*.js' \
         \) \
         -exec basename {} \; \
         | sort \
         | grep -v 'test-\(combine\(-pre-es5\)\?\|index\).js' \
     )
+
+    # find include files separately so we can output those before the tests
+    TEST_INC=$( find $PATH_TEST -name 'inc-*.js' -exec basename {} \; )
 
     # include test combine template
     cat "$TPL_TEST_PATH" | grep -v '^#' | $RMTRAIL
@@ -149,7 +151,7 @@ if [ "$INC_TEST" ]; then
     echo "ns_exports.runTests = function()"
     echo "{"
 
-    for testcase in $TEST_CASES; do
+    for testcase in $TEST_INC $TEST_CASES; do
         filename="$PATH_TEST/$testcase"
 
         # generate the module name by removing path and extension, then

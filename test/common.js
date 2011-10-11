@@ -44,3 +44,12 @@ exports.require = function( module )
     return require( exports.PATH_LIB + '/' + module );
 }
 
+
+/**
+ * Create simple xUnit-style test case
+ *
+ * @return  {udnefined}
+ */
+exports.testCase = require( __dirname + '/inc-testcase.js' );
+
+
