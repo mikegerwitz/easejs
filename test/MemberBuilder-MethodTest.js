@@ -28,7 +28,7 @@ var common    = require( './common' ),
     util      = common.require( 'util' ),
 
     // stub factories used for testing
-    stubFactory= common.require( '/MethodWrapperFactory' )(
+    stubFactory = common.require( '/MethodWrapperFactory' )(
          function( func ) { return func; }
     ),
 
