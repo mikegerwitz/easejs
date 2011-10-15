@@ -1,11 +1,8 @@
 /**
  * Combined redistributable ease.js file
  *
- * This file contains all ease.js modules in a single file for easy distribution
- * in a browser environment. For the original source code, please visit:
- *
- * https://github.com/mikegerwitz/easejs
- *
+ * For the original, uncombined and unminifed source, please visit
+ * http://easejs.org.
  *
  *  Copyright (C) 2010 Mike Gerwitz
  *
