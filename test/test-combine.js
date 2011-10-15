@@ -42,7 +42,6 @@ var files = [ 'ease.js', 'ease-full.js'],
 while ( i-- )
 {
     file = files[ i ];
-    console.log( file );
 
     // attempt to read the combined file
     try
