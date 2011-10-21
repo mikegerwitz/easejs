@@ -22,48 +22,93 @@
  * @package test
  */
 
-function buildStubMethod( name, val, visibility )
-{
-    var keywords = {};
 
-    // set visibility level using access modifier
-    keywords[ visibility ] = true;
-
-    this.sut.buildMethod( this.members, {}, name,
-        function() {
-            return val;
-        },
-        keywords,
-        function() {},
-        1,
-        {}
-    );
-}
-
-
-function buildStubProp( name, val, visibility )
-{
-    var keywords = {};
-
-    // set visibility level using access modifier
-    keywords[ visibility ] = true;
-
-    this.sut.buildProp( this.members, {}, name, val, keywords, {} );
-}
 
 
 require( 'common' ).testCase(
 {
     caseSetUp: function()
     {
-        this.buildStubMethod = function()
+        this.buildStubMethod = function( name, val, visibility )
         {
-            buildStubMethod.apply( this, arguments );
+            var keywords = {};
+
+            // set visibility level using access modifier
+            keywords[ visibility ] = true;
+
+            this.sut.buildMethod( this.members, {}, name,
+                function() {
+                    return val;
+                },
+                keywords,
+                function() {},
+                1,
+                {}
+            );
         };
 
-        this.buildStubProp = function()
+
+        this.buildStubProp = function( name, val, visibility )
         {
-            buildStubProp.apply( this, arguments );
+            var keywords = {};
+
+            // set visibility level using access modifier
+            keywords[ visibility ] = true;
+
+            this.sut.buildProp( this.members, {}, name, val, keywords, {} );
+        };
+
+
+        this.assertOnlyIn = function( vis, name )
+        {
+            var found = false;
+
+            for ( level in this.members )
+            {
+                if ( typeof this.members[ level ][ name ] === 'undefined' )
+                {
+                    continue;
+                }
+
+                // we found it; ensure it's in the expected visibility level
+                found = true;
+                if ( level !== vis )
+                {
+                    this.fail( name + " should only be accessible in: " + vis );
+                }
+            }
+
+            found || this.fail(
+                "Did not find '" + name + "' in level: " + vis
+            );
+        };
+
+
+        this.basicVisPropTest = function( vis )
+        {
+            var name = 'pub',
+                val  = 'val';
+
+            this.buildStubProp( name, val, vis );
+            this.assertEqual( this.members[ vis ][ name ][ 0 ], val );
+
+            this.assertOnlyIn( vis, name, this.members );
+        };
+
+
+        this.basicVisMethodTest = function( vis )
+        {
+            var name = 'pub',
+                val  = 'val';
+
+            this.buildStubMethod( name, val, vis );
+
+            this.assertEqual(
+                this.members[ vis ][ name ](),
+                val
+            );
+
+            this.assertOnlyIn( vis, name, this.members );
         };
     },
 
@@ -83,26 +128,14 @@ require( 'common' ).testCase(
     },
 
 
-    'Public properties are accessible via the public interface': function()
+    'Public properties are accessible only via the public interface': function()
     {
-        var name = 'pub',
-            val  = 'val';
-
-        this.buildStubProp( name, val, 'public' );
-        this.assertEqual( this.members[ 'public' ][ name ][ 0 ], val );
+        this.basicVisPropTest( 'public' );
     },
 
 
-    'Public methods are accessible via the public interface': function()
+    'Public methods are accessible only via the public interface': function()
     {
-        var name = 'pub',
-            val  = 'val';
-
-        this.buildStubMethod( name, val, 'public' );
-
-        this.assertEqual(
-            this.members[ 'public' ][ name ](),
-            val
-        );
+        this.basicVisMethodTest( 'public' );
     },
 } );
