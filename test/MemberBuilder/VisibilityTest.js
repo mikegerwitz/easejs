@@ -22,9 +22,6 @@
  * @package test
  */
 
-
-
-
 require( 'common' ).testCase(
 {
     caseSetUp: function()
@@ -63,6 +60,8 @@ require( 'common' ).testCase(
         {
             var found = false;
 
+            this.incAssertCount();
+
             for ( level in this.members )
             {
                 if ( typeof this.members[ level ][ name ] === 'undefined' )
@@ -86,8 +85,8 @@ require( 'common' ).testCase(
 
         this.basicVisPropTest = function( vis )
         {
-            var name = 'pub',
-                val  = 'val';
+            var name = vis + 'name',
+                val  = vis + 'val';
 
             this.buildStubProp( name, val, vis );
             this.assertEqual( this.members[ vis ][ name ][ 0 ], val );
@@ -98,8 +97,8 @@ require( 'common' ).testCase(
 
         this.basicVisMethodTest = function( vis )
         {
-            var name = 'pub',
-                val  = 'val';
+            var name = vis + 'name',
+                val  = vis + 'val';
 
             this.buildStubMethod( name, val, vis );
 
@@ -128,14 +127,26 @@ require( 'common' ).testCase(
     },
 
 
-    'Public properties are accessible only via the public interface': function()
+    'Properties are only accessible via their respective interfaces': function()
     {
-        this.basicVisPropTest( 'public' );
+        var _self = this,
+            tests = [ 'public', 'protected', 'private' ];
+
+        for ( i in tests )
+        {
+            _self.basicVisPropTest( tests[ i ] );
+        };
     },
 
 
-    'Public methods are accessible only via the public interface': function()
+    'Methods are only accessible via their respective interfaces': function()
     {
-        this.basicVisMethodTest( 'public' );
+        var _self = this;
+            tests = [ 'public', 'protected', 'private' ];
+
+        for ( i in tests )
+        {
+            _self.basicVisMethodTest( tests[ i ] );
+        };
     },
 } );
