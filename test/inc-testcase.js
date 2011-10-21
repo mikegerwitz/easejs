@@ -28,6 +28,11 @@ module.exports = function( test_case )
         context  = prepareCaseContext(),
         setUp    = test_case.setUp;
 
+    // perform case-wide setup
+    test_case.caseSetUp && test_case.caseSetUp.call( context );
+
+    // remove unneeded methods so we don't invoke them as tests below
+    delete test_case.caseSetUp;
     delete test_case.setUp;
 
     // run each test in the case
