@@ -1,6 +1,31 @@
 
 
-var assert = require( 'assert' );
+var assert         = require( 'assert' ),
+    assert_wrapped = {},
+    acount         = 0;
+
+
+// wrap each of the assertions so that we can keep track of the number of times
+// that they were invoked
+for ( f in assert )
+{
+    var _assert_cur = assert[ f ];
+
+    if ( typeof _assert_cur !== 'function' )
+    {
+        continue;
+    }
+
+    // wrap the assertion to keep count
+    assert_wrapped[ f ] = ( function( a )
+    {
+        return function()
+        {
+            acount++;
+            a.apply( this, arguments );
+        };
+    } )( _assert_cur );
+}
 
 
 /**
@@ -27,6 +52,9 @@ module.exports = function( test_case )
         scount   = 0,
         context  = prepareCaseContext(),
         setUp    = test_case.setUp;
+
+    // reset assertion count for this case
+    acount = 0;
 
     // perform case-wide setup
     test_case.caseSetUp && test_case.caseSetUp.call( context );
@@ -69,7 +97,8 @@ module.exports = function( test_case )
     testPrint(
         ( ( failures.length ) ? "FAILED" : "OK" ) + " - " +
         scount + " successful, " + failures.length + " failure(s), " +
-        ( scount + failures.length ) + " total\n"
+        ( scount + failures.length ) + " total " +
+        '(' + acount + " assertion" + ( ( acount !== 1 ) ? 's' : '' ) + ")\n"
     );
 
     // exit with non-zero status to indicate failure
@@ -89,16 +118,16 @@ function prepareCaseContext()
     return {
         require: require( __dirname + '/common' ).require,
 
-        fail:                 assert.fail,
-        assertOk:             assert.ok,
-        assertEqual:          assert.equal,
-        assertNotEqual:       assert.notEqual,
-        assertDeepEqual:      assert.deepEqual,
-        assertStrictEqual:    assert.strictEqual,
-        assertNotStrictEqual: assert.notStrictEqual,
-        assertThrows:         assert.throws,
-        assertDoesNotThrow:   assert.doesNotThrow,
-        assertIfError:        assert.ifError,
+        fail:                 assert_wrapped.fail,
+        assertOk:             assert_wrapped.ok,
+        assertEqual:          assert_wrapped.equal,
+        assertNotEqual:       assert_wrapped.notEqual,
+        assertDeepEqual:      assert_wrapped.deepEqual,
+        assertStrictEqual:    assert_wrapped.strictEqual,
+        assertNotStrictEqual: assert_wrapped.notStrictEqual,
+        assertThrows:         assert_wrapped.throws,
+        assertDoesNotThrow:   assert_wrapped.doesNotThrow,
+        assertIfError:        assert_wrapped.ifError,
     };
 }
 
