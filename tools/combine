@@ -132,11 +132,11 @@ done
 # include tests?
 if [ "$INC_TEST" ]; then
     # note that not all tests are included
-    TEST_CASES=$( find $PATH_TEST \
+    TEST_CASES=$( cd "$PATH_TEST"; find . \
         \( -name 'test-*.js' \
             -o -name '*Test*.js' \
         \) \
-        -exec basename {} \; \
+        | sed 's/^.\///' \
         | sort \
         | grep -v 'test-\(combine\(-pre-es5\)\?\|index\).js' \
     )
@@ -157,7 +157,7 @@ if [ "$INC_TEST" ]; then
         # generate the module name by removing path and extension, then
         # prefixing it with "test/"
         module="${filename%.*}"
-        module="test/${module##*/}"
+        module="test/${module##*test/}"
 
         # each module must be enclosed in a closure to emulate a module
         echo "/** TEST CASE: $testcase **/"

@@ -22,9 +22,9 @@
  * @package test
  */
 
-var common    = require( './common' ),
+var common    = require( 'common' ),
     assert    = require( 'assert' ),
-    mb_common = require( __dirname + '/inc-member_builder-common' ),
+    mb_common = require( __dirname + '/../inc-member_builder-common' ),
     util      = common.require( 'util' ),
 
     // stub factories used for testing

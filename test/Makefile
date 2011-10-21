@@ -13,6 +13,6 @@ default: $(tests) combine
 combine: $(tests_combine)
 
 %.js: FORCE
-	node --stack_trace_limit=20 $@
+	NODE_PATH=".:$(NODE_PATH)" node --stack_trace_limit=20 "$@"
 test-%: FORCE
 	./$@

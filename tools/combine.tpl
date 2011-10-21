@@ -41,8 +41,9 @@ var easejs = {};
     var require = function( module_id )
     {
         // remove the './' directory prefix (every module is currently included
-        // via a relative path)
-        var id_clean = module_id.replace( /^\.?\//, '' );
+        // via a relative path) and stupidly remove single ../'s (combine script
+        // doesn't include true paths, so they're not necessary to resolve)
+        var id_clean = module_id.replace( /^\.?\/|\.\.\//, '' );
 
         // attempt to retrieve the module
         var mod = module[ id_clean ];
