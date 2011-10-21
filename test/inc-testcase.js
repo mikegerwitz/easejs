@@ -21,11 +21,17 @@ for ( f in assert )
     {
         return function()
         {
-            acount++;
+            incAssertCount();
             a.apply( this, arguments );
         };
     } )( _assert_cur );
 }
+
+
+function incAssertCount()
+{
+    acount++;
+};
 
 
 /**
@@ -128,6 +134,7 @@ function prepareCaseContext()
         assertThrows:         assert_wrapped.throws,
         assertDoesNotThrow:   assert_wrapped.doesNotThrow,
         assertIfError:        assert_wrapped.ifError,
+        incAssertCount:       incAssertCount,
     };
 }
 
