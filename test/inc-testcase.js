@@ -150,6 +150,21 @@ function outputTestFailures( failures )
 {
     var i, cur, name, e;
 
+    // if we don't have stdout access, throw an error containing each of the
+    // error strings
+    if ( typeof process === 'undefined' )
+    {
+        var err = '',
+            i   = failures.length;
+
+        for ( i in failures )
+        {
+            err += failures[ i ][ 0 ] + '; ';
+        }
+
+        throw Error( err );
+    }
+
     for ( i = 0; i < failures.length; i++ )
     {
         cur = failures[ i ];
