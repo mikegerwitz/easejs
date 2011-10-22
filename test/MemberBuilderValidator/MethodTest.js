@@ -34,10 +34,15 @@ require( 'common' ).testCase(
          * Tests to ensure that a method with the given keywords fails
          * validation with an error message partially matching the provided
          * identifier
+         *
+         * To test overrides, specify keywords for 'prev'. To test for success
+         * instead of failure, set identifier to null.
          */
-        this.quickKeywordMethodTest = function( keywords, identifier )
+        this.quickKeywordMethodTest = function( keywords, identifier, prev )
         {
             var keyword_obj = {},
+                prev_obj    = {},
+                prev_data   = {},
                 name        = 'fooBar';
 
             // convert our convenient array into a keyword obj
@@ -46,12 +51,34 @@ require( 'common' ).testCase(
                 keyword_obj[ keywords[ i ] ] = true;
             }
 
-            _self.quickFailureTest( name, identifier, function()
+            // if prev keywords were given, do the same thing with those to
+            // generate our keyword obj
+            if ( prev !== undefined )
+            {
+                for ( var i = 0, len = prev.length; i < len; i++ )
+                {
+                    prev_obj[ prev[ i ] ] = true;
+                }
+
+                // define a dummy previous method value
+                prev_data = { member: function() {} };
+            }
+
+            var testfunc = function()
             {
                 _self.sut.validateMethod(
-                    name, function() {}, keyword_obj, {}, {}
+                    name, function() {}, keyword_obj, prev_data, prev_obj
                 );
-            } );
+            };
+
+            if ( identifier )
+            {
+                _self.quickFailureTest( name, identifier, testfunc );
+            }
+            else
+            {
+                _self.assertDoesNotThrow( testfunc, Error );
+            }
         };
 
 
@@ -342,6 +369,31 @@ require( 'common' ).testCase(
             var cur = tests[ i ];
             this.quickVisChangeTest( cur[ 0 ], cur[ 1 ], false );
         }
+    },
+
+
+    /**
+     * If a parent method is defined and the 'override' keyword is not provided,
+     * regardless of whether or not it is declared as virtual, we need to
+     * provide an error.
+     *
+     * Note: In the future, this will be replaced with the method hiding
+     * implementation.
+     */
+    'Must provide "override" keyword when overriding methods': function()
+    {
+        this.quickKeywordMethodTest( [], 'override', [] );
+    },
+
+
+    /**
+     * Building off of the previous test - we should be able to omit the
+     * 'override' keyword if we are providing a concrete method for an abstract
+     * method. In terms of ease.js, this is still "overriding".
+     */
+    'Can provide abstract method impl. without override keyword': function()
+    {
+        this.quickKeywordMethodTest( [], null, [ 'abstract' ] );
     },
 } );
 

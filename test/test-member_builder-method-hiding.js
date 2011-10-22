@@ -41,6 +41,9 @@ var common  = require( './common' ),
     )
 ;
 
+// XXX: Disabled until we begin re-development of this feature
+return;
+
 
 /**
  * Restores warning handler to the default
