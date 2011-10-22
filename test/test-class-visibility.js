@@ -524,8 +524,6 @@ var common    = require( './common' ),
     }, Error, "Can escalate visibility of subtype members" );
 
     // same level of visibility
-    assert.doesNotThrow( function()
-    {
         Class(
         {
             'protected foo': 'bar',
@@ -534,7 +532,6 @@ var common    = require( './common' ),
             'protected foo': 'bar',
             'override protected baz': function() {},
         } );
-    }, Error, "Can retain level of visibility for subtype members" );
 } )();
 
 
