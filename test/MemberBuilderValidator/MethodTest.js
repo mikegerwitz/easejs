@@ -215,7 +215,8 @@ require( 'common' ).testCase(
     /**
      * Although a function can certainly be assigned to a property, we cannot
      * allow /declaring/ a method in place of a parent property, as that alters
-     * the interface.
+     * the interface. One may still assign a callback or other function to a
+     * property after instantiation.
      */
     'Cannot override property with method': function()
     {
@@ -247,9 +248,20 @@ require( 'common' ).testCase(
     /**
      * Ensure we do not prevent legitimate method overriding
      */
-    'Can override concrete virtual method with concrete method': function()
+    'Can override virtual method with concrete method': function()
     {
         this.quickKeywordMethodTest( [ 'override' ], null, [ 'virtual' ] );
+    },
+
+
+    /**
+     * Overriding a method in ease.js does not immediately make it virtual.
+     * Rather, the virtual keyword must be explicitly specified. Let's ensure
+     * that it is permitted.
+     */
+    'Can declare override as virtual': function()
+    {
+        this.quickKeywordMethodTest( [ 'virtual', 'override' ] );
     },
 
 

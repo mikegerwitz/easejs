@@ -39,6 +39,7 @@ var common    = require( './common' ),
 ;
 
 
+mb_common.funcVal     = null;
 mb_common.value       = { baj: 'baz' };
 mb_common.buildMember = builder.buildProp
 
