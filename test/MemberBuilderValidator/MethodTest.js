@@ -241,6 +241,15 @@ require( 'common' ).testCase(
 
 
     /**
+     * Ensure we do not prevent legitimate method overriding
+     */
+    'Can override concrete virtual method with concrete method': function()
+    {
+        this.quickKeywordMethodTest( [ 'override' ], null, [ 'virtual' ] );
+    },
+
+
+    /**
      * Abstract methods act as a sort of placeholder, requiring an
      * implementation. Once an implementation has been defined, it does not make
      * sense (in the context of inheritance) to remove it entirely by reverting
