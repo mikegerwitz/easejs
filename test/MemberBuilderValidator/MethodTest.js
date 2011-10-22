@@ -24,11 +24,9 @@
 
 require( 'common' ).testCase(
 {
-    setUp: function()
+    caseSetUp: function()
     {
         var _self = this;
-
-        this.sut = this.require( 'MemberBuilderValidator' )();
 
         /**
          * Tests to ensure that a method with the given keywords fails
@@ -142,6 +140,12 @@ require( 'common' ).testCase(
                 _self.assertDoesNotThrow( testfun, Error );
             }
         };
+    },
+
+
+    setUp: function()
+    {
+        this.sut = this.require( 'MemberBuilderValidator' )();
     },
 
 
