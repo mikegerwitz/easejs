@@ -236,20 +236,7 @@ require( 'common' ).testCase(
      */
     'Cannot override non-virtual methods': function()
     {
-        var name  = 'foo',
-            _self = this;
-
-        this.quickFailureTest( name, 'non-virtual', function()
-        {
-            // override provided, but not 'virtual'
-            _self.sut.validateMethod(
-                name,
-                function() {},
-                { override: true },
-                { member: function() {} },
-                {}
-            );
-        } );
+        this.quickKeywordMethodTest( [ 'override' ], 'non-virtual', [] );
     },
 
 
@@ -261,20 +248,7 @@ require( 'common' ).testCase(
      */
     'Cannot override concrete method with abstract method': function()
     {
-        var name  = 'foo',
-            _self = this;
-
-        this.quickFailureTest( name, 'concrete', function()
-        {
-            // attempting to override concrete (non-abstract) method
-            _self.sut.validateMethod(
-                name,
-                function() {},
-                { 'abstract': true },
-                { member: function() {} },
-                {}
-            );
-        } );
+        this.quickKeywordMethodTest( [ 'abstract' ], 'concrete', [] );
     },
 
 
