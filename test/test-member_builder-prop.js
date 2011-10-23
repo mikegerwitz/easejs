@@ -39,14 +39,13 @@ var common    = require( './common' ),
 ;
 
 
-mb_common.funcVal     = null;
-mb_common.value       = { baj: 'baz' };
-mb_common.buildMember = builder.buildProp
+mb_common.funcVal = null;
+mb_common.value   = { baj: 'baz' };
 
 // must wrap to call in proper context
-var builder_method = function()
+var builder_method = mb_common.buildMember = function()
 {
-    builder.buildMethod.apply( builder, arguments );
+    builder.buildProp.apply( builder, arguments );
 }
 
 // do assertions common to all member builders
@@ -94,6 +93,7 @@ mb_common.assertCommon();
 {
     try
     {
+        mb_common.buildMember = builder_method;
         mb_common.buildMemberQuick( { 'virtual': true } );
     }
     catch ( e )
