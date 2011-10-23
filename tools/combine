@@ -142,7 +142,11 @@ if [ "$INC_TEST" ]; then
     )
 
     # find include files separately so we can output those before the tests
-    TEST_INC=$( find $PATH_TEST -name 'inc-*.js' -exec basename {} \; )
+    TEST_INC=$(
+        cd "$PATH_TEST" \
+            && find . -name 'inc-*.js' \
+            | sed 's/^\.\///' \
+    )
 
     # include test combine template
     cat "$TPL_TEST_PATH" | grep -v '^#' | $RMTRAIL
@@ -158,6 +162,7 @@ if [ "$INC_TEST" ]; then
         # prefixing it with "test/"
         module="${filename%.*}"
         module="test/${module##*test/}"
+        module_dir=$( dirname "$module" )
 
         # each module must be enclosed in a closure to emulate a module
         echo "/** TEST CASE: $testcase **/"
@@ -172,7 +177,7 @@ if [ "$INC_TEST" ]; then
         # add the module, removing trailing commas
         cat $filename | $RMTRAIL
 
-        echo "} )( module['$module'] = {}, 'test' );"
+        echo "} )( module['$module'] = {}, '$module_dir' );"
     done
 
     echo "};"
