@@ -80,33 +80,8 @@ require( 'common' ).testCase(
         };
 
 
-        this.quickFailureTest = function( name, identifier, action )
-        {
-            _self.incAssertCount();
-
-            try
-            {
-                action();
-            }
-            catch ( e )
-            {
-                // using the identifier, ensure the error string makes sense
-                _self.assertOk( ( e.message.search( identifier ) !== -1 ),
-                    "Incorrect error; expected identifier '" + identifier +
-                    "', but received: " + e.message
-                );
-
-                // to aid in debugging, the error message should contain the
-                // name of the method
-                _self.assertOk( ( e.message.search( name ) !== -1 ),
-                    'Error message should contain method name'
-                );
-
-                return;
-            }
-
-            _self.fail( "Expected failure" );
-        };
+        this.quickFailureTest = require( __dirname + '/inc-common' )
+            .quickFailureTest;
 
 
         this.quickVisChangeTest = function( start, override, failtest )
