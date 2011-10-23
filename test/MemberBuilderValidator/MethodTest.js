@@ -22,66 +22,24 @@
  * @package test
  */
 
+var shared = require( __dirname + '/inc-common' );
+
+
 require( 'common' ).testCase(
 {
     caseSetUp: function()
     {
         var _self = this;
 
-        /**
-         * Tests to ensure that a method with the given keywords fails
-         * validation with an error message partially matching the provided
-         * identifier
-         *
-         * To test overrides, specify keywords for 'prev'. To test for success
-         * instead of failure, set identifier to null.
-         */
         this.quickKeywordMethodTest = function( keywords, identifier, prev )
         {
-            var keyword_obj = {},
-                prev_obj    = {},
-                prev_data   = {},
-                name        = 'fooBar';
-
-            // convert our convenient array into a keyword obj
-            for ( var i = 0, len = keywords.length; i < len; i++ )
-            {
-                keyword_obj[ keywords[ i ] ] = true;
-            }
-
-            // if prev keywords were given, do the same thing with those to
-            // generate our keyword obj
-            if ( prev !== undefined )
-            {
-                for ( var i = 0, len = prev.length; i < len; i++ )
-                {
-                    prev_obj[ prev[ i ] ] = true;
-                }
-
-                // define a dummy previous method value
-                prev_data = { member: function() {} };
-            }
-
-            var testfunc = function()
-            {
-                _self.sut.validateMethod(
-                    name, function() {}, keyword_obj, prev_data, prev_obj
-                );
-            };
-
-            if ( identifier )
-            {
-                _self.quickFailureTest( name, identifier, testfunc );
-            }
-            else
-            {
-                _self.assertDoesNotThrow( testfunc, Error );
-            }
+            shared.quickKeywordTest.call( this,
+                'validateMethod', keywords, identifier, prev
+            );
         };
 
 
-        this.quickFailureTest = require( __dirname + '/inc-common' )
-            .quickFailureTest;
+        this.quickFailureTest = shared.quickFailureTest;
 
 
         this.quickVisChangeTest = function( start, override, failtest )

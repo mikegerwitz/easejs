@@ -67,3 +67,56 @@ exports.quickFailureTest = function( name, identifier, action )
 
     _self.fail( "Expected failure" );
 };
+
+
+/**
+ * Tests to ensure that a member with the given keywords fails validation with
+ * an error message partially matching the provided identifier
+ *
+ * To test overrides, specify keywords for 'prev'. To test for success instead
+ * of failure, set identifier to null.
+ */
+exports.quickKeywordTest = function( type, keywords, identifier, prev )
+{
+    var keyword_obj = {},
+        prev_obj    = {},
+        prev_data   = {},
+        name        = 'fooBar',
+        _self       = this;
+
+    // convert our convenient array into a keyword obj
+    for ( var i = 0, len = keywords.length; i < len; i++ )
+    {
+        keyword_obj[ keywords[ i ] ] = true;
+    }
+
+    // if prev keywords were given, do the same thing with those to
+    // generate our keyword obj
+    if ( prev !== undefined )
+    {
+        for ( var i = 0, len = prev.length; i < len; i++ )
+        {
+            prev_obj[ prev[ i ] ] = true;
+        }
+
+        // define a dummy previous method value
+        prev_data = { member: function() {} };
+    }
+
+    var testfunc = function()
+    {
+        _self.sut[ type ](
+            name, function() {}, keyword_obj, prev_data, prev_obj
+        );
+    };
+
+    if ( identifier )
+    {
+        _self.quickFailureTest( name, identifier, testfunc );
+    }
+    else
+    {
+        _self.assertDoesNotThrow( testfunc, Error );
+    }
+};
+
