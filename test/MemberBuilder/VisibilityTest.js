@@ -26,6 +26,8 @@ require( 'common' ).testCase(
 {
     caseSetUp: function()
     {
+        var _self = this;
+
         this.buildStubMethod = function( name, val, visibility )
         {
             var keywords = {};
@@ -109,6 +111,51 @@ require( 'common' ).testCase(
 
             this.assertOnlyIn( vis, name, this.members );
         };
+
+
+        this.multiVisFailureTest = function( test )
+        {
+            var multi = [
+                    { 'public': true,    'protected': true },
+                    { 'public': true,    'private': true },
+                    { 'protected': true, 'private': true },
+                ],
+
+                name = 'foo'
+            ;
+
+            // run the test for each combination of multiple access modifiers
+            for ( var i = 0, len = multi.length; i < len; i++ )
+            {
+                _self.incAssertCount();
+
+                try
+                {
+                    test( name, multi[ i ] );
+                }
+                catch ( e )
+                {
+                    // ensure we received the correct error
+                    _self.assertOk(
+                        ( e.message.search( 'access modifier' ) > -1 ),
+                        'Unexpected error for multiple access modifiers'
+                    );
+
+                    // ensure the error message contains the name of the member
+                    _self.assertOk(
+                        ( e.message.search( name ) > -1 ),
+                        'Multiple access modifier error message should ' +
+                            'contain name of member'
+                    );
+
+                    return;
+                }
+
+                _self.fail(
+                    'Should fail with multiple access modifiers: ' + i
+                );
+            }
+        };
     },
 
 
@@ -148,5 +195,29 @@ require( 'common' ).testCase(
         {
             _self.basicVisMethodTest( tests[ i ] );
         };
+    },
+
+
+    'Only one access modifier may be used per property': function()
+    {
+        var _self = this;
+
+        this.multiVisFailureTest( function( name, keywords )
+        {
+            _self.sut.buildProp( _self.members, {}, name, 'baz', keywords, {} );
+        } );
+    },
+
+
+    'Only one access modifier may be used per method': function()
+    {
+        var _self = this;
+
+        this.multiVisFailureTest( function( name, keywords )
+        {
+            _self.sut.buildMethod(
+                _self.members, {}, name, function() {}, keywords, {}
+            );
+        } );
     },
 } );
