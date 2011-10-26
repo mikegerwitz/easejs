@@ -198,6 +198,36 @@ require( 'common' ).testCase(
     },
 
 
+    /**
+     * If no access modifier is provided, it should be assumed that the member
+     * is to be public. This also allows for more concise code should the
+     * developer with to omit unnecessary keywords.
+     */
+    'Members will be declared public if access modifier is omitted': function()
+    {
+        var name_prop   = 'prop',   val_prop = 'foo',
+            name_method = 'method', val_method = function() {}
+        ;
+
+        this.sut.buildProp( this.members, {}, name_prop, val_prop, {}, {} );
+        this.sut.buildMethod( this.members, {}, name_method, val_method,
+            {}, function() {}, 1, {}
+        );
+
+        this.assertStrictEqual(
+            this.members[ 'public' ][ name_prop ][ 0 ],
+            val_prop,
+            'Properties should be public by default'
+        );
+
+        this.assertStrictEqual(
+            this.members[ 'public' ][ name_method ],
+            val_method,
+            'Methods should be public by default'
+        );
+    },
+
+
     'Only one access modifier may be used per property': function()
     {
         var _self = this;
