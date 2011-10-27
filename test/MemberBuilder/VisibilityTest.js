@@ -35,7 +35,7 @@ require( 'common' ).testCase(
             // set visibility level using access modifier
             keywords[ visibility ] = true;
 
-            this.sut.buildMethod( this.members, {}, name,
+            _self.sut.buildMethod( _self.members, {}, name,
                 function() {
                     return val;
                 },
@@ -54,7 +54,7 @@ require( 'common' ).testCase(
             // set visibility level using access modifier
             keywords[ visibility ] = true;
 
-            this.sut.buildProp( this.members, {}, name, val, keywords, {} );
+            _self.sut.buildProp( _self.members, {}, name, val, keywords, {} );
         };
 
 
@@ -62,14 +62,14 @@ require( 'common' ).testCase(
         {
             var keywords = {},
                 method   = ( ( type === 'get' )
-                    ? this.sut.buildGetter
-                    : this.sut.buildSetter
+                    ? _self.sut.buildGetter
+                    : _self.sut.buildSetter
                 )
             ;
 
             // set visibility level using access modifier
             keywords[ visibility ] = true;
-            method( this.members, {}, name, val, keywords, {} );
+            method( _self.members, {}, name, val, keywords, {} );
         };
 
 
@@ -77,11 +77,11 @@ require( 'common' ).testCase(
         {
             var found = false;
 
-            this.incAssertCount();
+            _self.incAssertCount();
 
-            for ( level in this.members )
+            for ( level in _self.members )
             {
-                if ( typeof this.members[ level ][ name ] === 'undefined' )
+                if ( typeof _self.members[ level ][ name ] === 'undefined' )
                 {
                     continue;
                 }
@@ -90,11 +90,11 @@ require( 'common' ).testCase(
                 found = true;
                 if ( level !== vis )
                 {
-                    this.fail( name + " should only be accessible in: " + vis );
+                    _self.fail( name + " should only be accessible in: " + vis );
                 }
             }
 
-            found || this.fail(
+            found || _self.fail(
                 "Did not find '" + name + "' in level: " + vis
             );
         };
@@ -105,10 +105,10 @@ require( 'common' ).testCase(
             var name = vis + 'propname',
                 val  = vis + 'val';
 
-            this.buildStubProp( name, val, vis );
-            this.assertEqual( this.members[ vis ][ name ][ 0 ], val );
+            _self.buildStubProp( name, val, vis );
+            _self.assertEqual( _self.members[ vis ][ name ][ 0 ], val );
 
-            this.assertOnlyIn( vis, name, this.members );
+            _self.assertOnlyIn( vis, name, _self.members );
         };
 
 
@@ -117,14 +117,14 @@ require( 'common' ).testCase(
             var name = vis + 'methodname',
                 val  = vis + 'val';
 
-            this.buildStubMethod( name, val, vis );
+            _self.buildStubMethod( name, val, vis );
 
-            this.assertEqual(
-                this.members[ vis ][ name ](),
+            _self.assertEqual(
+                _self.members[ vis ][ name ](),
                 val
             );
 
-            this.assertOnlyIn( vis, name, this.members );
+            _self.assertOnlyIn( vis, name, _self.members );
         };
 
 
