@@ -87,7 +87,7 @@ require( 'common' ).testCase(
 
         this.basicVisPropTest = function( vis )
         {
-            var name = vis + 'name',
+            var name = vis + 'propname',
                 val  = vis + 'val';
 
             this.buildStubProp( name, val, vis );
@@ -99,7 +99,7 @@ require( 'common' ).testCase(
 
         this.basicVisMethodTest = function( vis )
         {
-            var name = vis + 'name',
+            var name = vis + 'metohdname',
                 val  = vis + 'val';
 
             this.buildStubMethod( name, val, vis );
@@ -225,7 +225,11 @@ require( 'common' ).testCase(
     },
 
 
-    'Properties are only accessible via their respective interfaces': function()
+    /**
+     * The various members should be copied only to the interface specified by
+     * their access modifiers (public, protected, or private).
+     */
+    'Members are only accessible via their respective interfaces': function()
     {
         var _self = this,
             tests = [ 'public', 'protected', 'private' ];
@@ -233,17 +237,6 @@ require( 'common' ).testCase(
         for ( i in tests )
         {
             _self.basicVisPropTest( tests[ i ] );
-        };
-    },
-
-
-    'Methods are only accessible via their respective interfaces': function()
-    {
-        var _self = this;
-            tests = [ 'public', 'protected', 'private' ];
-
-        for ( i in tests )
-        {
             _self.basicVisMethodTest( tests[ i ] );
         };
     },
