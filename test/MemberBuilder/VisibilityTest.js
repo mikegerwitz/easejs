@@ -114,7 +114,7 @@ require( 'common' ).testCase(
 
         this.basicVisMethodTest = function( vis )
         {
-            var name = vis + 'metohdname',
+            var name = vis + 'methodname',
                 val  = vis + 'val';
 
             this.buildStubMethod( name, val, vis );
