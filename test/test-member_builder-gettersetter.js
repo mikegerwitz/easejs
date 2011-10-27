@@ -128,42 +128,6 @@ function assertOnlyVisibility( vis, name, value, message )
 }
 
 
-( function testRecognizesPublicProperty()
-{
-    buildGetterSetterQuick( { 'public': true } );
-
-    assertOnlyVisibility( 'public',
-        name,
-        value,
-        "Public properties are copied only to the public member prototype"
-    );
-} )();
-
-
-( function testRecognizesProtectedProperty()
-{
-    buildGetterSetterQuick( { 'protected': true } );
-
-    assertOnlyVisibility( 'protected',
-        name,
-        value,
-        "Protected properties are copied only to the protected member prototype"
-    );
-} )();
-
-
-( function testRecognizesPrivateProperty()
-{
-    buildGetterSetterQuick( { 'private': true } );
-
-    assertOnlyVisibility( 'private',
-        name,
-        value,
-        "Private properties are copied only to the private member prototype"
-    );
-} )();
-
-
 ( function testCopiedIntoPublicPrototypeByDefault()
 {
     buildGetterSetterQuick();
