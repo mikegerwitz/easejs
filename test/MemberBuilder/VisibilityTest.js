@@ -58,6 +58,21 @@ require( 'common' ).testCase(
         };
 
 
+        this.buildStubGetterSetter = function( name, val, visibility, type )
+        {
+            var keywords = {},
+                method   = ( ( type === 'get' )
+                    ? this.sut.buildGetter
+                    : this.sut.buildSetter
+                )
+            ;
+
+            // set visibility level using access modifier
+            keywords[ visibility ] = true;
+            method( this.members, {}, name, val, keywords, {} );
+        };
+
+
         this.assertOnlyIn = function( vis, name )
         {
             var found = false;
@@ -110,6 +125,37 @@ require( 'common' ).testCase(
             );
 
             this.assertOnlyIn( vis, name, this.members );
+        };
+
+
+        /** ES5-only **/
+        this.basicVisGetterSetterTest = function( vis )
+        {
+            // we cannot perform these tests if getters/setters are unsupported
+            // by our environment
+            if ( typeof Object.defineProperty !== 'function' )
+            {
+                return;
+            }
+
+            var name   = vis + 'getsetname',
+                getval = function() { return true; },
+                setval = function() {}
+            ;
+
+            // build both the getter and the setter
+            _self.buildStubGetterSetter( name, getval, vis, 'get' );
+            _self.buildStubGetterSetter( name, setval, vis, 'set' );
+
+            // get the getter/setter
+            var data = Object.getOwnPropertyDescriptor(
+                _self.members[ vis ], name
+            );
+
+            _self.assertEqual( data.get, getval );
+            _self.assertEqual( data.set, setval );
+
+            _self.assertOnlyIn( vis, name, _self.members );
         };
 
 
@@ -238,6 +284,7 @@ require( 'common' ).testCase(
         {
             _self.basicVisPropTest( tests[ i ] );
             _self.basicVisMethodTest( tests[ i ] );
+            _self.basicVisGetterSetterTest( tests[ i ] );
         };
     },
 
