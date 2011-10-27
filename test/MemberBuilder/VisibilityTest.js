@@ -174,6 +174,57 @@ require( 'common' ).testCase(
     },
 
 
+    /**
+     * The member object stores the members associated with each of the three
+     * levels of visibility that are denoted by access modifiers: public,
+     * protected and private. The initMembers() method is simply an abstraction.
+     */
+    'Can create empty member object': function()
+    {
+        var members = this.sut.initMembers(),
+            test    = [ 'public', 'protected', 'private' ];
+
+        // ensure each level of visibility exists in the new member object
+        // (aren't these for statements terribly repetitive? 0 <= i < len would
+        // be nice to be able to do.)
+        for ( var i = 0, len = test.length; i < len; i++ )
+        {
+            this.assertOk( ( typeof members[ test[ i ] ] !== 'undefined' ),
+                'Clean member object is missing visibility level: ' + test[ i ]
+            );
+        }
+    },
+
+
+    /**
+     * The initialization method gives us the option to use existing objects
+     * for each level of visibility rather than creating new, empty ones.
+     */
+    'Can initialize member object with existing objects': function()
+    {
+        var pub  = { foo: 'bar' },
+            prot = { bar: 'baz' },
+            priv = { baz: 'foo' },
+
+            members = this.sut.initMembers( pub, prot, priv ),
+
+            test = {
+                'public':    pub,
+                'protected': prot,
+                'private':   priv,
+            }
+        ;
+
+        // ensure we can initialize the values of each visibility level
+        for ( vis in test )
+        {
+            this.assertStrictEqual( test[ vis ], members[ vis ],
+                "Visibility level '" + vis + "' cannot be initialized"
+            );
+        }
+    },
+
+
     'Properties are only accessible via their respective interfaces': function()
     {
         var _self = this,
