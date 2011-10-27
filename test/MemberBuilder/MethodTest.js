@@ -22,57 +22,56 @@
  * @package test
  */
 
-var common    = require( 'common' ),
-    assert    = require( 'assert' ),
-    mb_common = require( __dirname + '/../inc-member_builder-common' ),
-    util      = common.require( 'util' ),
-
-    // stub factories used for testing
-    stubFactory = common.require( '/MethodWrapperFactory' )(
-         function( func ) { return func; }
-    ),
-
-    builder = common.require( '/MemberBuilder' )( stubFactory, stubFactory )
-;
-
-mb_common.funcVal     = 'foobar';
-mb_common.value       = function() { return mb_common.funcVal; };
-
-// must wrap to call in proper context
-var builder_method = mb_common.buildMember = function()
+require( 'common' ).testCase(
 {
-    builder.buildMethod.apply( builder, arguments );
-}
-
-// do assertions common to all member builders
-mb_common.assertCommon();
-
-
-/**
- * Unlike languages like C++, ease.js does not automatically mark overridden
- * methods as virtual. C# and some other languages offer a 'seal' keyword or
- * similar in order to make overridden methods non-virtual. In that sense,
- * ease.js will "seal" overrides by default.
- */
-( function testOverriddenMethodsAreNotVirtualByDefault()
-{
-    // build a virtual method
-    mb_common.value = function() {};
-    mb_common.buildMemberQuick( { 'virtual': true } );
-
-    // override it (non-virtual)
-    mb_common.buildMemberQuick( { 'override': true }, true );
-
-    // attempt to override again (should fail)
-    try
+    setUp: function()
     {
-        mb_common.buildMemberQuick( {}, true );
-    }
-    catch ( e )
+        // stub factories used for testing
+        var stubFactory = this.require( 'MethodWrapperFactory' )(
+             function( func ) { return func; }
+        );
+
+        this.sut = this.require( 'MemberBuilder' )(
+            stubFactory, stubFactory
+        );
+
+        this.members = this.sut.initMembers();
+    },
+
+
+    /**
+     * Unlike languages like C++, ease.js does not automatically mark overridden
+     * methods as virtual. C# and some other languages offer a 'seal' keyword or
+     * similar in order to make overridden methods non-virtual. In that sense,
+     * ease.js will "seal" overrides by default.
+     */
+    'Overridden methods are not virtual by default': function()
     {
-        return;
-    }
+        var name = 'foo';
 
-    assert.fail( "Overrides should not be declared as virtual by default" );
-} )();
+        // declare a virtual method
+        this.sut.buildMethod( this.members, {}, name, function() {},
+            { virtual: true }, function() {}, 1, {}
+        );
 
+        // override it (non-virtual)
+        this.sut.buildMethod( this.members, {}, name, function() {},
+            { override: true }, function() {}, 1, {}
+        );
+
+        // attempt to override again (should fail)
+        try
+        {
+            this.sut.buildMethod( this.members, {}, name, function() {},
+                { override: true }, function() {}, 1, {}
+            );
+        }
+        catch ( e )
+        {
+            this.incAssertCount();
+            return;
+        }
+
+        assert.fail( "Overrides should not be declared as virtual by default" );
+    },
+} );
