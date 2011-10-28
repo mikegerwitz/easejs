@@ -22,6 +22,10 @@
  * @package test
  */
 
+// get-set-test (supported)
+var gst = ( typeof Object.defineProperty === 'function' ) ? true : false;
+
+
 require( 'common' ).testCase(
 {
     caseSetUp: function()
@@ -133,7 +137,7 @@ require( 'common' ).testCase(
         {
             // we cannot perform these tests if getters/setters are unsupported
             // by our environment
-            if ( typeof Object.defineProperty !== 'function' )
+            if ( !gst )
             {
                 return;
             }
@@ -297,13 +301,24 @@ require( 'common' ).testCase(
     'Members will be declared public if access modifier is omitted': function()
     {
         var name_prop   = 'prop',   val_prop = 'foo',
-            name_method = 'method', val_method = function() {}
+            name_method = 'method', val_method = function() {},
+
+            name_gs = 'getset',
+            getval = function() {},
+            setval = function() {}
         ;
 
         this.sut.buildProp( this.members, {}, name_prop, val_prop, {}, {} );
         this.sut.buildMethod( this.members, {}, name_method, val_method,
             {}, function() {}, 1, {}
         );
+
+        // getter/setter if supported
+        if ( gst )
+        {
+            this.sut.buildGetter( this.members, {}, name_gs, getval, {}, {} );
+            this.sut.buildSetter( this.members, {}, name_gs, setval, {}, {} );
+        }
 
         this.assertStrictEqual(
             this.members[ 'public' ][ name_prop ][ 0 ],
@@ -316,6 +331,26 @@ require( 'common' ).testCase(
             val_method,
             'Methods should be public by default'
         );
+
+        // getter/setter if supported
+        if ( gst )
+        {
+            var data = Object.getOwnPropertyDescriptor(
+                this.members[ 'public' ], name_gs
+            );
+
+            this.assertStrictEqual(
+                data.get,
+                getval,
+                'Getters should be public by default'
+            );
+
+            this.assertStrictEqual(
+                data.set,
+                setval,
+                'Setters should be public by default'
+            );
+        }
     },
 
 

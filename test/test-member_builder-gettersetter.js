@@ -96,50 +96,6 @@ function testEach( test )
 }
 
 
-/**
- * Asserts that the given property exists only in the prototype for the
- * requested visibility
- */
-function assertOnlyVisibility( vis, name, value, message )
-{
-    var check = [ 'public', 'protected', 'private' ],
-        i     = check.length,
-        visi  = '',
-        cmp;
-
-    // forEach not used for pre-ES5 browser support
-    while ( i-- )
-    {
-        visi = check[ i ];
-        cmp  = ( visi === vis ) ? value : undefined;
-
-        assert.deepEqual(
-            members[ visi ].__lookupGetter__( name ),
-            cmp,
-            ( message + " (0)" )
-        );
-
-        assert.deepEqual(
-            members[ visi ].__lookupSetter__( name ),
-            cmp,
-            ( message + " (1)" )
-        );
-    }
-}
-
-
-( function testCopiedIntoPublicPrototypeByDefault()
-{
-    buildGetterSetterQuick();
-
-    assertOnlyVisibility( 'public',
-        name,
-        value,
-        "Properties are copied only to the public member prototype by default"
-    );
-} )();
-
-
 ( function testThrowsTypeErrorIfMultipleVisibilityKeywordsAreGiven()
 {
     assert.throws( function()
