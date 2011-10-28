@@ -65,9 +65,13 @@ require( 'common' ).testCase(
         this.buildStubGetterSetter = function( name, val, visibility, type )
         {
             var keywords = {},
-                method   = ( ( type === 'get' )
-                    ? _self.sut.buildGetter
-                    : _self.sut.buildSetter
+
+                // we can use bind() here because these tests will only be run
+                // in an ES5 environment (since pre-ES5 doesn't support
+                // getters/setters)
+                method = ( ( type === 'get' )
+                    ? _self.sut.buildGetter.bind( _self.sut )
+                    : _self.sut.buildSetter.bind( _self.sut )
                 )
             ;
 

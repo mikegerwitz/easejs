@@ -28,8 +28,15 @@ var common = require( './common' ),
 
     builder = common.require( 'MemberBuilder' )(),
 
-    buildGetter = builder.buildGetter,
-    buildSetter = builder.buildSetter,
+    buildGetter = function()
+    {
+        builder.buildGetter.apply( builder, arguments );
+    },
+
+    buildSetter = function()
+    {
+        builder.buildSetter.apply( builder, arguments );
+    },
 
     // member visibility types are quoted because they are reserved keywords
     members = {},
@@ -145,7 +152,7 @@ testEach( function testCannotOverrideMethodWithGetterOrSetter( type, build )
     catch ( e )
     {
         assert.ok( e.message.search( name ) !== -1,
-            "Method override error message should contain getter/setter name"
+            "Method override error message should contain " + type + " name"
         );
         return;
     }
