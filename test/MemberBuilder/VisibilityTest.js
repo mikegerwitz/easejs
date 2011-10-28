@@ -195,7 +195,7 @@ require( 'common' ).testCase(
                     _self.assertOk(
                         ( e.message.search( name ) > -1 ),
                         'Multiple access modifier error message should ' +
-                            'contain name of member'
+                            'contain name of member; received: ' + e.message
                     );
 
                     return;
@@ -372,6 +372,36 @@ require( 'common' ).testCase(
         this.multiVisFailureTest( function( name, keywords )
         {
             _self.sut.buildMethod(
+                _self.members, {}, name, function() {}, keywords, {}
+            );
+        } );
+    },
+
+
+    'Only one access modifier may be used per getter': function()
+    {
+        if ( !gst ) return;
+
+        var _self = this;
+
+        this.multiVisFailureTest( function( name, keywords )
+        {
+            _self.sut.buildGetter(
+                _self.members, {}, name, function() {}, keywords, {}
+            );
+        } );
+    },
+
+
+    'Only one access modifier may be used per setter': function()
+    {
+        if ( !gst ) return;
+
+        var _self = this;
+
+        this.multiVisFailureTest( function( name, keywords )
+        {
+            _self.sut.buildSetter(
                 _self.members, {}, name, function() {}, keywords, {}
             );
         } );
