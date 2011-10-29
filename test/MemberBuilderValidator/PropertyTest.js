@@ -37,6 +37,37 @@ require( 'common' ).testCase(
                 'validateProperty', keywords, identifier, prev
             );
         };
+
+        this.quickVisChangeTest = function( start, override, failtest )
+        {
+            var _self = this,
+                name  = 'foo',
+
+                startobj    = {},
+                overrideobj = {}
+            ;
+
+            startobj[ start ]       = true;
+            overrideobj[ override ] = true;
+
+            var testfun = function()
+            {
+                _self.sut.validateProperty(
+                    name, 'bar', overrideobj,
+                    { member: 'foo' },
+                    startobj
+                );
+            };
+
+            if ( failtest )
+            {
+                this.quickFailureTest( name, 'de-escalate', testfun );
+            }
+            else
+            {
+                _self.assertDoesNotThrow( testfun, Error );
+            }
+        };
     },
 
 
@@ -126,6 +157,31 @@ require( 'common' ).testCase(
                 { set: function() {} },
                 {}
             );
+        } );
+    },
+
+
+    /**
+     * De-escalating the visibility of a property would alter the interface of a
+     * subtype, which would not be polymorphic.
+     */
+    'Properties do not support visibility de-escalation': function()
+    {
+        this.quickVisChangeTest( 'public', 'protected', true );
+        this.quickVisChangeTest( 'protected', 'private', true );
+    },
+
+
+    /**
+     * Contrary to the above test, we have no such problem with visibility
+     * escalation.
+     */
+    'Properties do support visibility escalation and equality': function()
+    {
+        var _self = this;
+        shared.visEscalationTest( function( cur )
+        {
+            _self.quickVisChangeTest( cur[ 0 ], cur[ 1 ], false );
         } );
     },
 } );
