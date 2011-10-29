@@ -50,33 +50,19 @@ require( './common' ).testCase(
     /**
      * Getters and setters are unsupported in pre-ES5 environments
      */
-    'buildGetter() and buildSetter() methods throw exceptions': function()
+    'buildGetterSetter() method throws an exception': function()
     {
         // getter test
         try
         {
-            this.sut.buildGetter();
-            this.fail( 'Exception should have been called (getter)' );
+            this.sut.buildGetterSetter();
+            this.fail( 'Exception should have been called (getter/setter)' );
         }
         catch ( e )
         {
             this.assertOk(
                 e.message.match( /unsupported/ ),
-                'Incorrect exception thrown (getter)'
-            );
-        }
-
-        // setter test
-        try
-        {
-            this.sut.buildSetter();
-            this.fail( 'Exception should have been called (getter)' );
-        }
-        catch ( e )
-        {
-            this.assertOk(
-                e.message.match( /unsupported/ ),
-                'Incorrect exception thrown (setter)'
+                'Incorrect exception thrown (getter/setter)'
             );
         }
     },

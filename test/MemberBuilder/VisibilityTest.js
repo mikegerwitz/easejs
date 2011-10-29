@@ -62,22 +62,16 @@ require( 'common' ).testCase(
         };
 
 
-        this.buildStubGetterSetter = function( name, val, visibility, type )
+        this.buildStubGetterSetter = function( name, get, set, visibility )
         {
-            var keywords = {},
-
-                // we can use bind() here because these tests will only be run
-                // in an ES5 environment (since pre-ES5 doesn't support
-                // getters/setters)
-                method = ( ( type === 'get' )
-                    ? _self.sut.buildGetter.bind( _self.sut )
-                    : _self.sut.buildSetter.bind( _self.sut )
-                )
-            ;
+            var keywords = {};
 
             // set visibility level using access modifier
             keywords[ visibility ] = true;
-            method( _self.members, {}, name, val, keywords, {} );
+
+            _self.sut.buildGetterSetter(
+                _self.members, {}, name, get, set, keywords, {}
+            );
         };
 
 
@@ -152,8 +146,7 @@ require( 'common' ).testCase(
             ;
 
             // build both the getter and the setter
-            _self.buildStubGetterSetter( name, getval, vis, 'get' );
-            _self.buildStubGetterSetter( name, setval, vis, 'set' );
+            _self.buildStubGetterSetter( name, getval, setval, vis, 'get' );
 
             // get the getter/setter
             var data = Object.getOwnPropertyDescriptor(
@@ -320,8 +313,9 @@ require( 'common' ).testCase(
         // getter/setter if supported
         if ( gst )
         {
-            this.sut.buildGetter( this.members, {}, name_gs, getval, {}, {} );
-            this.sut.buildSetter( this.members, {}, name_gs, setval, {}, {} );
+            this.sut.buildGetterSetter(
+                this.members, {}, name_gs, getval, setval, {}, {}
+            );
         }
 
         this.assertStrictEqual(
@@ -382,7 +376,7 @@ require( 'common' ).testCase(
     },
 
 
-    'Only one access modifier may be used per getter': function()
+    'Only one access modifier may be used per getter/setter': function()
     {
         if ( !gst ) return;
 
@@ -390,23 +384,9 @@ require( 'common' ).testCase(
 
         this.multiVisFailureTest( function( name, keywords )
         {
-            _self.sut.buildGetter(
-                _self.members, {}, name, function() {}, keywords, {}
-            );
-        } );
-    },
-
-
-    'Only one access modifier may be used per setter': function()
-    {
-        if ( !gst ) return;
-
-        var _self = this;
-
-        this.multiVisFailureTest( function( name, keywords )
-        {
-            _self.sut.buildSetter(
-                _self.members, {}, name, function() {}, keywords, {}
+            _self.sut.buildGetterSetter(
+                _self.members, {}, name,
+                function() {}, function() {}, keywords, {}
             );
         } );
     },
