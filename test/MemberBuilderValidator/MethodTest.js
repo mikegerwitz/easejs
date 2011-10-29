@@ -44,34 +44,21 @@ require( 'common' ).testCase(
 
         this.quickVisChangeTest = function( start, override, failtest )
         {
-            var name  = 'foo',
+            shared.quickVisChangeTest.call( _self, start, override, failtest,
+                function( name, startobj, overrideobj )
+                {
+                    startobj.virtual     = true;
+                    overrideobj.override = true;
 
-                startobj    = { 'virtual': true },
-                overrideobj = { 'override': true }
-            ;
-
-            startobj[ start ]       = true;
-            overrideobj[ override ] = true;
-
-            var testfun = function()
-            {
-                _self.sut.validateMethod(
-                    name,
-                    function() {},
-                    overrideobj,
-                    { member: function() {} },
-                    startobj
-                );
-            };
-
-            if ( failtest )
-            {
-                this.quickFailureTest( name, 'de-escalate', testfun );
-            }
-            else
-            {
-                _self.assertDoesNotThrow( testfun, Error );
-            }
+                    _self.sut.validateMethod(
+                        name,
+                        function() {},
+                        overrideobj,
+                        { member: function() {} },
+                        startobj
+                    );
+                }
+            );
         };
     },
 

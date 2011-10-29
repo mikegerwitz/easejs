@@ -29,6 +29,8 @@ require( 'common' ).testCase(
 {
     caseSetUp: function()
     {
+        var _self = this;
+
         this.quickFailureTest = shared.quickFailureTest;
 
         this.quickKeywordPropTest = function( keywords, identifier, prev )
@@ -40,33 +42,16 @@ require( 'common' ).testCase(
 
         this.quickVisChangeTest = function( start, override, failtest )
         {
-            var _self = this,
-                name  = 'foo',
-
-                startobj    = {},
-                overrideobj = {}
-            ;
-
-            startobj[ start ]       = true;
-            overrideobj[ override ] = true;
-
-            var testfun = function()
-            {
-                _self.sut.validateProperty(
-                    name, 'bar', overrideobj,
-                    { member: 'foo' },
-                    startobj
-                );
-            };
-
-            if ( failtest )
-            {
-                this.quickFailureTest( name, 'de-escalate', testfun );
-            }
-            else
-            {
-                _self.assertDoesNotThrow( testfun, Error );
-            }
+            shared.quickVisChangeTest.call( _self, start, override, failtest,
+                function( name, startobj, overrideobj )
+                {
+                    _self.sut.validateProperty(
+                        name, 'bar', overrideobj,
+                        { member: 'foo' },
+                        startobj
+                    );
+                }
+            );
         };
     },
 

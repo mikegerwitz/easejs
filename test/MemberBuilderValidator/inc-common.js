@@ -147,3 +147,44 @@ exports.visEscalationTest = function( test )
     }
 };
 
+
+/**
+ * Performs a simple visibility change test using access modifiers
+ *
+ * Important: invoke within the context of the test case.
+ *
+ * @param  {string}  start     start keyword
+ * @param  {string}  override  overriding keyword
+ * @param  {bool}    failtest  whether the assertion should test for failure
+ *
+ * @param  {function()}  func  test function
+ *
+ * @return  {undefined}
+ */
+exports.quickVisChangeTest = function( start, override, failtest, func )
+{
+    var _self = this,
+        name  = 'foo',
+
+        startobj    = {},
+        overrideobj = {}
+    ;
+
+    startobj[ start ]       = true;
+    overrideobj[ override ] = true;
+
+    var testfun = function()
+    {
+        func( name, startobj, overrideobj );
+    };
+
+    if ( failtest )
+    {
+        this.quickFailureTest( name, 'de-escalate', testfun );
+    }
+    else
+    {
+        _self.assertDoesNotThrow( testfun, Error );
+    }
+};
+
