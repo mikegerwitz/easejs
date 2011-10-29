@@ -287,20 +287,11 @@ require( 'common' ).testCase(
      */
     'Methods support visibility escalation or equality': function()
     {
-        var tests = [
-            [ 'private',   'protected' ],
-            [ 'protected', 'public' ],
-
-            [ 'public',    'public' ],
-            [ 'protected', 'protected' ],
-            [ 'private',   'private' ]
-        ];
-
-        for ( var i = 0, len = tests.length; i < len; i++ )
+        var _self = this;
+        shared.visEscalationTest( function( cur )
         {
-            var cur = tests[ i ];
-            this.quickVisChangeTest( cur[ 0 ], cur[ 1 ], false );
-        }
+            _self.quickVisChangeTest( cur[ 0 ], cur[ 1 ], false );
+        } );
     },
 
 

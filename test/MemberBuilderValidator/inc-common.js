@@ -120,3 +120,30 @@ exports.quickKeywordTest = function( type, keywords, identifier, prev )
     }
 };
 
+
+/**
+ * Passes test visibility levels [ x1, x2 ] to test method T to ensure that test
+ * T will pass when x2 is used to override a member declared using x1
+ *
+ * @param {function(function())} test test function
+ *
+ * @return {undefined}
+ */
+exports.visEscalationTest = function( test )
+{
+    var tests = [
+        [ 'private',   'protected' ],
+        [ 'protected', 'public' ],
+
+        [ 'public',    'public' ],
+        [ 'protected', 'protected' ],
+        [ 'private',   'private' ]
+    ];
+
+    for ( var i = 0, len = tests.length; i < len; i++ )
+    {
+        var cur = tests[ i ];
+        test( cur );
+    }
+};
+
