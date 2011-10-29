@@ -190,14 +190,10 @@ var common = require( './common' ),
 
 
         util.propParse( data, {
-            getter: function( name, value, keywords )
+            getset: function( name, get, set, keywords )
             {
-                parsed_keywords[ name + 'g' ] = keywords;
-            },
-
-            setter: function( name, value, keywords )
-            {
-                parsed_keywords[ name + 's' ] = keywords;
+                get && ( parsed_keywords[ name + 'g' ] = keywords );
+                set && ( parsed_keywords[ name + 's' ] = keywords );
             },
         } );
 

@@ -203,9 +203,6 @@ var common     = require( './common' ),
         {
             // cause the error
             tries[ i ]();
-
-            // we shouldn't get to this point...
-            assert.fail( "Expected error. Something's wrong." );
         }
         catch ( e )
         {
@@ -215,7 +212,12 @@ var common     = require( './common' ),
                 null,
                 "Error contains interface name when available (" + i + ")"
             );
+
+            return;
         }
+
+        // we shouldn't get to this point...
+        assert.fail( "Expected error. Something's wrong: " + i );
     }
 } )();
 
