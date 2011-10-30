@@ -31,7 +31,23 @@ require( 'common' ).testCase(
 {
     caseSetUp: function()
     {
+        var _self = this;
+
         this.quickFailureTest = shared.quickFailureTest;
+
+        this.quickVisChangeTest = function( start, override, failtest )
+        {
+            shared.quickVisChangeTest.call( _self, start, override, failtest,
+                function( name, startobj, overrideobj )
+                {
+                    _self.sut.validateGetterSetter(
+                        name, overrideobj,
+                        { get: function() {}, set: function() {} },
+                        startobj
+                    );
+                }
+            );
+        };
     },
 
 
@@ -75,5 +91,30 @@ require( 'common' ).testCase(
                 name, {}, { member: 'foo' }
             );
         } );
-   },
+    },
+
+
+    /**
+     * De-escalating the visibility of any member would alter the interface of a
+     * subtype, which would not be polymorphic.
+     */
+    'Getters/setters do not support visibility de-escalation': function()
+    {
+        this.quickVisChangeTest( 'public', 'protected', true );
+        this.quickVisChangeTest( 'protected', 'private', true );
+    },
+
+
+    /**
+     * Contrary to the above test, we have no such problem with visibility
+     * escalation.
+     */
+    'Getters/setters support visibility escalation and equality': function()
+    {
+        var _self = this;
+        shared.visEscalationTest( function( cur )
+        {
+            _self.quickVisChangeTest( cur[ 0 ], cur[ 1 ], false );
+        } );
+    },
 } );
