@@ -42,63 +42,6 @@ var common  = require( './common' ),
 
 
 /**
- * The `const' keyword does not make sense with methods, as they are always
- * immutable. Methods of a class cannot be redefined after the class definition.
- * They may only be overridden by subtypes.
- */
-( function testConstKeywordCannotBeUsedWithMethods()
-{
-    try
-    {
-        // attempt to create a constant method (should fail)
-        builder.build(
-        {
-            'const foo': function() {},
-        } );
-    }
-    catch ( e )
-    {
-        assert.ok(
-            e.message.search( 'foo' ) !== -1,
-            "Const method error message should contain name of method"
-        );
-
-        return;
-    }
-
-    assert.fail( "Should not be able to declare constant methods" );
-} )();
-
-
-/**
- * The const keyword implies static. Using static along with it is redundant and
- * messy. Disallow it.
- */
-( function testConstKeywordCannotBeUsedWithStatic()
-{
-    try
-    {
-        // should fail
-        builder.build(
-        {
-            'static const foo': 'val',
-        } );
-    }
-    catch ( e )
-    {
-        assert.ok(
-            e.message.search( 'foo' ) !== -1,
-            "Static const method error message should contain name of property"
-        );
-
-        return;
-    }
-
-    assert.fail( "Should not be able to use static keyword with const" );
-} )();
-
-
-/**
  * The const keyword should result in a static property. The rationale for this
  * is that, if a value is constant, then instances do not make sense.
  */
