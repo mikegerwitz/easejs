@@ -38,16 +38,16 @@ require( 'common' ).testCase(
         this.builder = ClassBuilder(
             this.require( '/MemberBuilder' )(
                 MethodWrapperFactory( wrappers.wrapNew ),
-                MethodWrapperFactory( wrappers.wrapOverride )
+                MethodWrapperFactory( wrappers.wrapOverride ),
+                this.getMock( 'MemberBuilderValidator' )
             ),
             this.require( '/VisibilityObjectFactoryFactory' ).fromEnvironment()
         )
     },
 
 
-    /**
-     * The const keyword should result in a static property. The rationale for this
-     * is that, if a value is constant, then instances do not make sense.
+    /** The const keyword should result in a static property. The rationale for
+     * this is that, if a value is constant, then instances do not make sense.
      */
     'const keyword declares properties as static': function()
     {
@@ -113,8 +113,8 @@ require( 'common' ).testCase(
                 },
             } ),
 
-            // be sure to override each method to ensure we're checking references
-            // on the subtype, *not* the parent type
+            // be sure to override each method to ensure we're checking
+            // references on the subtype, *not* the parent type
             SubFoo = this.builder.build( Foo,
             {
                 'public static getProt': function()

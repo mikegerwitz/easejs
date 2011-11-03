@@ -2,7 +2,10 @@
 
 var assert         = require( 'assert' ),
     assert_wrapped = {},
-    acount         = 0;
+    acount         = 0,
+
+    common_require = require( __dirname + '/common' ).require
+;
 
 
 // wrap each of the assertions so that we can keep track of the number of times
@@ -114,6 +117,30 @@ module.exports = function( test_case )
 };
 
 
+function getMock( proto )
+{
+    var P    = common_require( proto ),
+        Mock = function() {},
+
+        proto = Mock.prototype = new P()
+    ;
+
+    for ( i in proto )
+    {
+        // only mock out methods
+        if ( typeof proto[ i ] !== 'function' )
+        {
+            continue;
+        }
+
+        // clear the method
+        proto[ i ] = function() {};
+    }
+
+    return new Mock();
+}
+
+
 /**
  * Prepare assertion methods on context
  *
@@ -122,7 +149,7 @@ module.exports = function( test_case )
 function prepareCaseContext()
 {
     return {
-        require: require( __dirname + '/common' ).require,
+        require: common_require,
 
         fail:                 assert_wrapped.fail,
         assertOk:             assert_wrapped.ok,
@@ -135,6 +162,8 @@ function prepareCaseContext()
         assertDoesNotThrow:   assert_wrapped.doesNotThrow,
         assertIfError:        assert_wrapped.ifError,
         incAssertCount:       incAssertCount,
+
+        getMock: getMock,
     };
 }
 

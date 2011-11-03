@@ -43,7 +43,8 @@ require( 'common' ).testCase(
         this.builder = ClassBuilder(
             this.require( '/MemberBuilder' )(
                 MethodWrapperFactory( wrappers.wrapNew ),
-                MethodWrapperFactory( wrappers.wrapOverride )
+                MethodWrapperFactory( wrappers.wrapOverride ),
+                this.getMock( 'MemberBuilderValidator' )
             ),
             this.require( '/VisibilityObjectFactoryFactory' ).fromEnvironment()
         );

@@ -29,20 +29,25 @@ var common   = require( './common' ),
     // dependencies should not be necessary for testing
     ClassBuilder         = common.require( '/ClassBuilder' ),
     MethodWrapperFactory = common.require( '/MethodWrapperFactory' ),
-    wrappers             = common.require( '/MethodWrappers' ).standard,
-
-    builder = ClassBuilder(
-        common.require( '/MemberBuilder' )(
-            MethodWrapperFactory( wrappers.wrapNew ),
-            MethodWrapperFactory( wrappers.wrapOverride )
-        ),
-        common.require( '/VisibilityObjectFactoryFactory' ).fromEnvironment()
-    )
+    wrappers             = common.require( '/MethodWrappers' ).standard
 ;
 
 
 require( 'common' ).testCase(
 {
+    setUp: function()
+    {
+        this.builder = ClassBuilder(
+            common.require( '/MemberBuilder' )(
+                MethodWrapperFactory( wrappers.wrapNew ),
+                MethodWrapperFactory( wrappers.wrapOverride ),
+                this.getMock( 'MemberBuilderValidator' )
+            ),
+            common.require( '/VisibilityObjectFactoryFactory' ).fromEnvironment()
+        );
+    },
+
+
     /**
      * To provide access to static members, this.__self is made available inside
      * of instances.
@@ -50,7 +55,7 @@ require( 'common' ).testCase(
     'Self property references class definition': function()
     {
         var val = [ 'baz' ],
-            Foo = builder.build(
+            Foo = this.builder.build(
             {
                 'public test': function()
                 {
@@ -77,7 +82,7 @@ require( 'common' ).testCase(
      */
     'Static property lookup returns undefined if not found': function()
     {
-        var result = builder.build( {} ).$( 'foo' );
+        var result = this.builder.build( {} ).$( 'foo' );
 
         this.assertEqual( result, undefined,
             "Static property getter should return undefined if not found"
@@ -93,7 +98,7 @@ require( 'common' ).testCase(
     'Static property accessor is not enumerable': function()
     {
         var get = Object.getOwnPropertyDescriptor,
-            Foo = builder.build( {} );
+            Foo = this.builder.build( {} );
 
         // don't perform the test if unsupported
         if ( fallback )
@@ -117,7 +122,7 @@ require( 'common' ).testCase(
     {
         var val  = 'foo',
             val2 = 'bar',
-            Foo  = builder.build(
+            Foo  = this.builder.build(
             {
                 'public static foo': val,
 
@@ -198,7 +203,7 @@ require( 'common' ).testCase(
         } );
 
         // define the class
-        var Foo = builder.build( def );
+        var Foo = this.builder.build( def );
 
         this.assertEqual( Foo.foo, val,
             "Public static getters are accessible via class definition"
@@ -240,7 +245,7 @@ require( 'common' ).testCase(
     'Static methods not bound to instance': function()
     {
         var result = null,
-            Foo    = builder.build(
+            Foo    = this.builder.build(
             {
                 'public static foo': function()
                 {
@@ -285,15 +290,15 @@ require( 'common' ).testCase(
         }
 
         var baz = 'foobar',
-            Foo = builder.build( def ),
+            Foo = this.builder.build( def ),
 
             // extends from the parent and adds an additional
-            SubFoo = builder.build( Foo, { 'public static baz': baz } ),
+            SubFoo = this.builder.build( Foo, { 'public static baz': baz } ),
 
             // simply extends from the parent (also serves as a check to ensure
             // that static members of *all* parents are inherited, not just the
             // immediate)
-            SubSubFoo = builder.build( SubFoo, {} )
+            SubSubFoo = this.builder.build( SubFoo, {} )
         ;
 
         // properties
@@ -358,11 +363,11 @@ require( 'common' ).testCase(
         var val  = [ 1, 2, 3 ],
             val2 = [ 'a', 'b', 'c' ],
 
-            Foo = builder.build(
+            Foo = this.builder.build(
             {
                 'public static bar': val,
             } ),
-            SubFoo = builder.build( Foo, {} )
+            SubFoo = this.builder.build( Foo, {} )
         ;
 
         // the properties should reference the same object
@@ -403,7 +408,7 @@ require( 'common' ).testCase(
     'Setting static props to undefined will not corrupt lookup': function()
     {
         var val = 'baz',
-            Foo = builder.build(
+            Foo = this.builder.build(
             {
                 'public static foo': '',
             } )
@@ -437,12 +442,12 @@ require( 'common' ).testCase(
      */
     'Static property setters return proper context': function()
     {
-        var Foo = builder.build(
+        var Foo = this.builder.build(
             {
                 'public static foo': '',
             } ),
 
-            SubFoo = builder.build( Foo, {} )
+            SubFoo = this.builder.build( Foo, {} )
         ;
 
         this.assertOk( Foo.$( 'foo', 'val' ) === Foo,
@@ -462,12 +467,14 @@ require( 'common' ).testCase(
      */
     'Attempting to set undeclared static prop results in exception': function()
     {
+        var _self = this;
+
         this.assertThrows(
             function()
             {
                 // should throw an exception since property 'foo' has not been
                 // declared
-                builder.build( {} ).$( 'foo', 'val' );
+                _self.builder.build( {} ).$( 'foo', 'val' );
             },
             ReferenceError,
             "Attempting to set an undeclaraed static property results in an " +
@@ -483,7 +490,7 @@ require( 'common' ).testCase(
     'Protected static members are available inside class only': function()
     {
         var val = 'foo',
-            Foo = builder.build(
+            Foo = this.builder.build(
             {
                 'protected static prop': val,
 
@@ -577,7 +584,7 @@ require( 'common' ).testCase(
         } );
 
         // define the class
-        var Foo = builder.build( def );
+        var Foo = this.builder.build( def );
 
         this.assertEqual( Foo.getProp(), val,
             "Protected static getters are accessible from within the class"
@@ -630,9 +637,9 @@ require( 'common' ).testCase(
             };
         }
 
-        var Foo  = builder.build( def ),
+        var Foo  = this.builder.build( def ),
 
-            SubFoo = builder.build( Foo,
+            SubFoo = this.builder.build( Foo,
             {
                 'public static bar': function()
                 {
@@ -655,7 +662,7 @@ require( 'common' ).testCase(
                 },
             } ),
 
-            SubSubFoo = builder.build( SubFoo, {} )
+            SubSubFoo = this.builder.build( SubFoo, {} )
         ;
 
         this.assertEqual( SubFoo.bar(), val,
@@ -715,7 +722,7 @@ require( 'common' ).testCase(
     'Private static members are available inside class only': function()
     {
         var val = 'foo',
-            Foo = builder.build(
+            Foo = this.builder.build(
             {
                 'private static prop': val,
 
@@ -792,9 +799,9 @@ require( 'common' ).testCase(
             } );
         }
 
-        var Foo = builder.build( def ),
+        var Foo = this.builder.build( def ),
 
-            SubFoo = builder.build( Foo,
+            SubFoo = this.builder.build( Foo,
             {
                 'public static getPriv': function()
                 {
@@ -877,7 +884,7 @@ require( 'common' ).testCase(
         } );
 
         // define the class
-        var Foo = builder.build( def );
+        var Foo = this.builder.build( def );
 
         this.assertEqual( Foo.getProp(), val,
             "Private static getters are accessible from within the class"
@@ -901,13 +908,13 @@ require( 'common' ).testCase(
     'Static methods can be overridden by subtypes': function()
     {
         var val = 'bar',
-            Foo = builder.build(
+            Foo = this.builder.build(
             {
                 'public static foo': function() {},
                 'protected static bar': function() {},
             } ),
 
-            SubFoo = builder.build( Foo,
+            SubFoo = this.builder.build( Foo,
             {
                 'public static foo': function()
                 {
@@ -945,12 +952,12 @@ require( 'common' ).testCase(
     'Cannot exploit accessor method to gain access to parent private props':
     function()
     {
-        var Foo = builder.build(
+        var Foo = this.builder.build(
             {
                 'private static foo': 'bar',
             } ),
 
-            SubFoo = builder.build( Foo,
+            SubFoo = this.builder.build( Foo,
             {
                 'public static getParentPrivate': function()
                 {
@@ -974,7 +981,7 @@ require( 'common' ).testCase(
         var val_orig = 'foobaz',
             val      = 'foobar',
 
-            Foo = builder.build(
+            Foo = this.builder.build(
             {
                 'public static prop': val_orig,
 
@@ -994,7 +1001,7 @@ require( 'common' ).testCase(
                 },
             } ),
 
-            SubFoo = builder.build( Foo,
+            SubFoo = this.builder.build( Foo,
             {
                 'public static prop': val,
 
@@ -1037,7 +1044,7 @@ require( 'common' ).testCase(
     'Calls to parent static methods retain private member access': function()
     {
         var val = 'foobar',
-            Foo = builder.build(
+            Foo = this.builder.build(
             {
                 'private static _priv': val,
 
@@ -1047,7 +1054,7 @@ require( 'common' ).testCase(
                 },
             } ),
 
-            SubFoo = builder.build( Foo,
+            SubFoo = this.builder.build( Foo,
             {
                 'public static getPriv2': function()
                 {

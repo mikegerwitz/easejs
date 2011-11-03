@@ -214,7 +214,8 @@ require( 'common' ).testCase(
         );
 
         this.sut = this.require( 'MemberBuilder' )(
-            stubFactory, stubFactory
+            stubFactory, stubFactory,
+            this.getMock( 'MemberBuilderValidator' )
         );
 
         this.members = this.sut.initMembers();
