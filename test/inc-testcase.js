@@ -1,8 +1,34 @@
-
+/**
+ * Simple X-Unit-style test cases
+ *
+ *  Copyright (C) 2010 Mike Gerwitz
+ *
+ *  This file is part of ease.js.
+ *
+ *  ease.js is free software: you can redistribute it and/or modify it under the
+ *  terms of the GNU Lesser General Public License as published by the Free
+ *  Software Foundation, either version 3 of the License, or (at your option)
+ *  any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT
+ *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
+ *  for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author  Mike Gerwitz
+ * @package test
+ */
 
 var assert         = require( 'assert' ),
     assert_wrapped = {},
     acount         = 0,
+
+    // when set to true, final statistics will be buffered until suite ends
+    suite    = false,
+    failures = [],
 
     common_require = require( __dirname + '/common' ).require
 ;
@@ -57,13 +83,14 @@ function incAssertCount()
  */
 module.exports = function( test_case )
 {
-    var failures = [],
-        scount   = 0,
-        context  = prepareCaseContext(),
+    var context  = prepareCaseContext(),
         setUp    = test_case.setUp;
 
-    // reset assertion count for this case
-    acount = 0;
+    // if we're not running a suite, clear out the failures
+    if ( !( suite ) )
+    {
+        init();
+    }
 
     // perform case-wide setup
     test_case.caseSetUp && test_case.caseSetUp.call( context );
@@ -95,6 +122,31 @@ module.exports = function( test_case )
         }
     }
 
+    // only output statistics if we're not running a suite (otherwise they'll be
+    // output at the end of the suite)
+    if ( !( suite ) )
+    {
+        endStats();
+    }
+};
+
+
+/**
+ * Reset counters
+ */
+function init()
+{
+    failures = [];
+    scount   = 0;
+    acount   = 0;
+}
+
+
+/**
+ * Display end stats (failures, counts)
+ */
+function endStats()
+{
     testPrint( "\n\n" );
 
     if ( failures.length )
@@ -114,6 +166,26 @@ module.exports = function( test_case )
     failures.length
         && typeof process !== 'undefined'
         && process.exit( 1 );
+}
+
+
+/**
+ * Start test suite, deferring summary stats until call to endSuite()
+ */
+module.exports.startSuite = function()
+{
+    init();
+    suite = true;
+};
+
+
+/**
+ * Ens test suite, display stats buffered since startSuite()
+ */
+module.exports.endSuite = function()
+{
+    suite = false;
+    endStats();
 };
 
 
