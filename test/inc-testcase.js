@@ -25,6 +25,7 @@
 var assert         = require( 'assert' ),
     assert_wrapped = {},
     acount         = 0,
+    icount         = 0,
 
     // when set to true, final statistics will be buffered until suite ends
     suite    = false,
@@ -84,7 +85,10 @@ function incAssertCount()
 module.exports = function( test_case )
 {
     var context  = prepareCaseContext(),
-        setUp    = test_case.setUp;
+        setUp    = test_case.setUp,
+
+        acount_last = 0
+    ;
 
     // if we're not running a suite, clear out the failures
     if ( !( suite ) )
@@ -108,12 +112,24 @@ module.exports = function( test_case )
             setUp.call( context );
         }
 
+        acount_last = acount;
+
         try
         {
             test_case[ test ].call( context );
 
-            scount++;
-            testPrint( '.' );
+            // if there were no assertions, then the test should be marked as
+            // incomplete
+            if ( acount_last === acount )
+            {
+                testPrint( 'I' );
+                icount++;
+            }
+            else
+            {
+                scount++;
+                testPrint( '.' );
+            }
         }
         catch ( e )
         {
@@ -137,8 +153,7 @@ module.exports = function( test_case )
 function init()
 {
     failures = [];
-    scount   = 0;
-    acount   = 0;
+    scount   = acount = icount = 0;
 }
 
 
@@ -158,7 +173,8 @@ function endStats()
     testPrint(
         ( ( failures.length ) ? "FAILED" : "OK" ) + " - " +
         scount + " successful, " + failures.length + " failure(s), " +
-        ( scount + failures.length ) + " total " +
+        ( ( icount > 0 ) ? icount + ' incomplete, ' : '' ) +
+        ( scount + icount + failures.length ) + " total " +
         '(' + acount + " assertion" + ( ( acount !== 1 ) ? 's' : '' ) + ")\n"
     );
 
