@@ -1,0 +1,335 @@
+/**
+ * Simple X-Unit-style test cases
+ *
+ *  Copyright (C) 2010 Mike Gerwitz
+ *
+ *  This file is part of ease.js.
+ *
+ *  ease.js is free software: you can redistribute it and/or modify it under the
+ *  terms of the GNU Lesser General Public License as published by the Free
+ *  Software Foundation, either version 3 of the License, or (at your option)
+ *  any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT
+ *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
+ *  for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author  Mike Gerwitz
+ * @package test
+ */
+
+var assert         = require( 'assert' ),
+    assert_wrapped = {},
+    acount         = 0,
+    icount         = 0,
+    skpcount         = 0,
+
+    // when set to true, final statistics will be buffered until suite ends
+    suite    = false,
+    failures = [],
+
+    // dummy object to be thrown for test skipping
+    SkipTest = { skip: true },
+
+    common_require = require( __dirname + '/common' ).require
+;
+
+
+// wrap each of the assertions so that we can keep track of the number of times
+// that they were invoked
+for ( f in assert )
+{
+    var _assert_cur = assert[ f ];
+
+    if ( typeof _assert_cur !== 'function' )
+    {
+        continue;
+    }
+
+    // wrap the assertion to keep count
+    assert_wrapped[ f ] = ( function( a )
+    {
+        return function()
+        {
+            incAssertCount();
+            a.apply( this, arguments );
+        };
+    } )( _assert_cur );
+}
+
+
+function incAssertCount()
+{
+    acount++;
+};
+
+
+/**
+ * Defines and runs a test case
+ *
+ * This is a very basic system that provides a more familiar jUnit/phpUnit-style
+ * output for xUnit tests and allows all tests in the case to be run in the
+ * event of a test failure.
+ *
+ * The test name should be given as the key and the test itself as a function as
+ * the value. The test will be invoked within the context of the assertion
+ * module.
+ *
+ * This will be evolving throughout the life of the project. Mainly, it cannot
+ * be run as part of a suite without multiple summary outputs.
+ *
+ * @param  {Object.<string,function()>}  object containing tests
+ *
+ * @return  {undefined}
+ */
+module.exports = function( test_case )
+{
+    var context  = prepareCaseContext(),
+        setUp    = test_case.setUp,
+
+        acount_last = 0
+    ;
+
+    // if we're not running a suite, clear out the failures
+    if ( !( suite ) )
+    {
+        init();
+    }
+
+    // perform case-wide setup
+    test_case.caseSetUp && test_case.caseSetUp.call( context );
+
+    // remove unneeded methods so we don't invoke them as tests below
+    delete test_case.caseSetUp;
+    delete test_case.setUp;
+
+    // run each test in the case
+    for ( test in test_case )
+    {
+        // xUnit-style setup
+        if ( setUp )
+        {
+            setUp.call( context );
+        }
+
+        acount_last = acount;
+
+        try
+        {
+            test_case[ test ].call( context );
+
+            // if there were no assertions, then the test should be marked as
+            // incomplete
+            if ( acount_last === acount )
+            {
+                testPrint( 'I' );
+                icount++;
+            }
+            else
+            {
+                scount++;
+                testPrint( '.' );
+            }
+        }
+        catch ( e )
+        {
+            if ( e === SkipTest )
+            {
+                testPrint( 'S' );
+                skpcount++;
+            }
+            else
+            {
+                testPrint( 'F' );
+                failures.push( [ test, e ] );
+            }
+        }
+    }
+
+    // only output statistics if we're not running a suite (otherwise they'll be
+    // output at the end of the suite)
+    if ( !( suite ) )
+    {
+        endStats();
+    }
+};
+
+
+/**
+ * Reset counters
+ */
+function init()
+{
+    failures = [];
+    scount   = acount = icount = skpcount = 0;
+}
+
+
+/**
+ * Display end stats (failures, counts)
+ */
+function endStats()
+{
+    testPrint( "\n\n" );
+
+    if ( failures.length )
+    {
+        outputTestFailures( failures );
+    }
+
+    // print test case summary
+    testPrint(
+        ( ( failures.length ) ? "FAILED" : "OK" ) + " - " +
+        scount + " successful, " + failures.length + " failure(s), " +
+        ( ( icount > 0 ) ? icount + ' incomplete, ' : '' ) +
+        ( ( skpcount > 0 ) ? skpcount + ' skipped, ' : '' ) +
+        ( scount + icount + skpcount + failures.length ) + " total " +
+        '(' + acount + " assertion" + ( ( acount !== 1 ) ? 's' : '' ) + ")\n"
+    );
+
+    // exit with non-zero status to indicate failure
+    failures.length
+        && typeof process !== 'undefined'
+        && process.exit( 1 );
+}
+
+
+/**
+ * Start test suite, deferring summary stats until call to endSuite()
+ */
+module.exports.startSuite = function()
+{
+    init();
+    suite = true;
+};
+
+
+/**
+ * Ens test suite, display stats buffered since startSuite()
+ */
+module.exports.endSuite = function()
+{
+    suite = false;
+    endStats();
+};
+
+
+function getMock( proto )
+{
+    var P    = common_require( proto ),
+        Mock = function() {},
+
+        proto = Mock.prototype = new P()
+    ;
+
+    for ( i in proto )
+    {
+        // only mock out methods
+        if ( typeof proto[ i ] !== 'function' )
+        {
+            continue;
+        }
+
+        // clear the method
+        proto[ i ] = function() {};
+    }
+
+    return new Mock();
+}
+
+
+function skipTest()
+{
+    throw SkipTest;
+}
+
+
+/**
+ * Prepare assertion methods on context
+ *
+ * @return  {Object}  context
+ */
+function prepareCaseContext()
+{
+    return {
+        require: common_require,
+
+        fail:                 assert_wrapped.fail,
+        assertOk:             assert_wrapped.ok,
+        assertEqual:          assert_wrapped.equal,
+        assertNotEqual:       assert_wrapped.notEqual,
+        assertDeepEqual:      assert_wrapped.deepEqual,
+        assertStrictEqual:    assert_wrapped.strictEqual,
+        assertNotStrictEqual: assert_wrapped.notStrictEqual,
+        assertThrows:         assert_wrapped.throws,
+        assertDoesNotThrow:   assert_wrapped.doesNotThrow,
+        assertIfError:        assert_wrapped.ifError,
+        incAssertCount:       incAssertCount,
+
+        getMock: getMock,
+        skip:    skipTest,
+    };
+}
+
+
+/**
+ * Outputs test failures and their stack traces
+ *
+ * @param  {Array}  failures
+ *
+ * @return  {undefined}
+ */
+function outputTestFailures( failures )
+{
+    var i, cur, name, e;
+
+    // if we don't have stdout access, throw an error containing each of the
+    // error strings
+    if ( typeof process === 'undefined' )
+    {
+        var err = '',
+            i   = failures.length;
+
+        for ( i in failures )
+        {
+            err += failures[ i ][ 0 ] + '; ';
+        }
+
+        throw Error( err );
+    }
+
+    for ( i = 0; i < failures.length; i++ )
+    {
+        cur = failures[ i ];
+
+        name = cur[ 0 ];
+        e    = cur[ 1 ];
+
+        // output the name followed by the stack trace
+        testPrint(
+            '#' + i + ' ' + name + '\n'
+            + e.stack + "\n\n"
+        );
+    }
+}
+
+
+/**
+ * Outputs a string if stdout is available (node.js)
+ *
+ * @param  {string}  str  string to output
+ *
+ * @return  {undefined}
+ */
+var testPrint = ( ( typeof process === 'undefined' )
+    || ( typeof process.stdout === 'undefined' ) )
+        ? function() {}
+        : function( str )
+        {
+            process.stdout.write( str );
+        };
+

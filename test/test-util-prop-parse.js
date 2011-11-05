@@ -96,15 +96,11 @@ util.propParse( data, {
         to[ name ] = method;
     },
 
-    getter: function( name, func )
+    getset: function( name, get, set )
     {
-        getters[ name ] = func;
+        getters[ name ] = get;
+        setters[ name ] = set;
     },
-
-    setter: function( name, func )
-    {
-        setters[ name ] = func;
-    }
 } );
 
 

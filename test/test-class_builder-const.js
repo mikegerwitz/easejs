@@ -23,174 +23,135 @@
  */
 
 var common  = require( './common' ),
-    assert  = require( 'assert' ),
-    builder = common.require( 'class_builder' )
+
+    // XXX: get rid of this disgusting mess; we're mid-refactor and all these
+    // dependencies should not be necessary for testing
+    ClassBuilder         = common.require( '/ClassBuilder' ),
+    MethodWrapperFactory = common.require( '/MethodWrapperFactory' ),
+    wrappers             = common.require( '/MethodWrappers' ).standard
 ;
 
-
-/**
- * The `const' keyword does not make sense with methods, as they are always
- * immutable. Methods of a class cannot be redefined after the class definition.
- * They may only be overridden by subtypes.
- */
-( function testConstKeywordCannotBeUsedWithMethods()
+require( 'common' ).testCase(
 {
-    try
+    setUp: function()
     {
-        // attempt to create a constant method (should fail)
-        builder.build(
+        this.builder = ClassBuilder(
+            this.require( '/MemberBuilder' )(
+                MethodWrapperFactory( wrappers.wrapNew ),
+                MethodWrapperFactory( wrappers.wrapOverride ),
+                this.getMock( 'MemberBuilderValidator' )
+            ),
+            this.require( '/VisibilityObjectFactoryFactory' ).fromEnvironment()
+        )
+    },
+
+
+    /** The const keyword should result in a static property. The rationale for
+     * this is that, if a value is constant, then instances do not make sense.
+     */
+    'const keyword declares properties as static': function()
+    {
+        var val = 'baz',
+            Foo = this.builder.build(
+            {
+                'const foo': val,
+            } )
+        ;
+
+        this.assertEqual( val, Foo.$('foo'),
+            "Const keyword should declare properties as static"
+        );
+    },
+
+
+    /**
+     * As the name implies, constant properties should not be writable.
+     */
+    'const keyword creates immutable property': function()
+    {
+        try
         {
-            'const foo': function() {},
-        } );
-    }
-    catch ( e )
+            // this should fail (trying to alter const prop foo)
+            this.builder.build( { 'const foo': 'bar'  } ).$( 'foo', 'baz' );
+        }
+        catch ( e )
+        {
+            this.assertOk(
+                e.message.search( 'foo' ) !== -1,
+                "Const modification error should contain name of property"
+            );
+
+            return;
+        }
+
+        this.fail( "Constant properties should not be writable" );
+    },
+
+
+    /**
+     * Unlike other languages such as PHP, the const keyword can have different
+     * levels of visibility.
+     */
+    'Access modifiers are permitted with const keyword': function()
     {
-        assert.ok(
-            e.message.search( 'foo' ) !== -1,
-            "Const method error message should contain name of method"
+        var protval = 'bar',
+            privval = 'baz',
+
+            Foo = this.builder.build(
+            {
+                'protected const prot': protval,
+                'private   const priv': privval,
+
+                'public static getProt': function()
+                {
+                    return this.$('prot');
+                },
+
+                'public static getPriv': function()
+                {
+                    return this.$('priv');
+                },
+            } ),
+
+            // be sure to override each method to ensure we're checking
+            // references on the subtype, *not* the parent type
+            SubFoo = this.builder.build( Foo,
+            {
+                'public static getProt': function()
+                {
+                    return this.$('prot');
+                },
+
+                'public static getPriv': function()
+                {
+                    return this.$('priv');
+                },
+            } )
+        ;
+
+        this.assertEqual( Foo.$('prot'), undefined,
+            "Protected constants are not available publicly"
         );
 
-        return;
-    }
-
-    assert.fail( "Should not be able to declare constant methods" );
-} )();
-
-
-/**
- * The const keyword implies static. Using static along with it is redundant and
- * messy. Disallow it.
- */
-( function testConstKeywordCannotBeUsedWithStatic()
-{
-    try
-    {
-        // should fail
-        builder.build(
-        {
-            'static const foo': 'val',
-        } );
-    }
-    catch ( e )
-    {
-        assert.ok(
-            e.message.search( 'foo' ) !== -1,
-            "Static const method error message should contain name of property"
+        this.assertEqual( Foo.$('priv'), undefined,
+            "Private constants are not available publicly"
         );
 
-        return;
-    }
-
-    assert.fail( "Should not be able to use static keyword with const" );
-} )();
-
-
-/**
- * The const keyword should result in a static property. The rationale for this
- * is that, if a value is constant, then instances do not make sense.
- */
-( function testConstKeywordDeclaresPropertiesAsStatic()
-{
-    var val = 'baz',
-        Foo = builder.build(
-        {
-            'const foo': val,
-        } )
-    ;
-
-    assert.equal( val, Foo.$('foo'),
-        "Const keyword should declare properties as static"
-    );
-} )();
-
-
-/**
- * As the name implies, constant properties should not be writable.
- */
-( function testConstKeywordCreatesImmutableProperty()
-{
-    try
-    {
-        // this should fail (trying to alter const prop foo)
-        builder.build( { 'const foo': 'bar'  } ).$( 'foo', 'baz' );
-    }
-    catch ( e )
-    {
-        assert.ok(
-            e.message.search( 'foo' ) !== -1,
-            "Const modification error should contain name of property"
+        this.assertEqual( Foo.getProt(), protval,
+            "Protected constants are available internally"
         );
 
-        return;
-    }
+        this.assertEqual( Foo.getPriv(), privval,
+            "Private constants are available internally"
+        );
 
-    assert.fail( "Constant properties should not be writable" );
-} )();
+        this.assertEqual( SubFoo.getProt(), protval,
+            "Protected constants are available to subtypes internally"
+        );
 
-
-/**
- * Unlike other languages such as PHP, the const keyword can have different
- * levels of visibility.
- */
-( function testVisibilityModifiersArePermittedWithConstKeyword()
-{
-    var protval = 'bar',
-        privval = 'baz',
-
-        Foo = builder.build(
-        {
-            'protected const prot': protval,
-            'private   const priv': privval,
-
-            'public static getProt': function()
-            {
-                return this.$('prot');
-            },
-
-            'public static getPriv': function()
-            {
-                return this.$('priv');
-            },
-        } ),
-
-        // be sure to override each method to ensure we're checking references
-        // on the subtype, *not* the parent type
-        SubFoo = builder.build( Foo,
-        {
-            'public static getProt': function()
-            {
-                return this.$('prot');
-            },
-
-            'public static getPriv': function()
-            {
-                return this.$('priv');
-            },
-        } )
-    ;
-
-    assert.equal( Foo.$('prot'), undefined,
-        "Protected constants are not available publicly"
-    );
-
-    assert.equal( Foo.$('priv'), undefined,
-        "Private constants are not available publicly"
-    );
-
-    assert.equal( Foo.getProt(), protval,
-        "Protected constants are available internally"
-    );
-
-    assert.equal( Foo.getPriv(), privval,
-        "Private constants are available internally"
-    );
-
-    assert.equal( SubFoo.getProt(), protval,
-        "Protected constants are available to subtypes internally"
-    );
-
-    assert.equal( SubFoo.getPriv(), undefined,
-        "Private constants are NOT available to subtypes internally"
-    );
-} )();
+        this.assertEqual( SubFoo.getPriv(), undefined,
+            "Private constants are NOT available to subtypes internally"
+        );
+    },
+} );
 

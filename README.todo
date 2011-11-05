@@ -1,0 +1,43 @@
+TODO
+====
+Todo tasks can be found in the bug tracker at http://easejs.org/bugs. Below is
+a list of the glaring issues that may be found at first glance.
+
+
+COUPLING
+--------
+During the beginning of the project, all modules were represented as object
+literals, which is similar to the concept of a Singleton. This satisfied the
+needs of the early project, but it soon evolved far past its original design and
+resulted in a tightly coupled system that was difficult to maintain, add to and
+test. Refactoring into prototypes is ongoing.
+
+
+UNIT TESTS
+----------
+The unit tests are currently split between a few different formats, depending on
+filename and test construction.
+
+- Tests created during the beginning of the project have a test-* prefix. These
+  are more likely to represent integration or system tests rather than unit
+  tests. They should be converted to files with a *Test.js suffix and be
+  refactored to test only the unit.
+- Newer tests use require( 'common' ).testCase() in order to run the tests. The
+  older format separates tests with self-executing functions. The former should
+  be used.
+
+When running the tests, you will notice that the older tests output nothing
+whereas the newer tests output the status of each test in addition to a summary
+at the end of the test case. Ultimately, a test runner will defer final
+statistics until the end of all running tests. The Makefile will need to be
+modified. This sacrifices the ability to use -jN with the tests, but will
+ultimately speed up the tests by eliminating the need to run a separate process
+for each test case (the performance benefit can be seen by running the tests in
+the browser).
+
+
+PERFORMANCE TESTS
+-----------------
+Performance tests need to be written for every aspect of the system. They will
+ultimately be graphed to show the relative performance across versions of the
+software.

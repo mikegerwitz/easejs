@@ -1,0 +1,42 @@
+Hacking ease.js
+===============
+Contributions to the project are more than welcome. Please be sure to keep the
+following in mind when hacking ease.js. This is not yet a complete list; the
+project is still under development. Please watch this file for changes.
+
+
+Coding Standards
+----------------
+The project does not currently have a strict set of coding standards. This will
+evolve in the future and will be loosely enforced (to maintain flexibility) by
+static analysis tools. In the meantime, please use your best judgment. The code
+has a certain "feel" to it. Try to follow this feel when submitting your own
+patches or making modifications to ensure consistency.
+
+
+Unit Testing
+------------
+ease.js follows a test-driven development model. No untested code will be
+accepted. Ensure you have complete code coverage, preferably by developing the
+tests before you develop the actual software. Ensure your tests fail before
+implementing the feature in order to point out potentially flawed test designs.
+
+When refactoring or expanding upon  existing tests, be careful to preserve the
+original intent. Prove that the new test(s) will provide the same coverage for
+the same feature set. In order to ensure the tests themselves were not broken,
+and to ensure that you understand the test case, cause the tests to fail.
+
+Under no circumstances should a test be completely removed without being
+replaced unless the feature was entirely removed.
+
+
+Submitting Patches
+------------------
+You may send pull requests via your preferred method or e-mail patches to the
+author. The e-mail address may be found in the commits.
+
+
+Bugs / Feature Requests
+-----------------------
+If you are looking for something to aid in, please see the out-standing issues
+at http://easejs.org/.

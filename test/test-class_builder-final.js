@@ -24,7 +24,10 @@
 
 var common  = require( './common' ),
     assert  = require( 'assert' ),
-    builder = common.require( 'class_builder' ),
+    builder = common.require( 'ClassBuilder' )(
+        common.require( 'MemberBuilder' )(),
+        common.require( 'VisibilityObjectFactoryFactory' ).fromEnvironment()
+    ),
 
     Class      = common.require( 'class' )
     FinalClass = common.require( 'class_final' )

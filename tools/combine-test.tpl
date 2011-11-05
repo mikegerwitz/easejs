@@ -18,10 +18,15 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # #
 
-module.common = { exports: {
+module.common = module['test/common'] = { exports: {
     require: function ( id )
     {
         return require( id );
+    },
+
+    testCase: function()
+    {
+        return require( 'test/inc-testcase' ).apply( this, arguments );
     }
 } };
 
@@ -50,6 +55,15 @@ module.assert = { exports: {
     strictEqual: function( val, cmp, err )
     {
         if ( val !== cmp )
+        {
+            failAssertion( err );
+        }
+    },
+
+
+    notStrictEqual: function( val, cmp, err )
+    {
+        if ( val === cmp )
         {
             failAssertion( err );
         }

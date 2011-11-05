@@ -1,5 +1,8 @@
 /**
- * Common paths for testing
+ * Runs test suite
+ *
+ * This script must be fed the tests to be run as arguments, one test case per
+ * argument. All test cases should use common.testCase().
  *
  *  Copyright (C) 2010 Mike Gerwitz
  *
@@ -22,34 +25,25 @@
  * @package test
  */
 
-/**
- * Library path
- * @type  {string}
- */
-exports.PATH_LIB = require( 'path' ).normalize( __dirname + '/../lib' );
+var common = require( 'common' );
 
+// start the test suite to defer statistics and failure output until the end of
+// all test cases
+common.testCase.startSuite();
 
-/**
- * Returns requested module from the library path
- *
- * This method abstracts require() implementation so that the tests may be more
- * easily implemented elsewhere (e.g. client-side)
- *
- * @param  {string}  module  module id
- *
- * @return  {Object}  module exports
- */
-exports.require = function( module )
+// run each file provided to us
+process.argv.forEach( function( val, i )
 {
-    return require( exports.PATH_LIB + '/' + module );
-}
+    // first arg is 'node', second is 'runner.js'
+    if ( i < 2 )
+    {
+        return;
+    }
 
+    // the tests will run themselves; we need only require 'em
+    require( __dirname + '/' + val );
+} );
 
-/**
- * Create simple xUnit-style test case
- *
- * @return  {udnefined}
- */
-exports.testCase = require( __dirname + '/inc-testcase.js' );
-
+// output statistics
+common.testCase.endSuite();
 

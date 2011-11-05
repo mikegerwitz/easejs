@@ -28,9 +28,35 @@ TPL_TEST_PATH="$PATH_TOOLS/combine-test.tpl"
 TPL_VAR='/**{CONTENT}**/'
 RMTRAIL="$PATH_TOOLS/rmtrail"
 
-# order matters
-CAT_MODULES="warn prop_parser util propobj member_builder class_builder"
-CAT_MODULES="$CAT_MODULES class class_final class_abstract interface"
+# determine the order in which modules must be concatenated; order matters to
+# ensure dependencies are loaded before the module that depends on them
+cat_modules=$(
+    cd "$PATH_TOOLS/../" &&
+    grep -rIo ' require(.*)' lib/ \
+        | sed "s/^lib\///;s/\.js://;s/require(.*'\/\(.*\)'.*/\1/" \
+        | node tools/combine-order.js
+) || {
+    echo "Failed to get module list" >&2
+    exit 3
+}
+
+# get a list of all available modules
+all_modules=$(
+    cd "$PATH_LIB" &&
+    ls -1 *.js \
+    | sed 's/\.js$//'
+)
+
+# get lsit of modules that haven't been
+remain_modules=$(
+    echo "$cat_modules
+$all_modules" \
+    | sort \
+    | uniq -u
+)
+
+cat_modules="$cat_modules
+$remain_modules"
 
 ##
 # Output template header
@@ -70,11 +96,11 @@ tpl_footer()
 
 # ensure we can locate our templates (should be in the /tools dir)
 if [ ! -f "$TPL_PATH" ]; then
-    echo "Error: combine.tpl not found ($TPL_PATH)"
+    echo "Error: combine.tpl not found ($TPL_PATH)" >&2
     exit 1
 fi
 if [ ! -f "$TPL_PATH" ]; then
-    echo "Error: license.tpl not found ($TPL_PATH)"
+    echo "Error: license.tpl not found ($TPL_PATH)" >&2
     exit 1
 fi
 
@@ -83,11 +109,11 @@ fi
 tpl_header
 
 # output each of the modules
-for module in $CAT_MODULES; do
+for module in $cat_modules; do
     filename="$PATH_LIB/$module.$MODULE_EXT"
 
     if [ ! -f "$filename" ]; then
-        echo "Error: module $module not found ($filename)"
+        echo "Error: module $module not found ($filename)" >&2
         exit 2
     fi
 
@@ -106,13 +132,20 @@ done
 # include tests?
 if [ "$INC_TEST" ]; then
     # note that not all tests are included
-    TEST_CASES=$( find $PATH_TEST \
+    TEST_CASES=$( cd "$PATH_TEST"; find . \
         \( -name 'test-*.js' \
-            -o -name 'inc-*.js' \
+            -o -name '*Test*.js' \
         \) \
-        -exec basename {} \; \
+        | sed 's/^.\///' \
         | sort \
         | grep -v 'test-\(combine\(-pre-es5\)\?\|index\).js' \
+    )
+
+    # find include files separately so we can output those before the tests
+    TEST_INC=$(
+        cd "$PATH_TEST" \
+            && find . -name 'inc-*.js' \
+            | sed 's/^\.\///' \
     )
 
     # include test combine template
@@ -122,13 +155,14 @@ if [ "$INC_TEST" ]; then
     echo "ns_exports.runTests = function()"
     echo "{"
 
-    for testcase in $TEST_CASES; do
+    for testcase in $TEST_INC $TEST_CASES; do
         filename="$PATH_TEST/$testcase"
 
         # generate the module name by removing path and extension, then
         # prefixing it with "test/"
         module="${filename%.*}"
-        module="test/${module##*/}"
+        module="test/${module##*test/}"
+        module_dir=$( dirname "$module" )
 
         # each module must be enclosed in a closure to emulate a module
         echo "/** TEST CASE: $testcase **/"
@@ -143,7 +177,7 @@ if [ "$INC_TEST" ]; then
         # add the module, removing trailing commas
         cat $filename | $RMTRAIL
 
-        echo "} )( module['$module'] = {}, 'test' );"
+        echo "} )( module['$module'] = {}, '$module_dir' );"
     done
 
     echo "};"
