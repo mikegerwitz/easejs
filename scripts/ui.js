@@ -112,7 +112,10 @@
 
     function runScript( script )
     {
-        var Class = easejs.Class,
+        var Class         = easejs.Class,
+            FinalClass    = easejs.FinalClass,
+            AbstractClass = easejs.AbstractClass,
+            Interface     = easejs.Interface,
 
             $console = $( '<textarea>' )
                 .attr( {
