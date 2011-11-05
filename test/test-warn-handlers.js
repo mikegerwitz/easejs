@@ -63,8 +63,8 @@ function backupConsole()
     console = {
         warn: function( message )
         {
-            assert.equal( message, warning.message,
-                "Should log proper message to console"
+            assert.equal( ( 'Warning: ' + warning.message ), message,
+                "Should log proper message to console, prefixed with 'Warning'"
             );
 
             logged = true;
@@ -125,7 +125,7 @@ function backupConsole()
     // attempt to log
     warn.handlers.log( warning );
 
-    assert.equal( given, warning.message,
+    assert.equal( ( 'Warning: ' + warning.message ), given,
         "Should fall back to log() and log proper message"
     );
 
