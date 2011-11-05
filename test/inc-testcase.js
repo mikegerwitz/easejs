@@ -26,10 +26,14 @@ var assert         = require( 'assert' ),
     assert_wrapped = {},
     acount         = 0,
     icount         = 0,
+    skpcount         = 0,
 
     // when set to true, final statistics will be buffered until suite ends
     suite    = false,
     failures = [],
+
+    // dummy object to be thrown for test skipping
+    SkipTest = { skip: true },
 
     common_require = require( __dirname + '/common' ).require
 ;
@@ -133,8 +137,16 @@ module.exports = function( test_case )
         }
         catch ( e )
         {
-            testPrint( 'F' );
-            failures.push( [ test, e ] );
+            if ( e === SkipTest )
+            {
+                testPrint( 'S' );
+                skpcount++;
+            }
+            else
+            {
+                testPrint( 'F' );
+                failures.push( [ test, e ] );
+            }
         }
     }
 
@@ -153,7 +165,7 @@ module.exports = function( test_case )
 function init()
 {
     failures = [];
-    scount   = acount = icount = 0;
+    scount   = acount = icount = skpcount = 0;
 }
 
 
@@ -174,7 +186,8 @@ function endStats()
         ( ( failures.length ) ? "FAILED" : "OK" ) + " - " +
         scount + " successful, " + failures.length + " failure(s), " +
         ( ( icount > 0 ) ? icount + ' incomplete, ' : '' ) +
-        ( scount + icount + failures.length ) + " total " +
+        ( ( skpcount > 0 ) ? skpcount + ' skipped, ' : '' ) +
+        ( scount + icount + skpcount + failures.length ) + " total " +
         '(' + acount + " assertion" + ( ( acount !== 1 ) ? 's' : '' ) + ")\n"
     );
 
@@ -229,6 +242,12 @@ function getMock( proto )
 }
 
 
+function skipTest()
+{
+    throw SkipTest;
+}
+
+
 /**
  * Prepare assertion methods on context
  *
@@ -252,6 +271,7 @@ function prepareCaseContext()
         incAssertCount:       incAssertCount,
 
         getMock: getMock,
+        skip:    skipTest,
     };
 }
 
