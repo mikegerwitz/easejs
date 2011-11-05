@@ -24,6 +24,13 @@
 
 
 /**
+ * Member name to be used in tests
+ * @type {string}
+ */
+exports.testName = 'fooBar';
+
+
+/**
  * Quickly tests for validation failures
  *
  * The following will be ensured by this assertion:
@@ -81,7 +88,7 @@ exports.quickKeywordTest = function( type, keywords, identifier, prev )
     var keyword_obj = {},
         prev_obj    = {},
         prev_data   = {},
-        name        = 'fooBar',
+        name        = exports.testName,
         _self       = this;
 
     // convert our convenient array into a keyword obj

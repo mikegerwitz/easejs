@@ -65,7 +65,17 @@ require( 'common' ).testCase(
 
     setUp: function()
     {
-        this.sut = this.require( 'MemberBuilderValidator' )();
+        var _self = this;
+
+        // can be used to intercept warnings; redefine in test
+        this.warningHandler = function( warning ) {};
+
+        this.sut = this.require( 'MemberBuilderValidator' )(
+            function( warning )
+            {
+                _self.warningHandler( warning );
+            }
+        );
     },
 
 
@@ -304,6 +314,45 @@ require( 'common' ).testCase(
     'Can provide abstract method impl. without override keyword': function()
     {
         this.quickKeywordMethodTest( [], null, [ 'abstract' ] );
+    },
+
+
+    /**
+     * If a developer uses the 'override' keyword when there is no super method
+     * to override, this could hint at a number of problems, including:
+     *   - Misunderstanding the keyword
+     *   - Misspelling the method name
+     *   - Forgetting to specify a class to extend from
+     *
+     * All of the above possibilities are pretty significant. In order to safe
+     * developers from themselves (everyone screws up eventually), let's provide
+     * a warning. Since this only hints at a potential bug but does not affect
+     * the functionality, there's no use in throwing an error and preventing the
+     * class from being defined.
+     */
+    'Throws warning when using override with no super method': function()
+    {
+        var given = null;
+
+        this.warningHandler = function( warning )
+        {
+            given = warning;
+        };
+
+        // trigger warning (override keyword with no super method)
+        this.quickKeywordMethodTest( [ 'override' ] );
+
+        this.assertNotEqual( null, given,
+            'No warning was provided'
+        );
+
+        this.assertOk( given instanceof Error,
+            'Provided warning is not of type Error'
+        );
+
+        this.assertOk( ( given.message.search( shared.testName ) > -1 ),
+            'Override warning should contain method name'
+        );
     },
 } );
 
