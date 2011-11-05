@@ -22,6 +22,8 @@
  * @package test
  */
 
+var shared = require( __dirname + '/inc-common' );
+
 require( 'common' ).testCase(
 {
     caseSetUp: function()
@@ -30,45 +32,28 @@ require( 'common' ).testCase(
 
         this.testArgs = function( args, name, value, keywords )
         {
-            var pub = _self.members[ 'public' ],
-
-                // prev data
-                pval_expect      = null,
-                pkeywords_expect = null,
-                pval_given       = null,
-                pkeywords_given  = null
-            ;
-
-            if ( pub[ name ] )
+            shared.testArgs( _self, args, name, value, keywords, function(
+                prev_default, pval_given, pkey_given
+            )
             {
-                pval_expect      = pub[ name ][ 0 ];
-                pkeywords_expect = pub[ name ][ 1 ];
+                var expected = _self.members[ 'public' ][ name ];
 
-                pval_given      = args[ 3 ].member[ 0 ];
-                pkeywords_given = args[ 4 ];
-            }
+                if ( !expected )
+                {
+                    return prev_default;
+                }
 
-            _self.assertEqual( name, args[ 0 ],
-                'Incorrect name passed to property validator'
-            );
-
-            _self.assertStrictEqual( value, args[ 1 ],
-                'Incorrect value passed to property validator'
-            );
-
-            _self.assertStrictEqual( keywords, args[ 2 ],
-                'Incorrect keywords passed to property validator'
-            );
-
-            _self.assertStrictEqual( pval_expect, pval_given,
-                'Previous data should contain prev value if overriding, ' +
-                'otherwise null'
-            );
-
-            _self.assertStrictEqual( pkeywords_expect, pkeywords_given,
-                'Previous keywords should contain prev keyword if ' +
-                'overriding, otherwise null'
-            );
+                return {
+                    value: {
+                        expected: expected[ 0 ],
+                        given:    pval_given.member[ 0 ],
+                    },
+                    keywords: {
+                        expected: expected[ 1 ],
+                        given:    pkey_given,
+                    },
+                };
+            } );
         };
     },
 
