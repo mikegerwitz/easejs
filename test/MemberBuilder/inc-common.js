@@ -47,7 +47,7 @@ exports.testArgs = function( testcase, args, name, value, keywords, prevLookup )
         'Incorrect name passed to validator'
     );
 
-    testcase.assertStrictEqual( value, args[ 1 ],
+    testcase.assertDeepEqual( value, args[ 1 ],
         'Incorrect value passed to validator'
     );
 
@@ -60,7 +60,7 @@ exports.testArgs = function( testcase, args, name, value, keywords, prevLookup )
         'otherwise null'
     );
 
-    testcase.assertStrictEqual( prev.keywords.expected, prev.keywords.given,
+    testcase.assertDeepEqual( prev.keywords.expected, prev.keywords.given,
         'Previous keywords should contain prev keyword if ' +
         'overriding, otherwise null'
     );

@@ -41,7 +41,7 @@ require( 'common' ).testCase(
                 function( name, startobj, overrideobj )
                 {
                     _self.sut.validateGetterSetter(
-                        name, overrideobj,
+                        name, {}, overrideobj,
                         { get: function() {}, set: function() {} },
                         startobj
                     );
@@ -72,7 +72,7 @@ require( 'common' ).testCase(
         this.quickFailureTest( name, 'method', function()
         {
             _self.sut.validateGetterSetter(
-                name, {}, { member: function() {} }
+                name, {}, {}, { member: function() {} }
             );
         } );
     },
@@ -88,7 +88,7 @@ require( 'common' ).testCase(
         this.quickFailureTest( name, 'method', function()
         {
             _self.sut.validateGetterSetter(
-                name, {}, { member: 'foo' }
+                name, {}, {}, { member: 'foo' }
             );
         } );
     },
