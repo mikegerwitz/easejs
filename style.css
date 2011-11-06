@@ -18,18 +18,21 @@ html, body {
   position: relative;
 
   background-color: #2e3436;
-
-  height: 150px;
-  color:  #babdb6;
+  color:            #babdb6;
 }
 
 #header-content {
+  background-image:    url('images/logo.png');
+  background-repeat:   no-repeat;
+  background-position: 0px 50px;
+
   margin: 0px auto;
+  height: 150px;
   width:  800px;
 }
 
 #header h1 {
-  display: inline-block;
+  display: none;
   margin:  0.25em 0px 0px 0px;
 
   font-size: 4.5em;
@@ -45,6 +48,8 @@ html, body {
 }
 
 #header h2.desc {
+  display: none;
+
   position: relative;
   top: -1.50em;
   left: 0.30em;
@@ -235,7 +240,7 @@ p.copyright a, p.copyright a:link {
   position: relative;
 
   margin: 0px auto;
-  top:    -2em;
+  top:    1.5em;
 }
 
 #trybox {

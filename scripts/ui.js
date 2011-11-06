@@ -51,7 +51,7 @@
             {
                 toggleTry();
             } )
-            .appendTo( '#header' );
+            .appendTo( '#header-content' );
     }
 
 
