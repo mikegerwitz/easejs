@@ -39,7 +39,7 @@
     {
         $trybtn = $( '<div>' )
             .attr( 'id', 'try' )
-            .text( 'Try It!' )
+            .text( 'Try It' )
             .addClass( 'btn large glow' )
             .mousedown( function( event )
             {
@@ -61,7 +61,7 @@
 
         $trybtn.text(
             ( $try.is( ':visible' ) )
-                ? 'Try It!'
+                ? 'Try It'
                 : 'Hide It'
         );
 

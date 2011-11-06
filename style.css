@@ -5,7 +5,7 @@
  */
 
 html, body {
-  background-color: white;
+  background-color: #eeeeec;
 
   margin:  0px 0px 1.5em 0px;
   padding: 0;
@@ -18,38 +18,77 @@ html, body {
   position: relative;
 
   background-color: #2e3436;
-  border-bottom:    2px solid #295301;
 
   height: 150px;
   color:  #babdb6;
 }
 
+#header-content {
+  margin: 0px auto;
+  width:  800px;
+}
+
 #header h1 {
   display: inline-block;
-  margin:  0.5em 0px 0px 0.5em;
+  margin:  0.25em 0px 0px 0px;
 
-  font-size: 4em;
+  font-size: 4.5em;
+  color:     #619ddb;
+}
+
+#header h1 .suffix {
+  position: relative;
+  top:      0.15em;
+
+  font-size: 0.8em;
+  color:     #ce5c00;
+}
+
+#header h2.desc {
+  position: relative;
+  top: -1.50em;
+  left: 0.30em;
+
+  font-size:   0.6em;
+  font-weight: normal;
+
+  padding: 0px;
+  margin:  0px;
 }
 
 #content {
   position: relative;
 
   background-color: white;
+  background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0, rgb(255,255,255)),
+      color-stop(1, rgb(238,238,236))
+  );
+  background-image: -moz-linear-gradient(
+      center top,
+      rgb(255,255,255) 0%,
+      rgb(238,238,236) 100%
+  );
 
   margin:  0px auto;
   padding: 0.5em 1em 1em 1em;
 
   width: 800px;
+
+  font-size: 0.9em;
 }
 
 #menu {
-  border-bottom:    2px solid #b1dd87;
-  background-color: #4e9a06;
+  background-color: #3465a4;
+  border-bottom:    4px solid #204a87;
 }
 
 #menu ul {
   padding: 0px;
-  height:  2.5em;
+  height:  3.5em;
 
   margin: 0px auto;
   width:  800px;
@@ -60,7 +99,7 @@ html, body {
   padding:    0px;
 
   float:       left;
-  line-height: 2em;
+  line-height: 3em;
 }
 
 #menu a, #menu a:link {
@@ -72,8 +111,13 @@ html, body {
   font-weight:     bold;
 }
 
-#menu a:hover {
-  background-color: #b1dd87;
+#menu a:hover,
+#menu ul li.selected a {
+  background-color: #204a87;
+}
+
+#menu ul li.selected a {
+  color: #f57900;
 }
 
 p.copyright {
@@ -85,17 +129,14 @@ p.copyright {
   margin: 0;
   padding: 1em;
 
-  background-color: #2e3436;
-  border-top:       2px solid #babdb6;
-
-  color: #babdb6;
+  color: #2e3436;
 
   font-size:  0.8em;
   text-align: center;
 }
 
 p.copyright a, p.copyright a:link {
-  color: #babdb6;
+  color: #2e3436;
 }
 
 @-webkit-keyframes pulse {
