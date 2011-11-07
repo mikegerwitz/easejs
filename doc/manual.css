@@ -26,9 +26,12 @@ body, .float-caption
   font-family: arial, sans-serif;
 }
 
-.float, var
-{
+.float pre, var {
   font-family: 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', Courier, monospace;
+}
+
+table, table td {
+  padding: 0.25em;
 }
 
 dfn {
@@ -50,7 +53,8 @@ var {
 }
 
 /* for code samples */
-.float .verbatim {
+.float .verbatim,
+.float table {
   background-color: #fafafc;
 
   font-size: 12px;
@@ -60,6 +64,13 @@ var {
 
   margin:  0px;
   padding: 0.5em 0.5em 1em 0.5em;
+}
+
+.float table {
+  font-size: inherit;
+
+  padding-top: 0px;
+  margin-top:  0px;
 }
 
 .float-caption {
