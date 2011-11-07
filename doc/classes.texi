@@ -148,6 +148,50 @@ determines what type of member will be declared.
 @var{name} must be unique across all members of @var{dfn}.
 @end enumerate
 
+@subsection Member Keywords
+@float Table, t:keywords
+@multitable @columnfractions .10 .9
+@headitem Keyword @tab Description
+@item @code{public}
+@tab Access modifier. Places member @var{name} in public interface (accessible
+outside of @var{C} or instance of @var{C}; accessible by subtypes). Implied if
+no other access modifier is provided. May not be used in conjunction with other
+access modifiers. @xref{Member Visibility}.
+@item @code{protected}
+@tab Access modifier. Places member @var{name} in protected interface
+(accessible only within @var{C} or instance of @var{C}; accessible by subtypes).
+May not be used in conjunction with other access modifiers. @xref{Member
+Visibility}.
+@item @code{private}
+@tab Access modifier. Places member @var{name} in private interface (accessible
+only within @var{C} or instance of @var{C}; not accessible by subtypes). May not
+be used in conjunction with other access modifiers. @xref{Member Visibility}.
+@item @code{static}
+@tab Binds member @var{name} to class @var{C} rather than instance of @var{C}.
+Member data shared with each instance of type @var{C}. @xref{Static Members}.
+@item @code{abstract}
+@tab Declares member @var{name} and defers definition to subtype. @var{value}
+is interpreted as an argument list and must be of type @code{array}. May only be
+used with methods.
+@item @code{const}
+@tab Defines an immutable property @var{name}. May not be used with methods or
+getters/setters. @xref{Constants}.
+@item @code{virtual}
+@tab Declares that method @var{name} may be overridden by subtypes. May only be
+used with methods. Methods without this keyword may not be overridden. May only
+be used with methods. @xref{Inheritance}.
+@item override
+@tab Overrides method @var{name} of supertype of @var{C} with @var{value}. May
+only override virtual methods. May only be used with methods.
+@xref{Inheritance}.
+@end multitable
+@caption{Supported keywords}
+@end float
+
+Only the keywords in @ref{t:keywords} are supported as valid tokens within
+@var{keywords}.
+
+
 @subsection Discussion
 In @ref{f:class-js}, we saw how one would conventionally declare a class-like
 object (a prototype) in JavaScript. This method is preferred for many
