@@ -524,7 +524,7 @@ ease.js?
     // our parent class (supertype)
     var Dog = Class( 'Dog',
     {
-        'public walk': function()
+        'virtual public walk': function()
         {
             console.log( 'Walking the dog' );
         },
@@ -538,7 +538,7 @@ ease.js?
     // subclass (child), as a named class
     var LazyDog = Class( 'LazyDog' ).extend( Dog,
     {
-        'public walk': function()
+        'override public walk': function()
         {
             console.log( 'Lazy dog refuses to walk.' );
         }
@@ -547,7 +547,7 @@ ease.js?
     // subclass (child), as an anonymous class
     var TwoLeggedDog = Dog.extend(
     {
-        'public walk': function()
+        'override public walk': function()
         {
             console.log( 'Walking the dog on two feet' );
         }
