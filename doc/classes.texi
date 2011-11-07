@@ -69,7 +69,7 @@ addresses. We will also see how to declare the classes using both prototypes and
 ease.js, until such a point where prototypes are no longer adequate.
 
 @menu
-* Declaring Classes::         Learn how to declare a class with ease.js
+* Defining Classes::         Learn how to define a class with ease.js
 * Inheritance::               Extending classes from another
 * Member Visibility::         Encapsulation is a core concept of Object-Oriented
                               programming
@@ -77,20 +77,92 @@ ease.js, until such a point where prototypes are no longer adequate.
 @end menu
 
 
-@node Declaring Classes
-@section Declaring Classes
-We just took a look at what it's like declaring a class using prototypes
-(@pxref{f:class-js,}). This method is preferred for many developers, but it is
-important to recognize that there is a distinct difference between Prototypal
-and Object-Oriented development models. As an Object-Oriented developer, you
-shouldn't concern yourself with @emph{how} a class is declared in JavaScript. In
-true OO fashion, that behavior should be encapsulated. With ease.js, it is.
+@node Defining Classes
+@section Defining Classes
+@table @code
+@item C = Class( string @var{name}, Object @var{dfn} )
+Define named class @var{C} identified by @var{name} described by @var{dfn}.
+
+@item C = Class( string @var{name} ).extend( Object @var{dfn} )
+Define named class @var{C} identified by @var{name} described by @var{dfn}.
+
+@item C = Class( Object @var{dfn} )
+Define anonymous class @var{C} as described by @var{dfn}.
+
+@item C = Class.extend( Object @var{dfn } )
+Define anonymous class @var{C} as described by @var{dfn}.
+@end table
+
+Class @var{C} can be defined in a number of manners, as listed above, provided
+a @dfn{definition object} @var{dfn} containing the class members and options. An
+optional string @var{name} may be provided to set an internal identifier for
+@var{C}, which may be used for reflection and error messages. If @var{name} is
+omitted, @var{C} will be declared anonymous.
+
+@code{Class} must be imported (@pxref{Including}) from @code{easejs.Class}; it
+is not available in the global scope.
+
+@subsection Definition Object
+@table @code
+@item dfn = @{ '[@var{keywords}] @var{name}': @var{value}[, ...] @}
+Define definition object @var{dfn} containing a member identified by @var{name},
+described by optional @var{keywords} with the value of @var{value}. The member
+type is determined by @code{typeof} @var{value}. Multiple members may be
+provided in a single definition object.
+@end table
+
+The definition object @var{dfn} has the following properties:
+@enumerate
+@item
+The keys represent the @dfn{member declaration}, which may optionally contain
+one or more @var{keywords} delimited by spaces. A space must delimit the final
+keyword and @var{name}.
+@enumerate
+  @item
+  @var{keywords} must consist only of recognized tokens, delimited by spaces.
+
+  @item
+  Each token in @var{keywords} must be unique per @var{name}.
+@end enumerate
+
+@item
+The @var{value} represents the @dfn{member definition}, the type of which
+determines what type of member will be declared.
+@enumerate
+  @item
+  A @var{value} of type @code{function} will define a @dfn{method}, which is an
+  invokable member whose context is assigned to the class or class instance
+  depending on @var{keywords}.
+
+  @item
+  All other types of @var{value} will define a @dfn{property} - a mutable
+  value equal to @var{value}, assigned to a class or instance depending on
+  @var{keywords}.  Properties may be made immutable using @var{keywords}.
+
+  @item
+  Getters/setters may be defined in an ECMAScript 5 or greater environment.
+  Getters/setters must share the same value for @var{keywords}.
+@end enumerate
+
+@item
+@var{name} must be unique across all members of @var{dfn}.
+@end enumerate
+
+@subsection Discussion
+In @ref{f:class-js}, we saw how one would conventionally declare a class-like
+object (a prototype) in JavaScript. This method is preferred for many
+developers, but it is important to recognize that there is a distinct difference
+between Prototypal and Classical Object-Oriented development models. Prototypes
+lack many of the conveniences and features that are provided by Classical
+languages, but they can be emulated with prototypes. As an Object-Oriented
+developer, you shouldn't concern yourself with @emph{how} a class is declared in
+JavaScript. In true OO fashion, that behavior should be encapsulated. With
+ease.js, it is.
 
 Let's take a look at how to declare that exact same class using ease.js:
 
 @float Figure, f:class-easejs
 @verbatim
-    // if client-side, use: var Class = easejs.Class;
     var Class = require( 'easejs' ).Class;
 
     var MyClass = Class(
@@ -351,6 +423,22 @@ creating a new class instance.
 
 @node Inheritance
 @section Inheritance
+@table @code
+@item C' = Class( string @var{name} ).extend( Object @var{base}, Object @var{dfn} )
+Define named class @var{C'} identified by @var{name} as a subtype of @var{base},
+described by @var{dfn}. @var{base} may be of type @code{Class} or may be any
+enumerable object.
+
+@item C' = C.extend( Object @var{dfn} )
+Define anonymous class @var{C'} as a subtype of class @var{C}, described by
+@var{dfn}.
+
+@item C' = Class.extend( Object @var{base}, Object @var{dfn} )
+Define anonymous class @var{C'} as a subtype of @var{base}, described by
+@var{dfn}. @var{base} may be of type @code{Class} or may be any enumerable
+object.
+@end table
+
 Inheritance can be a touchy subject among Object-Oriented developers. It is a
 powerful feature that is easily abused. @dfn{Inheritance} is the term used to
 describe the process of creating a @dfn{child} class that @dfn{extends}
@@ -424,7 +512,7 @@ ease.js?
 @caption{Inheritance in ease.js}
 @end float
 
-You should already understand how to define a class (@pxref{Declaring Classes}).
+You should already understand how to define a class (@pxref{Defining Classes}).
 The above example introduced two means of @dfn{extending} classes -- defining a
 new class that inherits from a parent:
 
