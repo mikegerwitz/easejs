@@ -496,9 +496,9 @@ class @var{B} as defined by @var{B} = Class( @var{base} ).
 
 @subsection Member Inheritance
 Let @var{dfn\_n\^c} denote a member of @var{dfn} in regards to class @var{c}
-that matches (case-sensitive) name @var{n} and is not private. Let @var{o\_name}
+that matches (case-sensitive) name @var{n} and is not private. Let @var{o\_n}
 denote an override, represented as boolean value that is true under the
-condition that both @var{dfn\_name\^C'} and @var{dfn\_name\^C} are defined
+condition that both @var{dfn\_n\^C'} and @var{dfn\_n\^C} are defined
 values.
 
 @var{C'} will @dfn{inherit} all public and protected members of supertype
