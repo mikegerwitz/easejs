@@ -483,13 +483,43 @@ Define anonymous class @var{C'} as a subtype of @var{base}, described by
 object.
 @end table
 
-Inheritance can be a touchy subject among Object-Oriented developers. It is a
-powerful feature that is easily abused. @dfn{Inheritance} is the term used to
-describe the process of creating a @dfn{child} class that @dfn{extends}
-(inherits members from) another @dfn{parent} class. The parent class is also
-referred to as the @dfn{supertype} and the child is called the @dfn{subtype}.
-Let's consider the following example, where we have a dog, a lazy dog, and a dog
-that walks on two legs:
+@var{C} is a class as defined in @ref{Defining Classes}. @var{base} may be any
+class or object containing enumerable members. @var{dfn} is to be a definition
+object as defined in @ref{Defining Classes}.
+
+Provided @var{C} or @var{base} to satisfy requirements of @var{C}, class
+@var{C'} will be defined as a @dfn{subtype} (child) of @dfn{supertype} (parent)
+class @var{C}. Provided @var{base} that does @emph{not} satisfy requirements of
+@var{C}, @var{C'} will be functionally equivalent to a subtype of anonymous
+class @var{B} as defined by @var{B} = Class( @var{base} ).
+
+
+@subsection Member Inheritance
+Let @var{dfn\_n\^c} denote a member of @var{dfn} in regards to class @var{c}
+that matches (case-sensitive) name @var{n} and is not private. Let @var{o\_name}
+denote an override, represented as boolean value that is true under the
+condition that both @var{dfn\_name\^C'} and @var{dfn\_name\^C} are defined
+values.
+
+@var{C'} will @dfn{inherit} all public and protected members of supertype
+@var{C}. As such, it could be said that @var{dfn\^C'} = @var{dfn\^C} +
+@var{dfn}. For any condition @var{o} of any member @var{name}, member
+@var{dfn\_name\^C'} will be said to @dfn{override} member @var{dfn\_name\^C},
+provided that overriding member @var{name} passes all validation rules
+associated with the operation.
+
+For a condition @var{o\_name} where member @var{name} is defined as a method, it
+is required that @var{dfn\_name\^C} be declared with the @code{virtual} keyword
+and that @var{dfn\_name\^C'} be declared with the @code{override} keyword.
+Non-virtual methods cannot be overridden (same as the "final" keyword in
+languages like Java).
+
+@subsection Discussion
+Inheritance can be a touchy subject among many Object-Oriented developers due to
+encapsulation concerns and design considerations over method overrides. The
+decision of whether or not inheritance is an appropriate choice over composition
+is left to the developer; ease.js provides the facilities for achieving
+classical inheritance where it is desired.
 
 @float Figure, f:inheritance-ex
 @image{img/inheritance-ex}
