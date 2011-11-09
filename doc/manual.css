@@ -43,6 +43,27 @@ var {
   font-family: monospace;
 }
 
+var div {
+  position: relative;
+  display:  inline;
+}
+
+var sub, var sup {
+  font-size: 0.75em;
+}
+
+sup.left {
+  position: absolute;
+  left: 0px;
+  top: -0.75em;
+}
+
+sub.left {
+  position: absolute;
+  left:   0px;
+  bottom: -0.2em;
+}
+
 .float {
   border:  1px solid #babdb6;
   padding: 0px;

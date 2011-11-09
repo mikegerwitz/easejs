@@ -49,6 +49,19 @@ jqueryCheck( function()
         {
             hljs.highlightBlock( element, '    ' );
         } );
+
+        // quick-n-dirty sub and super script impl (it is by no means perfect)
+        $( 'var:contains("\\")' ).each( function()
+        {
+            var $this = $( this );
+
+            $this.html(
+                $this.html().replace( /(\\.*)$/, '<div>$1</div>' )
+                .replace( /\\_([^ \\]+)/, '<sub>$1</sub>' )
+                .replace( /\\\^([^ \\]+)/, '<sup>$1</sup>' )
+                .replace( /(<\/su[bp]><su[bp])>/, '$1 class="left">' )
+            );
+        } );
     } );
 } );
 
