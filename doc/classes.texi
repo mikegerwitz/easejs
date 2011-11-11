@@ -179,9 +179,9 @@ used with methods.
 @tab Defines an immutable property @var{name}. May not be used with methods or
 getters/setters. @xref{Constants}.
 @item @code{virtual}
-@tab Declares that method @var{name} may be overridden by subtypes. May only be
-used with methods. Methods without this keyword may not be overridden. May only
-be used with methods. @xref{Inheritance}.
+@tab Declares that method @var{name} may be overridden by subtypes.  Methods
+without this keyword may not be overridden. May only be used with methods.
+@xref{Inheritance}.
 @item @code{override}
 @tab Overrides method @var{name} of supertype of @var{C} with @var{value}. May
 only override virtual methods. May only be used with methods.
