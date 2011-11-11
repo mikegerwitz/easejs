@@ -502,17 +502,55 @@ condition that both @var{dfn\_n\^C'} and @var{dfn\_n\^C} are defined
 values.
 
 @var{C'} will @dfn{inherit} all public and protected members of supertype
-@var{C}. As such, it could be said that @var{dfn\^C'} = @var{dfn\^C} +
-@var{dfn}. For any condition @var{o} of any member @var{name}, member
-@var{dfn\_name\^C'} will be said to @dfn{override} member @var{dfn\_name\^C},
-provided that overriding member @var{name} passes all validation rules
-associated with the operation.
+@var{C} such that @var{dfn\_n\^C'} = @var{dfn\_n\^C} for each @var{dfn\^C}. For
+any positive condition @var{o\_n}, member @var{dfn\_n\^C'} will be said to
+@dfn{override} member @var{dfn\_n\^C}, provided that overriding member @var{n}
+passes all validation rules associated with the operation. A @code{protected}
+member may be @dfn{escalated} to @code{public}, but the reverse is untrue.
+@code{private} members are invisible to subtypes.
 
-For a condition @var{o\_name} where member @var{name} is defined as a method, it
-is required that @var{dfn\_name\^C} be declared with the @code{virtual} keyword
-and that @var{dfn\_name\^C'} be declared with the @code{override} keyword.
-Non-virtual methods cannot be overridden (same as the "final" keyword in
-languages like Java).
+For any positive condition @var{o\_n} where member @var{n} is defined as a
+@emph{method}:
+
+@itemize
+@item
+One of the following conditions must always be true:
+  @itemize
+  @item
+  @var{dfn\_n\^C} is declared with the @code{virtual} keyword and
+  @var{dfn\_n\^C'} is declared with the @code{override} keyword.
+  @itemize
+    @item
+    Note that @var{dfn\_n\^C'} will not become @code{virtual} by default (unlike
+    languages such as C++); they must be explicitly declared as such.
+  @end itemize
+  @item
+  @var{dfn\_n\^C} is declared with the @code{abstract} keyword and
+  @var{dfn\_n\^C'} omits the @code{override} keywords.
+  @end itemize
+@item
+The argument count of method @var{dfn\_n\^C'} must be >= the argument count of
+method @var{dfn\_n\^C} to permit polymorphism.
+@item
+A reference to super method @var{dfn\_n\^C} will be preserved and assigned to
+@samp{this.__super} within context of method @var{dfn\_n\^C'}.
+@item
+A method is said to be @dfn{concrete} when it provides a definition and
+@dfn{abstract} when it provides only a declaration.
+@itemize
+  @item
+  Any method @var{n} such that @var{dfn\_n\^C} is declared @code{abstract} may
+  be overridden by a concrete or abstract method @var{dfn\_n\^C'}.
+  @item
+  A method @var{n} may @emph{not} be declared @code{abstract} if @var{dfn\_n\^C}
+  is concrete.
+@end itemize
+@item
+Member @var{dfn\_n\^C} must be a method.
+@end itemize
+
+Members that have been declared @code{static} cannot be overridden
+(@pxref{Static Members}).
 
 @subsection Discussion
 Inheritance can be a touchy subject among many Object-Oriented developers due to
