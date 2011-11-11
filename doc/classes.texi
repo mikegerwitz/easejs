@@ -180,7 +180,7 @@ getters/setters. @xref{Constants}.
 @tab Declares that method @var{name} may be overridden by subtypes. May only be
 used with methods. Methods without this keyword may not be overridden. May only
 be used with methods. @xref{Inheritance}.
-@item override
+@item @code{override}
 @tab Overrides method @var{name} of supertype of @var{C} with @var{value}. May
 only override virtual methods. May only be used with methods.
 @xref{Inheritance}.
