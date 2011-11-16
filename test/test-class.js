@@ -103,6 +103,16 @@ assert.ok(
 );
 
 assert.ok(
+    Class.isInstanceOf( Foo, undefined ) === false,
+    "Checking instance of undefined will not throw an error"
+);
+
+assert.ok(
+    Class.isInstanceOf( undefined, {} ) === false,
+    "Checking for instance of undefined will not throw an error"
+);
+
+assert.ok(
     !( Class.isInstanceOf( Foo, Foo ) ),
     "Class is not an instance of itself when uninstantiated"
 );
