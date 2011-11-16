@@ -867,28 +867,45 @@ automate this check for you.
 
 @node Visibility Escalation
 @subsection Visibility Escalation
+Let @var{a\_n} denote a numeric level of visibility for @var{dfn\_n\^C} such
+that the access modifiers (@pxref{Access Modifiers}) @code{private},
+@code{protected} and @code{public} are associated with the values @code{1},
+@code{2} and @code{3} respectively. Let @var{a'} represent @var{a} in regards to
+@var{C'} (@pxref{Inheritance}).
+
+For any member @var{n} of @var{dfn}, the following must be true:
+@itemize
+@item
+@var{a'\_n} >= @var{a\_n}.
+@item
+@var{dfn\_n\^C'} cannot be redeclared without providing a new definition
+(@var{value}).
+@end itemize
+
+@subsubsection Discussion
 @dfn{Visibility escalation} is the act of increasing the visibility of a member.
-Since private members cannot be inherited, this essentially means making a
-protected member public.
+Since private members cannot be inherited, this would then imply that the only
+act to be considered "escallation" would be increasing the level of visibility
+from @code{protected} to @code{private}.
 
-If you override a protected method, you may increase its visibility to public
-without any problems. If you follow the convention of prefixing private members
-with an underscore, you may find that it's not recommended doing so for
-protected members. This is because subtypes may decide to make the member
-public.
+Many follow the convention of prefixing private members with an underscore but
+leaving omitting such a prefix from protected members. This is to permit
+visibility escalation without renaming the member. Alternatively, a new member
+can be defined without the prefix that will simply call the overridden member
+(although this would then not be considered an escalation, since the member name
+varies).
 
-In order to increase the visibility, you do have to override the member. For
-properties, this has no discernible effect; you're just redefining it. For
-methods, this means that you are overriding the entire body. Therefore, you will
-either have to provide an alternate implementation, or call
-@samp{this.__super()} to invoke the original method.
+In order to increase the visibility, you must override the member; you cannot
+simply redeclare it, leaving the parent definition in tact. For properties, this
+has no discernible effect unless the @var{value} changes, as you are simply
+redefining it. For methods, this means that you are overriding the entire
+@var{value}. Therefore, you will either have to provide an alternate
+implementation or call @samp{this.__super()} to invoke the original method.
 
-Note that @emph{you cannot go from public to protected}. This will throw an
-error. You can only increase the level of visibility. This ensures that once a
-class defines an API, subclasses cannot alter it. That API is forever for all
-subtypes. This means that, if you are expecting a certain type, you can rest
-assured that whatever you are given, even if it is a subtype, has the API you
-are expecting.
+Note that @emph{you cannot de-escalate from public to protected}; this will
+result in an error. This ensures that once a class defines an API, subclasses
+cannot alter it. That API must be forever for all subtypes to ensure that it
+remains polymorphic.
 
 Let's take a look at an example.
 
