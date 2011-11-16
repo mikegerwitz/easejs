@@ -30,8 +30,17 @@ body, .float-caption
   font-family: 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', Courier, monospace;
 }
 
+table {
+  width: 100%;
+}
+
 table, table td {
   padding: 0.25em;
+}
+
+table ul {
+  margin:  0px;
+  padding: 0px 0px 0px 1em;
 }
 
 dfn {
@@ -93,6 +102,11 @@ sub.left {
 
   padding-top: 0px;
   margin-top:  0px;
+}
+
+/* unnecessary addition by texinfo */
+.float table td br {
+  display: none;
 }
 
 .float-caption {
