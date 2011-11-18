@@ -22,8 +22,10 @@
  * @package test
  */
 
-var shared = require( __dirname + '/inc-common' ),
-    es5    = ( typeof Object.defineProperty === 'function' ) ? true : false;
+var common = require( 'common' ),
+    shared = require( __dirname + '/inc-common' ),
+    es5    = !( common.require( 'util' ).definePropertyFallback() )
+;
 
 require( 'common' ).testCase(
 {

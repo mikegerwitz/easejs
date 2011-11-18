@@ -36,7 +36,7 @@ var common = require( './common' ),
  */
 ( function testUtilGetOwnPropertyDescriptorIsObjectsIfAvailable()
 {
-    if ( Object.getOwnPropertyDescriptor )
+    if ( get_set && Object.getOwnPropertyDescriptor )
     {
         assert.strictEqual(
             util.getOwnPropertyDescriptor,

@@ -23,7 +23,8 @@
  */
 
 // get-set-test (supported)
-var gst = ( typeof Object.defineProperty === 'function' ) ? true : false;
+var common = require( 'common' ),
+    gst    = !( common.require( 'util' ).definePropertyFallback() )
 
 
 require( 'common' ).testCase(
