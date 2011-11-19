@@ -89,10 +89,7 @@ function incAssertCount()
 module.exports = function( test_case )
 {
     var context  = prepareCaseContext(),
-        setUp    = test_case.setUp,
-
-        acount_last = 0
-    ;
+        setUp    = test_case.setUp;
 
     // if we're not running a suite, clear out the failures
     if ( !( suite ) )
@@ -116,37 +113,43 @@ module.exports = function( test_case )
             setUp.call( context );
         }
 
-        acount_last = acount;
+        var data   = test.match( /^(?:@(.*?)\((.*?)\))?(.*)$/ ),
+            method = data[ 1 ],
+            prop   = data[ 2 ],
+            name   = data[ 3 ],
+            count  = 1,
+            args   = [ [] ]
+        ;
 
-        try
+        if ( method === 'each' )
         {
-            test_case[ test ].call( context );
+            count = context[ prop ].length;
+            args  = [];
 
-            // if there were no assertions, then the test should be marked as
-            // incomplete
-            if ( acount_last === acount )
+            for ( var i = 0; i < count; i++ )
             {
-                testPrint( 'I' );
-                icount++;
-            }
-            else
-            {
-                scount++;
-                testPrint( '.' );
+                args.push( [ context[ prop ][ i ] ] );
             }
         }
-        catch ( e )
+        else if ( method !== undefined )
         {
-            if ( e === SkipTest )
-            {
-                testPrint( 'S' );
-                skpcount++;
-            }
-            else
-            {
-                testPrint( 'F' );
-                failures.push( [ test, e ] );
-            }
+            throw Error( "Unknown test method: " + method );
+        }
+
+
+        // perform the appropriate number of tests
+        for ( var i = 0; i < count; i++ )
+        {
+            tryTest(
+                test_case,
+                test,
+                name + ( ( count > 1 )
+                    ? ( ' (' + i + ')' )
+                    : ''
+                ),
+                context,
+                args[ i ]
+            );
         }
     }
 
@@ -157,6 +160,54 @@ module.exports = function( test_case )
         endStats();
     }
 };
+
+
+/**
+ * Attempt a test
+ *
+ * @param  {Object}  test_case  object containing all test cases
+ * @param  {string}  test       complete key of test to run
+ * @param  {string}  test_str   text to use on failure
+ * @param  {Object}  context    context to bind to test function
+ * @param  {Array}   args       arguments to pass to test function
+ *
+ * @return {undefined}
+ */
+function tryTest( test_case, test, test_str, context, args )
+{
+    var acount_last = acount;
+
+    try
+    {
+        test_case[ test ].apply( context, args );
+
+        // if there were no assertions, then the test should be marked as
+        // incomplete
+        if ( acount_last === acount )
+        {
+            testPrint( 'I' );
+            icount++;
+        }
+        else
+        {
+            scount++;
+            testPrint( '.' );
+        }
+    }
+    catch ( e )
+    {
+        if ( e === SkipTest )
+        {
+            testPrint( 'S' );
+            skpcount++;
+        }
+        else
+        {
+            testPrint( 'F' );
+            failures.push( [ test_str, e ] );
+        }
+    }
+}
 
 
 /**
