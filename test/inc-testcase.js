@@ -26,7 +26,8 @@ var assert         = require( 'assert' ),
     assert_wrapped = {},
     acount         = 0,
     icount         = 0,
-    skpcount         = 0,
+    skpcount       = 0,
+    tcount         = 0,
 
     // when set to true, final statistics will be buffered until suite ends
     suite    = false,
@@ -150,6 +151,9 @@ module.exports = function( test_case )
                 context,
                 args[ i ]
             );
+
+            // output a newline and the count every 60 tests
+            ( tcount % 60 ) || testPrint( " " + tcount + "\n" );
         }
     }
 
@@ -207,6 +211,8 @@ function tryTest( test_case, test, test_str, context, args )
             failures.push( [ test_str, e ] );
         }
     }
+
+    tcount++;
 }
 
 
