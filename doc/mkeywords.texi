@@ -1,0 +1,394 @@
+@c  This document is part of the ease.js manual
+@c  Copyright (c) 2011 Mike Gerwitz
+@c    Permission is granted to copy, distribute and/or modify this document
+@c    under the terms of the GNU Free Documentation License, Version 1.3
+@c    or any later version published by the Free Software Foundation;
+@c    with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+@c    Texts.  A copy of the license is included in the section entitled ``GNU
+@c    Free Documentation License''.
+
+@node Member Keywords
+@chapter Member Keywords
+Keywords are defined within the context of the @dfn{definition object}
+(@pxref{dfnobj,,Definition Object}). In the sections that follow, let @var{C}
+denote a class that contains the definition object @var{dfn}, which in turn
+contains @var{keywords} within the declaration of method @var{name}, whose
+definition is denoted by @var{value}.
+
+The table below summarizes the available keywords accepted by @var{keywords}.
+
+@float Table, t:keywords
+@multitable @columnfractions .10 .90
+@headitem Keyword @tab Description
+@item @code{public}
+@tab Places member @var{name} into the public API for @var{C} (@pxref{Access
+Modifiers}).
+@item @code{protected}
+@tab Places member @var{name} into the protected API for @var{C} (@pxref{Access
+Modifiers}).
+@item @code{private}
+@tab Places member @var{name} into the private API for @var{C} (@pxref{Access
+Modifiers}).
+@item @code{static}
+@tab Binds member @var{name} to class @var{C} rather than instance of @var{C}.
+Member data shared with each instance of type @var{C}. @xref{Static Members}.
+@item @code{abstract}
+@tab Declares member @var{name} and defers definition to subtype. @var{value}
+is interpreted as an argument list and must be of type @code{array}. May only be
+used with methods.
+@item @code{const}
+@tab Defines an immutable property @var{name}. May not be used with methods or
+getters/setters. @xref{Constants}.
+@item @code{virtual}
+@tab Declares that method @var{name} may be overridden by subtypes.  Methods
+without this keyword may not be overridden. May only be used with methods.
+@xref{Inheritance}.
+@item @code{override}
+@tab Overrides method @var{name} of supertype of @var{C} with @var{value}. May
+only override virtual methods. May only be used with methods.
+@xref{Inheritance}.
+@end multitable
+@caption{Supported keywords}
+@end float
+
+Not all keywords are supported by each member and some keywords conflict with
+each other. More information can be found in the appropriate sections as
+mentioned above in @ref{t:keywords}.
+
+@menu
+* Access Modifiers::    Control the context in which members may be accessed
+@end menu
+
+@node Access Modifiers
+@section Access Modifiers
+@dfn{Access modifiers}, when provided in @var{keywords}, alter the interface
+into which the definition of member @var{name} is placed. There are three
+interfaces, or levels of @dfn{visibility}, that dictate the context from which a
+member may be accessed, listed here from the most permissive to the least:
+
+@table @dfn
+@item public
+Accessible outside of @var{C} or any instance of @var{C} (e.g.
+@samp{foo.publicProp}). @ref{Inheritance,,Inherited} by subtypes of @var{C}.
+
+@item protected
+Not accessible outside of @var{C} or an instance of @var{C} (e.g.
+@samp{this.protectedProp} within context of @var{C}).
+@ref{Inheritance,,Inherited} by subtypes of
+@var{C}.
+
+@item private
+Not accessible outside of @var{C} or any instance of @var{C}. @emph{Not}
+@ref{Inheritance,,inherited} by subtypes of @var{C}.
+@end table
+
+@float Table, t:access-modifiers
+@multitable @columnfractions .10 .90
+@headitem Keyword @tab Description
+@item @code{public}
+@tab
+Places member @var{name} in public interface (accessible outside of @var{C} or
+instance of @var{C}; accessible by subtypes).  Implied if no other access
+modifier is provided.
+@item @code{protected}
+@tab
+Places member @var{name} in protected interface (accessible only within @var{C}
+or instance of @var{C}; accessible by subtypes).
+@item @code{private}
+@tab
+Places member @var{name} in private interface (accessible only within @var{C} or
+instance of @var{C}; not accessible by subtypes).
+@end multitable
+@caption{Access modifiers}
+@end float
+
+Access modifiers have the following properties:
+
+@itemize
+@item
+Only one access modifier may appear in @var{keywords} for any given @var{name}.
+@item
+If no access modifier is provided in @var{keywords} for any member @var{name},
+member @var{name} is implicitly @code{public}.
+@end itemize
+
+@menu
+* Discussion: Access Modifiers Discussion.  Uses and rationale
+* Example: Access Modifiers Example.        Demonstrating access modifiers
+@end menu
+
+@node Access Modifiers Discussion
+@subsection Discussion
+One of the major hurdles ease.js aimed to address (indeed, one of the core
+reasons for its creation) was that of encapsulation. JavaScript's prototypal
+model provides limited means of encapsulating data. Since functions limit scope,
+they may be used to mimic private members; these are often referred to as
+@dfn{privileged members}. However, declaring classes in this manner tends be
+messy, which has the consequence of increasing maintenance costs and reducing
+the benefit of the implementation. ease.js aims to provide an elegant
+implementation that is both a pleasure to work with and able to support
+protected members.
+
+By default, all members are public. This means that the members can be accessed
+and modified from within an instance as well as from outside of it. Subtypes
+(classes that inherit from it; @pxref{Inheritance}) will inherit public members.
+Public methods expose an API by which users may use your class. Public
+properties, however, should be less common in practice for a very important
+reason, which is explored throughout the remainder of this section.
+
+@subsubsection Encapsulation
+@dfn{Encapsulation} is the act of hiding information within a class or instance.
+Classes should be thought of black boxes; we want them to do their job, but we
+should not concern ourselves with @emph{how} they do their job. Encapsulation
+takes a great deal of complexity out of an implementation and allows the
+developer to focus on accomplishing the task by focusing on the implementing in
+terms of the problem domain.
+
+For example - consider a class named @var{Dog} which has a method @code{walk()}.
+To walk a dog, we simply call @code{Dog().walk()}. The @code{walk()} method
+could be doing anything. In the case of a real dog, perhaps it will send a
+message to the dog's brain, perform the necessary processing to determine how
+that command should be handled and communicate the result to the limbs. The
+limbs will communicate back the information they receive from their nerves,
+which will be processed by the brain to determine when they hit the ground,
+thereby triggering additional actions and the further movement of the other
+legs. This could be a terribly complicated implementation if we had to worry
+about how all of this was done.
+
+In addition to the actual walking algorithm, we have the state of each of the
+legs - their current position, their velocity, the state of each of the muscles,
+etc. This state pertains only to the operations performed by the dog. Exposing
+this state to everyone wouldn't be terribly useful. Indeed, if this information
+was exposed, it would complicate the implementation. What if someone decided to
+alter this state in the middle of a walking operation? Or what if the developer
+implementing @var{Dog} relied on this state in order to determine when the leg
+reached a certain position, but later versions of @var{Dog} decided to alter the
+algorithm, thereby changing those properties?
+
+By preventing these details from being exposed, we present the developer with a
+very simple interface@footnote{One would argue that this isn't necessary a good
+thing. What if additional flexibility was needed? @var{Dog}, in the sense of
+this example, can be thought of as a Facade (GoF). One could provide more
+flexibility by composing @var{Dog} of, say, @var{Leg} instances, a @var{Brain},
+etc. However, encapsulation still remains a factor. Each of those components
+would encapsulate their own data.}. Rather than the developer having to be
+concerned with moving each of the dog's legs, all they have to do is understand
+that the dog is being walked.
+
+When developing your classes, the following best practices should be kept in
+mind:
+
+@itemize
+@item
+When attempting to determine the best access modifier (@pxref{Access Modifiers})
+to use for a member, start with the least level of visibility (@code{private})
+and work your way up if necessary.
+@item
+If your member is not private, be sure that you can justify your choice.
+  @itemize
+  @item
+  If protected - why do subclasses need access to that data? Is there a better
+  way to accomplish the same task without breaking encapsulation?
+  @item
+  If public - is this member necessary to use the class externally? In the case
+  of a method - does it make sense to be part of a public API? If a property -
+  why is that data not encapsulated? Should you consider an accessor method?
+  @end itemize
+@end itemize
+
+@node Access Modifiers Example
+@subsection Example
+Let's consider our @var{Dog} class in more detail. We will not go so far as to
+implement an entire nervous system in our example. Instead, let's think of our
+@var{Dog} similar to a wind-up toy:
+
+@float Figure, f:encapsulation
+@verbatim
+Class( 'Dog',
+{
+    'private _legs': {},
+
+    'private _body': {},
+
+    // ...
+
+
+    'public walk': function()
+    {
+        this.stand();
+        this._moveFrontLeg( 0 );
+        this._moveBackLeg( 1 );
+        this._moveFrontLeg( 1 );
+        this._moveBackLeg( 0 );
+    },
+
+    'protected stand': function()
+    {
+        if ( this.isSitting() )
+        {
+            // ...
+        }
+    },
+
+    'public rollOver': function()
+    {
+        this._body.roll();
+    },
+
+    'private _moveFrontLeg': function( leg )
+    {
+        this._legs.front[ leg ].move();
+    },
+
+    'private _moveBackLeg': function( leg )
+    {
+        this._legs.back[ leg ].move();
+    },
+
+    // ...
+} );
+@end verbatim
+@caption{Encapsulating behavior of a class}
+@end float
+
+As you can see above, the act of making the dog move forward is a bit more
+complicated than the developer may have originally expected. The dog has four
+separate legs that need to be moved individually. The dog must also first stand
+before it can be walked, but it can only stand if it's sitting. Detailed tasks
+such as these occur all the time in classes, but they are hidden from the
+developer using the public API. The developer should not be concerned with all
+of the legs. Worrying about such details brings the developer outside of the
+problem domain and into a @emph{new} problem domain - how to get the dog to
+walk.
+
+
+@subsection Private Members
+Let's first explore private members. The majority of the members in the
+@var{Dog} class (@pxref{f:encapsulation,}) are private. This is the lowest level
+of visibility (and consequently the @emph{highest} level of encapsulation). By
+convention, we prefix private members with an underscore. Private members are
+available @emph{only to the class that defined it} and are not available outside
+the class.
+
+@float Figure, f:encapsulation-call-priv
+@verbatim
+    var dog = Dog();
+    dog._moveFrontLeg( 1 );
+
+    // TypeError: Object #<Dog> has no method '_moveFrontLeg'
+@end verbatim
+@caption{Cannot access private members outside the class}
+@end float
+
+You will notice that the dog's legs are declared private as well
+(@pxref{f:encapsulation,}). This is to ensure we look at the dog as a whole; we
+don't care about what the dog is made up of. Legs, fur, tail, teeth, tongue, etc
+- they are all irrelevant to our purpose. We just want to walk the dog.
+Encapsulating those details also ensures that they will not be tampered with,
+which will keep the dog in a consistent, predictable state.
+
+Private members cannot be inherited. Let's say we want to make a class called
+@var{TwoLeggedDog} to represent a dog that was trained to walk only on two feet.
+We could approach this in a couple different ways. The first way would be to
+prevent the front legs from moving. What happens when we explore that approach:
+
+
+@float Figure, f:encapsulation-inherit-priv
+@verbatim
+    var two_legged_dog = Class( 'TwoLeggedDog' ).extend( Dog,
+    {
+        /**
+         * This won't override the parent method.
+         */
+        'private _moveFrontLeg': function( leg )
+        {
+            // don't do anything
+            return;
+        },
+    } )();
+
+    two_legged_dog.walk();
+@end verbatim
+@caption{Cannot override private members of supertype}
+@end float
+
+If you were to attempt to walk a @var{TwoLeggedDog}, you would find that
+@emph{the dog's front legs still move}! This is because, as mentioned before,
+private methods are not inherited. Rather than overriding the parent's
+@var{_moveFrontLeg} method, you are instead @emph{defining a new method}, with
+the name @var{_moveFrontLeg}. The old method will still be called.  Instead, we
+would have to override the public @var{walk} method to prevent our dog from
+moving his front feet.
+
+@subsection Protected Members
+Protected members are often misunderstood. Many developers will declare all
+of their members as either public or protected under the misconception that they
+may as well allow subclasses to override whatever functionality they want. This
+makes the class more flexible.
+
+While it is true that the class becomes more flexible to work with for subtypes,
+this is a dangerous practice. In fact, doing so @emph{violates encapsulation}.
+Let's reconsider the levels of visibility in this manner:
+
+@table @strong
+@item public
+Provides an API for @emph{users of the class}.
+
+@item protected
+Provides an API for @emph{subclasses}.
+
+@item private
+Provides an API for @emph{the class itself}.
+@end table
+
+Just as we want to hide data from the public API, we want to do the same for
+subtypes. If we simply expose all members to any subclass that comes by, that
+acts as a peephole in our black box. We don't want people spying into our
+internals. Subtypes shouldn't care about the dog's implementation either.
+
+Private members should be used whenever possible, unless you are looking to
+provide subtypes with the ability to access or override methods. In that case,
+we can move up to try protected members.  Remember not to make a member public
+unless you wish it to be accessible to the entire world.
+
+@var{Dog} (@pxref{f:encapsulation,}) defined a single method as protected -
+@code{stand()}. Because the method is protected, it can be inherited by
+subtypes. Since it is inherited, it may also be overridden. Let's define another
+subtype, @var{LazyDog}, which refuses to stand.
+
+@float Figure, f:encapsulation-inherit-prot
+@verbatim
+    var lazy_dog = Class( 'LazyDog' ).extend( Dog,
+    {
+        /**
+         * Overrides parent method
+         */
+         'protected stand': function()
+         {
+            // nope!
+            this.rollOver();
+            return false;
+         },
+    } )();
+
+    lazy_dog.walk();
+@end verbatim
+@caption{Protected members are inherited by subtypes}
+@end float
+
+There are a couple important things to be noted from the above example. Firstly,
+we are able to override the @code{walk()} method, because it was inherited.
+Secondly, since @code{rollOver()} was also inherited from the parent, we are
+able to call that method, resulting in an upside-down dog that refuses to stand
+up, just moving his feet.
+
+Another important detail to notice is that @code{Dog.rollOver()} accesses a
+private property of @var{Dog} -- @var{_body}. Our subclass does not have access
+to that variable. Since it is private, it was not inherited. However, since the
+@code{rollOver()} method is called within the context of the @var{Dog} class,
+the @emph{method} has access to the private member, allowing our dog to
+successfully roll over. If, on the other hand, we were to override
+@code{rollOver()}, our code would @emph{not} have access to that private object.
+Calling @samp{this.__super()} from within the overridden method would, however,
+call the parent method, which would again have access to its parent's private
+members.
