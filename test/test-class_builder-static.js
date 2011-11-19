@@ -484,6 +484,49 @@ require( 'common' ).testCase(
 
 
     /**
+     * Same as above test. In this case, we have to keep in mind that non-class
+     * bases may not have the static accessor method defined. In that case,
+     * attempting to call it would cause an error.
+     *
+     * Of course, even if they did have a static accessor method defined, we
+     * wouldn't want to use it, as it isn't the one provided by us. Let's close
+     * up as many holes in the framework as we can. It's more to prevent
+     * unintended side-effects than anything. There's not much one could do with
+     * a "fake" static accessor method that they couldn't with a base class. So,
+     * for good measure, we'll declare one on our test base.
+     */
+    'Accessing static accessor method on non-class base also works': function()
+    {
+        var _self = this,
+            base  = function() {},
+            Test  = _self.builder.build( base, {} )
+        ;
+
+        // we do not want to call this
+        base.$ = function()
+        {
+            _self.fail(
+                "Should not call static accessor method of non-class base"
+            );
+        };
+
+        // get
+        this.assertEqual( undefined, Test.$( 'foo' ) );
+
+        // set
+        this.assertThrows(
+            function()
+            {
+                Test.$( 'foo', 'val' );
+            },
+            ReferenceError,
+            "Attempting to set an undeclaraed static property results in an " +
+                "exception on non-class base"
+        );
+    },
+
+
+    /**
      * Protected members should be available from within the class but shouldn't
      * be exposed to the world
      */
