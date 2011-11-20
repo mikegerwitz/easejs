@@ -69,9 +69,10 @@ addresses. We will also see how to declare the classes using both prototypes and
 ease.js, until such a point where prototypes are no longer adequate.
 
 @menu
-* Defining Classes::         Learn how to define a class with ease.js
-* Inheritance::               Extending classes from another
-* Static Members::            Members whose use do not require instantiation
+* Defining Classes::  Learn how to define a class with ease.js
+* Inheritance::       Extending classes from another
+* Static Members::    Members whose use do not require instantiation
+* Abstract Members::  Declare members, deferring their definition to subtypes
 @end menu
 
 
@@ -1239,4 +1240,262 @@ it is perfectly legal to alter the object:
 @verbatim
     MyClass.$('foo').a = 'c';
 @end verbatim
+
+
+@node Abstract Members
+@section Abstract Members
+@table @code
+@item 'abstract [@var{keywords}] @var{name}': @var{args}
+Declare an abstract method @var{name} as having @var{args} arguments, having
+optional additional keywords
+@var{keywords}.
+@end table
+Abstract members permit defining an API, deferring the implementation to a
+subtype. Abstract methods are declared as an array of string argument names
+@var{args}.
+
+@verbatim
+    // declares abstract method 'connect' expecting the two arguments, 'host'
+    // and 'path'
+    { 'abstract connect': [ 'host', 'path' ] }
+@end verbatim
+
+@itemize
+@item
+Abstract members are defined using the @ref{t:keywords,,@code{abstract}}
+keyword.
+  @itemize
+  @item
+  Except in interfaces (@pxref{Interfaces}), where the
+  @ref{t:keywords,,@code{abstract}} keyword is implicit.
+  @end itemize
+@item
+Currently, only methods may be declared abstract.
+@item
+The subtype must implement at least the number of arguments declared in
+@var{args}, but the names needn't match.
+  @itemize
+  @item
+  The names are use purely for documentation and are not semantic.
+  @end itemize
+@end itemize
+
+Abstract members may only be a part of one of the following:
+
+@menu
+* Interfaces::
+* Abstract Classes::
+@end menu
+
+@node Interfaces
+@subsection Interfaces
+@table @code
+@item I = Interface( string @var{name}, Object @var{dfn} )
+Define named interface @var{I} identified by @var{name} described by @var{dfn}.
+
+@item I = Interface( string @var{name} ).extend( Object @var{dfn} )
+Define named interface @var{I} identified by @var{name} described by @var{dfn}.
+
+@item I = Interface( Object @var{dfn} )
+Define anonymous interface @var{I} as described by @var{dfn}.
+
+@item I = Interface.extend( Object @var{dfn } )
+Define anonymous interface @var{I} as described by @var{dfn}.
+@end table
+
+Interfaces are defined with a syntax much like classes (@pxref{Defining
+Classes}) with the following properties:
+
+@itemize
+@item
+Interface @var{I} cannot be instantiated.
+@item
+Every member of @var{dfn} of @var{I} is implicitly
+@ref{t:keywords,,@code{abstract}}.
+  @itemize
+  @item
+  Consequently, @var{dfn} of @var{I} may contain only abstract methods.
+  @end itemize
+@item
+Interfaces may only extend other interfaces (@pxref{Inheritance}).
+@end itemize
+
+@subsubsection Implementing Interfaces
+@table @code
+@item C = Class( @var{name} ).implement( @var{I\_0}[, ...@var{I\_n}] ).extend( @var{dfn} )
+Define named class @var{C} identified by @var{name} implementing all interfaces
+@var{I}, described by @var{dfn}.
+@item C = Class.implement( @var{I\_0}[, ...@var{I\_n} ).extend( @var{dfn} )
+Define anonymous class @var{C} implementing all interfaces @var{I}, described
+by @var{dfn}.
+@end table
+Any class @var{C} may implement any interface @var{I}, inheriting its API.
+Unlike class inheritance, any class @var{C} may implement one or more
+interfaces.
+
+@itemize
+@item
+Class @var{C} implementing interfaces @var{I} will be considered a subtype of
+every @var{I}.
+@item
+Class @var{C} must either:
+  @itemize
+  @item Provide a concrete definition for every member of @var{dfn} of @var{I},
+  @item or be declared as an @code{AbstractClass} (@pxref{Abstract Classes})
+    @itemize
+    @item
+    @var{C} may be declared as an @code{AbstractClass} while still providing a
+    concrete definition for some of @var{dfn} of @var{I}.
+    @end itemize
+  @end itemize
+@end itemize
+
+@subsubsection Discussion
+Consider a library that provides a websocket abstraction. Not all environments
+support web sockets, so an implementation may need to fall back on long polling
+via AJAX, Flash sockets, etc. If websocket support @emph{is} available, one
+would want to use that. Furthermore, an environment may provide its own type of
+socket that our library does not include support for. Therefore, we would want
+to provide developers for that environment the ability to define their own type
+of socket implementation to be used in our library.
+
+This type of abstraction can be solved simply by providing a generic API that
+any operation on websockets may use. For example, this API may provide
+@code{connect()}, @code{onReceive()} and @code{send()} operations, among others. We
+could define this API in a @code{Socket} interface:
+
+@float Figure, f:interface-def
+@verbatim
+var Socket = Interface( 'Socket',
+{
+    'public connect': [ 'host', 'port' ],
+
+    'public send': [ 'data' ],
+
+    'public onReceive': [ 'callback' ],
+
+    'public close': [],
+} );
+@end verbatim
+@caption{Defining an interface}
+@end float
+
+We can then provide any number of @code{Socket} implementations:
+
+@float Figure f:interface-impl
+@verbatim
+var WebSocket = Class( 'WebSocket' ).implement( Socket ).extend(
+    {
+        'public connect': function( host, port )
+        {
+            // ...
+        },
+
+        // ...
+    } ),
+
+    SomeCustomSocket = Class.implement( Socket ).extend(
+    {
+        // ...
+    } );
+@end verbatim
+@caption{Implementing an interface}
+@end float
+
+Anything wishing to use sockets can work with this interface polymorphically:
+
+@float Figure, f:interface-poly
+@verbatim
+var ChatClient = Class(
+{
+    'private _socket': null,
+
+    __construct: function( socket )
+    {
+        // only allow sockets
+        if ( !( Class.isA( Socket, socket ) ) )
+        {
+            throw TypeError( 'Expected socket' );
+        }
+
+        this._socket = socket;
+    },
+
+    'public sendMessage': function( channel, message )
+    {
+        this._socket.send( {
+            channel: channel,
+            message: message,
+        } );
+    },
+} );
+@end verbatim
+@caption{Polymorphism with interfaces}
+@end float
+
+We could now use @code{ChatClient} with any of our @code{Socket}
+implementations:
+
+@float Figure, f:interface-poly-use
+@verbatim
+    ChatClient( WebSocket() ).sendMessage( '#lobby', "Sweet! WebSockets!" );
+    ChatClient( SomeCustomSocket() ).sendMessage( '#lobby', "I can chat too!" );
+@end verbatim
+@caption{Obtaining flexibility via dependency injection}
+@end float
+
+The use of the @code{Socket} interface allowed us to create a powerful
+abstraction that will allow our library to work across any range of systems. The
+use of an interface allows us to define a common API through which all of our
+various components may interact without having to worry about the implementation
+details - something we couldn't worry about even if we tried, due to the fact
+that we want developers to support whatever environment they are developing for.
+
+Let's make a further consideration. Above, we defined a @code{onReceive()}
+method which accepts a callback to be called when data is received. What if our
+library wished to use an @code{Event} interface as well, which would allow us to
+do something like @samp{some_socket.on( 'receive', function() @{@} )}?
+
+@float Figure, f:interface-impl-multi
+@verbatim
+var AnotherSocket = Class.implement( Socket, Event ).extend(
+{
+    'public connect': // ...
+
+    'public on': // ... part of Event
+} );
+@end verbatim
+@caption{Implementing multiple interfaces}
+@end float
+
+Any class may implement any number of interfaces. In the above example,
+@code{AnotherSocket} implemented both @code{Socket} and @code{Event}, allowing
+it to be used wherever either type is expected. Let's take a look:
+
+@float Figure, f:interface-multi-isa
+@verbatim
+    Class.isA( Socket, AnotherSocket() );  // true
+    Class.isA( Event, AnotherSocket() );   // true
+@end verbatim
+@caption{Implementors of interfaces are considered subtypes of each implemented
+interface}
+@end float
+
+Interfaces do not suffer from the same problems as multiple inheritance, because
+we are not providing any sort of implementation that may cause conflicts.
+
+One might then ask - why interfaces instead of abstract classes (@pxref{Abstract
+Classes})? Abstract classes require subclassing, which tightly couples the
+subtype with its parent. One may also only inherit from a single supertype
+(@pxref{Inheritance}), which may cause a problem in our library if we used an
+abstract class for @code{Socket}, but a developer had to inherit from another
+class and still have that subtype act as a @code{Socket}.
+
+Interfaces have no such problem. Implementors are free to use interfaces
+wherever they wish and use as many as they wish; they needn't worry that they
+may be unable to use the interface due to inheritance or coupling issues.
+
+@node Abstract Classes
+@subsection Abstract Classes
+TODO
 
