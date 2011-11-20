@@ -531,7 +531,7 @@ A method is said to be @dfn{concrete} when it provides a definition and
   Keywords,,@code{abstract}} if @var{dfn\_n\^C} is concrete.
 @end itemize
 @item
-Member @var{dfn\_n\^C} must be a method.
+Member @var{dfn\_n\^C'} must be a method.
 @end itemize
 
 Members that have been declared @code{static} cannot be overridden
