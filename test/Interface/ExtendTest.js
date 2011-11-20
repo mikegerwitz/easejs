@@ -23,7 +23,7 @@
  */
 
 var common    = require( 'common' ),
-    Interface = common.require( 'interface' );
+    Interface = common.require( 'interface' ),
 
     // get/set test support
     gst = !( common.require( 'util' ).definePropertyFallback() )
@@ -329,6 +329,18 @@ common.testCase(
 
             Interface( dfn );
         }, Error, "Interface members should not be able to be " + am );
+    },
+
+
+    /**
+     * We only want to permit the extending of other interfaces.
+     */
+    'Interfaces can only extend interfaces': function()
+    {
+        this.assertThrows( function()
+        {
+            Interface.extend( function() {}, {} );
+        }, TypeError, "Should not be able to extend from non-interface" );
     },
 } );
 
