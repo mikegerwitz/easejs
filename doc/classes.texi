@@ -1574,7 +1574,7 @@ Class( 'Dialog',
 {
     'private _factory': null,
 
-    __construct( factory )
+    __construct: function( factory )
     {
         if ( !( Class.isA( WidgetFactory, factory ) ) )
         {
