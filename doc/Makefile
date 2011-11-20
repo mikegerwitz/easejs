@@ -23,7 +23,7 @@ doc_replace := s/<\/body>/<script type="text\/javascript" \
 	src="highlight.pack.js"><\/script><script type="text\/javascript" \
 	src="interactive.js"><\/script><\/body>/\
 	;s/\&gt\;=/\&\#8805\;/g\
-	;s/\&gt\;=/\&\#8804\;/g\
+	;s/\&lt\;=/\&\#8804\;/g\
 
 .PHONY: doc mkbuild-doc doc-img doc-pdf doc-info doc-plain doc-html
 
