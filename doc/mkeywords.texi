@@ -35,7 +35,8 @@ Member data shared with each instance of type @var{C}. @xref{Static Members}.
 @item @code{abstract}
 @tab Declares member @var{name} and defers definition to subtype. @var{value}
 is interpreted as an argument list and must be of type @code{array}. May only be
-used with methods.
+used with methods. Member @var{name} must be part of @var{dfn} of either an
+@code{Interface} or @code{AbstractClass}. @xref{Abstract Members}.
 @item @code{const}
 @tab Defines an immutable property @var{name}. May not be used with methods or
 getters/setters. @xref{Constants}.

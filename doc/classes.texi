@@ -172,6 +172,10 @@ keywords (@pxref{Static Members} and @ref{Inheritance}).
 @item
 @var{keywords} of member @var{name} may not contain the
 @ref{Member Keywords,,@code{const}} keyword.
+@item
+For any member @var{name} that contains the keyword
+@ref{t:keywords,,@code{abstract}} in @var{keywords}, class @var{C} must instead
+be declared as an @code{AbstractClass} (@pxref{Abstract Classes}).
 @end itemize
 
 @subsection Discussion
@@ -1497,8 +1501,205 @@ class and still have that subtype act as a @code{Socket}.
 Interfaces have no such problem. Implementors are free to use interfaces
 wherever they wish and use as many as they wish; they needn't worry that they
 may be unable to use the interface due to inheritance or coupling issues.
+However, although interfaces facilitate API reuse, they do not aid in code
+reuse as abstract classes do@footnote{This is a problem that will eventually be
+solved by the introduction of traits/mixins.}.
 
 @node Abstract Classes
 @subsection Abstract Classes
-TODO
+@table @code
+@item A = AbstractClass( string @var{name}, Object @var{dfn} )
+Define named abstract class @var{A} identified by @var{name} described by
+@var{dfn}.
+
+@item A = AbstractClass( string @var{name} ).extend( Object @var{dfn} )
+Define named abstract class @var{A} identified by @var{name} described by
+@var{dfn}.
+
+@item A = AbstractClass( Object @var{dfn} )
+Define anonymous abstract class @var{A} as described by @var{dfn}.
+
+@item A = AbstractClass.extend( Object @var{dfn } )
+Define anonymous abstract class @var{A} as described by @var{dfn}.
+@end table
+
+Abstract classes are defined with a syntax much like classes (@pxref{Defining
+Classes}). They act just as classes do, except with the following additional
+properties:
+
+@itemize
+@item
+Abstract class @var{A} cannot be instantiated.
+@item
+Abstract class @var{A} must contain at least one member of @var{dfn} that is
+explicitly declared as @ref{t:keywords,,@code{abstract}}.
+@item
+Abstract classes may extend both concrete and abstract classes
+@end itemize
+
+An abstract class @emph{must} be used if any member of @var{dfn} is declared as
+abstract. This serves as a form of self-documenting code, as it would otherwise
+not be immediately clear whether or not a class was abstract (one would have to
+look through every member of @var{dfn} to make that determination).
+
+@code{AbstractClass} must be imported (@pxref{Including}) from
+@code{easejs.AbstractClass}; it is not available in the global scope.
+
+@subsubsection Discussion
+Abstract classes allow the partial implementation of an API, deferring portions
+of the implementation to subtypes (@pxref{Inheritance}). As an example, let's
+consider an implementation of the @dfn{Abstract Factory} pattern@footnote{See
+Abstract Factory, GoF}) which is responsible for the instantiation and
+initialization of an object without knowing its concrete type.
+
+Our hypothetical library will be a widget abstraction. For this example, let us
+consider that we need a system that will work with any number of frameworks,
+including jQuery UI, Dojo, YUI and others. A particular dialog needs to render a
+simple @code{Button} widget so that the user may click "OK" when they have
+finished reading. We cannot instantiate the widget from within the dialog
+itself, as that would tightly couple the chosen widget subsystem (jQuery UI,
+etc) to the dialog, preventing us from changing it in the future. Alternatively,
+we could have something akin to a switch statement in order to choose which type
+of widget to instantiate, but that would drastically inflate maintenance costs
+should we ever need to add or remove support for other widget system in the
+future.
+
+We can solve this problem by allowing another object, a @code{WidgetFactory}, to
+perform that instantiation for us. The dialog could accept the factory in its
+constructor, like so:
+
+@float Figure, f:abstract-factory-use
+@verbatim
+Class( 'Dialog',
+{
+    'private _factory': null,
+
+    __construct( factory )
+    {
+        if ( !( Class.isA( WidgetFactory, factory ) ) )
+        {
+            throw TypeError( 'Expected WidgetFactory' );
+        }
+
+        this._factory = factory;
+    },
+
+    'public open': function()
+    {
+        // before we open the dialog, we need to create and add the widgets
+        var btn = this._factory.createButtonWidget( 'btn_ok', "OK" );
+
+        // ...
+    },
+} );
+@end verbatim
+@caption{Hypothetical use case for our Abstract Factory}
+@end float
+
+We now have some other important considerations. As was previously mentioned,
+@code{Dialog} itself could have determined which widget to instantiate. By using
+a factory instead, we are moving that logic to the factory, but we are now
+presented with a similar issue. If we use something like a switch statement to
+decide what class should be instantiated, we are stuck with modifying the
+factory each and every time we add or remove support for another widget library.
+
+This is where an abstract class could be of some benefit. Let's consider the
+above call to @code{createButtonWidget()}, which accepted two arguments: an id
+for the generated DOM element and a label for the button. Clearly, there is some
+common initialization logic that can occur between each of the widgets. However,
+we do not want to muddy the factory up with log to determine what widget can be
+instantiated. The solution is to define the common logic, but defer the actual
+instantiation of the @code{Widget} to subtypes:
+
+@float Figure, f:abstract-factory-define
+@verbatim
+AbstractClass( 'WidgetFactory',
+{
+    'public createButtonWidget': function( id, label )
+    {
+        // note that this is a call to an abstract method; the implementation is
+        // not yet defined
+        var widget = this.getNewButtonWidget();
+
+        // perform common initialization tasks
+        widget.setId( id );
+        widget.setLabel( label );
+
+        // return the completed widget
+        return widget;
+    },
+
+
+    // declared with an empty array because it has no parameters
+    'abstract protected getNewButtonWidget': [],
+} );
+@end verbatim
+@caption{Defining our Abstract Factory}
+@end float
+
+As demonstrated in @ref{f:abstract-factory-define} above, we can see a very
+interesting aspect of abstract classes: we are making a call to a method that is
+not yet defined (@code{getNewButtonWidget()}@footnote{Note that we declared this
+method as @ref{t:keywords,,@code{protected}} in order to encapsulate which
+the widget creation logic (@pxref{Access Modifiers Discussion}). Users of the
+class should not be concerned with how we accomplish our job. Indeed, they
+should be concerned only with the fact that we save them the trouble of
+determining which classes need to be instantiated by providing them with a
+convenient API.}). Instead, by declaring it
+@ref{t:keywords,,@code{abstract}}, we are stating that we want to call this
+method, but it is up to a subtype to actually define it. It is for this reason
+that abstract classes cannot be instantiated - they cannot be used until each of
+the abstract methods have a defined implementation.
+
+We can now define a concrete widget factory (@pxref{Inheritance}) for each of
+the available widget libraries@footnote{Of course, the @code{Widget} itself
+would be its own abstraction, which may be best accomplished by the Adapter
+pattern.}:
+
+@float Figure, f:concrete-abstract-factory
+@verbatim
+Class( 'JqueryUiWidgetFactory' )
+    .extend( WidgetFactory,
+{
+    // concrete method
+    'protected getNewButtonWidget': function()
+    {
+        // ...
+    },
+} );
+
+Class( 'DojoWidgetFactory' )
+    .extend( WidgetFactory,
+{
+    // ...
+} );
+
+// ...
+@end verbatim
+@caption{Defining our concrete factories}
+@end float
+
+With that, we have solved our problem. Rather than using a simple switch
+statement, we opted for a polymorphic solution:
+
+@float Figure, f:abstract-factory-inject
+@verbatim
+    // we can use whatever widget library we wish by injecting it into Dialog
+    Dialog( JqueryUiWidgetFactory() ).show();
+    Dialog( DojoWidgetFactory() ).show();
+    Dialog( YuiWidgetFactory() ).show();
+@end verbatim
+@caption{Using our abstract factory @code{WidgetFactory} via dependency
+injection}
+@end float
+
+Now, adding or removing libraries is as simple as defining or removing a
+@code{WidgetFactory} class.
+
+Another noteworthy mention is that this solution could have just as easily used
+an interface instead of an abstract class (@pxref{Interfaces}). The reason we
+opted for an abstract class in this scenario is due to code reuse (the common
+initialization code), but in doing so, we have tightly coupled each subtype with
+the supertype @code{WidgetFactory}. There are a number of trade-offs with each
+implementation; choose the one that best fits your particular problem.
 
