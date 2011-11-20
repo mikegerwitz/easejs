@@ -209,12 +209,12 @@ be considered abstract and must be declared as such.
 
 ### Interfaces
 Interfaces can be declared in a very similar manner to classes. All members of
-an interface must be declared as abstract.
+an interface are implicitly abstract.
 
 ````javascript
     var MyType = Interface(
     {
-        'abstract public foo': []
+        'public foo': []
     });
 ````
 

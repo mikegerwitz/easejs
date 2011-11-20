@@ -38,11 +38,11 @@ common.testCase(
         this.baseTypes = [
             Interface.extend(
             {
-                'abstract method': [],
+                method: [],
             } ),
 
             Interface( {
-                'abstract method': [],
+                method: [],
             } )
         ];
 
@@ -113,14 +113,20 @@ common.testCase(
     },
 
 
-    'Abstract method declarations are permitted': function()
+    /**
+     * Declaring (but not defining) methods by specifying their arguments as
+     * arrays is supported, much like one would would declare an abstract method
+     * in a class. We do not require the abstract keyword, as it would be
+     * redundant.
+     */
+    'Method declarations (using arrays) are permitted': function()
     {
         this.assertDoesNotThrow(
             function()
             {
                 Interface.extend(
                 {
-                    'abstract method': [],
+                    method: [],
                 } );
             },
             TypeError,
@@ -200,7 +206,7 @@ common.testCase(
     {
         var SubType = Interface.extend( T,
         {
-            'abstract second': [],
+            second: [],
         } );
 
         this.assertOk(
@@ -247,7 +253,7 @@ common.testCase(
     {
         var SubType = T.extend(
         {
-            'abstract second': [],
+            second: [],
         } );
 
         this.assertOk(
@@ -319,7 +325,7 @@ common.testCase(
         {
             // am = access modifier
             var dfn = {};
-            dfn[ 'abstract ' + am + ' foo' ] = [];
+            dfn[ am + ' foo' ] = [];
 
             Interface( dfn );
         }, Error, "Interface members should not be able to be " + am );
