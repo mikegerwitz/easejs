@@ -1320,6 +1320,9 @@ Every member of @var{dfn} of @var{I} is implicitly
 Interfaces may only extend other interfaces (@pxref{Inheritance}).
 @end itemize
 
+@code{Interface} must be imported (@pxref{Including}) from
+@code{easejs.Interface}; it is not available in the global scope.
+
 @subsubsection Implementing Interfaces
 @table @code
 @item C = Class( @var{name} ).implement( @var{I\_0}[, ...@var{I\_n}] ).extend( @var{dfn} )
