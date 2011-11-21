@@ -132,7 +132,7 @@ module.exports = function( test_case )
                 args.push( [ context[ prop ][ i ] ] );
             }
         }
-        else if ( method !== undefined )
+        else if ( method )
         {
             throw Error( "Unknown test method: " + method );
         }
