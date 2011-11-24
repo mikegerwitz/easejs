@@ -118,12 +118,12 @@ html, body {
 
 #menu a:hover,
 body.index #about a,
-body.manual-select #manual a {
+body.man #manual a {
   background-color: #204a87;
 }
 
 body.index #about a,
-body.manual-select #manual a {
+body.man #manual a {
   color: #f57900;
 }
 
