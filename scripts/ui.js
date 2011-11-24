@@ -136,9 +136,16 @@
                 log: function( text )
                 {
                     $console.text(
-                        $console.text() + "\n" + text
+                        $console.text() + text + "\n"
                     );
-                }
+                },
+
+                warn: function( text )
+                {
+                    $console.text(
+                        $console.text() + "[Warning] " + text + "\n"
+                    );
+                },
             };
 
         ( function( console )
