@@ -117,11 +117,13 @@ html, body {
 }
 
 #menu a:hover,
-#menu ul li.selected a {
+body.index #about a,
+body.manual-select #manual a {
   background-color: #204a87;
 }
 
-#menu ul li.selected a {
+body.index #about a,
+body.manual-select #manual a {
   color: #f57900;
 }
 

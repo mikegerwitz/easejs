@@ -31,7 +31,9 @@ $(outdir)/images/%.png: images/%.png | $(outdir)
 	cp -r $< $@
 
 $(outdir)/%.html: %.html $(header) $(footer) | $(outdir)
-	cat $(header) $< $(footer) > $@
+	cat $(header) \
+		| sed 's/\(<body\)/\1 class="$*"/' \
+		| cat - $< $(footer) > $@
 
 clean:
 	${RM} -r webroot
