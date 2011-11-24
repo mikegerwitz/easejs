@@ -118,12 +118,14 @@ html, body {
 
 #menu a:hover,
 body.index #about a,
-body.man #manual a {
+body.man #manual a,
+body.source #source a {
   background-color: #204a87;
 }
 
 body.index #about a,
-body.man #manual a {
+body.man #manual a,
+body.source #source a {
   color: #f57900;
 }
 
@@ -287,5 +289,14 @@ p.copyright a, p.copyright a:link {
 
   font-size:   0.8em;
   font-family: monospace;
+}
+
+blockquote.git-clone {
+  font-family: fixed;
+  font-weight: lighter;
+}
+
+span.shell-start {
+  font-weight: normal;
 }
 
