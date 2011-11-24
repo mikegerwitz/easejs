@@ -109,7 +109,7 @@ html, body {
 
 #menu a, #menu a:link {
   display: inline-block;
-  padding: 0.25em 1em;
+  padding: 0.25em 1.25em;
 
   color:           #041c40;
   text-decoration: none;
