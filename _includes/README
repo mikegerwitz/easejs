@@ -1,0 +1,2 @@
+Files in this directory should not be uploaded to the web root. They are used by
+the build script as an alternative to dynamic pages (e.g. with PHP).
