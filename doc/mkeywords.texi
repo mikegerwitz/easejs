@@ -137,6 +137,7 @@ Public methods expose an API by which users may use your class. Public
 properties, however, should be less common in practice for a very important
 reason, which is explored throughout the remainder of this section.
 
+@anchor{Encapsulation}
 @subsubsection Encapsulation
 @dfn{Encapsulation} is the act of hiding information within a class or instance.
 Classes should be thought of black boxes; we want them to do their job, but we

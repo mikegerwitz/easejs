@@ -26,6 +26,8 @@ provide some details and rationale behind ease.js.
 
 @menu
 * Class Module Design::
+* Visibility Implementation::
+* Internal Methods/Objects::
 @end menu
 
 
@@ -133,11 +135,12 @@ Classes}). Indeed, we can do whatever scoping that JavaScript permits.
 
 @subsubsection Memory Management
 Memory management is perhaps one of the most important considerations.
-Initially, ease.js encapsulated class metadata and visibility structures.
-However, it quickly became apparent that this method of storing data, although
-excellent for protecting it from being manipulated, caused what appeared to be
-memory leaks in long-running software. These were in fact not memory leaks, but
-ease.js keeping references to class data with no idea when to free them.
+Initially, ease.js encapsulated class metadata and visibility structures
+(@pxref{Hacking Around the Issue of Encapsulation}).  However, it quickly became
+apparent that this method of storing data, although excellent for protecting it
+from being manipulated, caused what appeared to be memory leaks in long-running
+software. These were in fact not memory leaks, but ease.js keeping references to
+class data with no idea when to free them.
 
 To solve this issue, all class data is stored within the class itself (that is,
 the constructor in JavaScript terms). They are stored in obscure variables that
@@ -405,4 +408,309 @@ the portable, pre-ES5 syntax.
 
 This decision will ultimately be made in the future. For the time being, ease.js
 will support and encourage use of the portable static property syntax.
+
+
+@node Visibility Implementation
+@section Visibility Implementation
+One of the major distinguishing factors of ease.js is its full visibility
+support (@pxref{Access Modifiers}). This feature was the main motivator behind
+the project. Before we can understand the use of this feature, we have to
+understand certain limitations of JavaScript and how we may be able to work
+around them.
+
+@menu
+* Encapsulation In JavaScript::
+* Hacking Around the Issue of Encapsulation::
+@end menu
+
+@node Encapsulation In JavaScript
+@subsection Encapsulation In JavaScript
+Encapsulation is a cornerstone of many strong software development paradigms
+(@pxref{Encapsulation}). This concept is relatively simply to achieve using
+closures in JavaScript, as shown in the following example stack implementation:
+
+@float Figure, f:js-encapsulation-ex
+@verbatim
+var stack = {};
+
+( function( exports )
+{
+    var data = [];
+
+    exports.push = function( data )
+    {
+        data.push( data );
+    };
+
+    exports.pop = function()
+    {
+        return data.pop();
+    };
+} )( stack );
+
+stack.push( 'foo' );
+stack.pop(); // foo
+@end verbatim
+@caption{Encapsulation example using closures in JavaScript}
+@end float
+
+Because functions introduce scope in JavaScript, data can be hidden within them.
+In @ref{f:js-encapsulation-ex} above, a self-executing function is used to
+encapsulate the actual data in the stack (@var{data}). The function accepts a
+single argument, which will hold the functions used to push and pop values
+to/from the stack respectively. These functions are closures that have access to
+the @var{data} variable, allowing them to alter its data. However, nothing
+outside of the self-executing function has access to the data. Therefore, we
+present the user with an API that allows them to push/pop from the stack, but
+never allows them to see what data is actually @emph{in} the stack@footnote{The
+pattern used in the stack implementation is commonly referred to as the
+@dfn{module} pattern and is the same concept used by CommonJS. Another common
+implementation is to return an object containing the functions from the
+self-executing function, rather than accepting an object to store the values in.
+We used the former implementation here for the sake of clarity and because it
+more closely represents the syntax used by CommonJS.}.
+
+Let's translate some of the above into Object-Oriented terms:
+
+@itemize
+@item @var{push} and @var{pop} are public members of @var{stack}.
+@item @var{data} is a private member of @var{stack}.
+@item @var{stack} is a Singleton.
+@end itemize
+
+We can take this a bit further by defining a @code{Stack} prototype so that we
+can create multiple instances of our stack implementation. A single instance
+hardly seems useful for reuse. However, in attempting to do so, we run into a
+bit of a problem:
+
+@float Figure, f:js-proto-inst-noencapsulate
+@verbatim
+var Stack = function()
+{
+    this._data = [];
+};
+
+Stack.prototype = {
+    push: function( val )
+    {
+        this._data.push( val );
+    },
+
+    pop: function()
+    {
+        return this._data.pop();
+    },
+};
+
+// create a new instance of our Stack object
+var inst = new Stack();
+
+// what's this?
+inst.push( 'foo' );
+console.log( inst._data ); // [ 'foo' ]
+
+// uh oh.
+inst.pop( 'foo' ); // foo
+console.log( inst._data ); // []
+@end verbatim
+@caption{Working easily with instance members in JavaScript breaks
+encapsulation}
+@end float
+
+By defining our methods on the prototype and our data in the constructor, we
+have created a bit of a problem. Although the data is easy to work with,
+@emph{it is no longer encapsulated}. The @var{_data} property is now public,
+accessible for the entire work to inspect and modify. As such, a common practice
+in JavaScript is to simply declare members that are "supposed to be" private
+with an underscore prefix, as we have done above, and then trust that nobody
+will make use of them. Not a great solution.
+
+Another solution is to use a concept called @dfn{privileged members}, which uses
+closures defined in the constructor rather than functions defined in the
+prototype:
+
+@float Figure, f:js-privileged-members
+@verbatim
+var Stack = function()
+{
+    var data = [];
+
+    this.push = function( data )
+    {
+        data.push( data );
+    };
+
+    this.pop = function()
+    {
+        return data.pop();
+    };
+};
+
+// create a new instance of our Stack object
+var inst = new Stack();
+
+// can no longer access "privileged" member _data
+inst.push( 'foo' );
+console.log( inst._data ); // undefined
+@end verbatim
+@caption{Privileged members in JavaScript}
+@end float
+
+You may notice a strong similarity between @ref{f:js-encapsulation-ex} and
+@ref{f:js-privileged-members}. They are doing essentially the same thing, the
+only difference being that @ref{f:js-encapsulation-ex} is returning a single
+object and @ref{f:js-privileged-members} represents a constructor that may be
+instantiated.
+
+When using privileged members, one would define all members that need access to
+such members in the constructor and define all remaining members in the
+prototype. However, this introduces a rather large problem that makes this
+design decision a poor one in practice: @emph{Each time @var{Stack} is
+instantiated, @var{push} and @var{pop} have to be redefined, taking up
+additional memory and CPU cycles}. Those methods will be kept in memory until
+the instance of @var{Stack} is garbage collected.
+
+In @ref{f:js-privileged-members}, these considerations may not seem like much of
+an issue. However, consider a constructor that defines tens of methods and could
+potentially have hundreds of instances. For this reason, you will often see the
+concepts demonstrated in @ref{f:js-proto-inst-noencapsulate} used more
+frequently in libraries that have even modest performance requirements.
+
+@node Hacking Around the Issue of Encapsulation
+@subsection Hacking Around the Issue of Encapsulation
+Since neither @ref{f:js-encapsulation-ex} nor @ref{f:js-privileged-members} are
+acceptable implementations for strong Classical Object-Oriented code, another
+solution is needed. Based on what we have seen thus far, let's consider our
+requirements:
+
+@itemize
+@item
+Our implementation must not break encapsulation. That is - we should be
+enforcing encapsulation, not simply trusting our users not to touch.
+@item
+We must be gentle with our memory allocations and processing. This means placing
+@emph{all} methods within the prototype.
+@item
+We should not require any changes to how the developer uses the
+constructor/object. It should operate just like any other construct in
+JavaScript.
+@end itemize
+
+We can accomplish the above by using the encapsulation concepts from
+@ref{f:js-encapsulation-ex} and the same prototype model demonstrated in
+@ref{f:js-proto-inst-noencapsulate}. The problem with
+@ref{f:js-encapsulation-ex}, which provided proper encapsulation, was that it
+acted as a Singleton. We could not create multiple instances of it and, even if
+we could, they would end up sharing the same data. To solve this problem, we
+need a means of distinguishing between each of the instances so that we can
+access the data of each separately:
+
+@float Figure, f:js-encapsulate-instance
+@verbatim
+var Stack = ( function()
+{
+    var idata = [],
+        iid   = 0;
+
+    var S = function()
+    {
+        // set the instance id of this instance, then increment it to ensure the
+        // value is unique for the next instance
+        this.__iid = iid++;
+
+        // initialize our data for this instance
+        idata[ this.__iid ] = {
+            stack: [],
+        };
+    }:
+
+    S.prototype = {
+        push: function( val )
+        {
+            idata[ this.__iid ].stack.push( val );
+        },
+
+        pop: function()
+        {
+            return idata[ this.__iid ].stack.pop();
+        }
+    };
+
+    return S;
+} )();
+
+var stack1 = new Stack();
+var stack2 = new Stack();
+
+stack1.push( 'foo' );
+stack2.push( 'bar' );
+
+stack1.pop(); // foo
+stack2.pop(); // bar
+@end verbatim
+@caption{Encapsulating data per instance}
+@end float
+
+This would seem to accomplish each of our above goals. Our implementation does
+not break encapsulation, as nobody can get at the data. Our methods are part of
+the @var{Stack} prototype, so we are not redefining it with each instance,
+eliminating our memory and processing issues. Finally, @var{Stack} instances can
+be instantiated and used just like any other object in JavaScript; the developer
+needn't adhere to any obscure standards in order to emulate encapsulation.
+
+Excellent! However, our implementation does introduce a number of issues that we
+hadn't previously considered:
+
+@itemize
+@item
+Our implementation is hardly concise. Working with our ``private'' properties
+requires that we add ugly instance lookup code@footnote{We could encapsulate
+this lookup code, but we would then have the overhead of an additional method
+call with very little benefit; we cannot do something like: @samp{this.stack}.},
+obscuring the actual domain logic.
+@item
+Most importantly: @emph{this implementation introduces memory leaks}.
+@end itemize
+
+What do we mean by ``memory leaks''? Consider the usage example in
+@ref{f:js-encapsulate-instance}. What happens when were are done using
+@var{stack1} and @var{stack2} and they fall out of scope? They will be GC'd.
+However, take a look at our @var{idata} variable. The garbage collector will not
+know to free up the data for our particular instance. Indeed, it cannot, because
+we are still holding a reference to that data as a member of the @var{idata}
+array.
+
+Now imagine that we have a long-running piece of software that makes heavy use
+of @var{Stack}. This software will use thousands of instances throughout its
+life, but they are used only briefly and then discarded. Let us also imagine
+that the stacks are very large, perhaps holding hundreds of elements, and that
+we do not necessarily @code{pop()} every element off of the stack before we
+discard it.
+
+Imagine that we examine the memory usage throughout the life of this software.
+Each time a stack is used, additional memory will be allocated. Each time we
+@code{push()} an element onto the stack, additional memory is allocated for that
+element. Because our @var{idata} structure is not freed when the @var{Stack}
+instance goes out of scope, we will see the memory continue to rise. The memory
+would not drop until @var{Stack} itself falls out of scope, which may not be
+until the user navigates away from the page.
+
+From our perspective, this is not a memory leak. Our implementation is working
+exactly as it was developer. However, to the user of our stack implementation,
+this memory management is out of their control. From their perspective, this is
+indeed a memory leak that could have terrible consequences on their software.
+
+This method of storing instance data was ease.js's initial ``proof-of-concept''
+implementation (@pxref{Class Storage}). Clearly, this was not going to work;
+some changes to this implementation were needed.
+
+
+@node Internal Methods/Objects
+@section Internal Methods/Objects
+There are a number of internal methods/objects that may be useful to developers
+who are looking to use some features of ease.js without using the full class
+system. An API will be provided to many of these in the future, once refactoring
+is complete. Until that time, it is not recommended that you rely on any of the
+functionality that is not provided via the public API (@code{index.js} or the
+global @var{easejs} object).
 
