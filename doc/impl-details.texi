@@ -510,7 +510,7 @@ inst.push( 'foo' );
 console.log( inst._data ); // [ 'foo' ]
 
 // uh oh.
-inst.pop( 'foo' ); // foo
+inst.pop(); // foo
 console.log( inst._data ); // []
 @end verbatim
 @caption{Working easily with instance members in JavaScript breaks
@@ -703,6 +703,196 @@ indeed a memory leak that could have terrible consequences on their software.
 This method of storing instance data was ease.js's initial ``proof-of-concept''
 implementation (@pxref{Class Storage}). Clearly, this was not going to work;
 some changes to this implementation were needed.
+
+@subsubsection Instance Memory Considerations
+JavaScript does not provide destructors to let us know when an instance is about
+to be GC'd, so we unfortunately cannot know when to free instance data from
+memory in @ref{f:js-encapsulate-instance}. We are also not provided with an API
+that can return the reference count for a given object. We could provide a
+method that the user could call when they were done with the object, but that is
+not natural to a JavaScript developer and they could easily forget to call the
+method.
+
+As such, it seems that the only solution for this rather large issue is to store
+instance data on the instance itself so that it will be freed with the instance
+when it is garbage collected (remember, we decided that privileged members were
+not an option in the discussion of @ref{f:js-privileged-members}). Hold on - we
+already did that in @ref{f:js-proto-inst-noencapsulate}; that caused our data to
+be available publicly. How do we approach this situation?
+
+If we are adding data to an instance itself, there is no way to prevent it from
+being accessed in some manner, making true encapsulation impossible. The only
+options are to obscure it as best as possible, to make it too difficult to
+access in any sane implementation. For example:
+
+@itemize
+@item
+The property storing the private data could be made non-enumerable, requiring
+the use of a debugger or looking at the source code to determine the object
+name.
+  @itemize
+  @item This would work only with ECMAScript 5 and later environments.
+  @end itemize
+@item
+We could store all private data in an obscure property name, such as
+@var{___$$priv$$___}, which would make it clear that it should not be accessed.
+  @itemize
+  @item
+  We could take that a step further and randomize the name, making it very
+  difficult to discover at runtime, especially if it were
+  non-enumerable@footnote{Note that ease.js does not currently randomize its
+  visibility object name.}.
+  @end itemize
+@end itemize
+
+Regardless, it is clear that our data will only be ``encapsulated'' in the sense
+that it will not be available conveniently via a public API. Let's take a look
+at how something like that may work:
+
+@float Figure, f:js-obscure-private
+@verbatim
+var Stack = ( function()
+{
+    // implementation of getSomeRandomName() is left up to the reader
+    var _privname = getSomeRandomName();
+
+    var S = function()
+    {
+        // define a non-enumerable property to store our private data (will only
+        // work in ES5+ environments)
+        Object.defineProperty( this, _privname, {
+            enumerable:   false,
+            writable:     false,
+            configurable: false,
+
+            value: {
+                stack: []
+            }
+        } );
+    };
+
+    S.prototype = {
+        push: function( val )
+        {
+            this[ _privname ].stack.push( val );
+        },
+
+        pop: function()
+        {
+            return this[ _privname ].stack.pop();
+        },
+    };
+
+    return S;
+} );
+
+var inst = new Stack();
+inst.push( 'foo' );
+inst.pop(); // foo
+@end verbatim
+@caption{Using a random, non-enumerable property name to store private members}
+@end float
+
+Now we are really starting to hack around what JavaScript provides for us. We
+seem to be combining the encapsulation issues presented in
+@ref{f:js-proto-inst-noencapsulate} and the obscurity demonstrated in
+@ref{f:js-encapsulate-instance}. In addition, we our implementation depends on
+ECMAScript 5 (ideally, we would detect that and fall back to normal, enumerable
+properties in pre-ES5 environments, which ease.js does indeed do). This seems to
+be a case of encapsulation through obscurity@footnote{A play on ``security
+through obscurity''.}. While our implementation certainly makes it difficult to
+get at the private member data, it is also very obscure and inconvenient to work
+with. Who wants to write Object-Oriented code like that?
+
+@subsubsection Other Considerations
+We have conveniently omitted a number of other important factors in our
+discussion thus far. Before continuing, they deserve some mention and careful
+consideration.
+
+How would we implement private methods? We could add them to our private member
+object, just as we defined @var{stack} in @ref{f:js-obscure-private}, but that
+would cause it to be redefined with each instance, raising the same issues that
+were discussed with @ref{f:js-privileged-members}. Therefore, we would have to
+define them in a separate ``prototype'', if you will, that only we have access
+to:
+
+@float Figure, f:js-obscure-private-methods
+@verbatim
+var Stack = ( function()
+{
+    // implementation of getSomeRandomName() is left up to the reader
+    var _privname = getSomeRandomName();
+
+    var S = function()
+    {
+        // define a non-enumerable property to store our private data (will only
+        // work in ES5+ environments)
+        Object.defineProperty( this, _privname, {
+            // ... (see previous example)
+        } );
+    };
+
+    // private methods that only we will have access to
+    var priv_methods = {
+        getStack: function()
+        {
+            // note that, in order for 'this' to be bound to our instance, it
+            // must be passed as first argument to call() or apply()
+            return this[ _privname ].stack;
+        },
+    };
+
+    // public methods
+    S.prototype = {
+        push: function( val )
+        {
+            var stack = priv_methods.getStack.call( this );
+            stack.push( val );
+        },
+
+        pop: function()
+        {
+            var stack = priv_methods.getStack.call( this );
+            return stack.pop();
+        },
+    };
+
+    return S;
+} );
+
+var inst = new Stack();
+inst.push( 'foo' );
+inst.pop(); // foo
+@end verbatim
+@caption{A possible private method implementation}
+@end float
+
+While this does solve our problem, it further reduces code clarity. The
+implementation in @ref{f:js-obscure-private-methods} is certainly a far cry from
+something like @samp{this._getStack()}, which is all you would need to do in
+ease.js.
+
+Another consideration is a protected (@pxref{Access Modifiers}) member
+implementation, the idea being that subtypes should inherit both public and
+protected members. Inheritance is not something that we had to worry about with
+private members, so this adds an entirely new layer of complexity to the
+implementation. This would mean somehow making a protected prototype available
+to subtypes through the public prototype. Given our implementation in the
+previous figures, this would likely mean an awkward call that somewhat
+resembles: @samp{this[ _protname ].name}.
+
+Although the implementations show in @ref{f:js-obscure-private} and
+@ref{f:js-obscure-private-methods} represent a creative hack, this is precisely
+one of the reasons ease.js was created - to encapsulate such atrocities that
+would make code that is difficult to use, hard to maintain and easy to introduce
+bugs. One shouldn't have to have a deep understanding of JavaScript's prototype
+model in order to write the most elementary of Classical Object-Oriented code.
+For example, the constructors in the aforementioned figures directly set up an
+object in which to store private members. ease.js will do this for you before
+calling the @code{__construct()} method. Furthermore, ease.js does not require
+referencing that object directly, like we must do in our methods in
+@ref{f:js-obscure-private}. Nor does ease.js have an awkward syntax for invoking
+private methods. We will explore how this is handled in the following section.
 
 
 @node Internal Methods/Objects
