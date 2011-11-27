@@ -421,6 +421,7 @@ around them.
 @menu
 * Encapsulation In JavaScript::
 * Hacking Around the Issue of Encapsulation::
+* The Visibility Object::
 @end menu
 
 @node Encapsulation In JavaScript
@@ -893,6 +894,214 @@ calling the @code{__construct()} method. Furthermore, ease.js does not require
 referencing that object directly, like we must do in our methods in
 @ref{f:js-obscure-private}. Nor does ease.js have an awkward syntax for invoking
 private methods. We will explore how this is handled in the following section.
+
+
+@node The Visibility Object
+@subsection The Visibility Object
+Let's consider how we may rewrite @var{Stack} in
+@ref{f:js-obscure-private-methods} using ease.js:
+
+@float Figure, f:stack-using-easejs
+@verbatim
+var Stack = Class( 'Stack',
+{
+    'private _data': [],
+
+    'public push': function( val )
+    {
+        this._data.push( val );
+    },
+
+    'public pop': function()
+    {
+        return this._data.pop();
+    }
+} );
+
+var inst = Stack();
+inst.push( 'foo' );
+inst.pop(); // foo
+@end verbatim
+@caption{Stack implementation using ease.js}
+@end float
+
+The above implementation is much less impressive looking than our prior
+examples. What we have done is encapsulate the excess logic needed to emulate a
+class and got right down to business. ease.js will take the class definition
+above and generate an object much like we had done in the prior examples, with a
+few improvements.
+
+If you have not read over the previous sections, you are recommended to do so
+before continuing in order to better understand the rationale and finer
+implementation details.
+
+The secret behind ease.js's visibility implementation (@pxref{Access
+Modifiers}) is referred to internally as the @dfn{visibility object} (or, in
+older commits and some notes, the @dfn{property object}). Consider the problem
+regarding the verbosity of our private property accessors and method calls in
+@ref{f:js-obscure-private-methods}. It would be much more convenient if the
+properties and methods were bound to @var{this} so that they can be accessed
+more naturally, as would be expected by a programmer familiar with classes in
+other Classical Object-Oriented languages (@pxref{f:stack-using-easejs}). This
+can be done using @code{call()} or @code{apply()}:
+
+@float Figure, f:function-context
+@verbatim
+function getName()
+{
+    return this.name;
+}
+
+var obj = { name: "foo" };
+getName.call( obj ); // "foo"
+@end verbatim
+@caption{Calling a function within the context of a given object}
+@end float
+
+@ref{f:function-context} demonstrates the concept we are referring to. Given an
+arbitrary object @var{obj}, we can call any given method (in this case,
+@code{getName()}, binding @var{this} to that object. This is precisely what
+ease.js does with each method call. To understand this process, we have to
+explore two concepts: the visibility object itself and method wrapping.
+
+@subsubsection Visibility Object Implementation
+The visibility object is mostly simply represented in the following diagram:
+
+@float Figure, f:visobj
+@image{img/visobj}
+@caption{Structure of the visibility object}
+@end float
+
+Specifically, the visibility object is a prototype chain containing the private
+members of the class associated with the method currently being invoked on the
+current instance, its protected members (including those inherited from its
+supertype) and the public members (also including those inherited from the
+supertype). To accomplish this, the visibility object has the following
+properties:
+
+@itemize
+@item
+The private object is @dfn{swappable} - that is, it is the only portion of the
+prototype chain that is replaced between calls to various methods.
+  @itemize
+  @item
+  It is for this reason that the private object is placed atop the prototype
+  chain. This allows it to be swapped very cheaply by simply passing different
+  objects to be bound to @code{this}.
+  @end itemize
+@item
+Both the private and protected objects are initialized during instantiation by
+the @code{__initProps()} method attached by @code{ClassBuilder} to each class
+during definition.
+  @itemize
+  @item
+  Properties are cloned to ensure references are not shared between instances.
+  @item
+  Methods are copied by reference, since their implementations are immutable.
+  @item
+  This must be done because neither protected nor private members may be added
+  to the prototype chain of a class.
+    @itemize
+    @item
+    Doing so would effectively make them public.
+    @item
+    Doing so would also cause private members to be inherited by subtypes.
+    @end itemize
+  @end itemize
+@item
+Public members are a part of the class prototype chain as you would expect in
+any conventional prototype.
+  @itemize
+  @item
+  Public @emph{properties} only are initialized by @code{__initProps()}, just as
+  private and protected properties, to ensure that no references are shared
+  between instances.
+  @end itemize
+@end itemize
+
+As a consequence of the above, it is then clear that there must be a separate
+visibility object (prototype chain) @emph{for each supertype of each instance},
+because there must be a separate private object for each subtype of each
+instance. Let us consider for a moment why this is necessary with the following
+sample of code:
+
+@float Figure, f:priv-swap-rationale
+@verbatim
+var C1 = Class(
+    {
+        'private _name': 'Foo',
+
+        'public getName': function()
+        {
+            return this._name;
+        },
+
+        // ...
+    } ),
+
+    // note the naming convention using descending ids for the discussion
+    // following this example
+    C0 = C1.extend(
+    {
+        // ...
+    } );
+
+C1().getName(); // "Foo"
+C0().getName(); // "Foo"
+@end verbatim
+@caption{Why private member swapping is necessary}
+@end float
+
+@ref{f:priv-swap-rationale} demonstrates why the private object
+swapping@footnote{The term ``swapping'' can be a bit deceptive. While we are
+swapping in the sense that we are passing an entirely new private object as the
+context to a method, we are @emph{not} removing an object from the prototype chain and
+adding another in place of it. They @emph{do}, however, share the same prototype
+chain.} is indeed necessary. If a subtype does @emph{not} override a super
+method that uses a private member, it is important that the private member be
+accessible to the method when it is called. In @ref{f:priv-swap-rationale}, if
+we did not swap out the object, @var{_name} would be undefined when invoked on
+@var{C2}.
+
+Given this new information, the implementation would more formally be
+represented as a collection of objects @var{V} for class @var{C} and each of its
+supertypes as denoted by @var{C\_n}, with @var{C\_0} representing the class
+having been instantiated and any integer @var{n} >= 0 representing the closest
+supertype, such that each @var{V\_n} is associated with @var{C\_n},
+@var{V\_n\^x} is the visibility object bound to any method associated with class
+@var{C\_x} and each @var{V} shares the same prototype chain @var{P\_n} for any
+given instance of @var{C\_n}:
+
+@float Figure, f:visobj-collection
+@image{img/visobj-collection-wide}
+@caption{Collection of visibility objects @var{V} for each class @var{C}}
+@end float
+
+Fortunately, as shown in @ref{f:visobj-collection}, the majority of the
+prototype chain can be reused under various circumstances:
+
+@itemize
+@item
+For each instance of class @var{C\_n}, @var{P\_n} is re-used as the
+prototype of every @var{V\_n}.
+@item
+@var{C\_n} is re-used as the prototype for each @var{P\_n}.
+@end itemize
+
+Consequently, on instantiation of class @var{C\_n}, we incur a performance hit
+from @code{__initProps()} for the initialization of each member of @var{V\_x}
+and @var{P\_x}, as well as each property of @var{C\_x}, recursively for each
+value of @var{m} >= @var{x} >= @var{n} (that is, supertypes are initialized
+first), where @var{m} is equal to the number of supertypes of class @var{C\_n} +
+@var{n}.@footnote{There is room for optimization in this implementation, which
+will be left for future versions of ease.js.}
+
+The instance stores a reference to each of the visibility objects @var{V},
+indexed by an internal class identifier (which is simply incremented for each
+new class definition, much like we did with the instance id in
+@ref{f:js-encapsulate-instance}. When a method is called, the visibility object
+that matches the class identifier associated with the invoked method is then
+passed as the context (bound to @var{this}) for that method.
 
 
 @node Internal Methods/Objects

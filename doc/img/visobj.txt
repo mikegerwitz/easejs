@@ -1,0 +1,7 @@
+,---------,
+| private |                [this; swappable; init per instance]
+`------,--`--------,
+     |_| protected |       [init per instance]
+       `-------,---`----,
+             |_| public |  [directly inherited; external API]
+               `--------`
