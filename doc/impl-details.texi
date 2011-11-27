@@ -964,6 +964,12 @@ arbitrary object @var{obj}, we can call any given method (in this case,
 ease.js does with each method call. To understand this process, we have to
 explore two concepts: the visibility object itself and method wrapping.
 
+@menu
+* Visibility Object Implementation::  Design of the visibility object
+* Property Proxies::                  Overcoming prototype limitations
+@end menu
+
+@node Visibility Object Implementation
 @subsubsection Visibility Object Implementation
 The visibility object is mostly simply represented in the following diagram:
 
@@ -1103,6 +1109,182 @@ new class definition, much like we did with the instance id in
 that matches the class identifier associated with the invoked method is then
 passed as the context (bound to @var{this}) for that method.
 
+@node Property Proxies
+@subsubsection Property Proxies
+Astute readers may notice that the visibility implementation described in the
+previous section (@pxref{Visibility Object Implementation}) has one critical
+flaw stemming from how prototypes in JavaScript are implemented: setting a
+property on the visibility object bound to the method will set the property on
+that object, but @emph{not necessarily on its correct object}. The following
+example will demonstrate this issue:
+
+@float Figure, f:proto-set-issue
+@verbatim
+var pub = {
+        foo:    'bar',
+        method: function()
+        {
+            return 'baz';
+        },
+    },
+
+    // what will become our visibility object
+    priv = function() {}
+;
+
+// set up our visibility object's prototype chain (we're leaving the protected
+// layer out of the equation)
+priv.prototype = pub;
+
+// create our visibility object
+var vis = new priv();
+
+// retrieving properties works fine, as do method invocations
+vis.foo;       // "bar"
+vis.method();  // "baz"
+
+// but when it comes to setting values...
+vis.foo = 'newval';
+
+// ...we stop short
+vis.foo;  // "newval"
+pub.foo;  // "bar"
+
+vis.foo = undefined;
+vis.foo;  // undefined
+delete vis.foo;
+vis.foo;  // "bar"
+pub.foo;  // "bar"
+
+pub.foo = 'moo';
+vis.foo; // "moo"
+@end verbatim
+@caption{Demonstrating property set issues with prototype chains}
+@end float
+
+Retrieving property values and invoking methods are not a problem. This is
+because values further down the prototype chain peek through ``holes'' in
+objects further up the chain. Since @var{vis} in @ref{f:proto-set-issue} has no
+value for property @var{foo} (note that a value of @code{undefined} is still a
+value), it looks at its prototype, @var{pub}, and finds the value there.
+
+However, the story changes a bit when we try to set a value. When we assign a
+value to member @var{foo} of @var{vis}, we are in fact setting the property on
+@var{vis} itself, @emph{not} @var{pub}. This fills that aforementioned ``hole'',
+masking the value further down the prototype chain (our value in @var{pub}).
+This has the terrible consequence that if we were to set a public/protected
+property value from within a method, it would only be accessible from within
+that instance, for @emph{only that visibility object}.
+
+To summarize:
+
+@itemize
+@item
+Methods are never an issue, as they are immutable (in the sense of a class).
+@item
+Reading properties are never an issue; they properly ``peek'' through holes in
+the prototype chain.
+@item
+Writing private values are never an issue, as they will be properly set on that
+visibility object. The value needn't be set on any other visibility objects,
+since private values are to remain exclusive to that instance within the context
+of that class only (it should not be available to methods of supertypes).
+@item
+We run into issues when @emph{setting} public or protected values, as they are
+not set on their appropriate object.
+@end itemize
+
+This issue is huge. Before ECMAScript 5, it may have been a show-stopper,
+preventing us from using a familiar @code{this.prop} syntax within classes and
+making the framework more of a mess than an elegant implementation. It is also
+likely that this is the reason that frameworks like ease.js did not yet exist;
+ECMAScript 5 and browsers that actually implement it are still relatively new.
+
+Fortunately, ECMAScript 5 provides support for getters and setters. Using these,
+we can create a proxy from our visibility object to the appropriate members of
+the other layers (protected, public). Let us demonstrate this by building off of
+@ref{f:proto-set-issue}:
+
+@float Figure, f:proto-getset
+@verbatim
+// proxy vis.foo to pub.foo using getters/setters
+Object.defineProperty( vis, 'foo', {
+    set: function( val )
+    {
+        pub.foo = val;
+    },
+
+    get: function()
+    {
+        return pub.foo;
+    },
+} );
+
+vis.foo; // "moo"
+pub.foo; // "moo"
+
+vis.foo = "bar";
+vis.foo; // "bar"
+pub.foo; // "bar"
+
+pub.foo = "changed";
+vis.foo; // "changed"
+@end verbatim
+@caption{Using getters/setters to proxy values to the appropriate object}
+@end float
+
+The implementation in @ref{f:proto-getset} is precisely how ease.js implements
+and @emph{enforces} the various levels of visibility.@footnote{One may wonder
+why we implemented a getter in @ref{f:proto-getset} when we had no trouble
+retrieving the value to begin with. In defining a @emph{setter} for @var{foo} on
+object @var{vis}, we filled that ``hole'', preventing us from ``seeing through''
+into the prototype (@var{pub}). Unfortunately, that means that we must use a
+getter in order to provide the illusion of the ``hole''.} This is both fortunate
+and unfortunate; the project had been saved by getters/setters, but with a
+slight performance penalty. In order to implement this proxy, the following must
+be done:
+
+@itemize
+@item
+For each public property, proxy from the protected object to the public.
+@item
+For each protected property, proxy from the private object to the
+protected.@footnote{One may also notice that we are not proxying public
+properties from the private member object to the public object. The reason for
+this is that getters/setters, being functions, @emph{are} properly invoked when
+nestled within the prototype chain. The reader may then question why ease.js did
+not simply convert each property to a getter/setter, which would prevent the
+need for proxying. The reason for this was performance - with the current
+implementation, there is only a penalty for accessing public members from within
+an instance, for example. However, accessing public members outside of the class
+is as fast as normal property access. By converting all properties to
+getters/setters, we would cause a performance hit across the board, which is
+unnecessary.}
+@end itemize
+
+Consequently, this means that accessing public properties from within the class
+will be slower than accessing the property outside of the class. Furthermore,
+accessing a protected property will @emph{always} incur a performance
+hit@footnote{How much of a performance hit are we talking? This will depend on
+environment. In the case of v8 (Node.js is used to run the performance tests
+currently), getters/setters are not yet optimized (converted to machine code),
+so they are considerably more slow than direct property access.
+
+For example: on one system using v8, reading public properties externally took
+only 0.0000000060s (direct access), whereas accessing the same property
+internally took 0.0000001120s (through the proxy), which is a significant
+(18.6x) slow-down. Run that test 500,000 times, as the performance test does,
+and we're looking at 0.005s for direct access vs 0.056s for proxy access.},
+because it is always hidden behind the provide object and it cannot be accessed
+from outside of the class.  On the upside, accessing private members is fast (as
+in - ``normal'' speed). This has the benefit of encouraging proper OO practices
+by discouraging the use of public and protected properties. Note that methods,
+as they are not proxied, do not incur the same performance hit.
+
+Given the above implementation details, it is clear that ease.js has been
+optimized for the most common use case, indicative of proper OO development -
+the access of private properties from within classes, for which there will be no
+performance penalty.
 
 @node Internal Methods/Objects
 @section Internal Methods/Objects
