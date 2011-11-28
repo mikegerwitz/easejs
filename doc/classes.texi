@@ -473,11 +473,11 @@ object.
 class or object containing enumerable members. @var{dfn} is to be a definition
 object as defined in @ref{dfnobj,,Definition Object}.
 
-Provided @var{C} or @var{base} to satisfy requirements of @var{C}, class
-@var{C'} will be defined as a @dfn{subtype} (child) of @dfn{supertype} (parent)
-class @var{C}. Provided @var{base} that does @emph{not} satisfy requirements of
-@var{C}, @var{C'} will be functionally equivalent to a subtype of anonymous
-class @var{B} as defined by @var{B} = Class( @var{base} ).
+Provided non-final @var{C} or @var{base} to satisfy requirements of @var{C},
+class @var{C'} will be defined as a @dfn{subtype} (child) of @dfn{supertype}
+(parent) class @var{C}. Provided @var{base} that does @emph{not} satisfy
+requirements of @var{C}, @var{C'} will be functionally equivalent to a subtype
+of anonymous class @var{B} as defined by @var{B} = Class( @var{base} ).
 
 
 @subsection Member Inheritance
@@ -645,6 +645,7 @@ conciseness.
 * Type Checks and Polymorphism::      Substituting similar classes for
                                       one-another
 * Visibility Escalation::             Increasing visibility of inherited members
+* Final Classes::                     Classes that cannot be inherited from
 @end menu
 
 @node Understanding Member Inheritance
@@ -952,6 +953,27 @@ Let's take a look at an example.
 
 Note that, in the above example, making the public @var{cannotMakeProtected}
 method protected would throw an error.
+
+@node Final Classes
+@subsection Final Classes
+@table @code
+@item F = FinalClass( string @var{name}, Object @var{dfn} )
+Define final named class @var{C} identified by @var{name} described by
+@var{dfn}.
+
+@item F = FinalClass( string @var{name} ).extend( Object @var{dfn} )
+Define final named class @var{C} identified by @var{name} described by
+@var{dfn}.
+
+@item F = FinalClass( Object @var{dfn} )
+Define anonymous final class @var{C} as described by @var{dfn}.
+
+@item F = FinalClass.extend( Object @var{dfn } )
+Define anonymous final class @var{C} as described by @var{dfn}.
+@end table
+
+Final classes operate exactly as ``normal'' classes do (@pxref{Defining
+Classes}), with the exception that they cannot be inherited from.
 
 
 @node Static Members
