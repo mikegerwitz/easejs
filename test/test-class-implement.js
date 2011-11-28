@@ -31,12 +31,13 @@ var common    = require( './common' ),
 ;
 
 
+// test with and without abstract keyword
 var Type = Interface.extend( {
         'abstract foo': [],
     }),
 
     Type2 = Interface.extend( {
-        'abstract foo2': [],
+        foo2: [],
     }),
 
     Foo       = {},
