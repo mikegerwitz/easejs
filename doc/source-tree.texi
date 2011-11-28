@@ -67,14 +67,18 @@ Invoked by the @command{make} command. Used for building ease.js.
 @item package.json
 Used by @command{npm}, a package manager for Node.js, to automate installation.
 
+@item README.hacking
+Useful information for those looking to modify/contribute to the project.
+
 @item README.md
 Serves as a quick reference for the project, in markdown@footnote{See
 @uref{http://en.wikipedia.org/wiki/Markdown}.} format. This format was chosen
 because it is displayed nicely on GitHub.
 
-@item TODO
+@item README.todo
 Incomplete tasks. Future direction of the project. If you're looking to help
-out, take a look at this file to see what needs to be done.
+out, take a look at this file to see what needs to be done. (See also the bug
+tracker at @uref{http://easejs.org/bugs}).
 @end table
 
 These files will be discussed in further detail when they are actually used.
