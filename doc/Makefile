@@ -41,7 +41,7 @@ $(path_doc_output):
 # doc images
 $(path_doc)/img/%.png: $(path_doc)/img/%.dia
 	echo "$<" | grep -q 'wide' \
-		&& dia -e $@ -s x300 $< \
+		&& dia -e $@ -s x250 $< \
 		|| dia -e $@ -s 300x $<
 
 # doc pdf
