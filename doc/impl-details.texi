@@ -422,6 +422,7 @@ around them.
 * Encapsulation In JavaScript::
 * Hacking Around the Issue of Encapsulation::
 * The Visibility Object::
+* Method Wrapping::
 @end menu
 
 @node Encapsulation In JavaScript
@@ -705,6 +706,7 @@ This method of storing instance data was ease.js's initial ``proof-of-concept''
 implementation (@pxref{Class Storage}). Clearly, this was not going to work;
 some changes to this implementation were needed.
 
+@anchor{Instance Memory Considerations}
 @subsubsection Instance Memory Considerations
 JavaScript does not provide destructors to let us know when an instance is about
 to be GC'd, so we unfortunately cannot know when to free instance data from
@@ -962,7 +964,9 @@ getName.call( obj ); // "foo"
 arbitrary object @var{obj}, we can call any given method (in this case,
 @code{getName()}, binding @var{this} to that object. This is precisely what
 ease.js does with each method call. To understand this process, we have to
-explore two concepts: the visibility object itself and method wrapping.
+explore two concepts: the visibility object itself and method wrapping. We will
+start by discussing the visibility object in more detail and cover method
+wrapping later on (@pxref{Method Wrapping}).
 
 @menu
 * Visibility Object Implementation::  Design of the visibility object
@@ -1107,7 +1111,8 @@ indexed by an internal class identifier (which is simply incremented for each
 new class definition, much like we did with the instance id in
 @ref{f:js-encapsulate-instance}. When a method is called, the visibility object
 that matches the class identifier associated with the invoked method is then
-passed as the context (bound to @var{this}) for that method.
+passed as the context (bound to @var{this}) for that method (@pxref{Method
+Wrapping}).
 
 @node Property Proxies
 @subsubsection Property Proxies
@@ -1285,6 +1290,143 @@ Given the above implementation details, it is clear that ease.js has been
 optimized for the most common use case, indicative of proper OO development -
 the access of private properties from within classes, for which there will be no
 performance penalty.
+
+@node Method Wrapping
+@subsection Method Wrapping
+The visibility object (@pxref{The Visibility Object}) is a useful tool for
+organizing the various members, but we still need some means of binding it to a
+method call. This is accomplished by wrapping each method in a closure that,
+among other things@footnote{The closure also sets the @code{__super()} method
+reference, if a super method exists, and returns the instance if @var{this} is
+returned from the method.}, uses @code{apply()} to forward the arguments to the
+method, binding @var{this} to the appropriate visibility object. This is very
+similar to the ES5 @code{Function.bind()} call.
+
+The following example demonstrates in an overly-simplistic way how ease.js
+handles class definitions and method wrapping.@footnote{ease.js, of course,
+generates its own visibility objects internally. However, for the sake of
+brevity, we simply provide one in our example.}
+
+@float Figure, f:method-wrapping
+@verbatim
+/**
+ * Simple function that returns a prototype ("class"), generated from the given
+ * definition and all methods bound to the provided visibility object
+ */
+function createClass( vis, dfn )
+{
+    var C      = function() {},
+        hasOwn = Object.hasOwnProperty;
+
+    for ( name in dfn )
+    {
+        // ignore any members that are not part of our object (further down the
+        // chain)
+        if ( hasOwn.call( dfn, name ) === false )
+        {
+            continue;
+        }
+
+        // simply property impl (WARNING: copies by ref)
+        if ( typeof dfn[ name ] !== 'function' )
+        {
+            C.prototype[ name ] = dfn[ name ];
+            continue;
+        }
+
+        // enclose name in a closure to preserve it (otherwise it'll contain the
+        // name of the last member in the loop)
+        C.prototype[ name ] = ( function( mname )
+        {
+            return function()
+            {
+                // call method with the given argments, bound to the given
+                // visibility object
+                dfn[ mname ].apply( vis, arguments );
+            };
+        } )( name );
+    }
+
+    return C;
+};
+
+var vis = { _data: "foo" },
+
+    Foo = createClass( vis,
+    {
+        getData: function()
+        {
+            return this._data;
+        },
+    } );
+
+var inst = new Foo();
+
+// getData() will be bound to vis and should return its _data property
+inst.getData(); // "foo"
+@end verbatim
+@caption{Basic "class" implementation with method binding}
+@end float
+
+There are some important considerations with the implementation in
+@ref{f:method-wrapping}, as well as ease.js's implementation:
+
+@itemize
+@item
+Each method call, unless optimized away by the engine, is equivalent to two
+function invocations, which cuts down on the available stack space.
+  @itemize
+  @item
+  The method wrapping may complicate tail call optimization, depending on the
+  JavaScript engine's implementation and whether or not it will optimize across
+  the stack, rather than just a single-depth recursive call.
+  @item
+  As such, for operations that are highly dependent on stack space, one may wish
+  to avoid method calls and call functions directly.
+  @end itemize
+@item
+There is a very slight performance hit (though worrying about this is likely to
+be a micro-optimization in the majority of circumstances).
+@end itemize
+
+As mentioned previously, each visibility object is indexed by class identifier
+(@pxref{Visibility Object Implementation}). The appropriate visibility object is
+bound dynamically on method invocation based on the matching class identifier.
+Previously in this discussion, it was not clear how this identifier was
+determined at runtime. Since methods are shared by reference between subtypes,
+we cannot store a class identifier on the function itself.
+
+The closure that wraps the actual method references the arguments that were
+passed to the function that created it when the class was defined. Among these
+arguments are the class identifier and a lookup method used to determine the
+appropriate visibility object to use for binding.@footnote{See
+@file{lib/MethodWrappers.js} for the method wrappers and
+@code{ClassBuilder.getMethodInstance()} for the lookup function.} Therefore, the
+wrapper closure will always know the appropriate class identifier. The lookup
+method is also passed @var{this}, which is bound to the instance automatically
+by JavaScript for the method call. It is on this object that the visibility
+objects are stored (non-enumerable; @pxref{Instance Memory Considerations}),
+indexed by class identifier. The appropriate is simply returned.
+
+If no visibility object is found, @code{null} is returned by the lookup
+function, which causes the wrapper function to default to @var{this} as
+determined by JavaScript, which will be the instance that the method was invoked
+on, or whatever was bound to the function via a call to @code{call()} or
+@code{apply()}. This means that, currently, a visibility object can be
+explicitly specified for any method by invoking the method in the form of:
+@samp{inst.methodName.apply( visobj, arguments )}, which is consistent with how
+JavaScript is commonly used with other prototypes. However, it should be noted
+that this behavior is undocumented and subject to change in future releases
+unless it is decided that this implementation is ideal. It is therefore
+recommended to avoid using this functionality for the time being.@footnote{One
+one hand, keeping this feature is excellent in the sense that it is predictable.
+If all other prototypes work this way, why not ``classes'' as created through
+ease.js? At the same time, this is not very class-like. It permits manipulating
+the internal state of the class, which is supposed to be encapsulated. It also
+allows bypassing constructor logic and replacing methods at runtime. This is
+useful for mocking, but a complete anti-pattern in terms of Classical
+Object-Oriented development.}
+
 
 @node Internal Methods/Objects
 @section Internal Methods/Objects
