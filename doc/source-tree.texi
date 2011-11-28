@@ -94,32 +94,9 @@ the source code.
 @node Lib Directory
 @section Lib Directory
 The @file{lib/} directory contains the source code for the project. Each source
-file represents a single CommonJS module and is written in JavaScript.
-
-@table @file
-@item class.js
-The main Class module. This contains all the functionality necessary to declare
-and extend classes, implement interfaces, etc. This is the bulk of ease.js.
-
-@item interface.js
-Allows declaration and extension of Interfaces.
-
-@item member_builder.js
-Responsible for building class members.
-
-@item propobj.js
-Builds the internal property instance object that is passed around to methods of
-specific class instances. This is the magic behind visibility support, and
-therefore encapsulation.
-
-@item prop_parser.js
-Parses property strings. Note that the name refers to JavaScript properties,
-which are any members of an object. Therefore, this module works on all members.
-
-@item util.js
-General utility functions for property parsing, object cloning, browser
-fallbacks, etc.
-@end table
+file represents a single CommonJS module, often containing a prototype, and is
+written in JavaScript. Additional information about each of the modules can be
+found in the header of each file.
 
 Unless you are developing for ease.js, you needn't concern yourself with these
 files. @file{index.js}, in the root directory, contains mappings to these files
