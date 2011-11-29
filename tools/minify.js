@@ -58,7 +58,6 @@ function minify()
     var ast  = parser.parse( data );
 
     // mange and minify
-    ast = uglify.ast_mangle( ast );
     ast = uglify.ast_squeeze( ast );
 
     // output final, compressed code
