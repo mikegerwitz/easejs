@@ -25,13 +25,13 @@ doc_replace := s/<\/body>/<script type="text\/javascript" \
 	;s/\&gt\;=/\&\#8805\;/g\
 	;s/\&lt\;=/\&\#8804\;/g\
 
-.PHONY: doc mkbuild-doc doc-img doc-pdf doc-info doc-plain doc-html
+.PHONY: doc mkbuild-doc img pdf info plain html
 
 # generate texinfo documentation (twice to generate TOC), then remove the extra
 # files that were generated
 #
 # generates: pdf, info, HTML (multiple pages), HTML (single page)
-default: doc-pdf doc-info doc-plain doc-html
+default: pdf info plain html
 
 mkbuild-doc: $(path_doc_output)
 
@@ -45,7 +45,7 @@ $(path_doc)/img/%.png: $(path_doc)/img/%.dia
 		|| dia -e $@ -s 300x $<
 
 # doc pdf
-$(path_doc_output)/%.pdf: $(doc_src) $(doc_imgs) | mkbuild-doc doc-img
+$(path_doc_output)/%.pdf: $(doc_src) $(doc_imgs) | mkbuild-doc img
 	TEXINPUTS="$(path_doc):" \
 		pdftex -output-directory "${path_doc}" "${path_manual_texi}" && \
 		TEXINPUTS="$(path_doc):" \
@@ -65,7 +65,7 @@ $(path_doc_output_plain): $(doc_imgs_txt) | mkbuild-doc
 $(path_doc_output_html)/index.html: $(doc_src) $(path_doc_css) \
 | $(path_doc_output_html)/img $(path_doc_output_html)/interactive.js \
 $(path_doc_output_html)/highlight.pack.js \
-$(path_doc_output_html)/$(path_doc_css_ref) mkbuild-doc doc-img
+$(path_doc_output_html)/$(path_doc_css_ref) mkbuild-doc img
 	makeinfo --html --css-ref="$(path_doc_css_ref)" \
 		-I "$(path_doc)" -o "${path_doc_output_html}" "${path_manual_texi}"
 	sed -i '$(doc_replace)' $(path_doc_output_html)/*.htm?
@@ -73,14 +73,14 @@ $(path_doc_output_html)/$(path_doc_css_ref) mkbuild-doc doc-img
 # doc html (single page)
 $(path_doc_output_html1): $(doc_src) $(path_doc_css) \
 | $(path_doc_output)/img $(path_doc_output)/interactive.js \
-$(path_doc_output)/highlight.pack.js mkbuild-doc doc-img
+$(path_doc_output)/highlight.pack.js mkbuild-doc img
 	makeinfo --no-split --html --css-include="${path_doc_css}" \
 		-I "$(path_doc)" -o - "${path_manual_texi}" \
 		| sed '$(doc_replace)' \
 			> "$(path_doc_output_html1)"
 
 # doc images (in build dir)
-$(path_doc_output)/img: $(doc_imgs) | mkbuild-doc doc-img
+$(path_doc_output)/img: $(doc_imgs) | mkbuild-doc img
 	[ -d "$@" ] || mkdir -p $@
 	cp "$(path_doc_img)"/*.png $@
 $(path_doc_output_html)/img: $(path_doc_output)/img
@@ -98,11 +98,11 @@ $(path_doc_output_html)/%.css: $(path_doc)/%.css
 	cp $< $@
 
 
-doc-img: $(doc_imgs)
-doc-pdf: $(path_doc_output)/manual.pdf
-doc-info: $(path_doc_output_info)
-doc-plain: $(path_doc_output_plain)
-doc-html: $(path_doc_output_html)/index.html $(path_doc_output_html1)
+img: $(doc_imgs)
+pdf: $(path_doc_output)/manual.pdf
+info: $(path_doc_output_info)
+plain: $(path_doc_output_plain)
+html: $(path_doc_output_html)/index.html $(path_doc_output_html1)
 
 clean:
 	rm -rf $(path_doc_output)
