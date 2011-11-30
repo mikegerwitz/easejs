@@ -423,6 +423,7 @@ around them.
 * Hacking Around the Issue of Encapsulation::
 * The Visibility Object::
 * Method Wrapping::
+* Pre-ES5 Fallback::
 @end menu
 
 @node Encapsulation In JavaScript
@@ -1426,6 +1427,118 @@ the internal state of the class, which is supposed to be encapsulated. It also
 allows bypassing constructor logic and replacing methods at runtime. This is
 useful for mocking, but a complete anti-pattern in terms of Classical
 Object-Oriented development.}
+
+@node Pre-ES5 Fallback
+@subsection Pre-ES5 Fallback
+For any system that is to remain functionally compatible across a number of
+environments, one must develop around the one with the least set of features. In
+the case of ease.js, this means designing around the fact that it must maintain
+support for older, often unsupported, environments.@footnote{ease.js was
+originally developed for use in software that would have to maintain
+compatibility as far back as IE6, while still operating on modern web browsers
+and within a server-side environment.} The line is drawn between ECMAScript 5
+and its predecessors.
+
+As mentioned when describing the proxy implementation (@pxref{Property
+Proxies}), ease.js's ability to create a framework that is unobtrusive and
+fairly easy to work with is attributed to features introduced in ECMAScript 5,
+primarily getters and setters. Without them, we cannot proxy between the
+different visibility layers (@pxref{Visibility Object Implementation}). As a
+consequence, @emph{we cannot use visibility layers within a pre-ES5
+environment}.
+
+This brings about the subject of graceful feature degradation. How do we fall
+back while still allowing ease.js to operate the same in both environments?
+
+@itemize
+@item
+Because getters/setters are unsupported, we cannot proxy (@pxref{Property
+Proxies}) between visibility layers (@pxref{Visibility Object Implementation}).
+  @itemize
+  @item
+  Visibility support is enforced for development, but it is not necessary in a
+  production environment (unless that environment makes heavy use of 3rd party
+  libraries that may abuse the absence of the feature).
+    @itemize
+      @item
+      Therefore, the feature can be safely dropped.
+      @item
+      It is important that the developer develops the software in an ECMAScript 5+
+      environment to ensure that the visibility constraints are properly enforced.
+      The developer may then rest assured that their code will work properly in
+      pre-ES5 environments (so long as they are not using ES5 features in their
+      own code).
+    @end itemize
+  @end itemize
+@end itemize
+
+@subsubsection Visibility Fallback
+Visibility fallback is handled fairly simply in ease.js polymorphically with the
+@code{FallbackVisibilityObjectFactory} prototype (as opposed to
+@code{VisibilityObjectFactory} which is used in ES5+ environments), which does
+the following:
+
+@itemize
+@item
+Property proxies are unsupported. As such, rather than returning a proxy object,
+@code{createPropProxy()} will simply return the object that was originally
+passed to it.
+@item
+This will ultimately result in each layer (public, protected and private)
+referencing the same object (the class prototype, also known as the ``public''
+layer).
+  @itemize
+  @item
+  Consequently, all members will be public, just as they would have been without
+  visibility constraints.
+  @end itemize
+@end itemize
+
+Classical Object-Oriented programming has many rich features, but many of its
+``features'' are simply restrictions it places on developers. This simple fact
+works to our benefit. However, in this case of a visibility implementation, we
+aren't dealing only with restrictions. There is one exception.
+
+Unfortunately, this necessary fallback introduces a startling limitation:
+Consider what might happen if a subtype defines a private member with the same
+name as the supertype. Generally, this is not an issue. Subtypes have no
+knowledge of supertypes' private members, so there is no potential for conflict.
+Indeed, this is the case with our visibility implementation (@pxref{Visibility
+Object Implementation}. Unfortunately, if we merge all those layers into one,
+we introduce a potential for conflict.
+
+@subsubsection Private Member Dilemma
+With public and protected members (@pxref{Access Modifiers}), we don't have to
+worry about conflicts because they are inherited by subtypes
+(@pxref{Inheritance}). Private members are intended to remain distinct from any
+supertypes; only that specific class has access to its own private members. As
+such, inheritance cannot be permitted. However, by placing all values in the
+prototype chain (the public layer), we are permitting inheritance of every
+member. Under this circumstance, if a subtype were to define a member of the
+same name as a supertype, it would effectively be altering the value of its
+supertype. Furthermore, the supertype would have access to the same member,
+allowing it to modify the values of its @emph{subtypes}, which does not make
+sense at all!
+
+This means that we have to place a certain restriction on ease.js as a whole; we
+must prevent private member name conflicts even though they cannot occur in ES5
+environments. This is unfortunate, but necessary in order to ensure feature
+compatibility across the board. This also has the consequence of allowing the
+system to fall back purely for performance benefits (no overhead of the
+visibility object).
+
+@subsubsection Forefitting Fallbacks
+Although ease.js allows flexibility in what environment one develops for, a
+developer may choose to support only ES5+ environments and make use of ES5
+features. At this point, the developer may grow frustrated with ease.js limiting
+its implementation for pre-ES5 environments when their code will not even run in
+a pre-ES5 environment.
+
+For this reason, ease.js may include a feature in the future to disable these
+limitations on a class-by-class@footnote{Will also include traits in the
+future.} basis in order to provide additional syntax benefits, such as omission
+of the static access modifiers (@pxref{Static Implementation}) and removal of
+the private member conflict check.
 
 
 @node Internal Methods/Objects
