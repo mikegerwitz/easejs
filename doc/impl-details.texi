@@ -1507,6 +1507,7 @@ Indeed, this is the case with our visibility implementation (@pxref{Visibility
 Object Implementation}. Unfortunately, if we merge all those layers into one,
 we introduce a potential for conflict.
 
+@anchor{Private Member Dilemma}
 @subsubsection Private Member Dilemma
 With public and protected members (@pxref{Access Modifiers}), we don't have to
 worry about conflicts because they are inherited by subtypes

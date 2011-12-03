@@ -482,10 +482,9 @@ of anonymous class @var{B} as defined by @var{B} = Class( @var{base} ).
 
 @subsection Member Inheritance
 Let @var{dfn\_n\^c} denote a member of @var{dfn} in regards to class @var{c}
-that matches (case-sensitive) name @var{n} and is not private. Let @var{o\_n}
-denote an override, represented as boolean value that is true under the
-condition that both @var{dfn\_n\^C'} and @var{dfn\_n\^C} are defined
-values.
+that matches (case-sensitive) name @var{n}. Let @var{o\_n} denote an override,
+represented as boolean value that is true under the condition that both
+@var{dfn\_n\^C'} and @var{dfn\_n\^C} are defined values.
 
 @var{C'} will @dfn{inherit} all public and protected members of supertype
 @var{C} such that @var{dfn\_n\^C'} = @var{dfn\_n\^C} for each @var{dfn\^C}. For
@@ -493,7 +492,11 @@ any positive condition @var{o\_n}, member @var{dfn\_n\^C'} will be said to
 @dfn{override} member @var{dfn\_n\^C}, provided that overriding member @var{n}
 passes all validation rules associated with the operation. A @code{protected}
 member may be @dfn{escalated} to @code{public}, but the reverse is untrue.
-@code{private} members are invisible to subtypes.
+@code{private} members are invisible to subtypes.@footnote{This is true
+conceptually, but untrue in pre-ES5 environments where ease.js is forced to fall
+back (@pxref{Private Member Dilemma}). As such, one should always develop in an
+ES5 or later environment to ensure visibility restrictions are properly
+enforced.}
 
 For any positive condition @var{o\_n} where member @var{n} is defined as a
 @emph{method}:
@@ -537,6 +540,9 @@ A method is said to be @dfn{concrete} when it provides a definition and
 @end itemize
 @item
 Member @var{dfn\_n\^C'} must be a method.
+@item
+Member @var{dfn\_n\^C} must not have been declared @ref{Member
+Keywords,,@code{private}} (@pxref{Private Member Dilemma}).
 @end itemize
 
 Members that have been declared @code{static} cannot be overridden
