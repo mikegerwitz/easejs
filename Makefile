@@ -36,8 +36,10 @@ $(path_combine_output): $(src_js) | mkbuild
 	${combine} > "$(path_combine_output)"
 $(path_combine_output_full): $(src_js) $(src_tests) | mkbuild
 	INC_TEST=1 "$(combine)" > "${path_combine_output_full}"
-$(path_build)/browser-test.html: $(path_combine_output_full)
-	cp "$(path_browser_test)" "$(path_build)"
+$(path_build)/browser-test.html: $(path_browser_test) | $(path_combine_output_full)
+	cp "$(path_browser_test)" $@
+$(path_build)/browser-test-min.html: $(path_browser_test) | $(path_combine_output_full)
+	cat "$(path_browser_test)" | sed 's/ease-full\.js/ease-full\.min\.js/' > $@
 combine: $(path_combine_output) $(path_build)/browser-test.html
 
 doc:
@@ -51,10 +53,10 @@ perf: default $(perf_tests)
 perf-%.js: default
 	@node $@
 
-min: build/ease.min.js build/ease-full.min.js
+min: build/ease.min.js build/ease-full.min.js $(path_build)/browser-test-min.html
 build/%.min.js: build/%.js
 	cat $(path_tools)/license.tpl > $@
-	node $(path_tools)/minify.js < $< >> $@
+	node $(path_tools)/minify.js < $< > $@
 
 install: doc-info
 	[ -d $(path_info_install) ] || mkdir -p $(path_info_install)
