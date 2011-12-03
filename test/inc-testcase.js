@@ -353,7 +353,17 @@ function outputTestFailures( failures )
 
         for ( i in failures )
         {
-            err += failures[ i ][ 0 ] + '; ';
+            var failure = failures[ i ];
+
+            err += failure[ 0 ] +
+                ' (' + ( failure[ 1 ].message || 'no message' ) + ')' +
+                ( ( failure[ 1 ].stack )
+                    ? ( '<br />' +
+                        failure[ 1 ].stack.replace( /\n/g, '<br />' ) +
+                        '<br />'
+                    )
+                    : '; '
+                )
         }
 
         throw Error( err );
