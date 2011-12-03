@@ -66,7 +66,7 @@ exports.quickFailureTest = function( name, identifier, action )
         // to aid in debugging, the error message should contain the
         // name of the method
         _self.assertOk( ( e.message.search( name ) !== -1 ),
-            'Error message should contain method name'
+            'Error message should contain member name'
         );
 
         return;
@@ -139,18 +139,34 @@ exports.quickKeywordTest = function( type, keywords, identifier, prev )
 exports.visEscalationTest = function( test )
 {
     var tests = [
-        [ 'private',   'protected' ],
-        [ 'protected', 'public' ],
-
-        [ 'public',    'public' ],
+        [ 'protected', 'public'    ],
+        [ 'public',    'public'    ],
         [ 'protected', 'protected' ],
-        [ 'private',   'private' ]
+
+        // note: private/private is intentionally omitted; see private naming
+        // conflict test
     ];
 
     for ( var i = 0, len = tests.length; i < len; i++ )
     {
         var cur = tests[ i ];
         test( cur );
+    }
+};
+
+
+exports.privateNamingConflictTest = function( test )
+{
+    var tests = [
+        [ 'private', 'private'   ],
+        [ 'private', 'protected' ],
+        [ 'private',' public'    ],
+    ];
+
+    var i = tests.length;
+    while ( i-- )
+    {
+        test( tests[ i ] );
     }
 };
 
@@ -166,9 +182,13 @@ exports.visEscalationTest = function( test )
  *
  * @param  {function()}  func  test function
  *
+ * @param  {string}  failstr  string to check for in failure string
+ *
  * @return  {undefined}
  */
-exports.quickVisChangeTest = function( start, override, failtest, func )
+exports.quickVisChangeTest = function(
+    start, override, failtest, func, failstr
+)
 {
     var _self = this,
         name  = 'foo',
@@ -187,7 +207,7 @@ exports.quickVisChangeTest = function( start, override, failtest, func )
 
     if ( failtest )
     {
-        this.quickFailureTest( name, 'de-escalate', testfun );
+        this.quickFailureTest( name, ( failstr || 'de-escalate' ), testfun );
     }
     else
     {

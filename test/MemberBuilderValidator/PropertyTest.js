@@ -40,7 +40,7 @@ require( 'common' ).testCase(
             );
         };
 
-        this.quickVisChangeTest = function( start, override, failtest )
+        this.quickVisChangeTest = function( start, override, failtest, failstr )
         {
             shared.quickVisChangeTest.call( _self, start, override, failtest,
                 function( name, startobj, overrideobj )
@@ -50,7 +50,8 @@ require( 'common' ).testCase(
                         { member: 'foo' },
                         startobj
                     );
-                }
+                },
+                failstr
             );
         };
     },
@@ -167,6 +168,25 @@ require( 'common' ).testCase(
         shared.visEscalationTest( function( cur )
         {
             _self.quickVisChangeTest( cur[ 0 ], cur[ 1 ], false );
+        } );
+    },
+
+
+    /**
+     * Wait - what? That doesn't make sense from an OOP perspective, now does
+     * it! Unfortunately, we're forced into this restriction in order to
+     * properly support fallback to pre-ES5 environments where the visibility
+     * object is a single layer, rather than three. With this impl, all members
+     * are public and private name conflicts would result in supertypes and
+     * subtypes altering eachothers' private members (see manual for more
+     * information).
+     */
+    'Cannot redeclare private properties in subtypes': function()
+    {
+        var _self = this;
+        shared.privateNamingConflictTest( function( cur )
+        {
+            _self.quickVisChangeTest( cur[ 0 ], cur[ 1 ], true, 'conflict' );
         } );
     },
 } );

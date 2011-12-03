@@ -35,7 +35,7 @@ require( 'common' ).testCase(
 
         this.quickFailureTest = shared.quickFailureTest;
 
-        this.quickVisChangeTest = function( start, override, failtest )
+        this.quickVisChangeTest = function( start, override, failtest, failstr )
         {
             shared.quickVisChangeTest.call( _self, start, override, failtest,
                 function( name, startobj, overrideobj )
@@ -45,7 +45,8 @@ require( 'common' ).testCase(
                         { get: function() {}, set: function() {} },
                         startobj
                     );
-                }
+                },
+                failstr
             );
         };
     },
@@ -115,6 +116,22 @@ require( 'common' ).testCase(
         shared.visEscalationTest( function( cur )
         {
             _self.quickVisChangeTest( cur[ 0 ], cur[ 1 ], false );
+        } );
+    },
+
+
+    /**
+     * See property/method tests for more information. This is not strictly
+     * necessary (since getters/setters can exist only in an ES5+ environment),
+     * but it's provided for consistency. It's also easy to remove this feature
+     * without breaking BC. The reverse is untrue.
+     */
+    'Cannot redeclare private getters/setters in subtypes': function()
+    {
+        var _self = this;
+        shared.privateNamingConflictTest( function( cur )
+        {
+            _self.quickVisChangeTest( cur[ 0 ], cur[ 1 ], true, 'conflict' );
         } );
     },
 } );
