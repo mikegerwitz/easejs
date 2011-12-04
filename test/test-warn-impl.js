@@ -35,17 +35,15 @@ var common  = require( './common' ),
  */
 ( function testDefaultHandlerIsLogger()
 {
-    // back up console object
-    var console_ = ( typeof console !== 'undefined' ) ? console : undefined,
-        called   = false;
+    var called   = false;
 
     // stub it
-    console = {
+    warn.setConsole( {
         warn: function()
         {
             called = true;
         },
-    };
+    } );
 
     warn.handle( warn.Warning( Error( 'foo' ) ) );
 
@@ -54,7 +52,7 @@ var common  = require( './common' ),
     );
 
     // restore console
-    console = console_;
+    warn.setConsole( console );
 } )();
 
 

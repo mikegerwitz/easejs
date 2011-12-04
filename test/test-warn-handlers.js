@@ -32,35 +32,14 @@ var common  = require( './common' ),
 
 
 /**
- * Return the console object, without throwing errors if it does not exist
- *
- * @return {Object} console
- */
-function backupConsole()
-{
-    // ensure that we don't throw errors if console is not defined
-    if ( typeof console !== 'undefined' )
-    {
-        return console;
-    }
-
-    return undefined;
-}
-
-
-/**
  * The log warning handler should log warnings to the console
  */
 ( function testLogWarningHandlerLogsMessageToConsole()
 {
-    var logged = false,
-
-        // back up console ref
-        console_ = backupConsole()
-    ;
+    var logged = false;
 
     // mock console
-    console = {
+    warn.setConsole( {
         warn: function( message )
         {
             assert.equal( ( 'Warning: ' + warning.message ), message,
@@ -69,7 +48,7 @@ function backupConsole()
 
             logged = true;
         },
-    };
+    } );
 
     // call handler with the warning
     warn.handlers.log( warning );
@@ -79,7 +58,7 @@ function backupConsole()
     );
 
     // restore console
-    console = console_;
+    warn.setConsole( console );
 } )();
 
 
@@ -90,17 +69,14 @@ function backupConsole()
  */
 ( function testLogWarningHandlerHandlesMissingConsole()
 {
-    // back up console
-    var console_ = backupConsole();
-
     // destroy it
-    console = undefined;
+    warn.setConsole( undefined );
 
     // attempt to log
     warn.handlers.log( warning );
 
     // restore console
-    console = console_;
+    warn.setConsole( console );
 } )();
 
 
@@ -111,16 +87,14 @@ function backupConsole()
  */
 ( function testLogWarningHandlerWillFallBackToLogMethodIfWarnIsMissing()
 {
-    // back up and overwrite console to contain only log()
-    var console_ = backupConsole(),
-        given    = '';
+    var given = '';
 
-    console = {
+    warn.setConsole( {
         log: function( message )
         {
             given = message;
         }
-    };
+    } );
 
     // attempt to log
     warn.handlers.log( warning );
@@ -130,7 +104,7 @@ function backupConsole()
     );
 
     // restore console
-    console = console_;
+    warn.setConsole( console );
 } )();
 
 
@@ -166,14 +140,13 @@ function backupConsole()
 ( function testDismissWarningHandlerShouldDoNothing()
 {
     // destroy the console to ensure nothing is logged
-    var console_ = backupConsole();
-    console = undefined;
+    warn.setConsole( undefined );
 
     // don't catch anything, to ensure no errors occur and that no exceptions
     // are thrown
     warn.handlers.dismiss( warning );
 
     // restore console
-    console = console_;
+    warn.setConsole( console );
 } )();
 
