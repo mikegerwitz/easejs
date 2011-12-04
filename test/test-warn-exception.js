@@ -67,8 +67,14 @@ var common  = require( './common' ),
  */
 ( function testCanWarningMessageIsSetFromWrappedException()
 {
-    var err     = Error( 'oshit' ),
-        warning = Warning( err );
+    var err = Error( 'oshit' );
+
+    // bug in FF (tested with 8.0) where, without accessing the message property
+    // in this test before passing it to Warning, err.message === "" within the
+    // Warning ctor.
+    err.message;
+
+    var warning = Warning( err );
 
     assert.equal( warning.message, err.message,
         "Warning message should be taken from wrapped exception"
