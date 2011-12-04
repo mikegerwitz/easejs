@@ -138,13 +138,12 @@ exports.quickKeywordTest = function( type, keywords, identifier, prev )
  */
 exports.visEscalationTest = function( test )
 {
+    // note: private/private is intentionally omitted; see private naming
+    // conflict test
     var tests = [
         [ 'protected', 'public'    ],
         [ 'public',    'public'    ],
         [ 'protected', 'protected' ],
-
-        // note: private/private is intentionally omitted; see private naming
-        // conflict test
     ];
 
     for ( var i = 0, len = tests.length; i < len; i++ )
