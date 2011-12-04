@@ -27,6 +27,8 @@ var common  = require( './common' ),
     warn    = common.require( 'warn' )
 ;
 
+if ( typeof console === 'undefined' ) console = undefined;
+
 
 /**
  * The default warning handler should be the 'log' handler. This is a friendly

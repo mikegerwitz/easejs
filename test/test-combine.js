@@ -24,8 +24,8 @@
 
 var common  = require( './common' ),
     assert  = require( 'assert' ),
+    vm      = require( 'vm' ),
     Class   = common.require( 'class' ),
-    Script  = process.binding( 'evals' ).Script,
 
     // sandbox in which combined script will be run
     sandbox = {
@@ -60,8 +60,7 @@ while ( i-- )
     }
 
     // run the script (if this fails to compile, the generated code is invalid)
-    var cmb_script = new Script( data );
-    cmb_script.runInNewContext( sandbox );
+    vm.runInNewContext( data, sandbox );
 
     assert.equal(
         sandbox.require,

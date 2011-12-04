@@ -30,6 +30,8 @@ var common  = require( './common' ),
     warning = Warning( Error( 'gninraw' ) )
 ;
 
+if ( typeof console === 'undefined' ) console = undefined;
+
 
 /**
  * The log warning handler should log warnings to the console
