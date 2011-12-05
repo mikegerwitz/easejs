@@ -11,7 +11,9 @@ path_perf_test=${path_test}/perf
 perf_tests := $(shell find "$(path_perf_test)" -name 'perf-*.js')
 
 src_js := index.js $(wildcard $(path_lib)/*.js)
-src_tests := index.js $(shell find "$(path_test)" -name test-* -o -name *Test*)
+src_tests := index.js $(shell find "$(path_test)" -name test-* \
+	-o -name *Test* \
+	-o -name inc-*.js )
 
 path_doc := ./doc
 
