@@ -157,12 +157,12 @@ assert.ok(
  */
 ( function testConstructorCannotBeDeclaredAsProtectedOrPrivate()
 {
-    assert.throws( function()
+    assert['throws']( function()
     {
         Class( { 'protected __construct': function() {} } );
     }, TypeError, "Constructor cannot be protected" );
 
-    assert.throws( function()
+    assert['throws']( function()
     {
         Class( { 'private __construct': function() {} } );
     }, TypeError, "Constructor cannot be private" );

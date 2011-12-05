@@ -71,8 +71,8 @@ var common  = require( './common' ),
 
     // bug in FF (tested with 8.0) where, without accessing the message property
     // in this test before passing it to Warning, err.message === "" within the
-    // Warning ctor.
-    err.message;
+    // Warning ctor. (Assignment is to silence Closure compiler warning.)
+    var _ = err.message;
 
     var warning = Warning( err );
 
@@ -88,12 +88,12 @@ var common  = require( './common' ),
  */
 ( function testThrowsExceptionIfNoExceptionIsWrapped()
 {
-    assert.throws( function()
+    assert['throws']( function()
     {
         Warning( /* nothing provided to wrap */ );
     }, TypeError, "Exception should be thrown if no exception is provided" );
 
-    assert.throws( function()
+    assert['throws']( function()
     {
         Warning( 'not an exception' );
     }, TypeError, "Exception should be thrown if given value is not an Error" );

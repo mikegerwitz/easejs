@@ -81,13 +81,13 @@ var common  = require( './common' ),
     ;
 
     // named
-    assert.throws( function()
+    assert['throws']( function()
     {
         FinalNamed.extend( {} );
     }, Error, "Cannot extend final named subtype" );
 
     // anonymous
-    assert.throws( function()
+    assert['throws']( function()
     {
         FinalAnon.extend( {} );
     }, Error, "Cannot extend final anonymous subtype" );

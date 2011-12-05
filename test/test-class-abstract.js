@@ -256,7 +256,7 @@ var ConcreteFoo = Class.extend( AbstractFoo,
 
 ( function testAbstractClassesCannotBeInstantiated()
 {
-    assert.throws( function()
+    assert['throws']( function()
     {
         // both should fail
         AbstractFoo();
@@ -289,7 +289,7 @@ var ConcreteFoo = Class.extend( AbstractFoo,
 
 ( function testConcreteMethodsMustImplementTheProperNumberOfArguments()
 {
-    assert.throws( function()
+    assert['throws']( function()
     {
         AbstractFoo.extend(
         {
@@ -304,7 +304,7 @@ var ConcreteFoo = Class.extend( AbstractFoo,
 
 ( function testAbstractMethodsOfSubtypesMustImplementProperNumberOfArguments()
 {
-    assert.throws(
+    assert['throws'](
         function()
         {
             AbstractFoo.extend(
@@ -360,7 +360,7 @@ var ConcreteFoo = Class.extend( AbstractFoo,
 
 ( function testAbstractMethodsMustBeDeclaredAsArrays()
 {
-    assert.throws( function()
+    assert['throws']( function()
     {
         Class.extend(
         {
@@ -424,7 +424,7 @@ var ConcreteFoo = Class.extend( AbstractFoo,
         anon_named = AbstractClass.extend( AbstractFoo, {} );
 
     // named
-    assert.throws(
+    assert['throws'](
         function()
         {
             // should throw an error, since we're not declaring it as abstract
@@ -436,7 +436,7 @@ var ConcreteFoo = Class.extend( AbstractFoo,
     );
 
     // anonymous
-    assert.throws(
+    assert['throws'](
         function()
         {
             // should throw an error, since we're not declaring it as abstract

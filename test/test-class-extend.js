@@ -166,7 +166,7 @@ for ( var i = 0; i < class_count; i++ )
     );
 
 
-    assert.throws( function()
+    assert['throws']( function()
     {
         Class.extend( OtherClass,
         {
@@ -224,7 +224,7 @@ for ( var i = 0; i < class_count; i++ )
         "Subtypes can override parent property values"
     );
 
-    assert.throws( function()
+    assert['throws']( function()
     {
         Class.extend(
         {
@@ -249,7 +249,7 @@ for ( var i = 0; i < class_count; i++ )
 
 ( function testInvokingClassModuleRequiresObjectAsArgumentIfCreating()
 {
-    assert.throws( function()
+    assert['throws']( function()
         {
             Class( 'moo' );
             Class( 5 );
@@ -321,7 +321,7 @@ for ( var i = 0; i < class_count; i++ )
  */
 ( function testCannotProvideDuplicateMemberDefintions()
 {
-    assert.throws( function()
+    assert['throws']( function()
     {
         Class(
         {
@@ -334,7 +334,7 @@ for ( var i = 0; i < class_count; i++ )
         } );
     }, Error, "Cannot redeclare property in same class definition" );
 
-    assert.throws( function()
+    assert['throws']( function()
     {
         Class(
         {

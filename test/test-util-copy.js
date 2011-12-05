@@ -121,22 +121,22 @@ var common = require( './common' ),
  */
 ( function testThrowsErrorIfSourceOrDestAreNotGiven()
 {
-    assert.throws( function()
+    assert['throws']( function()
     {
         copyTo();
     }, TypeError, "Dest parameter is required" );
 
-    assert.throws( function()
+    assert['throws']( function()
     {
         copyTo( 'bla', {} );
     }, TypeError, "Dest parameter is required to be an object" );
 
-    assert.throws( function()
+    assert['throws']( function()
     {
         copyTo( {} );
     }, TypeError, "Src parameter is required" );
 
-    assert.throws( function()
+    assert['throws']( function()
     {
         copyTo( {}, 'foo' );
     }, TypeError, "Src parameter is required to be an object" );

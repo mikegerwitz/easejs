@@ -104,7 +104,7 @@ assert.equal(
     "Arguments should be passed to super method via _super argument list"
 );
 
-assert.throws( function()
+assert['throws']( function()
 {
     Foo.extend(
     {

@@ -38,7 +38,7 @@ assert.ok(
         "util.isAbstractMethod"
 );
 
-assert.throws( function()
+assert['throws']( function()
 {
     util.createAbstractMethod()();
 }, Error, "Abstract methods cannot be called" );

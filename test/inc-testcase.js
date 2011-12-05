@@ -322,7 +322,7 @@ function prepareCaseContext()
         assertDeepEqual:      assert_wrapped.deepEqual,
         assertStrictEqual:    assert_wrapped.strictEqual,
         assertNotStrictEqual: assert_wrapped.notStrictEqual,
-        assertThrows:         assert_wrapped.throws,
+        assertThrows:         assert_wrapped['throws'],
         assertDoesNotThrow:   assert_wrapped.doesNotThrow,
         assertIfError:        assert_wrapped.ifError,
         incAssertCount:       incAssertCount,

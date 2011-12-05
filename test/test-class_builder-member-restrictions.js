@@ -88,7 +88,7 @@ var common  = require( './common' ),
     for ( name in reserved )
     {
         // properties
-        assert.throws(
+        assert['throws'](
             function()
             {
                 var obj = {};
@@ -102,7 +102,7 @@ var common  = require( './common' ),
         );
 
         // methods
-        assert.throws(
+        assert['throws'](
             function()
             {
                 var obj = {};
@@ -179,7 +179,7 @@ var common  = require( './common' ),
     // test each of the reserved members
     for ( name in pub )
     {
-        assert.throws( function()
+        assert['throws']( function()
         {
             var obj = {};
             obj[ name ] = function() {};
