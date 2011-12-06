@@ -17,10 +17,11 @@ src_tests := index.js $(shell find "$(path_test)" -name test-* \
 
 path_doc := ./doc
 
-combine=${path_tools}/combine
+combine := $(path_tools)/combine
+compiler := $(path_tools)/compiler.jar
 
 
-.PHONY: combine min doc test test-combine
+.PHONY: combine min doc test test-combine clean distclean
 
 
 default: combine min
@@ -55,10 +56,15 @@ perf: default $(perf_tests)
 perf-%.js: default
 	@node $@
 
-min: build/ease.min.js build/ease-full.min.js $(path_build)/browser-test-min.html
-build/%.min.js: build/%.js
+# minificatino process uses Google Closure compiler
+min: build/ease.min.js build/ease-full.min.js $(path_build)/browser-test-min.html \
+	| combine
+$(compiler):
+	wget -O- http://closure-compiler.googlecode.com/files/compiler-latest.tar.gz \
+		| tar -C $(path_tools) -xzv compiler.jar
+build/%.min.js: build/%.js $(compiler)
 	cat $(path_tools)/license.tpl > $@
-	node $(path_tools)/minify.js < $< > $@
+	java -jar $(compiler) --js $< >> $@ || rm $@
 
 install: doc-info
 	[ -d $(path_info_install) ] || mkdir -p $(path_info_install)
@@ -71,4 +77,7 @@ uninstall:
 clean:
 	$(MAKE) -C $(path_doc) clean
 	rm -rf "${path_build}"
+
+distclean: clean
+	rm $(compiler)
 
