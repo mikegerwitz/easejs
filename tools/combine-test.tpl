@@ -124,7 +124,13 @@ module.assert = { exports: {
     },
 
 
-    throws: function ( test, expected, err )
+    fail: function ( err )
+    {
+        failAssertion( err );
+    },
+
+
+    'throws': function ( test, expected, err )
     {
         try
         {
