@@ -119,11 +119,11 @@ exports.quickKeywordTest = function( type, keywords, identifier, prev )
 
     if ( identifier )
     {
-        _self.quickFailureTest( name, identifier, testfunc );
+        this.quickFailureTest.call( this, name, identifier, testfunc );
     }
     else
     {
-        _self.assertDoesNotThrow( testfunc, Error );
+        this.assertDoesNotThrow( testfunc, Error );
     }
 };
 
@@ -206,11 +206,13 @@ exports.quickVisChangeTest = function(
 
     if ( failtest )
     {
-        this.quickFailureTest( name, ( failstr || 'de-escalate' ), testfun );
+        this.quickFailureTest.call( this,
+            name, ( failstr || 'de-escalate' ), testfun
+        );
     }
     else
     {
-        _self.assertDoesNotThrow( testfun, Error );
+        this.assertDoesNotThrow( testfun, Error );
     }
 };
 

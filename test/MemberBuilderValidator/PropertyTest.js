@@ -31,7 +31,10 @@ require( 'common' ).testCase(
     {
         var _self = this;
 
-        this.quickFailureTest = shared.quickFailureTest;
+        this.quickFailureTest = function()
+        {
+            shared.quickFailureTest.apply( _self, arguments );
+        };
 
         this.quickKeywordPropTest = function( keywords, identifier, prev )
         {

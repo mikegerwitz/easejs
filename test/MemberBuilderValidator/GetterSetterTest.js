@@ -33,7 +33,10 @@ require( 'common' ).testCase(
     {
         var _self = this;
 
-        this.quickFailureTest = shared.quickFailureTest;
+        this.quickFailureTest = function()
+        {
+            shared.quickFailureTest.apply( _self, arguments );
+        };
 
         this.quickVisChangeTest = function( start, override, failtest, failstr )
         {
