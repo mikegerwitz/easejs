@@ -79,6 +79,10 @@ var common  = require( './common' ),
     assert.equal( warning.message, err.message,
         "Warning message should be taken from wrapped exception"
     );
+
+    // this little trick prevents the compiler from optimizing away the
+    // assignment, which would break the test in certain versions of FF.
+    return _;
 } )();
 
 

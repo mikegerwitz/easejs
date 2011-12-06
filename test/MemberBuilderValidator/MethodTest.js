@@ -230,7 +230,9 @@ require( 'common' ).testCase(
                 name,
                 function() {},
                 { 'override': true },
-                { member: function( a, b, c ) {} },
+                // this function returns each of its arguments, otherwise
+                // they'll be optimized away by Closure Compiler.
+                { member: function( a, b, c ) { return [a,b,c]; } },
                 { 'virtual': true }
             );
         } );

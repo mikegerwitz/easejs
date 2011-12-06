@@ -192,6 +192,9 @@ var ConcreteFoo = Class.extend( AbstractFoo,
 {
     method: function( one, two, three )
     {
+        // prevent Closure Compiler from optimizing the arguments away, causing
+        // a definition failure
+        return [ one, two, three ];
     },
 
     second: function()
@@ -391,8 +394,9 @@ var ConcreteFoo = Class.extend( AbstractFoo,
     {
         Class.extend( SubAbstractFoo,
         {
-            // concrete, so the result would otherwise not be abstract
-            'method': function( one, two, three ) {},
+            // concrete, so the result would otherwise not be abstract (return
+            // args so they're not optimized away during compile)
+            'method': function( _, __, ___ ) { return [ _, __, ___ ]; },
 
             // the problem
             'toString': function() {},
