@@ -19,7 +19,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author  Mike Gerwitz
- * @package core
  */
 
 exports.Class         = require( __dirname + '/lib/class' );
