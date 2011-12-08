@@ -33,7 +33,7 @@ module.common = module['test/common'] = { exports: {
 
 function failAssertion( err )
 {
-    throw Error( 'Assertion failed: ' + err.toString() );
+    throw Error( 'Assertion failed: ' + ( err || '(no failure message)' ) );
 }
 
 
