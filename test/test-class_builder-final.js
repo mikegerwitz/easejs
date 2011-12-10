@@ -28,7 +28,7 @@ var common  = require( './common' ),
         common.require( 'VisibilityObjectFactoryFactory' ).fromEnvironment()
     ),
 
-    Class      = common.require( 'class' )
+    Class      = common.require( 'class' ),
     FinalClass = common.require( 'class_final' )
 ;
 

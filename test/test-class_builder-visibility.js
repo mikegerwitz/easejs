@@ -62,7 +62,7 @@ require( 'common' ).testCase(
      */
     'Self property references instance rather than property object': function()
     {
-        var result = null
+        var result = null,
             ref    = null,
 
             foo = this.builder.build( {

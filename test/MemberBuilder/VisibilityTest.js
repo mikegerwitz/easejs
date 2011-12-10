@@ -81,7 +81,7 @@ require( 'common' ).testCase(
 
             _self.incAssertCount();
 
-            for ( level in _self.members )
+            for ( var level in _self.members )
             {
                 if ( typeof _self.members[ level ][ name ] === 'undefined' )
                 {
@@ -264,7 +264,7 @@ require( 'common' ).testCase(
         ;
 
         // ensure we can initialize the values of each visibility level
-        for ( vis in test )
+        for ( var vis in test )
         {
             this.assertStrictEqual( test[ vis ], members[ vis ],
                 "Visibility level '" + vis + "' cannot be initialized"
@@ -282,7 +282,7 @@ require( 'common' ).testCase(
         var _self = this,
             tests = [ 'public', 'protected', 'private' ];
 
-        for ( i in tests )
+        for ( var i in tests )
         {
             _self.basicVisPropTest( tests[ i ] );
             _self.basicVisMethodTest( tests[ i ] );

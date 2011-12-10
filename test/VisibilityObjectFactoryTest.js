@@ -111,7 +111,7 @@ var VisibilityObjectFactory = common.require( 'VisibilityObjectFactory' ),
     sut.createPropProxy( base, dest, props );
 
     // check to ensure the properties are properly proxied
-    for ( prop in props )
+    for ( var prop in props )
     {
         dest[ prop ] = val;
 

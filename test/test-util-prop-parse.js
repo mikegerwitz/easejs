@@ -61,7 +61,7 @@ if ( get_set )
 
 
 var chk_each = {};
-for ( i in data )
+for ( var i in data )
 {
     chk_each[ i ] = 1;
 }
@@ -152,7 +152,7 @@ if ( get_set )
 
 
 var chk_each_count = 0;
-for ( item in chk_each )
+for ( var item in chk_each )
 {
     chk_each_count++;
 }

@@ -52,7 +52,7 @@ for ( var i = 0, len = arr.length; i < len; i++ )
 }
 
 // ensure object was properly cloned
-for ( prop in obj )
+for ( var prop in obj )
 {
     assert.equal(
         obj2[ prop ],
@@ -94,7 +94,7 @@ while ( deep_i-- )
     );
 }
 
-for ( prop in deep_obj )
+for ( var prop in deep_obj )
 {
     assert.ok(
         ( deep_obj2[ prop ] !== deep_obj[ prop ] ),

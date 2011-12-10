@@ -22,7 +22,7 @@
  */
 
 var common   = require( './common' ),
-    fallback = common.require( 'util' ).definePropertyFallback()
+    fallback = common.require( 'util' ).definePropertyFallback(),
 
     // XXX: get rid of this disgusting mess; we're mid-refactor and all these
     // dependencies should not be necessary for testing
@@ -183,7 +183,7 @@ require( 'common' ).testCase(
         // we must define in this manner so older engines won't blow up due to
         // syntax errors
         var def    = {},
-            val    = 'baz'
+            val    = 'baz',
             called = [];
 
         Object.defineProperty( def, 'public static foo', {
@@ -615,7 +615,7 @@ require( 'common' ).testCase(
                     this.foo = val;
                 },
             },
-            val    = 'baz'
+            val    = 'baz',
             called = [];
 
         Object.defineProperty( def, 'protected static foo', {
@@ -915,7 +915,7 @@ require( 'common' ).testCase(
                     this.foo = val;
                 },
             },
-            val    = 'baz'
+            val    = 'baz',
             called = [];
 
         Object.defineProperty( def, 'private static foo', {

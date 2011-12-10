@@ -25,6 +25,7 @@ var assert         = require( 'assert' ),
     assert_wrapped = {},
     acount         = 0,
     icount         = 0,
+    scount         = 0,
     skpcount       = 0,
     tcount         = 0,
 
@@ -41,7 +42,7 @@ var assert         = require( 'assert' ),
 
 // wrap each of the assertions so that we can keep track of the number of times
 // that they were invoked
-for ( f in assert )
+for ( var f in assert )
 {
     var _assert_cur = assert[ f ];
 
@@ -105,7 +106,7 @@ module.exports = function( test_case )
     delete test_case.setUp;
 
     // run each test in the case
-    for ( test in test_case )
+    for ( var test in test_case )
     {
         // xUnit-style setup
         if ( setUp )
@@ -282,7 +283,7 @@ function getMock( proto )
         proto = Mock.prototype = new P()
     ;
 
-    for ( i in proto )
+    for ( var i in proto )
     {
         // only mock out methods
         if ( typeof proto[ i ] !== 'function' )
@@ -350,7 +351,7 @@ function outputTestFailures( failures )
         var err = '',
             i   = failures.length;
 
-        for ( i in failures )
+        for ( var i in failures )
         {
             var failure = failures[ i ];
 
@@ -368,7 +369,7 @@ function outputTestFailures( failures )
         throw Error( err );
     }
 
-    for ( i = 0; i < failures.length; i++ )
+    for ( var i = 0; i < failures.length; i++ )
     {
         cur = failures[ i ];
 

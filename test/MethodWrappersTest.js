@@ -23,7 +23,7 @@
 
 var common = require( './common' ),
     assert = require( 'assert' ),
-    util   = common.require( 'util' )
+    util   = common.require( 'util' ),
     sut    = common.require( 'MethodWrappers' )
 ;
 
@@ -45,7 +45,7 @@ var common = require( './common' ),
         {
             called = true;
             return instance;
-        }
+        },
 
         method = sut.standard.wrapNew(
             function()
@@ -152,7 +152,7 @@ var common = require( './common' ),
                 super_called = true;
             },
             null, 0, getInst
-        )
+        ),
 
         // the overriding method
         override = sut.standard.wrapOverride(

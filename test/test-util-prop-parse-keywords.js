@@ -161,7 +161,7 @@ var common = require( './common' ),
         },
     } );
 
-    for ( prop in parsed_keywords )
+    for ( var prop in parsed_keywords )
     {
         assert.deepEqual(
             parsed_keywords[ prop ],

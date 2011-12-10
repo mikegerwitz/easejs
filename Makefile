@@ -58,13 +58,16 @@ perf-%.js: default
 
 # minificatino process uses Google Closure compiler
 min: build/ease.min.js build/ease-full.min.js $(path_build)/browser-test-min.html \
-	| combine
+	$(path_tools)/externs-global.js | combine
 $(compiler):
 	wget -O- http://closure-compiler.googlecode.com/files/compiler-latest.tar.gz \
 		| tar -C $(path_tools) -xzv compiler.jar
 build/%.min.js: build/%.js $(compiler)
 	cat $(path_tools)/license.tpl > $@
-	java -jar $(compiler) --js $< >> $@ || rm $@
+	java -jar $(compiler) \
+		--warning_level VERBOSE \
+		--externs $(path_tools)/externs-global.js \
+		--js $< >> $@ || rm $@
 
 install: doc-info
 	[ -d $(path_info_install) ] || mkdir -p $(path_info_install)

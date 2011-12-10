@@ -36,7 +36,7 @@ var foo_props = {
         Class( foo_props ),
     ],
 
-    class_count = classes.length
+    class_count = classes.length,
 
     // will hold the class being tested
     Foo = null

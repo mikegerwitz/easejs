@@ -24,6 +24,7 @@
 var common  = require( './common' ),
     assert  = require( 'assert' ),
 
+    Class        = common.require( 'class' ),
     ClassBuilder = common.require( 'ClassBuilder' ),
     builder      = ClassBuilder(
         common.require( 'MemberBuilder' )(),
@@ -84,7 +85,7 @@ var common  = require( './common' ),
         count    = 0;
 
     // test each of the reserved members
-    for ( name in reserved )
+    for ( var name in reserved )
     {
         // properties
         assert['throws'](
@@ -137,7 +138,7 @@ var common  = require( './common' ),
         "Can retrieve hash of forced-public methods"
     );
 
-    for ( name in pub )
+    for ( var name in pub )
     {
         count++;
     }
@@ -176,12 +177,12 @@ var common  = require( './common' ),
     var pub = ClassBuilder.getForcedPublicMethods();
 
     // test each of the reserved members
-    for ( name in pub )
+    for ( var name in pub )
     {
         assert['throws']( function()
         {
             var obj = {};
-            obj[ name ] = function() {};
+            obj[ 'private ' + name ] = function() {};
 
             Class( obj );
         }, Error, "Forced-public methods must be declared as public" );

@@ -23,7 +23,7 @@
 
 var common = require( './common' ),
     assert = require( 'assert' ),
-    Class  = common.require( 'class' );
+    Class  = common.require( 'class' ),
 
     // we store these outside of the class to ensure that visibility bugs do not
     // get in the way of our assertions

@@ -199,8 +199,8 @@ var common = require( './common' ),
 ( function testCanCreateNamedClassUsingStagingMethod()
 {
     var name   = 'Foo',
-        named  = Class( name ).extend( {} )
-        namedi = Class( name ).implement( Interface( {} ) ).extend( {} )
+        named  = Class( name ).extend( {} ),
+        namedi = Class( name ).implement( Interface( {} ) ).extend( {} ),
 
         // we should also be able to extend classes in this manner
         namede = Class( name ).implement( Interface( {} ) ).extend( named, {} )

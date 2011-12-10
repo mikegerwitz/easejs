@@ -49,7 +49,7 @@ var common = require( './common' ),
 
     copyTo( dest, src );
 
-    for ( key in src )
+    for ( var key in src )
     {
         assert.deepEqual( src[ key ], dest[ key ],
             "Copies by reference by default"

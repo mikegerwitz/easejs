@@ -29,7 +29,7 @@ var common = require( './common' ),
 // will still be set even if the context of the constructor is wrong
 var construct_count   = 0,
     construct_context = null,
-    construct_args    = null
+    construct_args    = null,
 
 // create a basic test class
     Foo = Class.extend(
