@@ -19,7 +19,7 @@ path_doc := ./doc
 
 combine := $(path_tools)/combine
 compiler := $(path_tools)/compiler.jar
-
+path_externs_internal := $(path_build)/externs-internal.js
 
 .PHONY: combine min doc test test-combine clean distclean
 
@@ -56,17 +56,23 @@ perf: default $(perf_tests)
 perf-%.js: default
 	@node $@
 
-# minificatino process uses Google Closure compiler
+# externs for compilation process
+$(path_externs_internal): | mkbuild
+	$(path_tools)/mkexterns > $@
+
+# minification process uses Google Closure compiler
 min: build/ease.min.js build/ease-full.min.js $(path_build)/browser-test-min.html \
-	$(path_tools)/externs-global.js | combine
+	| combine
 $(compiler):
 	wget -O- http://closure-compiler.googlecode.com/files/compiler-latest.tar.gz \
 		| tar -C $(path_tools) -xzv compiler.jar
-build/%.min.js: build/%.js $(compiler)
+build/%.min.js: build/%.js $(path_tools)/externs-global.js  $(path_externs_internal) \
+	$(compiler)
 	cat $(path_tools)/license.tpl > $@
 	java -jar $(compiler) \
 		--warning_level VERBOSE \
 		--externs $(path_tools)/externs-global.js \
+		--externs $(path_build)/externs-internal.js \
 		--js $< >> $@ || rm $@
 
 install: doc-info

@@ -1,0 +1,23 @@
+#!/bin/bash
+#
+# Because this project consists of a bunch of CommonJS modules, the constructors
+# have restricted scope. This means that they cannot be used as types in other
+# modules. Therefore, to permit this, we must generate an extern file containing
+# basic definitions of each.
+#
+# This is used only for compilation and is otherwise completely unnecessary. As
+# such, to reduce maintenance overhead, the creation of this file is automated.
+# #
+
+# all CamelCase modules are likely to be ctors
+modules=$( ls lib/ \
+    | sed 's/lib\/\|\.js//' \
+    | grep -vP '^[a-z]'
+)
+
+# simple definition for now (we'll worry about members later)
+for module in $modules; do
+    echo "/** @constructor */"
+    echo "function $module() {};"
+    echo
+done
