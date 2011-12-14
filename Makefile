@@ -70,7 +70,6 @@ build/%.min.js: build/%.js $(path_tools)/externs-global.js  $(path_externs_inter
 	$(compiler)
 	cat $(path_tools)/license.tpl > $@
 	java -jar $(compiler) \
-		--warning_level VERBOSE \
 		--externs $(path_tools)/externs-global.js \
 		--externs $(path_build)/externs-internal.js \
 		--js $< >> $@ || rm $@

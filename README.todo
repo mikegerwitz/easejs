@@ -41,3 +41,9 @@ PERFORMANCE TESTS
 Performance tests need to be written for every aspect of the system. They will
 ultimately be graphed to show the relative performance across versions of the
 software.
+
+
+CLOSURE COMPILER WARNINGS
+-------------------------
+Certain warnings are suppressed. Figure out the best way to resolve them without
+suppressing them, unless suppression is truely the best option.

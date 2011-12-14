@@ -36,7 +36,9 @@ var easejs = {};
      *
      * @param  {string}  module_id  id of the module to load
      *
-     * @return  {Object}  exports of requested module
+     * return tag intentionally omitted; too many potential return types and
+     * setting return type of {*} will throw warnings for those attempting to
+     * treat the return value as a function
      */
     var require = function( module_id )
     {
