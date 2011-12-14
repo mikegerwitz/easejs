@@ -1,6 +1,6 @@
 {
   "name":        "easejs",
-  "description": "A basic collection of CommonJS modules intended to \"ease\" the transition into JavaScript from other Object-Oriented languages.",
+  "description": "A Classical Object-Oriented Framework for JavaScript",
   "version":     "0.1.0-pre",
   "author":      "Mike Gerwitz <mike@mikegerwitz.com> (http://mikegerwitz.com)",
   "homepage":    "http://easejs.org",
@@ -15,14 +15,12 @@
   },
 
   "dependencies": {},
-  "devDependencies": {
-    "uglify-js": ">1.0.2"
-  },
+  "devDependencies": {},
 
   "licenses": [
     {
-      "type": "GPLv3+",
-      "url": "http://www.gnu.org/licenses/gpl.html"
+      "type": "LGPLv3+",
+      "url": "http://www.gnu.org/licenses/lgpl.html"
     }
   ],
 
@@ -34,9 +32,6 @@
       "object oriented",
       "oo",
       "oop",
-      "lib",
-      "library",
-      "framework",
       "classes",
       "classical",
       "interfaces",
