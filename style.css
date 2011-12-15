@@ -134,17 +134,12 @@ body.source #source a {
 }
 
 p.copyright {
-  position: fixed;
-  bottom:   0px;
-  left:     0px;
-  right:    0px;
-
   margin: 0;
   padding: 1em;
 
   color: #2e3436;
 
-  font-size:  0.8em;
+  font-size:  0.7em;
   text-align: center;
 }
 
