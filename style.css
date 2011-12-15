@@ -78,6 +78,10 @@ html, body {
       rgb(238,238,236) 100%
   );
 
+  border:              2px solid #babdb6;
+  border-top:          0px;
+  border-bottom-width: 4px;
+
   margin:  0px auto;
   padding: 0.5em 1em 1em 1em;
 
