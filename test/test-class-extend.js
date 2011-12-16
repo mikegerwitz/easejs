@@ -432,3 +432,34 @@ for ( var i = 0; i < class_count; i++ )
     assert.fail( "Should not be permitted to override non-virtual method" );
 } )();
 
+
+/**
+ * If we attempt to extend an object (rather than a constructor), we should
+ * simply use that as the prototype directly rather than attempting to
+ * instantiate it.
+ */
+( function testExtendingObjectWillNotAttemptInstantiation()
+{
+    var obj = { foo: 'bar' };
+
+    assert.equal( obj.foo, Class.extend( obj, {} )().foo,
+        'Should be able to use object as prototype'
+    );
+} )();
+
+
+/**
+ * It only makes sense to extend from an object or function (constructor, more
+ * specifically)
+ *
+ * We could also test to ensure that the return value of the constructor is an
+ * object, but that is unnecessary for the time being.
+ */
+( function testWillThrowExceptionIfNonObjectOrCtorIsProvided()
+{
+    assert['throws']( function()
+    {
+        Class.extend( 'foo', {} );
+    }, TypeError, 'Should not be able to extend from non-object or non-ctor' );
+} )();
+
