@@ -1077,7 +1077,7 @@ we did not swap out the object, @var{_name} would be undefined when invoked on
 Given this new information, the implementation would more formally be
 represented as a collection of objects @var{V} for class @var{C} and each of its
 supertypes as denoted by @var{C\_n}, with @var{C\_0} representing the class
-having been instantiated and any integer @var{n} >= 0 representing the closest
+having been instantiated and any integer @var{n} > 0 representing the closest
 supertype, such that each @var{V\_n} is associated with @var{C\_n},
 @var{V\_n\^x} is the visibility object bound to any method associated with class
 @var{C\_x} and each @var{V} shares the same prototype chain @var{P\_n} for any
