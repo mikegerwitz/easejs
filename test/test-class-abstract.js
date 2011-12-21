@@ -26,7 +26,8 @@ var common = require( './common' ),
     util   = common.require( 'util' ),
 
     Class         = common.require( 'class' ),
-    AbstractClass = common.require( 'class_abstract' )
+    AbstractClass = common.require( 'class_abstract' ),
+    Interface     = common.require( 'interface' )
 ;
 
 
@@ -450,4 +451,23 @@ var ConcreteFoo = Class.extend( AbstractFoo,
         "Extending anonymous abstract classes should be concrete by default"
     );
 } )();
+
+
+/**
+ * Extending an abstract class after an implement() should still result in an
+ * abstract class. Essentially, we are testing to ensure that the extend()
+ * method is properly wrapped to flag the resulting class as abstract. This was
+ * a bug.
+ */
+( function testImplementingInterfacesWillPreserveAbstractClassDeclaration()
+{
+    assert.doesNotThrow( function()
+    {
+        // if not considered abstract, extend() will fail, as it will contain
+        // abstract member foo
+        AbstractClass( 'TestImplExtend' )
+            .implement( Interface( { foo: [] } ) )
+            .extend( {} );
+    }, Error, 'Class should still be abstract after implement().extend()' );
+} )()
 
