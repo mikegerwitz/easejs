@@ -1308,6 +1308,9 @@ The subtype must implement at least the number of arguments declared in
 @var{args}, but the names needn't match.
   @itemize
   @item
+  Each name in @var{args} must be a valid variable name, as satisfied by the
+  regular expression @code{/^[a-z][a-z0-9]*$/i}.
+  @item
   The names are use purely for documentation and are not semantic.
   @end itemize
 @end itemize

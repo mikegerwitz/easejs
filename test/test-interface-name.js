@@ -243,3 +243,27 @@ var common     = require( './common' ),
     }
 } )();
 
+
+/**
+ * At this point in time, we are unsure what we will allow within interface
+ * definitions in the future (e.g. possible type hinting). As such, we will
+ * simply allow only valid variable names for now (like a function definition).
+ */
+( function testTriggersErrorIfInvalidVarNamesAreUsedAsArgumentNames()
+{
+    assert['throws']( function()
+    {
+        Interface( { foo: [ 'invalid name' ] } );
+    }, SyntaxError, 'Only var names should be permitted in interface dfns' );
+
+    assert['throws']( function()
+    {
+        Interface( { foo: [ '1invalid' ] } );
+    }, SyntaxError, 'Only var names should be permitted in interface dfns: 2' );
+
+    assert.doesNotThrow( function()
+    {
+        Interface( { foo: [ 'valid' ] } );
+    }, SyntaxError, 'Valid var names as args should not throw exceptions' );
+} )();
+
