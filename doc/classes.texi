@@ -1277,17 +1277,17 @@ it is perfectly legal to alter the object:
 @node Abstract Members
 @section Abstract Members
 @table @code
-@item 'abstract [@var{keywords}] @var{name}': @var{args}
-Declare an abstract method @var{name} as having @var{args} arguments, having
+@item 'abstract [@var{keywords}] @var{name}': @var{params}
+Declare an abstract method @var{name} as having @var{params} parameters, having
 optional additional keywords
 @var{keywords}.
 @end table
-Abstract members permit defining an API, deferring the implementation to a
-subtype. Abstract methods are declared as an array of string argument names
-@var{args}.
+Abstract members permit declaring an API, deferring the implementation to a
+subtype. Abstract methods are declared as an array of string parameter names
+@var{params}.
 
 @verbatim
-    // declares abstract method 'connect' expecting the two arguments, 'host'
+    // declares abstract method 'connect' expecting the two parameters, 'host'
     // and 'path'
     { 'abstract connect': [ 'host', 'path' ] }
 @end verbatim
@@ -1304,11 +1304,11 @@ keyword.
 @item
 Currently, only methods may be declared abstract.
 @item
-The subtype must implement at least the number of arguments declared in
-@var{args}, but the names needn't match.
+The subtype must implement at least the number of parameters declared in
+@var{params}, but the names needn't match.
   @itemize
   @item
-  Each name in @var{args} must be a valid variable name, as satisfied by the
+  Each name in @var{params} must be a valid variable name, as satisfied by the
   regular expression @code{/^[a-z][a-z0-9]*$/i}.
   @item
   The names are use purely for documentation and are not semantic.
