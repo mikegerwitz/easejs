@@ -205,7 +205,7 @@ assert.equal(
 
     assert.doesNotThrow( function()
     {
-        util.propParse( { 'abstract foo': [ 'valid' ] }, {} );
+        util.propParse( { 'abstract foo': [ 'valid_name' ] }, {} );
     }, SyntaxError, 'Valid var names as args should not throw exceptions' );
 } )();
 

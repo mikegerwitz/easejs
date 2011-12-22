@@ -1309,7 +1309,7 @@ The subtype must implement at least the number of parameters declared in
   @itemize
   @item
   Each name in @var{params} must be a valid variable name, as satisfied by the
-  regular expression @code{/^[a-z][a-z0-9]*$/i}.
+  regular expression @code{/^[a-z_][a-z0-9_]*$/i}.
   @item
   The names are use purely for documentation and are not semantic.
   @end itemize
