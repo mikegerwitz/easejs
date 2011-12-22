@@ -119,3 +119,27 @@ for ( var prop in deep_obj )
     );
 } )();
 
+
+/**
+ * Primitives cannot be cloned, so we should expect that they are simply
+ * returned
+ */
+( function testPrimitivesAreProperlyReturnedByClone()
+{
+    // we don't try NaN because NaN != NaN; we'll try it separately
+    var prim = [ null, 1, true, false, undefined ],
+        i    = prim.length;
+
+    while ( i-- )
+    {
+        var val = prim[ i ];
+
+        assert.equal( val, util.clone( val ),
+            'Failed to clone primitive value: ' + val
+        );
+    }
+
+    // test NaN separately
+    assert.ok( isNaN( util.clone( NaN ) ) );
+} )();
+
