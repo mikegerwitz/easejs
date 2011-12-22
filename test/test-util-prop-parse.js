@@ -184,3 +184,28 @@ assert.equal(
     "propParse should ignore prototype properties of instances"
 );
 
+
+/**
+ * At this point in time, we are unsure what we will allow within abstract
+ * member declarations in the future (e.g. possible type hinting). As such, we
+ * will simply allow only valid variable names for now (like a function
+ * definition).
+ */
+( function testTriggersErrorIfInvalidVarNamesAreUsedAsParameterNames()
+{
+    assert['throws']( function()
+    {
+        util.propParse( { 'abstract foo': [ 'invalid name' ] }, {} );
+    }, SyntaxError, 'Only var names should be permitted in interface dfns' );
+
+    assert['throws']( function()
+    {
+        util.propParse( { 'abstract foo': [ '1invalid' ] }, {} );
+    }, SyntaxError, 'Only var names should be permitted in interface dfns: 2' );
+
+    assert.doesNotThrow( function()
+    {
+        util.propParse( { 'abstract foo': [ 'valid' ] }, {} );
+    }, SyntaxError, 'Valid var names as args should not throw exceptions' );
+} )();
+
