@@ -1,11 +1,11 @@
 \input texinfo   @c -*-texinfo-*-
 @c %**start of header
 @setfilename manual.info
-@settitle ease.js Manual v0.1.0-pre
+@settitle ease.js Manual v0.1.0
 @c %**end of header
 
 @copying
-This manual is for ease.js, version 0.1.0-pre.
+This manual is for ease.js, version 0.1.0.
 
 Copyright @copyright{} 2011 Mike Gerwitz.
 
@@ -22,7 +22,7 @@ Free Documentation License".
 
 
 @titlepage
-@title ease.js Manual v0.1.0-pre
+@title ease.js Manual v0.1.0
 @subtitle User & Developer Documentation
 @author Mike Gerwitz
 
