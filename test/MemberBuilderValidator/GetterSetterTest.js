@@ -154,4 +154,15 @@ require( 'common' ).testCase(
     {
         this.quickKeywordTest( [ 'abstract' ], 'abstract' );
     },
+
+
+    /**
+     * As getters/setters are essentially methods, they are treated very
+     * similarity. They cannot be declared as const. Rather, that should be
+     * handled by omitting a setter.
+     */
+    'Cannot declare const getters/setters': function()
+    {
+        this.quickKeywordTest( [ 'const' ], 'const' );
+    },
 } );
