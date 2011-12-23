@@ -37,6 +37,13 @@ require( 'common' ).testCase(
             shared.quickFailureTest.apply( _self, arguments );
         };
 
+        this.quickKeywordTest = function( keywords, identifier, prev )
+        {
+            shared.quickKeywordTest.call( this,
+                'validateGetterSetter', keywords, identifier, prev
+            );
+        };
+
         this.quickVisChangeTest = function( start, override, failtest, failstr )
         {
             shared.quickVisChangeTest.call( _self, start, override, failtest,
@@ -135,5 +142,16 @@ require( 'common' ).testCase(
         {
             _self.quickVisChangeTest( cur[ 0 ], cur[ 1 ], true, 'conflict' );
         } );
+    },
+
+
+    /**
+     * Abstract getter/setters are not yet supported. They may be supported in
+     * the future. Disallowing them now will allow us to determine an
+     * implementation in the future without breaking BC.
+     */
+    'Cannot declare abstract getters/setters': function()
+    {
+        this.quickKeywordTest( [ 'abstract' ], 'abstract' );
     },
 } );
