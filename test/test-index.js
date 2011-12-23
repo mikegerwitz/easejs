@@ -52,3 +52,8 @@ assert.ok(
     "Interface should be made available"
 );
 
+assert.ok(
+    ( typeof index.version === 'string' ),
+    "Version information should be exported"
+);
+

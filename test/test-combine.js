@@ -82,7 +82,8 @@ while ( i-- )
         'Class',
         'AbstractClass',
         'FinalClass',
-        'Interface'
+        'Interface',
+        'version'
     ] .forEach( function( item )
     {
         assert.ok(
