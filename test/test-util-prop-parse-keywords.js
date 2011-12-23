@@ -1,7 +1,7 @@
 /**
  * Tests util.propParse keyword parsing
  *
- *  Copyright (C) 2010 Mike Gerwitz
+ *  Copyright (C) 2010,2011 Mike Gerwitz
  *
  *  This file is part of ease.js.
  *
