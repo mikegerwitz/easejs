@@ -28,6 +28,7 @@ var common = require( './common' ),
     AbstractClass = common.require( 'class_abstract' ),
     FinalClass    = common.require( 'class_final' ),
     Interface     = common.require( 'interface' ),
+    version       = common.require( 'version' ),
 
     index  = require( '../' );
 
@@ -52,8 +53,7 @@ assert.ok(
     "Interface should be made available"
 );
 
-assert.ok(
-    ( typeof index.version === 'string' ),
+assert.ok( ( index.version === version ),
     "Version information should be exported"
 );
 

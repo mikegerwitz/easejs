@@ -63,6 +63,6 @@ var easejs = {};
     ns_exports.AbstractClass = module['class_abstract'].exports;
     ns_exports.FinalClass    = module['class_final'].exports;
     ns_exports.Interface     = module['interface'].exports;
-    ns_exports.version       = '0.1.0';
+    ns_exports.version       = module['version'].exports;
 } )( easejs );
 
