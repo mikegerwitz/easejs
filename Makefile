@@ -68,7 +68,7 @@ $(compiler):
 		| tar -C $(path_tools) -xzv compiler.jar
 build/%.min.js: build/%.js $(path_tools)/externs-global.js  $(path_externs_internal) \
 	$(compiler)
-	cat $(path_tools)/license.tpl > $@
+	cat $(path_tools)/license-min.tpl > $@
 	java -jar $(compiler) \
 		--externs $(path_tools)/externs-global.js \
 		--externs $(path_build)/externs-internal.js \
