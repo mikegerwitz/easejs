@@ -52,7 +52,7 @@ Object.defineProperty( foo_def, 'foo', {
     enumerable: true,
 } );
 
-Object.defineProperty( foo_def, 'bar', {
+Object.defineProperty( foo_def, 'virtual bar', {
     get: function ()
     {
         return 'durp';
@@ -64,7 +64,7 @@ Object.defineProperty( foo_def, 'bar', {
     enumerable: true,
 } );
 
-Object.defineProperty( sub_foo_def, 'bar', {
+Object.defineProperty( sub_foo_def, 'override bar', {
     get: function ()
     {
         return this.bar2;

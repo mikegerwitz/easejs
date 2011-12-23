@@ -40,7 +40,8 @@ require( 'common' ).testCase(
         this.quickKeywordTest = function( keywords, identifier, prev )
         {
             shared.quickKeywordTest.call( this,
-                'validateGetterSetter', keywords, identifier, prev
+                'validateGetterSetter', keywords, identifier, prev,
+                { get: function() {}, set: function() {} }
             );
         };
 
@@ -49,6 +50,9 @@ require( 'common' ).testCase(
             shared.quickVisChangeTest.call( _self, start, override, failtest,
                 function( name, startobj, overrideobj )
                 {
+                    startobj.virtual     = true;
+                    overrideobj.override = true;
+
                     _self.sut.validateGetterSetter(
                         name, {}, overrideobj,
                         { get: function() {}, set: function() {} },
@@ -164,5 +168,34 @@ require( 'common' ).testCase(
     'Cannot declare const getters/setters': function()
     {
         this.quickKeywordTest( [ 'const' ], 'const' );
+    },
+
+
+    /**
+     * Getters/setters can be overridden just like methods, so long as they
+     * follow the same keyword restrictions.
+     */
+    'Can override virtual getter/setter with override keyword': function()
+    {
+        this.quickKeywordTest( [ 'override' ], null, [ 'virtual' ] );
+    },
+
+
+    /**
+     * The 'override' keyword must be provided if a member is being overridden.
+     */
+    'Must provide override keyword when overriding getter/setter': function()
+    {
+        this.quickKeywordTest( [], 'override', [ 'virtual' ] );
+    },
+
+
+    /**
+     * Just like methods, getters/setters may only be overridden if they have
+     * been declared 'virtual'.
+     */
+    'Cannot override non-virtual getter/setter': function()
+    {
+        this.quickKeywordTest( [ 'override' ], 'non-virtual', [] );
     },
 } );

@@ -82,11 +82,13 @@ exports.quickFailureTest = function( name, identifier, action )
  * To test overrides, specify keywords for 'prev'. To test for success instead
  * of failure, set identifier to null.
  */
-exports.quickKeywordTest = function( type, keywords, identifier, prev )
+exports.quickKeywordTest = function(
+    type, keywords, identifier, prev, prev_data
+)
 {
     var keyword_obj = {},
         prev_obj    = {},
-        prev_data   = {},
+        prev_data   = prev_data || {},
         name        = exports.testName,
         _self       = this;
 
@@ -106,7 +108,7 @@ exports.quickKeywordTest = function( type, keywords, identifier, prev )
         }
 
         // define a dummy previous method value
-        prev_data = { member: function() {} };
+        prev_data.member = function() {};
     }
 
     var testfunc = function()
