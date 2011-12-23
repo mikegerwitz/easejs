@@ -67,7 +67,17 @@ require( 'common' ).testCase(
 
     setUp: function()
     {
-        this.sut = this.require( 'MemberBuilderValidator' )();
+        var _self = this;
+
+        // can be used to intercept warnings; redefine in test
+        this.warningHandler = function( warning ) {};
+
+        this.sut = this.require( 'MemberBuilderValidator' )(
+            function( warning )
+            {
+                _self.warningHandler( warning );
+            }
+        );
     },
 
 
@@ -213,5 +223,36 @@ require( 'common' ).testCase(
     'Cannot declare getter/setter as both static and virtual': function()
     {
         this.quickKeywordTest( [ 'static', 'virtual' ], 'static' );
+    },
+
+
+    /**
+     * If a developer uses the 'override' keyword when there is no super member
+     * to override, this could hint at a number of problems (see MethodTest for
+     * further discussion).
+     */
+    'Throws warning when using override with no super getter/setter': function()
+    {
+        var given = null;
+
+        this.warningHandler = function( warning )
+        {
+            given = warning;
+        };
+
+        // trigger warning (override keyword with no super method)
+        this.quickKeywordTest( [ 'override' ] );
+
+        this.assertNotEqual( null, given,
+            'No warning was provided'
+        );
+
+        this.assertOk( given instanceof Error,
+            'Provided warning is not of type Error'
+        );
+
+        this.assertOk( ( given.message.search( shared.testName ) > -1 ),
+            'Override warning should contain getter/setter name'
+        );
     },
 } );
