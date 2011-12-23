@@ -24,8 +24,10 @@
 var common = require( './common' ),
     assert = require( 'assert' ),
 
-    Class     = common.require( 'class' ),
-    Interface = common.require( 'interface' ),
+    Class         = common.require( 'class' ),
+    AbstractClass = common.require( 'class_abstract' ),
+    FinalClass    = common.require( 'class_final' ),
+    Interface     = common.require( 'interface' ),
 
     index  = require( '../' );
 
@@ -33,6 +35,16 @@ var common = require( './common' ),
 assert.ok(
     ( index.Class === Class ),
     "Class should be made available"
+);
+
+assert.ok(
+    ( index.AbstractClass === AbstractClass ),
+    "AbstractClass should be made available"
+);
+
+assert.ok(
+    ( index.FinalClass === FinalClass ),
+    "FinalClass should be made available"
 );
 
 assert.ok(
