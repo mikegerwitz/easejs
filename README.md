@@ -16,15 +16,8 @@ Current support includes:
 While the current focus of the project is Object-Oriented design, it is likely
 that ease.js will expand to other paradigms in the future.
 
-**This project is still under development. Please read the manual for more
+**This project is under active development. Please see the manual for more
 information.**
-
-**Release/npm Note:** The first release of ease.js (and subsequently,
-availability on npm) will come once the features are solidified and committed
-to. This is to ensure adoption is not stifled by design alterations. Version
-0.1.0 release is near; please see the
-[v0.1.0 roadmap](http://easejs.org/bugs/roadmap_page.php?version_id=1) for
-out-standing issues.
 
 ## Full Documentation
 Full documentation is available at the following URL:
