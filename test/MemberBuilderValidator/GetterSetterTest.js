@@ -41,7 +41,7 @@ require( 'common' ).testCase(
         {
             shared.quickKeywordTest.call( this,
                 'validateGetterSetter', keywords, identifier, prev,
-                { get: function() {}, set: function() {} }
+                prev && { get: function() {}, set: function() {} }
             );
         };
 
@@ -197,5 +197,21 @@ require( 'common' ).testCase(
     'Cannot override non-virtual getter/setter': function()
     {
         this.quickKeywordTest( [ 'override' ], 'non-virtual', [] );
+    },
+
+
+    'Can declare getter/setter as static': function()
+    {
+        this.quickKeywordTest( [ 'static' ] );
+    },
+
+
+    /**
+     * As static members cannot be overridden, it does not make sense to permit
+     * the 'static' and 'virtual' keywords to be used together.
+     */
+    'Cannot declare getter/setter as both static and virtual': function()
+    {
+        this.quickKeywordTest( [ 'static', 'virtual' ], 'static' );
     },
 } );
