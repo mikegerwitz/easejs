@@ -24,6 +24,6 @@ var Dog = Class( 'Dog',
 Dog( 'Fluffy' ).bark();
 
 // alternatively, we can use the 'new' keyword
-var inst = new Dog( 'Rompie' );
+var inst = new Dog( 'Bob' );
 inst.bark();
 
