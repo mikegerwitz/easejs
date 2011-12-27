@@ -77,10 +77,10 @@
         {
             $txt = $( '<textarea>' );
 
-            $.get( 'scripts/ex/class.js', function( data )
+            $.get( 'scripts/ex/class.js', {}, function( data )
             {
                 $txt.text( data );
-            } );
+            }, 'html' );
 
             return $trybox = $( '<div>' )
                 .attr( 'id', 'trybox' )
