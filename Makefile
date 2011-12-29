@@ -1,8 +1,8 @@
 # Builds website
 #
 
-header := _includes/header.html
-footer := _includes/footer.html
+header := includes/header.html
+footer := includes/footer.html
 
 input_html := $(wildcard *.html)
 input_images := $(wildcard images/*.png)
