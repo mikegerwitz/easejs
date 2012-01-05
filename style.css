@@ -122,6 +122,7 @@ html, body {
 
 #menu a:hover,
 body.index #about a,
+body.blog #blog a,
 body.download #download a,
 body.man #manual a,
 body.source #source a {
@@ -129,6 +130,7 @@ body.source #source a {
 }
 
 body.index #about a,
+body.blog #blog a,
 body.download #download a,
 body.man #manual a,
 body.source #source a {
@@ -312,5 +314,20 @@ span.release-current {
 
 span.release-current .version {
   font-weight: normal;
+}
+
+h3.git-commit {
+  margin-bottom: 0.1em;
+  padding-bottom: 0.1em;
+}
+
+div.git-commit-author,
+div.git-commit-date {
+  color: #2e3436;
+  font-size: 0.9em;
+}
+
+div.git-commit-date {
+  font-size: 0.8em;
 }
 

@@ -13,10 +13,10 @@ output_html := $(addprefix $(outdir)/, $(input_html))
 output_images := $(addprefix $(outdir)/, $(input_images))
 output_scripts := $(addprefix $(outdir)/, $(input_scripts))
 
-.PHONY: default clean
+.PHONY: default clean blog
 
 default: $(outdir) $(output_html) $(output_images) \
-         $(output_scripts) $(outdir)/style.css
+         $(output_scripts) $(outdir)/style.css blog
 
 $(outdir):
 	mkdir -p $@ $@/images $@/scripts/ex
@@ -36,6 +36,17 @@ $(outdir)/%.html: %.html $(header) $(footer) | $(outdir)
 		| cat - $< $(footer) \
 		| sed 's/^ \+//' \
 		> $@
+
+# requires git-weblog from mikegerwitz's git-supp package
+blog:
+	@[ "$$( which git-weblog )" ] || ( echo "Please add git-weblog to PATH" && false )
+	git log --log-size --format="%H%n%B" master \
+		| grep -A1 '^log size \([5-9][0-9]\{2,\}\|[0-9]\{4,\}\)$$' \
+		| grep -o '^[a-z0-9]\+$$' \
+		| xargs git weblog 0.1.0 \
+		| cat $(header) - $(footer) \
+		| sed 's/\(<body\)/\1 class="blog"/' \
+		> "$(outdir)/blog.html"
 
 clean:
 	${RM} -r webroot
