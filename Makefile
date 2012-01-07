@@ -40,6 +40,7 @@ $(outdir)/%.html: %.html $(header) $(footer) | $(outdir)
 # requires git-weblog from mikegerwitz's git-supp package
 blog:
 	@[ "$$( which git-weblog )" ] || ( echo "Please add git-weblog to PATH" && false )
+	git fetch origin refs/notes/*:refs/notes/*
 	git log --log-size --format="%H%n%B" master \
 		| grep -A1 '^log size \([5-9][0-9]\{2,\}\|[0-9]\{4,\}\)$$' \
 		| grep -o '^[a-z0-9]\+$$' \
