@@ -1,1 +1,1 @@
-:s/glib/\0c/
+:s/glib/\0c/;w
