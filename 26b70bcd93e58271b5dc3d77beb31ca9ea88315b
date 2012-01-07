@@ -12,3 +12,8 @@ libraries (e.g. MIT/Expat) would permit proprietary derivatives, which is
 unacceptable.
 
 Therefore, my decisions is intended to enforce freedom.
+
+(Another noteworthy correction is that glibc is not released under the LGPL
+because of more permissive licenses; that was the ease.js reason. glibc is
+released under the LGPL to encourage others to adopt it over other proprietary
+libraries.)
