@@ -1,1 +1,1 @@
-:!sed 's/glib/\0c/' # text correction
+:s/glib/\0c/
