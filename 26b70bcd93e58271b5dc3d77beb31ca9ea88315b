@@ -1,0 +1,14 @@
+It's rather interesting looking back on commits.
+
+The second paragraph mentions that ease.js "isn't anything special". Indeed, at
+the time of that commit, ease.js was a very simple project. It has since evolved
+to be a much more unique project. In that regard, the GPL could have been
+appropriate in the sense that no other project exists that is quite like the
+current incarnate of ease.js.  However, I still stand behind my decision to use
+the LGPL for this project for the sake of adoption. I do not want non-copyleft
+libraries to arise that could be used in place of ease.js that would restrict
+users' freedoms. More permissive licenses that I commonly see used for JS
+libraries (e.g. MIT/Expat) would permit proprietary derivatives, which is
+unacceptable.
+
+Therefore, my decisions is intended to enforce freedom.
