@@ -16,7 +16,7 @@ output_scripts := $(addprefix $(outdir)/, $(input_scripts))
 .PHONY: default clean blog
 
 default: $(outdir) $(output_html) $(output_images) \
-         $(output_scripts) $(outdir)/style.css blog
+         $(output_scripts) $(outdir)/style.css
 
 $(outdir):
 	mkdir -p $@ $@/images $@/scripts/ex
