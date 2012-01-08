@@ -13,7 +13,7 @@ output_html := $(addprefix $(outdir)/, $(input_html))
 output_images := $(addprefix $(outdir)/, $(input_images))
 output_scripts := $(addprefix $(outdir)/, $(input_scripts))
 
-.PHONY: default clean blog
+.PHONY: default clean blog publish
 
 default: $(outdir) $(output_html) $(output_images) \
          $(output_scripts) $(outdir)/style.css
@@ -48,6 +48,12 @@ blog:
 		| cat $(header) - $(footer) \
 		| sed 's/\(<body\)/\1 class="blog"/' \
 		> "$(outdir)/blog.html"
+
+# publish webroot to remote server using rsync (do not delete files, since we
+# may not have built everything)
+publish: | default
+	@[ -n "$(PUBURL)" ] || ( echo "PUBURL not set; aborting." >&2 && false )
+	rsync -vr $(outdir)/./* "$(PUBURL)"
 
 clean:
 	${RM} -r webroot
