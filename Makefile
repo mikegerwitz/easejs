@@ -45,7 +45,7 @@ blog:
 	git log --log-size --format="%H%n%B" master \
 		| grep -A1 '^log size \([5-9][0-9]\{2,\}\|[0-9]\{4,\}\)$$' \
 		| grep -o '^[a-z0-9]\+$$' \
-		| xargs git weblog 0.1.0 \
+		| xargs git weblog -D $$( git tag -l ) \
 		| cat $(header) - $(footer) \
 		| sed 's/\(<body\)/\1 class="blog"/' \
 		> "$(outdir)/blog.html"
