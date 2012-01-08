@@ -34,7 +34,8 @@ $(outdir)/%.html: %.html $(header) $(footer) | $(outdir)
 	cat $(header) \
 		| sed 's/\(<body\)/\1 class="$*"/' \
 		| cat - $< $(footer) \
-		| sed 's/^ \+//' \
+		| sed 's/^ \+//;s/^ *#//;' \
+		| tools/page-parse \
 		> $@
 
 # requires git-weblog from mikegerwitz's git-supp package

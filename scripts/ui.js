@@ -25,89 +25,28 @@
 
     $( document ).ready( function()
     {
-        appendTry();
+        var $ex     = $( '.ex' ),
+            content = $ex.text().replace( /^ *\n/, '' ),
+            $txt;
 
-        if ( document.location.href.substr( -6 ) === '#tryit' )
-        {
-            console.log( 'ok' );
-            toggleTry();
-        }
-    } );
-
-
-    function appendTry()
-    {
-        $trybtn = $( '<div>' )
-            .attr( 'id', 'try' )
-            .text( 'Try It' )
-            .addClass( 'btn large glow' )
-            .mousedown( function( event )
-            {
-                // prevent dragging from highlighting the text (so it looks more
-                // like an image)
-                event.preventDefault();
-            } )
-            .click( function( event )
-            {
-                toggleTry();
-            } )
-            .appendTo( '#header-content' );
-    }
-
-
-    function toggleTry()
-    {
-        var $try = getTry();
-
-        $trybtn.text(
-            ( $try.is( ':visible' ) )
-                ? 'Try It'
-                : 'Hide It'
-        );
-
-        $try.slideToggle();
-    }
-
-
-    function getTry()
-    {
-        var $txt;
-
-        return $trybox || ( function createTryBox()
-        {
-            $txt = $( '<textarea>' );
-
-            $.get( 'scripts/ex/class.js', {}, function( data )
-            {
-                $txt.text( data );
-            }, 'html' );
-
-            return $trybox = $( '<div>' )
-                .attr( 'id', 'trybox' )
-                .hide()
-                .append( $( '<h2>' ).text( 'Try ease.js' ) )
-                .append( $( '<p>' ).html(
-                    "Enter or modify a test script below. The common " +
-                    "ease.js modules, such as <tt>Class</tt>, have " +
-                    "already been imported for you. When you are ready, " +
-                    "click <strong>Run</strong> to run the script."
-                ) )
-                .append( $txt )
+        $ex.text( '' )
+            .removeClass( 'excode' )
+            .append( $txt = $( '<textarea>' )
+                .addClass( 'excode' )
+                .text( content )
+            )
+            .append( $( '<div>' )
+                .addClass( 'btns' )
                 .append( $( '<div>' )
-                    .attr( 'id', 'trybtns' )
-                    .append( $( '<div>' )
-                        .attr( 'id', 'run' )
-                        .text( 'Run' )
-                        .addClass( 'btn med green' )
-                        .click( function()
-                        {
-                            runScript( $txt.val() );
-                        } )
-                    )
+                    .text( 'try it' )
+                    .addClass( 'btn go' )
+                    .click( function()
+                    {
+                        runScript( $txt.val() );
+                    } )
                 )
-                .prependTo( '#content' );
-        } )();
-    }
+            );
+    } );
 
 
     function runScript( script )

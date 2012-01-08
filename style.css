@@ -81,6 +81,8 @@ html, body {
   border:              2px solid #babdb6;
   border-top:          0px;
   border-bottom-width: 4px;
+  border-radius:       0px 0px 0.5em 0.5em;
+  -moz-border-radius:  0px 0px 0.5em 0.5em;
 
   margin:  0px auto;
   padding: 0.5em 1em 1em 1em;
@@ -151,15 +153,6 @@ p.copyright a, p.copyright a:link {
   color: #2e3436;
 }
 
-@-webkit-keyframes pulse {
-  0% {
-    -webkit-box-shadow: 0 0 0px #ffffff;
-  }
-  100% {
-    -webkit-box-shadow: 0 0 5px #ffffff;
-  }
-}
-
 .btn {
   display: inline-block;
 
@@ -168,6 +161,7 @@ p.copyright a, p.copyright a:link {
   font-weight:     bold;
   cursor:          pointer;
   text-align:      center;
+  text-shadow:     black 1px 1px 1px;
 
   padding: 0.25em 0.5em;
 
@@ -189,7 +183,7 @@ p.copyright a, p.copyright a:link {
   );
 }
 
-.btn.green {
+.btn.go {
   border: 1px solid #4e9a06;
 
   background-image: -webkit-gradient(
@@ -220,72 +214,6 @@ p.copyright a, p.copyright a:link {
   text-shadow: black 2px 2px 5px;
 }
 
-.glow {
-  -webkit-box-shadow: 0 0 5px #ffffff;
-  -moz-box-shadow:    0 0 5px #ffffff;
-  box-shadow:         0 0 5px #ffffff;
-
-  -webkit-transition:       -webkit-box-shadow 0.25s linear;
-  -moz-transition-property: -moz-box-shadow;
-  -moz-transition-duration: 0.25s;
-
-  -webkit-animation-name:            pulse;
-  -webkit-animation-duration:        1s;
-  -webkit-animation-direction:       alternate;
-  -webkit-animation-timing-function: ease-in-out;
-  -webkit-animation-iteration-count: 1;
-}
-
-.glow:hover {
-  -webkit-box-shadow: 0 0 10px #ffffff;
-  -moz-box-shadow:    0 0 10px #ffffff;
-  box-shadow:         0 0 10px #ffffff;
-}
-
-#try {
-  display:  block;
-  position: relative;
-
-  margin: 0px auto;
-  top:    1.5em;
-}
-
-#trybox {
-  position: relative;
-
-  border:             1px solid #eeeeec;
-  border-radius:      0.5em;
-  -moz-border-radius: 0.5em;
-
-  background-image: -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      color-stop(0, rgb(186,189,182)),
-      color-stop(1, rgb(238,238,236))
-  );
-  background-image: -moz-linear-gradient(
-      center bottom,
-      rgb(186,189,182) 0%,
-      rgb(238,238,236) 100%
-  );
-
-  padding: 1em;
-}
-
-#trybox h2 {
-  margin: 0px;
-}
-
-#trybox textarea {
-  width:  100%;
-  height: 20em;
-}
-
-#trybox #trybtns {
-  text-align: right;
-}
-
 #try-console {
   width:  99%;
   height: 10em;
@@ -306,7 +234,63 @@ span.shell-start {
 }
 
 
-/** Download **/
+/** index **/
+.ex {
+  display: block;
+
+  position: relative;
+  top: -1em;
+
+  background-color: white;
+
+  border-width:       3px 1px;
+  border-style:       solid;
+  border-color:       #babdb6;
+  border-radius:      0.25em;
+  -moz-border-radius: 0.25em;
+
+  padding: 0.5em;
+  float:   right;
+
+  margin-bottom: 0.5em;
+}
+
+.excode {
+  width: 400px;
+  height: 10em;
+
+  font-family: monospace;
+  font-size:   0.7em;
+  white-space: pre;
+  overflow-y: scroll;
+}
+
+.ex textarea {
+  width: 400px;
+  height: 10em;
+
+  border: none;
+
+  margin-bottom: 0.5em;
+}
+
+.ex .btns {
+  border-top: 1px dotted #babdb6;
+
+  margin: 0px -0.25em;
+  padding: 0.25em;
+}
+
+.ex .btn {
+  float: right;
+}
+
+.info {
+  clear: both;
+}
+
+
+/** download **/
 span.release-current {
   font-size:   1.2em;
   font-weight: bold;
@@ -316,6 +300,8 @@ span.release-current .version {
   font-weight: normal;
 }
 
+
+/** blog **/
 h3.git-commit {
   margin-bottom: 0.1em;
   padding-bottom: 0.1em;

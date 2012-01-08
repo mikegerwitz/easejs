@@ -26,4 +26,3 @@ Dog( 'Fluffy' ).bark();
 // alternatively, we can use the 'new' keyword
 var inst = new Dog( 'Bob' );
 inst.bark();
-
