@@ -272,6 +272,15 @@ span.shell-start {
   border: none;
 
   margin-bottom: 0.5em;
+
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition:    all 0.5s ease-in-out;
+  transition:         all 0.5s ease-in-out;
+}
+
+.ex textarea:focus,
+.ex:hover textarea {
+  height: 20em;
 }
 
 .ex .btns {
