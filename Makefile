@@ -54,8 +54,8 @@ blog:
 # publish webroot to remote server using rsync (do not delete files, since we
 # may not have built everything)
 publish: | default
-	@[ -n "$(PUBURL)" ] || ( echo "PUBURL not set; aborting." >&2 && false )
-	rsync -vr $(outdir)/./* "$(PUBURL)"
+	@[ -n "$(PUBROOT)" ] || ( echo "PUBROOT not set; aborting." >&2 && false )
+	rsync -vr $(outdir)/./* "$(PUBROOT)"
 
 clean:
 	${RM} -r webroot
