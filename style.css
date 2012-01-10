@@ -225,7 +225,7 @@ p.copyright a, p.copyright a:link {
 blockquote.git-clone,
 blockquote.shell
 {
-  font-family: fixed;
+  font-family: monospace;
   font-weight: lighter;
 }
 
