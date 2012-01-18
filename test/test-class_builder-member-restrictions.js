@@ -76,6 +76,36 @@ var common  = require( './common' ),
 
 
 /**
+ * This test is to ensure that nobody (a) removes reserved members without
+ * understanding the consequences or (b) adds reserved members without properly
+ * documenting them.
+ */
+( function testProperMembersAreReserved()
+{
+    var chk      = [ '__initProps', 'constructor' ],
+        i        = chk.length,
+        reserved = ClassBuilder.getReservedMembers();
+
+    while ( i-- )
+    {
+        var cur = chk[ i ];
+
+        assert.ok( reserved.hasOwnProperty( cur ),
+            "Member '" + cur + "' should be reserved"
+        );
+
+        delete reserved[ cur ];
+    }
+
+    // ensure there are no others that we didn't expect
+    for ( var name in reserved )
+    {
+        assert.fail( "Untested reserved member found: " + name );
+    }
+} )();
+
+
+/**
  * Ensure that each of the reserved members will throw an exception if they are
  * used.
  */
