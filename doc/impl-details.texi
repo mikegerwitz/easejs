@@ -1104,7 +1104,7 @@ from @code{__initProps()} for the initialization of each member of @var{V\_x}
 and @var{P\_x}, as well as each property of @var{C\_x}, recursively for each
 value of @var{m} >= @var{x} >= @var{n} (that is, supertypes are initialized
 first), where @var{m} is equal to the number of supertypes of class @var{C\_n} +
-@var{n}.@footnote{There is room for optimization in this implementation, which
+1.@footnote{There is room for optimization in this implementation, which
 will be left for future versions of ease.js.}
 
 The instance stores a reference to each of the visibility objects @var{V},
