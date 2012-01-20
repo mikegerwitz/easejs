@@ -167,3 +167,20 @@ assert.ok(
     }, TypeError, "Constructor cannot be private" );
 } )();
 
+
+/**
+ * When a constructor is instantiated, the instance's 'constructor' property is
+ * set to the constructor that was used to instantiate it. The same should be
+ * true for class instances.
+ *
+ * This will also be important for reflection.
+ */
+( function testConsructorPropertyIsProperlySetToClass()
+{
+    var Foo = Class( {} );
+
+    assert.ok( Foo().constructor === Foo,
+        "Instance constructor should be set to class"
+    );
+} )();
+
