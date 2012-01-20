@@ -1110,7 +1110,7 @@ will be left for future versions of ease.js.}
 The instance stores a reference to each of the visibility objects @var{V},
 indexed by an internal class identifier (which is simply incremented for each
 new class definition, much like we did with the instance id in
-@ref{f:js-encapsulate-instance}. When a method is called, the visibility object
+@ref{f:js-encapsulate-instance}). When a method is called, the visibility object
 that matches the class identifier associated with the invoked method is then
 passed as the context (bound to @var{this}) for that method (@pxref{Method
 Wrapping}).
