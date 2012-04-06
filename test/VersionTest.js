@@ -63,7 +63,13 @@ require( 'common' ).testCase(
 
     'Version string is available': function()
     {
-        this.assertEqual( this.version.join( '.' ), this.version.toString(),
+        var v = this.version,
+
+            expected = v.major + '.' + v.minor + '.' + v.rev +
+                ( v.suffix && ( '-' + v.suffix ) || '' )
+        ;
+
+        this.assertEqual( expected, this.version.toString(),
             'Version string should be made available'
         );
     },
