@@ -1,0 +1,32 @@
+#!/bin/bash
+#
+# Lists all commits after a given commit that do not have a trusted signature
+#
+# Allows for automated detection of potential attacks or false authorship of
+# commits by validating signatures against trusted public GPG keys.
+#
+#   Copyright (C) 2012  Mike Gerwitz
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##
+
+# default to last unsigned commit (specific to ease.js)
+chkafter="${1:-a5df4631e}"
+
+# Check every commit after chkcommit (or all commits if chkcommit was not
+# provided) for a trusted signature, listing invalid commits. %G? will output
+# "G" if the signature is trusted.
+t=$'\t'
+git log --pretty="format:%H %aN$t%s$t%G?" "$chkafter.." \
+  | grep -v "${t}G$"
