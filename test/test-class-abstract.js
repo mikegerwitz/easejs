@@ -461,13 +461,10 @@ var ConcreteFoo = Class.extend( AbstractFoo,
  */
 ( function testImplementingInterfacesWillPreserveAbstractClassDeclaration()
 {
-    assert.doesNotThrow( function()
-    {
         // if not considered abstract, extend() will fail, as it will contain
         // abstract member foo
         AbstractClass( 'TestImplExtend' )
             .implement( Interface( { foo: [] } ) )
             .extend( {} );
-    }, Error, 'Class should still be abstract after implement().extend()' );
 } )()
 

@@ -378,5 +378,54 @@ require( 'common' ).testCase(
             _self.quickVisChangeTest( cur[ 0 ], cur[ 1 ], true, 'conflict' );
         } );
     },
+
+
+    /**
+     * Proxies forward calls to other properties of a given instance. The only
+     * way to represent those properties is by name, which we will use a string
+     * to accomplish. Therefore, the value of a proxy method must be the name of
+     * the property to proxy to (as a string).
+     */
+    "`proxy' keyword must provide string value": function()
+    {
+        var name  = 'foo',
+            _self = this;
+
+        this.quickFailureTest( name, 'string value expected', function()
+        {
+            // provide function instead of string
+            _self.sut.validateMethod(
+                name, function() {}, { 'proxy': true }, {}, {}
+            );
+        } );
+    },
+
+
+    /**
+     * Similar to the above test, but asserts that string values are permitted.
+     */
+    "`proxy' keyword can provide string value": function()
+    {
+        var _self = this;
+
+        this.assertDoesNotThrow( function()
+        {
+            _self.sut.validateMethod(
+                'foo', 'dest', { 'proxy': true }, {}, {}
+            );
+        }, TypeError );
+    },
+
+
+    /**
+     * It does not make sense for a proxy to be abstract; proxies are concrete
+     * by definition (in ease.js' context, at least).
+     */
+    'Method proxy cannot be abstract': function()
+    {
+        this.quickKeywordMethodTest( [ 'proxy', 'abstract' ],
+            'cannot be abstract'
+        );
+    },
 } );
 

@@ -180,3 +180,165 @@ var common = require( './common' ),
     );
 } )();
 
+
+/**
+ * The proxy wrapper should forward all arguments to the provided object's
+ * appropriate method. The return value should also be proxied back to the
+ * caller.
+ */
+( function testProxyWillProperlyForwardCallToDestinationObject()
+{
+    var name     = 'someMethod',
+        propname = 'dest',
+
+        args       = [ 1, {}, 'three' ],
+        args_given = [],
+
+        getInst = function()
+        {
+            return inst;
+        },
+
+        method_retval = {},
+        dest          = {
+            someMethod: function()
+            {
+                args_given = Array.prototype.slice.call( arguments );
+                return method_retval;
+            },
+        },
+
+        // acts like a class instance
+        inst = { dest: dest },
+
+        proxy = sut.standard.wrapProxy( propname, null, 0, getInst, name )
+    ;
+
+    assert.strictEqual( method_retval, proxy.apply( inst, args ),
+        "Proxy call should return the value from the destination"
+    );
+
+    assert.deepEqual( args, args_given,
+        "All arguments should be properly forwarded to the destination"
+    );
+} )();
+
+
+/**
+ * If the destination object returns itself, then we should return the context
+ * in which the proxy was called; this ensures that we do not break
+ * encapsulation.  Consequently, it also provides a more consistent and sensical
+ * API and permits method chaining.
+ *
+ * If this is not the desired result, then the user is free to forefit the proxy
+ * wrapper and instead use a normal method, manually proxying the call.
+ */
+( function testProxyReturnValueIsReplacedWithContextIfDestinationReturnsSelf()
+{
+    var propname = 'foo',
+        method   = 'bar',
+
+        foo = {
+            bar: function()
+            {
+                // return "self"
+                return foo;
+            }
+        },
+
+        inst = { foo: foo },
+
+        ret = sut.standard.wrapProxy(
+            propname, null, 0,
+            function()
+            {
+                return inst;
+            },
+            method
+        ).call( inst )
+    ;
+
+    assert.strictEqual( inst, ret,
+        "Proxy should return instance in place of destination, if returned"
+    );
+} )();
+
+
+// common assertions between a couple of proxy tests
+function proxyErrorAssertCommon( e, prop, method )
+{
+    assert.ok(
+        e.message.search( 'Unable to proxy' ) > -1,
+        "Unexpected error received: " + e.message
+    );
+
+    assert.ok(
+        ( ( e.message.search( prop ) > -1 )
+            && ( e.message.search( method ) > -1 )
+        ),
+        "Error should contain property and method names"
+    );
+}
+
+
+/**
+ * Rather than allowing a cryptic error to be thrown by the engine, take some
+ * initiative and attempt to detect when a call will fail due to the destination
+ * not being an object.
+ */
+( function testProxyThrowsErrorIfCallWillFailDueToNonObject()
+{
+    var prop   = 'noexist',
+        method = 'foo';
+
+    try
+    {
+        // should fail because 'noexist' does not exist on the object
+        sut.standard.wrapProxy(
+            prop, null, 0,
+            function() { return {}; },
+            method
+        )();
+    }
+    catch ( e )
+    {
+        proxyErrorAssertCommon( e, prop, method );
+        return;
+    }
+
+    assert.fail(
+        "Error should be thrown if proxy would fail due to a non-object"
+    );
+} )();
+
+
+/**
+ * Rather than allowing a cryptic error to be thrown by the engine, take some
+ * initiative and attempt to detect when a call will fail due to the destination
+ * method not being a function.
+ */
+( function testProxyThrowsErrorIfCallWillFailDueToNonObject()
+{
+    var prop   = 'dest',
+        method = 'foo';
+
+    try
+    {
+        // should fail because 'noexist' does not exist on the object
+        sut.standard.wrapProxy(
+            prop, null, 0,
+            function() { return { dest: { foo: 'notafunc' } }; },
+            method
+        )();
+    }
+    catch ( e )
+    {
+        proxyErrorAssertCommon( e, prop, method );
+        return;
+    }
+
+    assert.fail(
+        "Error should be thrown if proxy would fail due to a non-function"
+    );
+} )();
+

@@ -113,8 +113,11 @@ exports.quickKeywordTest = function(
 
     var testfunc = function()
     {
+        // proxies use strings, while all others use functions
+        var val = ( keyword_obj[ 'proxy' ] ) ? 'proxyDest': function() {};
+
         _self.sut[ type ](
-            name, function() {}, keyword_obj, prev_data, prev_obj
+            name, val, keyword_obj, prev_data, prev_obj
         );
     };
 

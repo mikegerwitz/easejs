@@ -68,7 +68,7 @@ require( 'common' ).testCase(
         );
 
         this.sut = this.require( 'MemberBuilder' )(
-            stubFactory, stubFactory,
+            stubFactory, stubFactory, stubFactory,
             this.mockValidate = this.getMock( 'MemberBuilderValidator' )
         );
 

@@ -64,10 +64,13 @@ var common = require( './common' ),
         super_method = function() {},
         cid          = 55,
         getInst      = function() {},
+        name         = 'someMethod',
         retval       = 'foobar';
 
     var result = Sut(
-        function( given_method, given_super, given_cid, givenGetInst )
+        function(
+            given_method, given_super, given_cid, givenGetInst, givenName
+        )
         {
             called = true;
 
@@ -87,9 +90,13 @@ var common = require( './common' ),
                 "Factory method should be provided with proper inst function"
             );
 
+            assert.equal( givenName, name,
+                "Factory method should be provided with proper method name"
+            );
+
             return retval;
         }
-    ).wrapMethod( method, super_method, cid, getInst );
+    ).wrapMethod( method, super_method, cid, getInst, name );
 
     // we'll include this in addition to the following assertion (which is
     // redundant) to make debugging more clear

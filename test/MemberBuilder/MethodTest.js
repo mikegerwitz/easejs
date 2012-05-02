@@ -59,13 +59,27 @@ require( 'common' ).testCase(
 
     setUp: function()
     {
+        var _self = this;
+
         // stub factories used for testing
         var stubFactory = this.require( 'MethodWrapperFactory' )(
              function( func ) { return func; }
         );
 
+        // used for testing proxies explicitly
+        var stubProxyFactory = this.require( 'MethodWrapperFactory' )(
+             function()
+             {
+                _self.proxyFactoryCall = arguments;
+                return _self.proxyReturnValue;
+             }
+        );
+
+        this.proxyFactoryCall = null;
+        this.proxyReturnValue = function() {};
+
         this.sut = this.require( 'MemberBuilder' )(
-            stubFactory, stubFactory,
+            stubFactory, stubFactory, stubProxyFactory,
             this.mockValidate = this.getMock( 'MemberBuilderValidator' )
         );
 
@@ -126,5 +140,47 @@ require( 'common' ).testCase(
         );
 
         this.assertEqual( true, called, 'validateMethod() was not called' );
+    },
+
+
+    /**
+     * The `proxy' keyword should result in a method that proxies to the given
+     * object's method (both identified by name).
+     */
+    "Creates proxy when `proxy' keyword is given": function()
+    {
+         var _self  = this,
+            called = false,
+
+            cid      = 1,
+            name     = 'foo',
+            value    = 'bar',
+            keywords = { 'proxy': true },
+
+            instCallback = function() {}
+        ;
+
+        // build the proxy
+        this.sut.buildMethod(
+            this.members, {}, name, value, keywords, instCallback, cid, {}
+        );
+
+        this.assertNotEqual( null, this.proxyFactoryCall,
+            "Proxy factory should be used when `proxy' keyword is provided"
+        );
+
+        this.assertDeepEqual(
+            [ value, null, cid, instCallback, name ],
+            this.proxyFactoryCall,
+            "Proxy factory should be called with proper arguments"
+        );
+
+        // ensure it was properly generated (use a strict check to ensure the
+        // *proper* value is returned)
+        this.assertStrictEqual(
+            this.proxyReturnValue,
+            this.members[ 'public' ][ name ],
+            "Generated proxy method should be properly assigned to members"
+        );
     },
 } );

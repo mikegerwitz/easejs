@@ -46,6 +46,9 @@ var data = {
 
     // abstract method
     abstractMethod: util.createAbstractMethod(),
+
+    // proxy
+    'proxy someProxy': 'dest',
 };
 
 // only add getter/setter if it's supported by our engine
@@ -81,6 +84,13 @@ util.propParse( data, {
         if ( value === data[ name ] )
         {
             delete chk_each[ name ];
+        }
+
+        // TODO: Odd case. Perhaps this doesn't belong here or we can rewrite
+        // this test.
+        if ( name === 'someProxy' )
+        {
+            delete chk_each[ 'proxy someProxy' ];
         }
     },
 
@@ -207,5 +217,20 @@ assert.equal(
     {
         util.propParse( { 'abstract foo': [ 'valid_name' ] }, {} );
     }, SyntaxError, 'Valid var names as args should not throw exceptions' );
+} )();
+
+
+/**
+ * Proxies, since their values are strings, would conventionally be considered
+ * properties. Therefore, we must ensure that the `proxy' keyword is properly
+ * applied to return a method rather than a property.
+ */
+( function testProxiesAreConsideredMethodsDespiteTheirStringValues()
+{
+    assert.equal(
+        methods.someProxy,
+        data[ 'proxy someProxy' ],
+        "Properties with `proxy' keyword should be considered to be methods"
+    );
 } )();
 
