@@ -342,3 +342,42 @@ function proxyErrorAssertCommon( e, prop, method )
     );
 } )();
 
+
+/**
+ * If the `static' keyword is provided, then the proxy mustn't operate on
+ * instance properties. Instead, the static accessor method $() must be used.
+ */
+( function testCanProxyToStaticMembers()
+{
+    var getInst = function()
+        {
+            // pretend that we're a static class with a static accessor method
+            return {
+                $: function( name )
+                {
+                    // implicitly tests that the argument is properly passed
+                    // (would otherwise return `undefined`)
+                    return s[ name ];
+                },
+            };
+        },
+
+        keywords = { 'static': true };
+
+        val = [ 'value' ],
+        s   = {
+            // destination object
+            foo: {
+                method: function()
+                {
+                    return val;
+                },
+            }
+        };
+
+    assert.strictEqual( val,
+        sut.standard.wrapProxy( 'foo', null, 0, getInst, 'method', keywords )(),
+        "Should properly proxy to static membesr via static accessor method"
+    );
+} )();
+

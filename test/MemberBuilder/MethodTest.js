@@ -170,7 +170,7 @@ require( 'common' ).testCase(
         );
 
         this.assertDeepEqual(
-            [ value, null, cid, instCallback, name ],
+            [ value, null, cid, instCallback, name, keywords ],
             this.proxyFactoryCall,
             "Proxy factory should be called with proper arguments"
         );
