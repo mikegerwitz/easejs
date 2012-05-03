@@ -21,91 +21,90 @@
  * @author  Mike Gerwitz
  */
 
-
-var common = require( './common' ),
-    assert = require( 'assert' ),
-
-    // SUT
-    FallbackVisibilityObjectFactory =
-        common.require( 'FallbackVisibilityObjectFactory' ),
-
-    // parent of SUT
-    VisibilityObjectFactory = common.require( 'VisibilityObjectFactory' ),
-
-    sut = FallbackVisibilityObjectFactory(),
-
-    props = methods = {
-        'public':    {},
-        'protected': {},
-        'private':   {},
-    }
-;
-
-
-/**
- * To keep with the spirit of ease.js, we should be able to instantiate
- * VisibilityObjectFactory both with and without the 'new' keyword
- *
- * Consistency is key with these sorts of things.
- */
-( function testCanInstantiateWithAndWithoutNewKeyword()
+require( 'common' ).testCase(
 {
-    // with 'new' keyword
-    assert.ok(
-        ( new FallbackVisibilityObjectFactory() )
-            instanceof FallbackVisibilityObjectFactory,
-        "Should be able to instantiate FallbackVisibilityObjectFactory with " +
-            "'new' keyword"
-    );
+    caseSetUp: function()
+    {
+        this.Sut = this.require( 'FallbackVisibilityObjectFactory' );
 
-    // without 'new' keyword
-    assert.ok(
-        FallbackVisibilityObjectFactory()
-            instanceof FallbackVisibilityObjectFactory,
-        "Should be able to instantiate FallbackVisibilityObjectFactory " +
-            "without 'new' keyword"
-    );
-} )();
+        // parent of SUT
+        this.VisibilityObjectFactory =
+            this.require( 'VisibilityObjectFactory' );
+
+        this.props = this.methods = {
+            'public':    {},
+            'protected': {},
+            'private':   {},
+        };
+    },
 
 
-/**
- * VisibilityObjectFactory should be part of our prototype chain.
- */
-( function testInheritsFromVisibilityObjectFactory()
-{
-    // check an instance, rather than __proto__, because older engines do not
-    // support it
-    assert.ok(
-        FallbackVisibilityObjectFactory() instanceof VisibilityObjectFactory,
-        "Fallback should inherit from VisibilityObjectFactory"
-    );
-} )();
+    /**
+     * To keep with the spirit of ease.js, we should be able to instantiate
+     * VisibilityObjectFactory both with and without the 'new' keyword
+     *
+     * Consistency is key with these sorts of things.
+     */
+    'Can instantiate with and without `new` keyword': function()
+    {
+        // with 'new' keyword
+        this.assertOk(
+            ( new this.Sut() ) instanceof this.Sut,
+            "Should be able to instantiate FallbackVisibilityObjectFactory " +
+            "with 'new' keyword"
+        );
+
+        // without 'new' keyword
+        this.assertOk(
+            this.Sut() instanceof this.Sut,
+            "Should be able to instantiate FallbackVisibilityObjectFactory " +
+                "without 'new' keyword"
+        );
+    },
 
 
-/**
- * We're falling back because we do not support the private visibility layer (or
- * any layers, for that matter). Ensure it's not created.
- */
-( function testSetupMethodShouldNotAddPrivateLayer()
-{
-    var dest = {},
-        obj  = sut.setup( dest, props, methods );
+    /**
+     * VisibilityObjectFactory should be part of our prototype chain.
+     */
+    'Inherits from visibility object factory': function()
+    {
+        // check an instance, rather than __proto__, because older engines do
+        // not support it
+        this.assertOk(
+            this.Sut() instanceof this.VisibilityObjectFactory,
+            "Fallback should inherit from VisibilityObjectFactory"
+        );
+    },
 
-    assert.strictEqual( dest, obj,
-        "Private visibility layer is not added atop destination"
-    );
-} )();
+
+    /**
+     * We're falling back because we do not support the private visibility layer
+     * (or any layers, for that matter). Ensure it's not created.
+     */
+    'Setup method should not add private layer': function()
+    {
+        var dest = {},
+            obj  = this.Sut().setup( dest, this.props, this.methods );
+
+        this.assertStrictEqual( dest, obj,
+            "Private visibility layer is not added atop destination"
+        );
+    },
 
 
-( function testCreatingPropertyProxyShouldSimplyReturnSelf()
-{
-    var base = {},
-        dest = {};
+    /**
+     * Getters/setters are unsupported (thus the fallback).
+     */
+    'Creating property proxy should simply return self': function()
+    {
+        var base = {},
+            dest = {};
 
-    assert.strictEqual(
-        sut.createPropProxy( base, dest, props ),
-        base,
-        "Creating property proxy should simply return original object"
-    );
-} )();
+        this.assertStrictEqual(
+            this.Sut().createPropProxy( base, dest, this.props ),
+            base,
+            "Creating property proxy should simply return original object"
+        );
+    },
+} );
 

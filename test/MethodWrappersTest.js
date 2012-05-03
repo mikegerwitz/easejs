@@ -21,363 +21,375 @@
  * @author  Mike Gerwitz
  */
 
-var common = require( './common' ),
-    assert = require( 'assert' ),
-    util   = common.require( 'util' ),
-    sut    = common.require( 'MethodWrappers' )
-;
-
-
-/**
- * The wrappers accept a function that should return the instance to be bound to
- * 'this' when invoking a method. This has some important consequences, such as
- * the ability to implement protected/private members.
- */
-( function testMethodInvocationBindsThisToPassedInstance()
+require( 'common' ).testCase(
 {
-    var instance = function() {},
-        val      = 'fooboo',
-        val2     = 'fooboo2',
-        iid      = 1,
-        called   = false,
-
-        getInst = function()
+    caseSetUp: function()
+    {
+        // common assertions between a couple of proxy tests
+        this.proxyErrorAssertCommon = function( e, prop, method )
         {
-            called = true;
-            return instance;
-        },
+            this.assertOk(
+                e.message.search( 'Unable to proxy' ) > -1,
+                "Unexpected error received: " + e.message
+            );
 
-        method = sut.standard.wrapNew(
-            function()
+            this.assertOk(
+                ( ( e.message.search( prop ) > -1 )
+                    && ( e.message.search( method ) > -1 )
+                ),
+                "Error should contain property and method names"
+            );
+        };
+    },
+
+
+    setUp: function()
+    {
+        this._sut = this.require( 'MethodWrappers' );
+    },
+
+
+    /**
+     * The wrappers accept a function that should return the instance to be
+     * bound to 'this' when invoking a method. This has some important
+     * consequences, such as the ability to implement protected/private members.
+     */
+    'Method invocation binds `this` to passed instance': function()
+    {
+        var instance = function() {},
+            val      = 'fooboo',
+            val2     = 'fooboo2',
+            iid      = 1,
+            called   = false,
+
+            getInst = function()
             {
-                return this.foo;
+                called = true;
+                return instance;
             },
-            null, 0, getInst
-        ),
 
-        override = sut.standard.wrapOverride(
-            function()
+            method = this._sut.standard.wrapNew(
+                function()
+                {
+                    return this.foo;
+                },
+                null, 0, getInst
+            ),
+
+            override = this._sut.standard.wrapOverride(
+                function()
+                {
+                    return this.foo2;
+                },
+                method, 0, getInst
+            )
+        ;
+
+        // set instance values
+        instance.foo  = val;
+        instance.foo2 = val2;
+
+        this.assertEqual( method(), val,
+            "Calling method will bind 'this' to passed instance"
+        );
+
+        this.assertEqual( override(), val2,
+            "Calling method override will bind 'this' to passed instance"
+        );
+    },
+
+
+    /**
+     * The __super property is defined for method overrides and permits invoking
+     * the overridden method (method of the supertype).
+     *
+     * In this test, we are not looking to assert that __super matches the super
+     * method. Rather, we want to ensure it /invokes/ it. This is because the
+     * super method may be wrapped to provide additional functionality. We don't
+     * know, we don't care. We just want to make sure it's functioning properly.
+     */
+    'Overriden method should contain reference to super method': function()
+    {
+        var _self       = this,
+            orig_called = false,
+            getInst     = function() {},
+
+            // "super" method
+            method = this._sut.standard.wrapNew(
+                function()
+                {
+                    orig_called = true;
+                },
+                null, 0, getInst
+            ),
+
+            // override method
+            override = this._sut.standard.wrapOverride(
+                function()
+                {
+                    _self.assertNotEqual(
+                        this.__super,
+                        undefined,
+                        "__super is defined for overridden method"
+                    );
+
+                    this.__super();
+                    _self.assertEqual(
+                        orig_called,
+                        true,
+                        "Invoking __super calls super method"
+                    );
+                },
+                method, 0, getInst
+            )
+        ;
+
+        // invoke the method to run the above assertions
+        override();
+    },
+
+
+    /**
+     * If the method is called when bound to a different context (e.g. for
+     * protected/private members), __super may not be properly bound.
+     *
+     * This test is in response to a bug found after implementing visibility
+     * support. The __super() method was previously defined on 'this', which may
+     * or may not be the context that is actually used. Likely, it's not.
+     */
+    'Super method works properly when context differs': function()
+    {
+        var super_called = false,
+            retobj       = {},
+
+            getInst = function()
             {
-                return this.foo2;
+                return retobj;
             },
-            method, 0, getInst
-        )
-    ;
 
-    // set instance values
-    instance.foo  = val;
-    instance.foo2 = val2;
+            // super method to be overridden
+            method = this._sut.standard.wrapNew(
+                function()
+                {
+                    super_called = true;
+                },
+                null, 0, getInst
+            ),
 
-    assert.equal( method(), val,
-        "Calling method will bind 'this' to passed instance"
-    );
+            // the overriding method
+            override = this._sut.standard.wrapOverride(
+                function()
+                {
+                    this.__super();
+                },
+                method, 0, getInst
+            )
+        ;
 
-    assert.equal( override(), val2,
-        "Calling method override will bind 'this' to passed instance"
-    );
-} )();
+        // call the overriding method
+        override();
 
+        // ensure that the super method was called
+        this.assertEqual( super_called, true,
+            "__super() method is called even when context differs"
+        );
 
-/**
- * The __super property is defined for method overrides and permits invoking the
- * overridden method (method of the supertype).
- *
- * In this test, we are not looking to assert that __super matches the super
- * method. Rather, we want to ensure it /invokes/ it. This is because the super
- * method may be wrapped to provide additional functionality. We don't know, we
- * don't care. We just want to make sure it's functioning properly.
- */
-( function testOverridenMethodShouldContainReferenceToSuperMethod()
-{
-    var orig_called = false,
-        getInst     = function() {},
-
-        // "super" method
-        method = sut.standard.wrapNew(
-            function()
-            {
-                orig_called = true;
-            },
-            null, 0, getInst
-        ),
-
-        // override method
-        override = sut.standard.wrapOverride(
-            function()
-            {
-                assert.notEqual(
-                    this.__super,
-                    undefined,
-                    "__super is defined for overridden method"
-                );
-
-                this.__super();
-                assert.equal(
-                    orig_called,
-                    true,
-                    "Invoking __super calls super method"
-                );
-            },
-            method, 0, getInst
-        )
-    ;
-
-    // invoke the method to run the above assertions
-    override();
-} )();
+        // finally, ensure that __super is no longer set on the returned object
+        // after the call to ensure that the caller cannot break encapsulation
+        // by stealing a method reference (sneaky, sneaky)
+        this.assertEqual( retobj.__super, undefined,
+            "__super() method is unset after being called"
+        );
+    },
 
 
-/**
- * If the method is called when bound to a different context (e.g. for
- * protected/private members), __super may not be properly bound.
- *
- * This test is in response to a bug found after implementing visibility
- * support. The __super() method was previously defined on 'this', which may or
- * may not be the context that is actually used. Likely, it's not.
- */
-( function testSuperMethodWorksProperlyWhenContextDiffers()
-{
-    var super_called = false,
-        retobj       = {},
+    /**
+     * The proxy wrapper should forward all arguments to the provided object's
+     * appropriate method. The return value should also be proxied back to the
+     * caller.
+     */
+    'Proxy will properly forward calls to destination object': function()
+    {
+        var name     = 'someMethod',
+            propname = 'dest',
 
-        getInst = function()
-        {
-            return retobj;
-        },
+            args       = [ 1, {}, 'three' ],
+            args_given = [],
 
-        // super method to be overridden
-        method = sut.standard.wrapNew(
-            function()
-            {
-                super_called = true;
-            },
-            null, 0, getInst
-        ),
-
-        // the overriding method
-        override = sut.standard.wrapOverride(
-            function()
-            {
-                this.__super();
-            },
-            method, 0, getInst
-        )
-    ;
-
-    // call the overriding method
-    override();
-
-    // ensure that the super method was called
-    assert.equal( super_called, true,
-        "__super() method is called even when context differs"
-    );
-
-    // finally, ensure that __super is no longer set on the returned object
-    // after the call to ensure that the caller cannot break encapsulation by
-    // stealing a method reference (sneaky, sneaky)
-    assert.equal( retobj.__super, undefined,
-        "__super() method is unset after being called"
-    );
-} )();
-
-
-/**
- * The proxy wrapper should forward all arguments to the provided object's
- * appropriate method. The return value should also be proxied back to the
- * caller.
- */
-( function testProxyWillProperlyForwardCallToDestinationObject()
-{
-    var name     = 'someMethod',
-        propname = 'dest',
-
-        args       = [ 1, {}, 'three' ],
-        args_given = [],
-
-        getInst = function()
-        {
-            return inst;
-        },
-
-        method_retval = {},
-        dest          = {
-            someMethod: function()
-            {
-                args_given = Array.prototype.slice.call( arguments );
-                return method_retval;
-            },
-        },
-
-        // acts like a class instance
-        inst = { dest: dest },
-
-        proxy = sut.standard.wrapProxy( propname, null, 0, getInst, name )
-    ;
-
-    assert.strictEqual( method_retval, proxy.apply( inst, args ),
-        "Proxy call should return the value from the destination"
-    );
-
-    assert.deepEqual( args, args_given,
-        "All arguments should be properly forwarded to the destination"
-    );
-} )();
-
-
-/**
- * If the destination object returns itself, then we should return the context
- * in which the proxy was called; this ensures that we do not break
- * encapsulation.  Consequently, it also provides a more consistent and sensical
- * API and permits method chaining.
- *
- * If this is not the desired result, then the user is free to forefit the proxy
- * wrapper and instead use a normal method, manually proxying the call.
- */
-( function testProxyReturnValueIsReplacedWithContextIfDestinationReturnsSelf()
-{
-    var propname = 'foo',
-        method   = 'bar',
-
-        foo = {
-            bar: function()
-            {
-                // return "self"
-                return foo;
-            }
-        },
-
-        inst = { foo: foo },
-
-        ret = sut.standard.wrapProxy(
-            propname, null, 0,
-            function()
+            getInst = function()
             {
                 return inst;
             },
-            method
-        ).call( inst )
-    ;
 
-    assert.strictEqual( inst, ret,
-        "Proxy should return instance in place of destination, if returned"
-    );
-} )();
+            method_retval = {},
+            dest          = {
+                someMethod: function()
+                {
+                    args_given = Array.prototype.slice.call( arguments );
+                    return method_retval;
+                },
+            },
+
+            // acts like a class instance
+            inst = { dest: dest },
+
+            proxy = this._sut.standard.wrapProxy(
+                propname, null, 0, getInst, name
+            )
+        ;
+
+        this.assertStrictEqual( method_retval, proxy.apply( inst, args ),
+            "Proxy call should return the value from the destination"
+        );
+
+        this.assertDeepEqual( args, args_given,
+            "All arguments should be properly forwarded to the destination"
+        );
+    },
 
 
-// common assertions between a couple of proxy tests
-function proxyErrorAssertCommon( e, prop, method )
-{
-    assert.ok(
-        e.message.search( 'Unable to proxy' ) > -1,
-        "Unexpected error received: " + e.message
-    );
-
-    assert.ok(
-        ( ( e.message.search( prop ) > -1 )
-            && ( e.message.search( method ) > -1 )
-        ),
-        "Error should contain property and method names"
-    );
-}
-
-
-/**
- * Rather than allowing a cryptic error to be thrown by the engine, take some
- * initiative and attempt to detect when a call will fail due to the destination
- * not being an object.
- */
-( function testProxyThrowsErrorIfCallWillFailDueToNonObject()
-{
-    var prop   = 'noexist',
-        method = 'foo';
-
-    try
+    /**
+     * If the destination object returns itself, then we should return the
+     * context in which the proxy was called; this ensures that we do not break
+     * encapsulation.  Consequently, it also provides a more consistent and
+     * sensical API and permits method chaining.
+     *
+     * If this is not the desired result, then the user is free to forefit the
+     * proxy wrapper and instead use a normal method, manually proxying the
+     * call.
+     */
+    'Proxy retval is replaced with context if dest returns self': function()
     {
-        // should fail because 'noexist' does not exist on the object
-        sut.standard.wrapProxy(
-            prop, null, 0,
-            function() { return {}; },
-            method
-        )();
-    }
-    catch ( e )
+        var propname = 'foo',
+            method   = 'bar',
+
+            foo = {
+                bar: function()
+                {
+                    // return "self"
+                    return foo;
+                }
+            },
+
+            inst = { foo: foo },
+
+            ret = this._sut.standard.wrapProxy(
+                propname, null, 0,
+                function()
+                {
+                    return inst;
+                },
+                method
+            ).call( inst )
+        ;
+
+        this.assertStrictEqual( inst, ret,
+            "Proxy should return instance in place of destination, if returned"
+        );
+    },
+
+
+    /**
+     * Rather than allowing a cryptic error to be thrown by the engine, take
+     * some initiative and attempt to detect when a call will fail due to the
+     * destination not being an object.
+     */
+    'Proxy throws error if call will faill due to non-object': function()
     {
-        proxyErrorAssertCommon( e, prop, method );
-        return;
-    }
+        var prop   = 'noexist',
+            method = 'foo';
 
-    assert.fail(
-        "Error should be thrown if proxy would fail due to a non-object"
-    );
-} )();
-
-
-/**
- * Rather than allowing a cryptic error to be thrown by the engine, take some
- * initiative and attempt to detect when a call will fail due to the destination
- * method not being a function.
- */
-( function testProxyThrowsErrorIfCallWillFailDueToNonObject()
-{
-    var prop   = 'dest',
-        method = 'foo';
-
-    try
-    {
-        // should fail because 'noexist' does not exist on the object
-        sut.standard.wrapProxy(
-            prop, null, 0,
-            function() { return { dest: { foo: 'notafunc' } }; },
-            method
-        )();
-    }
-    catch ( e )
-    {
-        proxyErrorAssertCommon( e, prop, method );
-        return;
-    }
-
-    assert.fail(
-        "Error should be thrown if proxy would fail due to a non-function"
-    );
-} )();
-
-
-/**
- * If the `static' keyword is provided, then the proxy mustn't operate on
- * instance properties. Instead, the static accessor method $() must be used.
- */
-( function testCanProxyToStaticMembers()
-{
-    var getInst = function()
+        try
         {
-            // pretend that we're a static class with a static accessor method
-            return {
-                $: function( name )
-                {
-                    // implicitly tests that the argument is properly passed
-                    // (would otherwise return `undefined`)
-                    return s[ name ];
-                },
+            // should fail because 'noexist' does not exist on the object
+            this._sut.standard.wrapProxy(
+                prop, null, 0,
+                function() { return {}; },
+                method
+            )();
+        }
+        catch ( e )
+        {
+            this.proxyErrorAssertCommon( e, prop, method );
+            return;
+        }
+
+        this.assertFail(
+            "Error should be thrown if proxy would fail due to a non-object"
+        );
+    },
+
+
+    /**
+     * Rather than allowing a cryptic error to be thrown by the engine, take
+     * some initiative and attempt to detect when a call will fail due to the
+     * destination method not being a function.
+     */
+    'Proxy throws error if call will fail due to non-function': function()
+    {
+        var prop   = 'dest',
+            method = 'foo';
+
+        try
+        {
+            // should fail because 'noexist' does not exist on the object
+            this._sut.standard.wrapProxy(
+                prop, null, 0,
+                function() { return { dest: { foo: 'notafunc' } }; },
+                method
+            )();
+        }
+        catch ( e )
+        {
+            this.proxyErrorAssertCommon( e, prop, method );
+            return;
+        }
+
+        this.assertFail(
+            "Error should be thrown if proxy would fail due to a non-function"
+        );
+    },
+
+
+    /**
+     * If the `static' keyword is provided, then the proxy mustn't operate on
+     * instance properties. Instead, the static accessor method $() must be
+     * used.
+     */
+    'Can proxy to static members': function()
+    {
+        var getInst = function()
+            {
+                // pretend that we're a static class with a static accessor method
+                return {
+                    $: function( name )
+                    {
+                        // implicitly tests that the argument is properly passed
+                        // (would otherwise return `undefined`)
+                        return s[ name ];
+                    },
+                };
+            },
+
+            keywords = { 'static': true };
+
+            val = [ 'value' ],
+            s   = {
+                // destination object
+                foo: {
+                    method: function()
+                    {
+                        return val;
+                    },
+                }
             };
-        },
 
-        keywords = { 'static': true };
-
-        val = [ 'value' ],
-        s   = {
-            // destination object
-            foo: {
-                method: function()
-                {
-                    return val;
-                },
-            }
-        };
-
-    assert.strictEqual( val,
-        sut.standard.wrapProxy( 'foo', null, 0, getInst, 'method', keywords )(),
-        "Should properly proxy to static membesr via static accessor method"
-    );
-} )();
+        this.assertStrictEqual( val,
+            this._sut.standard.wrapProxy(
+                'foo', null, 0, getInst, 'method', keywords
+            )(),
+            "Should properly proxy to static membesr via static accessor method"
+        );
+    },
+} );
 

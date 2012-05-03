@@ -21,57 +21,62 @@
  * @author  Mike Gerwitz
  */
 
-
-var common = require( './common' ),
-    assert = require( 'assert' ),
-    util   = common.require( 'util' ),
-
-    sut = common.require( 'VisibilityObjectFactoryFactory' ),
-
-    VisibilityObjectFactory = common.require( 'VisibilityObjectFactory' ),
-
-    FallbackVisibilityObjectFactory =
-        common.require( 'FallbackVisibilityObjectFactory' )
-;
-
-
-/**
- * By default, if supported by our environment, we should use the standard
- * factory to provide proper visibility support.
- */
-( function testReturnsStandardIfNotFallingBack()
+require( 'common' ).testCase(
 {
-    // don't bother with the test if we don't support the standard visibility
-    // object
-    if ( util.definePropertyFallback() )
+    caseSetUp: function()
     {
-        return;
-    }
+        this.sut = this.require( 'VisibilityObjectFactoryFactory' );
 
-    assert.ok(
-        ( sut.fromEnvironment() instanceof VisibilityObjectFactory ),
-        "Creates standard VisibilityObjectFactory if supported"
-    );
-} )();
+        this.VisibilityObjectFactory =
+            this.require( 'VisibilityObjectFactory' );
+
+        this.FallbackVisibilityObjectFactory =
+            this.require( 'FallbackVisibilityObjectFactory' );
+
+        this.util = this.require( 'util' );
+    },
 
 
-/**
- * If not supported by our environment, we should be permitted to fall back to a
- * working implementation that sacrifices visibility support.
- */
-( function testReturnsFallbackFactoryIfFallingBack()
-{
-    var old = util.definePropertyFallback();
+    /**
+     * By default, if supported by our environment, we should use the standard
+     * factory to provide proper visibility support.
+     */
+    'Returns standard factory if not falling back': function()
+    {
+        // don't bother with the test if we don't support the standard visibility
+        // object
+        if ( this.util.definePropertyFallback() )
+        {
+            return;
+        }
 
-    // force fallback
-    util.definePropertyFallback( true );
+        this.assertOk(
+            ( this.sut.fromEnvironment()
+                instanceof this.VisibilityObjectFactory ),
+            "Creates standard VisibilityObjectFactory if supported"
+        );
+    },
 
-    assert.ok(
-        ( sut.fromEnvironment() instanceof FallbackVisibilityObjectFactory ),
-        "Creates fallback VisibilityObjectFactory if falling back"
-    );
 
-    // restore fallback
-    util.definePropertyFallback( old );
-} )();
+    /**
+     * If not supported by our environment, we should be permitted to fall back to a
+     * working implementation that sacrifices visibility support.
+     */
+    'Returns fallback factory if falling back': function()
+    {
+        var old = this.util.definePropertyFallback();
 
+        // force fallback
+        this.util.definePropertyFallback( true );
+
+        this.assertOk(
+            ( this.sut.fromEnvironment()
+                instanceof this.FallbackVisibilityObjectFactory
+            ),
+            "Creates fallback VisibilityObjectFactory if falling back"
+        );
+
+        // restore fallback
+        this.util.definePropertyFallback( old );
+    },
+} );

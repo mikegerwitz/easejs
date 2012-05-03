@@ -22,96 +22,97 @@
  */
 
 
-var common = require( './common' ),
-    assert = require( 'assert' ),
-
-    Sut = common.require( 'MethodWrapperFactory' )
-;
-
-
-/**
- * To keep with the spirit of ease.js, we should be able to instantiate
- * MethodWrapperFactory both with and without the 'new' keyword
- *
- * Consistency is key with these sorts of things.
- */
-( function testCanInstantiateWithAndWithoutNewKeyword()
+require( 'common' ).testCase(
 {
-    // with 'new' keyword
-    assert.ok(
-        ( new Sut() )
-            instanceof Sut,
-        "Should be able to instantiate MethodWrapperFactory with " +
-            "'new' keyword"
-    );
-
-    // without 'new' keyword
-    assert.ok( ( Sut() instanceof Sut ),
-        "Should be able to instantiate MethodWrapperFactory " +
-            "without 'new' keyword"
-    );
-} )();
+    caseSetUp: function()
+    {
+        this.Sut = this.require( 'MethodWrapperFactory' );
+    },
 
 
-/**
- * The factory itself is rather simple. The class should accept a factory
- * function which should return the wrapped method.
- */
-( function testProvidedFactoryFunctionIsProperlyCalled()
-{
-    var called       = false,
-        method       = function() {},
-        super_method = function() {},
-        cid          = 55,
-        getInst      = function() {},
-        name         = 'someMethod',
-        keywords     = { 'static': true, 'public': true },
-        retval       = 'foobar';
+    /**
+     * To keep with the spirit of ease.js, we should be able to instantiate
+     * MethodWrapperFactory both with and without the 'new' keyword
+     *
+     * Consistency is key with these sorts of things.
+     */
+    'Can instantiate with and without new keyword': function()
+    {
+        // with 'new' keyword
+        this.assertOk(
+            ( new this.Sut() ) instanceof this.Sut,
+            "Should be able to instantiate MethodWrapperFactory with " +
+                "'new' keyword"
+        );
 
-    var result = Sut(
-        function(
-            given_method, given_super, given_cid, givenGetInst, given_name,
-            given_keywords
-        )
-        {
-            called = true;
+        // without 'new' keyword
+        this.assertOk( ( this.Sut() instanceof this.Sut ),
+            "Should be able to instantiate MethodWrapperFactory " +
+                "without 'new' keyword"
+        );
+    },
 
-            assert.equal( given_method, method,
-                "Factory method should be provided with method to wrap"
-            );
 
-            assert.equal( given_super, super_method,
-                "Factory method should be provided with super method"
-            );
+    /**
+     * The factory itself is rather simple. The class should accept a factory
+     * function which should return the wrapped method.
+     */
+    'Provided factory function is properly called': function()
+    {
+        var _self        = this,
+            called       = false,
+            method       = function() {},
+            super_method = function() {},
+            cid          = 55,
+            getInst      = function() {},
+            name         = 'someMethod',
+            keywords     = { 'static': true, 'public': true },
+            retval       = 'foobar';
 
-            assert.equal( given_cid, cid,
-                "Factory method should be provided with cid"
-            );
+        var result = this.Sut(
+            function(
+                given_method, given_super, given_cid, givenGetInst, given_name,
+                given_keywords
+            )
+            {
+                called = true;
 
-            assert.equal( givenGetInst, getInst,
-                "Factory method should be provided with proper inst function"
-            );
+                _self.assertEqual( given_method, method,
+                    "Factory method should be provided with method to wrap"
+                );
 
-            assert.equal( given_name, name,
-                "Factory method should be provided with proper method name"
-            );
+                _self.assertEqual( given_super, super_method,
+                    "Factory method should be provided with super method"
+                );
 
-            assert.equal( given_keywords, keywords,
-                "Factory method should be provided with proper keywords"
-            );
+                _self.assertEqual( given_cid, cid,
+                    "Factory method should be provided with cid"
+                );
 
-            return retval;
-        }
-    ).wrapMethod( method, super_method, cid, getInst, name, keywords );
+                _self.assertEqual( givenGetInst, getInst,
+                    "Factory method should be provided with proper inst function"
+                );
 
-    // we'll include this in addition to the following assertion (which is
-    // redundant) to make debugging more clear
-    assert.equal( called, true,
-        "Given factory method should be called"
-    );
+                _self.assertEqual( given_name, name,
+                    "Factory method should be provided with proper method name"
+                );
 
-    assert.equal( result, retval,
-        "Should return value from factory function"
-    );
-} )();
+                _self.assertEqual( given_keywords, keywords,
+                    "Factory method should be provided with proper keywords"
+                );
 
+                return retval;
+            }
+        ).wrapMethod( method, super_method, cid, getInst, name, keywords );
+
+        // we'll include this in addition to the following assertion (which is
+        // redundant) to make debugging more clear
+        this.assertEqual( called, true,
+            "Given factory method should be called"
+        );
+
+        this.assertEqual( result, retval,
+            "Should return value from factory function"
+        );
+    },
+} );
