@@ -5,7 +5,9 @@
  */
 
 html, body {
-  background-color: #eeeeec;
+  background-color:  #eeeeec;
+  background-image:  url( 'images/rough_diagonal.png' );
+  background-repeat: both;
 
   margin:  0px 0px 1.5em 0px;
   padding: 0;
@@ -17,8 +19,10 @@ html, body {
 #header {
   position: relative;
 
-  background-color: #2e3436;
-  color:            #babdb6;
+  background-color:  #2e3436;
+  background-image:  url( 'images/dvsup.png' );
+  background-repeat: both;
+  color:             #babdb6;
 }
 
 #header-content {
