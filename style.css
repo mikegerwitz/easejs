@@ -317,3 +317,7 @@ div.git-commit-date {
   font-size: 0.8em;
 }
 
+div.git-commit-body pre {
+  font-size: 0.8em;
+}
+
