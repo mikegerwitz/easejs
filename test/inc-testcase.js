@@ -108,12 +108,6 @@ module.exports = function( test_case )
     // run each test in the case
     for ( var test in test_case )
     {
-        // xUnit-style setup
-        if ( setUp )
-        {
-            setUp.call( context );
-        }
-
         var data   = test.match( /^(?:@(.*?)\((.*?)\))?(.*)$/ ),
             method = data[ 1 ],
             prop   = data[ 2 ],
@@ -144,6 +138,7 @@ module.exports = function( test_case )
             tryTest(
                 test_case,
                 test,
+                ( setUp || null ),
                 name + ( ( count > 1 )
                     ? ( ' (' + i + ')' )
                     : ''
@@ -169,20 +164,27 @@ module.exports = function( test_case )
 /**
  * Attempt a test
  *
- * @param  {Object}  test_case  object containing all test cases
- * @param  {string}  test       complete key of test to run
- * @param  {string}  test_str   text to use on failure
- * @param  {Object}  context    context to bind to test function
- * @param  {Array}   args       arguments to pass to test function
+ * @param  {Object}    test_case  object containing all test cases
+ * @param  {string}    test       complete key of test to run
+ * @param  {Function}  setUp      test setup method, or null
+ * @param  {string}    test_str   text to use on failure
+ * @param  {Object}    context    context to bind to test function
+ * @param  {Array}     args       arguments to pass to test function
  *
  * @return {undefined}
  */
-function tryTest( test_case, test, test_str, context, args )
+function tryTest( test_case, test, setUp, test_str, context, args )
 {
     var acount_last = acount;
 
     try
     {
+        // xUnit-style setup
+        if ( setUp )
+        {
+            setUp.call( context );
+        }
+
         test_case[ test ].apply( context, args );
 
         // if there were no assertions, then the test should be marked as
