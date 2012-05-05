@@ -16,7 +16,7 @@ html, body {
   font-size:   16px;
 }
 
-a, a:active {
+a, a:active, a:link {
   color: #204a87;
   text-decoration: none;
 }
@@ -139,9 +139,9 @@ body.source #source a {
   color: #f57900;
 }
 
-p.copyright {
+.footer p {
   margin: 0;
-  padding: 1em;
+  padding: 0.1em;
 
   color: #2e3436;
 
@@ -149,7 +149,11 @@ p.copyright {
   text-align: center;
 }
 
-p.copyright a, p.copyright a:link {
+.footer p.copyright {
+  margin-top: 1em;
+}
+
+.footer p a, .footer p a:link {
   color: #2e3436;
 }
 
