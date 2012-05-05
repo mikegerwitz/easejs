@@ -16,6 +16,14 @@ html, body {
   font-size:   16px;
 }
 
+a, a:active {
+  color: #204a87;
+  text-decoration: none;
+}
+a:visited {
+  color: #729fcf;
+}
+
 #header {
   position: relative;
 
@@ -68,19 +76,7 @@ html, body {
 #content {
   position: relative;
 
-  background-color: white;
-  background-image: -webkit-gradient(
-      linear,
-      left top,
-      left bottom,
-      color-stop(0, rgb(255,255,255)),
-      color-stop(1, rgb(238,238,236))
-  );
-  background-image: -moz-linear-gradient(
-      center top,
-      rgb(255,255,255) 0%,
-      rgb(238,238,236) 100%
-  );
+  background-color: rgba( 255, 255, 255, 0.5 );
 
   border:              2px solid #babdb6;
   border-top:          0px;
@@ -325,3 +321,160 @@ div.git-commit-body pre {
   font-size: 0.8em;
 }
 
+
+.bigemph {
+  font-size: 1.7em;
+}
+
+h3 > .anchor {
+  display: none;
+}
+h3 > .anchor > a {
+  text-decoration: none;
+  color: inherit;
+
+  float: right;
+}
+h3:hover > .anchor {
+  display: inline;
+}
+
+h3.bigemph {
+  border-bottom:  2px solid rgba( 226, 226, 223, 0.75 );
+  padding-bottom: 0.2em;
+}
+
+pre.js {
+  background-image:  url( 'images/cross_scratches.png' );
+  background-repeat: both;
+
+  border: 1px solid #babdb6;
+  border-radius: 0.25em;
+
+  font-size: 0.9em;
+  padding:   1em;
+}
+
+
+/*
+github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+Modified slightly from its original by Mike Gerwitz
+*/
+
+pre .comment,
+pre .template_comment,
+pre .diff .header,
+pre .javadoc {
+  color: #998;
+  font-style: italic
+}
+
+pre .keyword,
+pre .css .rule .keyword,
+pre .winutils,
+pre .javascript .title,
+pre .lisp .title,
+pre .subst {
+  color: #000;
+  font-weight: bold
+}
+
+pre .number,
+pre .hexcolor {
+  color: #40a070
+}
+
+pre .string,
+pre .tag .value,
+pre .phpdoc,
+pre .tex .formula {
+  color: #d14
+}
+
+pre .title,
+pre .id {
+  color: #900;
+  font-weight: bold
+}
+
+pre .javascript .title,
+pre .lisp .title,
+pre .subst {
+  font-weight: normal
+}
+
+pre .class .title,
+pre .haskell .label,
+pre .tex .command {
+  color: #458;
+  font-weight: bold
+}
+
+pre .tag,
+pre .tag .title,
+pre .rules .property,
+pre .django .tag .keyword {
+  color: #000080;
+  font-weight: normal
+}
+
+pre .attribute,
+pre .variable,
+pre .instancevar,
+pre .lisp .body {
+  color: #008080
+}
+
+pre .regexp {
+  color: #009926
+}
+
+pre .class {
+  color: #458;
+  font-weight: bold
+}
+
+pre .symbol,
+pre .ruby .symbol .string,
+pre .ruby .symbol .keyword,
+pre .ruby .symbol .keymethods,
+pre .lisp .keyword,
+pre .tex .special,
+pre .input_number {
+  color: #990073
+}
+
+pre .builtin,
+pre .built_in,
+pre .lisp .title {
+  color: #0086b3
+}
+
+pre .preprocessor,
+pre .pi,
+pre .doctype,
+pre .shebang,
+pre .cdata {
+  color: #999;
+  font-weight: bold
+}
+
+pre .deletion {
+  background: #fdd
+}
+
+pre .addition {
+  background: #dfd
+}
+
+pre .diff .change {
+  background: #0086b3
+}
+
+pre .chunk {
+  color: #aaa
+}
+
+pre .tex .formula {
+  opacity: 0.5;
+}

@@ -1,22 +1,16 @@
-// define class Dog
-var Dog = Class( 'Dog',
-{
-    'private _name': '',
+var Class = easejs.Class;
 
-    __construct: function( name )
+var Stack = Class( 'Stack',
+{
+    'private _stack': [],
+
+    'public push': function( value )
     {
-        this._name = name;
+        this._stack.push( value );
     },
 
-    'public bark': function()
+    'public pop': function()
     {
-        console.log( this._name + ' says: Woof!' );
-    }
+        return this._stack.pop();
+    },
 } );
-
-// invoke method 'bark' on a new instance of 'Dog'
-Dog( 'Fluffy' ).bark();
-
-// alternatively, we can use the 'new' keyword
-var inst = new Dog( 'Bob' );
-inst.bark();

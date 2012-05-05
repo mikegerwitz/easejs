@@ -1,26 +1,187 @@
 <p>
-  ease.js is a Classical Object-Oriented framework for JavaScript,
-  intended to &ldquo;ease&rdquo; the transition into JavaScript from other
-  Object-Oriented languages. Features include:
+  <span class="bigemph">ease.js is a Classical Object-Oriented framework for
+  JavaScript,</span> intended to eliminate boilerplate code and
+  &ldquo;ease&rdquo; the transition into JavaScript from other Object-Oriented
+  languages. Features include:
 </p>
 
-<div class="ex excode">
-  <!--%inc scripts/ex/class.js -->
-</div>
-
 <ul class="features">
-  <li>Simple and intuitive class definitions</li>
-  <li>Classical inheritance</li>
-  <li>Abstract classes and methods</li>
-  <li>Interfaces</li>
-  <li>Access modifiers (public, protected and private)</li>
-  <li>Static and constant members</li>
+  <li><a href="#class-dfn">Simple and intuitive class definitions</a></li>
+  <li><a href="#inheritance">Classical inheritance</a></li>
+  <li><a href="#abstract">Abstract classes and methods</a></li>
+  <li><a href="#interfaces">Interfaces</a></li>
+  <li>
+    <a href="#access-modifiers">
+      Access modifiers (public, protected and private)
+    </a>
+  </li>
+  <li><a href="#static">Static and constant members</a></li>
 </ul>
 
 <p class="info">
-  ease.js is a framework, not a compiler. It may be used wherever
-  JavaScript may be used, including with other compilers/parsers. ease.js
-  also provides support for older, pre-ES5 environments by gracefully
-  degrading features (such as visibility support), but remaining
-  functionally consistent.
+  ease.js is a framework, not a compiler. It may be used wherever JavaScript may
+  be used, including with other compilers/parsers.  ease.js also provides
+  support for older, pre-ES5 environments by gracefully degrading features (such
+  as visibility support), but remaining functionally consistent.
 </p>
+
+<h3 id="class-dfn" class="bigemph">
+  Simple and Intuitive Class Definitions
+  <span class="anchor"><a href="#class-dfn">&para;</a></span>
+</h3>
+<p>
+  Class definitions closely resemble the familiar syntax of languages like Java,
+  C++, C# and PHP.
+</p>
+<pre class="js">
+  <!--%inc scripts/ex/class.js -->
+</pre>
+
+<p>
+  Classes can be anonymous or named, the latter being more useful for debugging.
+  Since classes may be anonymous, constructors are styled after PHP:
+</p>
+<pre class="js">
+  <!--%inc scripts/ex/class-anon.js -->
+</pre>
+
+<p>
+  Classes can be instantiated with or without the <tt>new</tt> keyword. Omission
+  aids in concise method chaining and the use of temporary classes.
+</p>
+<pre class="js">
+  var inst = Foo( "John Doe" );
+  var inst = new Foo( "John Doe" );
+
+  // temporary class
+  Foo( "John Doe" ).sayHello();
+</pre>
+
+
+<h3 id="inheritance" class="bigemph">
+  Classical Inheritance
+  <span class="anchor"><a href="#inheritance">&para;</a></span>
+</h3>
+<p>
+  Classes can be extended to create subtypes. Like C++, methods are
+  <em>not</em> virtual by default. In Java terminology, all methods are
+  final by default. Multiple inheritance, like Java, is unsupported (see
+  <a href="#interfaces">Interfaces</a>).
+</p>
+<pre class="js">
+  <!--%inc scripts/ex/class-extend.js-->
+</pre>
+
+<p>
+  Alternatively, if creating an anonymous subtype, the supertype's
+  <tt>extend()</tt> method may be used.
+</p>
+<pre class="js">
+  var SturdyCow = Cow.extend( { /*...*/ } );
+</pre>
+
+<p>
+  To prevent a class from being extended, <tt>FinalClass</tt> can be used.
+</p>
+<pre class="js">
+  <!--%inc scripts/ex/class-final.js-->
+</pre>
+
+
+<h3 id="abstract" class="bigemph">
+  Abstract Classes and Methods
+  <span class="anchor"><a href="#abstract">&para;</a></span>
+</h3>
+<p>
+  If a class contains abstract members, it must be declared as an
+  <tt>AbstractClass</tt>. Abstract methods must be overridden by subtypes and
+  are implicitly virtual.
+</p>
+<pre class="js">
+  <!--%inc scripts/ex/class-abstract.js-->
+</pre>
+
+
+<h3 id="interfaces" class="bigemph">
+  Interfaces
+  <span class="anchor"><a href="#interfaces">&para;</a></span>
+</h3>
+<p>
+  ease.js supports the Java concept of Interfaces, which act much like abstract
+  classes with no implementation. Each method is implicitly abstract. Properties
+  cannot be defined on interfaces.
+</p>
+<pre class="js">
+  <!--%inc scripts/ex/interface.js -->
+</pre>
+
+<p>
+  Concrete classes may implement one or more interfaces. If a concrete class
+  does not provide a concrete implementation for every method defined on the
+  interface, it must be declared an <a
+  href="#abstract"><tt>AbstractClass</tt></a>.
+</p>
+<pre class="js">
+  <!--%inc scripts/ex/interface-2.js -->
+</pre>
+
+<p>
+  Polymorphic methods may check whether a given object implements a certain
+  interface.
+</p>
+<pre class="js">
+  <!--%inc scripts/ex/interface-3.js -->
+</pre>
+
+
+<h3 id="access-modifiers" class="bigemph">
+  Access Modifiers
+  <span class="anchor"><a href="#access-modifiers">&para;</a></span>
+</h3>
+<p>
+  All three common access modifiers &mdash; public, protected and private
+  &mdash; are supported, but enforced only in ECMAScript 5 and later
+  environments.
+</p>
+<pre class="js">
+  <!--%inc scripts/ex/access-modifiers.js -->
+</pre>
+<p>
+  In the above example, the database connection remains encapsulated within
+  <tt>DatabaseRecord</tt>. Subtypes are able to query and escape strings and
+  external callers are able to retrieve a name for a given id. Attempting to
+  access a private or protected member externally will result in an error.
+  Attempting to access a private member from within a subtype will result in an
+  error.
+</p>
+
+
+<h3 id="static" class="bigemph">
+  Static and Constant Members
+  <span class="anchor"><a href="#static">&para;</a></span>
+</h3>
+<p>
+  Static members are bound to the class itself, rather than a particular
+  instance. Constants are immutable static members (unlike languages like PHP,
+  they may use any access modifier). In order to support both
+  pre- and post-ECMAScript 5 environments, the syntax requires use of a static
+  accessor method &mdash; <tt>$()</tt>.
+</p>
+<pre class="js">
+  <!--%inc scripts/ex/static-members.js -->
+</pre>
+
+
+<script type="text/javascript" src="scripts/highlight.pack.js"></script>
+<script type="text/javascript">
+  try
+  {
+    // JS syntax highlighting, ES5
+    Array.prototype.slice.call( document.querySelectorAll( '.js' ) )
+      .forEach( function( element )
+      {
+        hljs.highlightBlock( element, '    ' );
+      } );
+  }
+  catch ( e ) {};
+</script>
