@@ -30,7 +30,7 @@ $(outdir)/scripts/%.js: scripts/%.js | $(outdir)
 $(outdir)/images/%.png: images/%.png | $(outdir)
 	cp -r $< $@
 
-$(outdir)/%.html: %.html $(header) $(footer) | $(outdir)
+$(outdir)/%.html: %.html $(header) $(footer) tools/page-parse | $(outdir)
 	cat $(header) \
 		| sed 's/\(<body\)/\1 class="$*"/' \
 		| cat - $< $(footer) \
