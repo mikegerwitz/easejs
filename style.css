@@ -160,7 +160,7 @@ body.source #source a {
   color: #2e3436;
 }
 
-.btn {
+.btn, a.btn {
   display: inline-block;
 
   background-color: #f57900;
@@ -168,7 +168,7 @@ body.source #source a {
   font-weight:     bold;
   cursor:          pointer;
   text-align:      center;
-  text-shadow:     black 1px 1px 1px;
+  text-shadow:     black 0px 0px 1px;
 
   padding: 0.25em 0.5em;
 
@@ -189,6 +189,9 @@ body.source #source a {
       rgb(206,93,0) 100%
   );
 }
+a.btn:hover {
+  text-decoration: none;
+}
 
 .btn.go {
   border: 1px solid #4e9a06;
@@ -208,17 +211,11 @@ body.source #source a {
 }
 
 .btn.med {
-  width: 75px;
-
-  font-size:   1.5em;
-  text-shadow: black 2px 2px 4px;
+  font-size: 1.5em;
 }
 
 .btn.large {
-  width: 100px;
-
-  font-size:   2em;
-  text-shadow: black 2px 2px 5px;
+  font-size: 2em;
 }
 
 #try-console {
@@ -242,54 +239,9 @@ span.shell-start {
 
 
 /** index **/
-.ex {
-  display: block;
-
-  position: relative;
-  top: -1em;
-
-  background-color: white;
-
-  border-width:       3px 1px;
-  border-style:       solid;
-  border-color:       #babdb6;
-  border-radius:      0.25em;
-  -moz-border-radius: 0.25em;
-
-  padding: 0.5em;
-  float:   right;
-
-  margin-bottom: 0.5em;
-}
-
-.excode {
-  width: 400px;
-  height: 10em;
-
-  font-family: monospace;
-  font-size:   0.7em;
-  white-space: pre;
-  overflow-y: scroll;
-}
-
-.ex textarea {
-  width: 400px;
-  height: 10em;
-
-  border: none;
-
-  margin-bottom: 0.5em;
-}
-
-.ex .btns {
-  border-top: 1px dotted #babdb6;
-
-  margin: 0px -0.25em;
-  padding: 0.25em;
-}
-
-.ex .btn {
+.btn.download {
   float: right;
+  margin-top: 0.9em;
 }
 
 .info {
