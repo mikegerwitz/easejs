@@ -18,11 +18,15 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-# currently, this only replaces %inc commands with the file contents
+curver="$( git tag -l | tail -n1 )"
+
+# TODO: Both sed and gawk are unnecessary; it was just the most convenient
+# solution
 gawk '
   match( $0, /^ *<!--%inc (.*?) *--> *$/, arr ) {
     system( "cat " arr[1] )
     next
   }
   { print }
-'
+' \
+  | sed 's/<!--%curver-->/'$curver'/g'
