@@ -359,6 +359,10 @@ pre.js {
   padding:   1em;
 }
 
+a.top {
+  float: right;
+}
+
 
 /*
 github.com style (c) Vasily Polovnyov <vast@whiteants.net>
