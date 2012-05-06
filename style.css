@@ -23,6 +23,9 @@ a, a:active, a:link {
 a:visited {
   color: #729fcf;
 }
+a:hover {
+  text-decoration: underline;
+}
 
 #header {
   position: relative;
