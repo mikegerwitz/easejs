@@ -92,7 +92,18 @@
 </pre>
 
 <p>
-  To prevent a class from being extended, <tt>FinalClass</tt> can be used.
+  Type checks for polymorphic methods may be performed with
+  <tt>Class.isA()</tt>, which is <a
+  href="manual/Type-Checks-and-Polymorphism.html" class="man">recommended in
+  place of <tt>instanceof</tt></a>.
+</p>
+<pre class="js">
+  <!--%inc scripts/ex/class-poly.js-->
+</pre>
+
+<p>
+  To prevent a class from being extended, <a href="manual/Final-Classes.html"
+  class="man"><tt>FinalClass</tt></a> may be used.
 </p>
 <pre class="js">
   <!--%inc scripts/ex/class-final.js-->
