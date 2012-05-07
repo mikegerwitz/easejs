@@ -248,6 +248,11 @@ span.shell-start {
   clear: both;
 }
 
+a.man:before {
+  /* &rarr;&nbsp; */
+  content: '\2192\00a0';
+}
+
 
 /** download **/
 span.release-current {
