@@ -241,8 +241,14 @@ span.shell-start {
 /** index **/
 .btn.download {
   float: right;
-  margin-top: 0.9em;
+  margin-top: 0.8em;
 }
+
+.btn.download .note {
+  font-size: 0.4em;
+  font-style: italic;
+}
+
 
 .info {
   clear: both;

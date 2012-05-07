@@ -24,6 +24,15 @@ curver="$( git tag -l \
   | tail -n1
 )"
 
+curver_date="$( date "+%d %b %Y" \
+  --date="$( git for-each-ref \
+    --format='%(*authordate)' \
+    "refs/tags/$curver" \
+    | cut -d' ' -f1-5 \
+  )"
+)"
+
+
 # TODO: Both sed and gawk are unnecessary; it was just the most convenient
 # solution
 gawk '
@@ -33,4 +42,7 @@ gawk '
   }
   { print }
 ' \
-  | sed 's/<!--%curver-->/'$curver'/g'
+  | sed "
+    s/<!--%curver-->/$curver/g;
+    s/<!--%curver-date-->/$curver_date/g;
+  "
