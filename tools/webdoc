@@ -70,6 +70,7 @@ webify()
     s#</head>#<link type="text/css" rel="stylesheet" \
       href="'$root'style.css" />\n&#;
     s#highlight\.pack\.js#'$root'scripts/&#;
+    s#</body>#\n&#;
   ' "$docpath" \
     | awk '
       /<body>/ {
@@ -80,11 +81,11 @@ webify()
         " );
         next
       }
-      { print }
       /<\/body>/ {
         system( "cat includes/footer.html" );
-        next
+        exit
       }
+      { print }
     ' \
     > "$tmp"
 
