@@ -47,6 +47,8 @@ combine: $(path_combine_output) $(path_build)/browser-test.html
 
 doc:
 	$(MAKE) -C $(path_doc)
+doc-html:
+	$(MAKE) -C $(path_doc) html
 
 test: default
 	$(MAKE) -C $(path_test)
