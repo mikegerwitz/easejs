@@ -59,7 +59,7 @@ webdoc:
 # may not have built everything)
 publish: | default
 	@[ -n "$(PUBROOT)" ] || ( echo "PUBROOT not set; aborting." >&2 && false )
-	rsync -vr $(outdir)/./* "$(PUBROOT)"
+	rsync -vrL $(outdir)/./* "$(PUBROOT)"
 
 clean:
 	${RM} -r webroot
