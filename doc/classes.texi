@@ -166,7 +166,7 @@ true:
 @ref{Member Keywords,,@code{override}} without a super method of the same
 @var{name} (@pxref{Inheritance}).
 @item
-@var{keywords} of member @var{name} may contain both
+@var{keywords} of member @var{name} may not contain both
 @ref{Member Keywords,,@code{static}} and @ref{Member Keywords,,@code{virtual}}
 keywords (@pxref{Static Members} and @ref{Inheritance}).
 @item
