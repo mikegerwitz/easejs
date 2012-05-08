@@ -317,7 +317,7 @@ h3.bigemph {
   padding-bottom: 0.2em;
 }
 
-pre.js {
+pre.js, div.float {
   background-image:  url( 'images/cross_scratches.png' );
   background-repeat: both;
 
@@ -326,6 +326,15 @@ pre.js {
 
   font-size: 0.9em;
   padding:   1em;
+}
+
+/* from manual (overrides some of the styles above) */
+div.float {
+  padding: 0;
+}
+div.float pre.verbatim,
+div.float table {
+  background-color: transparent; /* for those who don't support rgba */
 }
 
 a.top {
