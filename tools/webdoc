@@ -61,6 +61,12 @@ webify()
   root="$2"
   tmp="$1.tmp"
 
+  # if necessary, rewrite links to point to the proper directory (we do not use
+  # absolute paths, as that is not friendly to viewing the documentation on a
+  # filesystem)
+  shref='sed \"s#href=\\\"\\([^\\\"]\\+\\)\\\"#href=\\\"'"$root"'\\1\\\"#g\"'
+  shref="$shref | sed 's#//\\\"#\\\"#g'"
+
   echo "Styling $path..."
 
   # We do not use -i here because we have some piping to do. We also use a $root
@@ -75,14 +81,11 @@ webify()
     | awk '
       /<body>/ {
         print "<body class=\"man\">";
-        system( " \
-          awk \"/body/{i=1;next;} i\" includes/header.html \
-            | sed \"s#href=\\\"\\([^\\\"]\\+\\)\\\"#href=\\\"'$root'\\1\\\"#g\"\
-        " );
+        system( "awk \"/body/{i=1;next;} i\" includes/header.html | '"$shref"'" );
         next
       }
       /<\/body>/ {
-        system( "cat includes/footer.html" );
+        system( "cat includes/footer.html | '"$shref"'" );
         exit
       }
       { print }
