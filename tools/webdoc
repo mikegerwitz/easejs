@@ -97,7 +97,7 @@ webify()
 }
 
 # generate the documentation from the master branch
-git checkout master \
+git checkout "${WEBDOC_BRANCH:-origin/master}" \
   && make doc-html \
   && git checkout - \
     && webify "$path_doc_single" \
