@@ -1,0 +1,106 @@
+#!/bin/sh
+#
+# Styles documentation, generated from master, to match the rest of the website
+#
+# What a relief. This also allows the documentation that is generated separately
+# (apart from the website) to have its own style; that makes sense, considering
+# the master branch should have no knowledge of the website.
+#
+#  Copyright (C) 2010 Mike Gerwitz
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as
+#  published by the Free Software Foundation, either version 3 of the
+#  License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##
+
+# ensure that we are within the git repository (otherwise, we cannot generate
+# content from master)
+git rev-parse --git-dir >/dev/null 2>/dev/null || {
+  echo "This command may only be run from within the git repository" >&2
+  exit 1
+}
+
+# we do not want to switch branches if it may risk losing changes
+[ "$( git status --short | grep -v '??' )" ] && {
+  # auto-stashing can be used during development to test this script without
+  # fighting with git
+  if [ -z "$WEBDOC_AUTOSTASH" ]; then
+    echo "Working tree is dirty; please stash or commit changes" >&2
+    exit 2
+  fi
+
+  # automatically stash changes
+  echo "Stashing changes before switching branches..." >&2
+  git stash save 'Stashed by webdoc'
+
+  # on exit, pop the stash
+  trap 'git stash pop' EXIT
+}
+
+
+path_dest=webroot
+path_doc=build/doc
+path_img=$path_doc/img
+path_js=$path_doc/interactive.js
+path_doc_single=$path_doc/manual.html
+path_doc_multi=$path_doc/manual
+
+# style a particular file, rewriting relevant portions of the HTML
+webify()
+{
+  docpath="$1"
+  root="$2"
+  tmp="$1.tmp"
+
+  echo "Styling $path..."
+
+  # We do not use -i here because we have some piping to do. We also use a $root
+  # var in place of a simple "/" prefix to permit this page to be viewed
+  # anywhere --- not just on the root of a domain.
+  sed '
+    s#</head>#<link type="text/css" rel="stylesheet" \
+      href="'$root'style.css" />\n&#;
+    s#highlight\.pack\.js#'$root'scripts/&#;
+  ' "$docpath" \
+    | awk '
+      /<body>/ {
+        print "<body class=\"man\">";
+        system( " \
+          awk \"/body/{i=1;next;} i\" includes/header.html \
+            | sed \"s#href=\\\"\\([^\\\"]\\+\\)\\\"#href=\\\"'$root'\\1\\\"#g\"\
+        " );
+        next
+      }
+      { print }
+      /<\/body>/ {
+        system( "cat includes/footer.html" );
+        next
+      }
+    ' \
+    > "$tmp"
+
+  # overwrite file with changes
+  mv "$tmp" "$docpath"
+}
+
+# generate the documentation from the master branch
+git checkout master \
+  && make doc-html \
+  && git checkout - \
+    && webify "$path_doc_single" \
+    && for path in $( find "$path_doc_multi" -name '*.htm?' )
+      do
+        webify "$path" "../"
+      done \
+    && ln -sf \
+      "../$path_doc_single" "../$path_img" "../$path_js" "../$path_doc_multi" \
+      "$path_dest/"

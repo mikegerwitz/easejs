@@ -51,6 +51,10 @@ blog:
 		| sed 's/\(<body\)/\1 class="blog"/' \
 		> "$(outdir)/blog.html"
 
+# documentation, styled to match the rest of the website
+webdoc:
+	./tools/webdoc
+
 # publish webroot to remote server using rsync (do not delete files, since we
 # may not have built everything)
 publish: | default
