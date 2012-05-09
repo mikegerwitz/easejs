@@ -199,6 +199,7 @@ a.btn:hover {
 .btn.go {
   border: 1px solid #4e9a06;
 
+  background-color: rgb(116,210,22);
   background-image: -webkit-gradient(
       linear,
       left bottom,
@@ -240,6 +241,32 @@ span.shell-start {
   font-weight: normal;
 }
 
+#content .head {
+  display: block;
+  width: 100%;
+  padding: 1em;
+  margin:  -0.5em -1em 1em -1em;
+
+  border-bottom: 1px solid;
+}
+#content .head.good {
+  background-color: rgb(116,210,22);
+  background-image: -webkit-gradient(
+      linear,
+      left bottom,
+      left top,
+      color-stop(0, rgb(116,210,22)),
+      color-stop(1, rgb(139,226,52))
+  );
+  background-image: -moz-linear-gradient(
+      center bottom,
+      rgb(116,210,22) 0%,
+      rgb(139,226,52) 100%
+  );
+
+  border-bottom-color: #4e9a06;
+}
+
 
 /** index **/
 .btn.download {
@@ -271,6 +298,9 @@ span.release-current {
 
 span.release-current .version {
   font-weight: normal;
+}
+span.release-current .date {
+  font-size: 0.6em;
 }
 
 
