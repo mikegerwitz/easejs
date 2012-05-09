@@ -371,6 +371,21 @@ a.top {
   float: right;
 }
 
+div.node {
+  background-color: rgba( 220, 220, 220, 0.15 );
+  border-bottom: 1px solid #babdb6;
+
+  margin:  -0.5em -1em 1em -1em; /* negate #content padding */
+  padding: 1em;
+}
+div.node p {
+  margin:  0;
+  padding: 0;
+}
+div.node hr {
+  display: none;
+}
+
 
 /*
 github.com style (c) Vasily Polovnyov <vast@whiteants.net>
