@@ -247,7 +247,7 @@ span.shell-start {
   padding: 1em;
   margin:  -0.5em -1em 1em -1em;
 
-  border-bottom: 1px solid;
+  border-bottom: 1px solid #babdb6;
 }
 #content .head.good {
   background-color: rgb(116,210,22);
