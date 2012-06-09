@@ -21,8 +21,9 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-header := includes/header.html
-footer := includes/footer.html
+header      := includes/header.html
+footer      := includes/footer.html
+header_blog := includes/blog-header.html
 
 input_html := $(wildcard *.html)
 input_images := $(wildcard images/*.png)
@@ -67,7 +68,7 @@ blog:
 		| grep -A1 '^log size \([5-9][0-9]\{2,\}\|[0-9]\{4,\}\)$$' \
 		| grep -o '^[a-z0-9]\+$$' \
 		| xargs git weblog -Dn $$( git tag -l ) \
-		| cat $(header) - $(footer) \
+		| cat $(header) $(header_blog) - $(footer) \
 		| sed 's/\(<body\)/\1 class="blog"/' \
 		> "$(outdir)/blog.html"
 
