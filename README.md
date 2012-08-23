@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/mikegerwitz/easejs.png)](http://travis-ci.org/mikegerwitz/easejs)
 # ease.js
 
 ease.js is a collection of CommonJS modules intended to "ease" the transition
