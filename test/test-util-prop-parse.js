@@ -51,11 +51,13 @@ var data = {
     'proxy someProxy': 'dest',
 };
 
+get_called = false;
+
 // only add getter/setter if it's supported by our engine
 if ( get_set )
 {
     Object.defineProperty( data, 'someFoo', {
-        get: function () {},
+        get: function () { get_called = true; },
         set: function () {},
 
         enumerable: true,
@@ -80,8 +82,10 @@ util.propParse( data, {
     // run for each item in data
     each: function( name, value )
     {
-        // only remove if the passed value is correct
-        if ( value === data[ name ] )
+        // only remove if the passed value is correct (note the check for
+        // 'someFoo', since this has a getter and checking its value would
+        // invoke the getter, which would taint one of the tests)
+        if ( ( name === 'someFoo' ) || ( value === data[ name ] ) )
         {
             delete chk_each[ name ];
         }
@@ -157,6 +161,11 @@ if ( get_set )
         setters.someFoo,
         data.__lookupSetter__( 'someFoo' ),
         "Property parser properly detects setters"
+    );
+
+    // bug fix
+    assert.equal( false, get_called,
+        "Getter should not be called during processing"
     );
 }
 
