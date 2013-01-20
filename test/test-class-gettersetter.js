@@ -77,6 +77,11 @@ Object.defineProperty( sub_foo_def, 'override bar', {
     enumerable: true,
 } );
 
+// this is important since the system may freeze the object, so we must have
+// declared it in advance
+foo_def.bar2 = '';
+
+
 var Foo    = Class.extend( foo_def ),
     SubFoo = Foo.extend( sub_foo_def );
 
