@@ -1,7 +1,7 @@
 {
   "name":        "easejs",
   "description": "A Classical Object-Oriented Framework for JavaScript",
-  "version":     "0.1.0",
+  "version":     "0.1.1",
   "author":      "Mike Gerwitz <mike@mikegerwitz.com> (http://mikegerwitz.com)",
   "homepage":    "http://easejs.org",
 
