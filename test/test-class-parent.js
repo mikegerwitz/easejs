@@ -29,6 +29,7 @@ var common = require( './common' ),
     // get in the way of our assertions
     hitMethod  = false,
     hitMethod2 = false,
+    hitDouble  = false,
     method2Arg  = null,
 
     Foo = Class.extend(
@@ -46,6 +47,11 @@ var common = require( './common' ),
 
             return this;
         },
+
+        'virtual double': function()
+        {
+            hitDouble = true;
+        }
     }),
 
     SubFoo = Foo.extend(
@@ -59,6 +65,14 @@ var common = require( './common' ),
         {
             return this.__super( arg );
         },
+
+        'override double': function()
+        {
+            this.myMethod();
+            this.__super();
+
+            return this;
+        }
     }),
 
     foo     = new Foo(),
@@ -81,7 +95,7 @@ assert.equal(
 hitMethod = hitMethod2 = false;
 
 var arg = 'foobar';
-sub_foo.myMethod().myMethod2( arg );
+sub_foo.myMethod().myMethod2( arg ).double();
 
 // myMethod overrides without calling parent
 assert.equal(
@@ -112,3 +126,9 @@ assert['throws']( function()
     });
 }, TypeError, "Methods must be overridden with a Function" );
 
+// ensure that __super is not cleared after a call to an override
+assert.equal(
+    hitDouble,
+    true,
+    "__super is maintained in a stack-like manner"
+);
