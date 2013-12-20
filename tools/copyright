@@ -1,0 +1,99 @@
+#!/bin/bash
+# Updates copyright of various source files and commits to repository
+#
+#  Copyright (C) 2013 Mike Gerwitz
+#
+#  This file is part of ease.js.
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Please note that this file will update itself. Further, it will only update
+# files that state ``this file is part of ease.js''.
+#
+# This script will look up the modification dates from the file commits and
+# update the copyright line accordingly. Since the history must not include the
+# copyright update itself, this script will also perform the commit (feel free
+# to amend afterward) to ensure consistency in future filtering.
+#
+# This should be run from the tools directory.
+##
+
+owner="${@:?Missing copyright owner}"
+
+# refuse to run on a dirty tree
+if [ -n "$( git status --short | grep -v ^?? )" ]; then
+  echo 'Please stash or commit your changes.' >&2
+  exit 1
+fi
+
+# safety check
+wd="$(pwd)"
+[ "${wd##*/}" == tools ] || {
+  echo 'Please run from within tools directory' >&2
+  exit 1
+}
+
+# enable extglob for !()
+shopt -s extglob || {
+  echo 'extglob unsupported' >&2
+  exit 1
+}
+
+# we will be updating all files that contain this line
+ident='This file is part of ease.js.$'
+
+ignorepath='.git|build|webroot|node_modules'
+files=$( grep -rl "$ident" ../!($ignorepath) )
+
+(
+  echo 'The following files will be updated to reflect modification years:'
+  echo
+  echo "$files"
+) | less -EX
+
+read -p 'Are you sure you want to continue (y/N)? ' c
+[[ "$c" == [yY] ]] || {
+  echo 'Aborting.' >&2
+  exit 1
+}
+
+# have at it
+for file in $files; do
+  ext="${file##*/*.}"
+  echo -n "updating $file..."
+
+  # determine copyrightable years from commit log and format as year1, year2,
+  # ..., yearn (TODO: join consecutive years with dash)
+  years=$(
+    git log --format='%aD %s' -- "$file" \
+      | grep -vF '[copyright]' \
+      | cut -d' ' -f4 \
+      | sort -u \
+      | tr '\n' , \
+      | sed 's/,/, /g;s/, $//'
+  )
+
+  # no years, then no history
+  if [ -z "$years" ]; then
+    echo 'unknown; skipped.'
+    continue
+  fi
+
+  # perform copyright update
+  sed -i "s/\(. \+Copyright (C) \).*\$/\\1$years $owner/" "$file"
+  echo "$years."
+done
+
+# commit
+git commit -am '[copyright] Copyright update'
