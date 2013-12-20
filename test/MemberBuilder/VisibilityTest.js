@@ -1,7 +1,7 @@
 /**
  * Tests visibility portion of member builder
  *
- *  Copyright (C) 2011, 2012 Mike Gerwitz
+ *  Copyright (C) 2011, 2012, 2013 Mike Gerwitz
  *
  *  This file is part of ease.js.
  *

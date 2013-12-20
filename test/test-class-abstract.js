@@ -1,7 +1,7 @@
 /**
  * Tests abstract classes
  *
- *  Copyright (C) 2010, 2011, 2012 Mike Gerwitz
+ *  Copyright (C) 2010, 2011, 2012, 2013 Mike Gerwitz
  *
  *  This file is part of ease.js.
  *

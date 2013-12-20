@@ -1,7 +1,7 @@
 /**
  * Tests util abstract functions
  *
- *  Copyright (C) 2010, 2011 Mike Gerwitz
+ *  Copyright (C) 2010, 2011, 2013 Mike Gerwitz
  *
  *  This file is part of ease.js.
  *

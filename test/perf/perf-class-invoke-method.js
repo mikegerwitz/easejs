@@ -18,7 +18,7 @@
  *       will remove this performance hit if the Class contains no private
  *       members.
  *
- *  Copyright (C) 2011 Mike Gerwitz
+ *  Copyright (C) 2011, 2013 Mike Gerwitz
  *
  *  This file is part of ease.js.
  *

@@ -4,7 +4,7 @@
  * These tests can be run in a pre-ES5 environment since they do not deal with
  * actual getters/setters; they deal only with the data associated with them.
  *
- *  Copyright (C) 2011 Mike Gerwitz
+ *  Copyright (C) 2011, 2013 Mike Gerwitz
  *
  *  This file is part of ease.js.
  *

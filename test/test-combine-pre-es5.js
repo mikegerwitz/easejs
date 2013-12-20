@@ -6,7 +6,7 @@
  * choice. It is intended to catch errors early, to ensure bugs are not
  * committed between browser tests.
  *
- *  Copyright (C) 2011 Mike Gerwitz
+ *  Copyright (C) 2011, 2013 Mike Gerwitz
  *
  *  This file is part of ease.js.
  *

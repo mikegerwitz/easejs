@@ -1,7 +1,7 @@
 /**
  * Tests warning system implementation
  *
- *  Copyright (C) 2011 Mike Gerwitz
+ *  Copyright (C) 2011, 2013 Mike Gerwitz
  *
  *  This file is part of ease.js.
  *

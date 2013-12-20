@@ -3,7 +3,7 @@
  *
  * Note that this test case can also be run in an ES5 environment.
  *
- *  Copyright (C) 2011 Mike Gerwitz
+ *  Copyright (C) 2011, 2013 Mike Gerwitz
  *
  *  This file is part of ease.js.
  *
