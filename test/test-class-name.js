@@ -1,7 +1,7 @@
 /**
  * Tests class naming
  *
- *  Copyright (C) 2010,2011 Mike Gerwitz
+ *  Copyright (C) 2011 Mike Gerwitz
  *
  *  This file is part of ease.js.
  *

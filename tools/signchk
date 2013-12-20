@@ -5,7 +5,7 @@
 # Allows for automated detection of potential attacks or false authorship of
 # commits by validating signatures against trusted public GPG keys.
 #
-#  Copyright (C) 2012  Mike Gerwitz
+#  Copyright (C) 2012 Mike Gerwitz
 #
 #  This file is part of ease.js.
 #

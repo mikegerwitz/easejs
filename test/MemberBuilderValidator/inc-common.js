@@ -1,7 +1,7 @@
 /**
  * Shared functions for MemberBuilderValidator tests
  *
- *  Copyright (C) 2010,2011 Mike Gerwitz
+ *  Copyright (C) 2011, 2012 Mike Gerwitz
  *
  *  This file is part of ease.js.
  *

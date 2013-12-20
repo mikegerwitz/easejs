@@ -2,7 +2,7 @@
  * Tests amount of time taken to declare 1000 classes with a few properties,
  * public keyword
  *
- *  Copyright (C) 2010,2011 Mike Gerwitz
+ *  Copyright (C) 2011 Mike Gerwitz
  *
  *  This file is part of ease.js.
  *

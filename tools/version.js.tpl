@@ -1,7 +1,7 @@
 /**
  * Provides version information
  *
- *  Copyright (C) 2010,2011 Mike Gerwitz
+ *  Copyright (C) 2012 Mike Gerwitz
  *
  *  This file is part of ease.js.
  *

@@ -4,7 +4,7 @@
  * For the original, uncombined and unminifed source, please visit
  * http://easejs.org.
  *
- *  Copyright (C) 2010,2011 Mike Gerwitz
+ *  Copyright (C) 2011 Mike Gerwitz
  *
  *  This file is part of ease.js.
  *

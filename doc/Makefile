@@ -3,7 +3,7 @@
 #
 # Responsible for building the project documentation.
 #
-#  Copyright (C) 2012  Mike Gerwitz
+#  Copyright (C) 2011, 2012 Mike Gerwitz
 #
 #  This file is part of ease.js.
 #
