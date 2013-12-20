@@ -68,6 +68,14 @@ read -p 'Are you sure you want to continue (y/N)? ' c
   exit 1
 }
 
+copyupdate()
+{
+  years="$1"
+  file="$2"
+
+  sed -i "s/\(. \+Copyright (C) \).*\$/\\1$years $owner/" "$file"
+}
+
 # have at it
 for file in $files; do
   ext="${file##*/*.}"
@@ -91,9 +99,14 @@ for file in $files; do
   fi
 
   # perform copyright update
-  sed -i "s/\(. \+Copyright (C) \).*\$/\\1$years $owner/" "$file"
+  copyupdate "$years" "$file"
   echo "$years."
 done
+
+# general files
+year="$( date +%Y )"
+copyupdate "$year" license.tpl
+copyupdate "$year" license-min.tpl
 
 # commit
 git commit -am '[copyright] Copyright update'
