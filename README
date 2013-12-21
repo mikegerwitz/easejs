@@ -1,0 +1,43 @@
+Configuring ease.js
+*******************
+
+  Copyright (C) 2013 Mike Gerwitz
+
+  This file is part of ease.js.
+
+  Copying and distribution of this file, with or without modification, are
+  permitted in any medium without royalty provided the copyright notice and
+  this notice are preserved.  This file is offered as-is, without warranty
+  of any kind.
+
+
+This file contains information on configuring and building ease.js; for
+information on using the library, please see the Markdown-formatted
+README.md file or the Texinfo manual.
+
+
+Installing
+==========
+
+For information on installing ease.js on your system, see INSTALL.
+Alternatively, you may install the software using npm by issuing the
+following command:
+
+  $ npm install easejs
+
+
+
+Configuring
+===========
+
+If your distribution contains a `configure' file in the project root, you
+may jump immediately to INSTALL.
+
+Otherwise, you likely have the sources as they exist in the project
+repository, which does not contain the generature `configure' script; you
+may generate it by issuing the following commands:
+
+  $ aclocal && automake --foreign && autoconf
+
+Please note that the --foreign argument is necessary to `automake' to ignore
+certain missing files (such as ChangeLog) that are generated at build time.

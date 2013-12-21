@@ -1,0 +1,93 @@
+# For use by automake and autoconf
+#
+#  Copyright (C) 2013 Mike Gerwitz
+#
+#  This file is part of ease.js.
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##
+
+AC_INIT([ease.js], [1.0.0-dev], [bugs@easejs.org])
+AC_CONFIG_AUX_DIR([tools])
+AM_INIT_AUTOMAKE
+
+AC_CONFIG_FILES([Makefile])
+
+# check for node, which is required for nearly every operation
+AC_CHECK_PROGS(NODE, [node nodejs])
+AM_CONDITIONAL(HAS_NODE, [test "$NODE"])
+
+# certain portions of the build process require that node be installed (in the
+# future, we may be able to allow alternatives, such as SpiderMonkey)
+test "$NODE" || AC_MSG_WARN([
+
+  Node.js is not installed; certain make targets have been disabled.
+])
+
+# yes, this isn't necessarily a good practice, however the directory itself can
+# be loaded and used without being built, so it's important that our resulting
+# file includes exactly what is contained within the dir and is rebuilt if /any/
+# of the files change
+AC_MSG_CHECKING([for source js files])
+SRC_JS_LIB="$(find lib/*.js | tr '\n' ' ' )"
+SRC_JS="index.js $SRC_JS_LIB"
+AC_SUBST(SRC_JS)
+if test -n "$SRC_JS_LIB"; then
+    AC_MSG_RESULT(ok)
+else
+    AC_MSG_ERROR(failed!)
+fi
+
+# unit tests
+AC_MSG_CHECKING([for unit tests])
+SRC_TESTS="$( find test/ -name test-* \
+    -o -name *Test* \
+    -o -name inc-*.js \
+    | tr '\n' ' ' \
+)"
+AC_SUBST(SRC_TESTS)
+if test "$SRC_TESTS"; then
+    AC_MSG_RESULT(ok)
+else
+    AC_MSG_WARN(none found)
+fi
+
+# check for performance tests
+AC_MSG_CHECKING([for performance tests])
+PERF_TESTS=$( find test/perf -name 'perf-*.js' | tr '\n' ' ' )
+AC_SUBST(PERF_TESTS)
+if test "$PERF_TESTS"; then
+    AC_MSG_RESULT(ok)
+else
+    AC_MSG_WARN(none found)
+fi
+
+# Java is used for Closure Compiler
+AC_CHECK_PROGS(JAVA, [java])
+AM_CONDITIONAL(HAS_JAVA, [test "$JAVA"])
+
+ccjar=
+if test "$JAVA"; then
+  AC_CHECK_FILE([tools/closure-compiler.jar], [ccjar=1], [AC_MSG_NOTICE([
+
+    If you wish perform minification of the combined source file, you must
+    download closure-compiler.jar into the tools directory; it is available
+    here:
+
+    https://developers.google.com/closure/compiler/
+  ])])
+fi
+AM_CONDITIONAL(HAS_CCJAR, [test "$ccjar"])
+
+AC_OUTPUT
