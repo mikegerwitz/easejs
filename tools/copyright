@@ -84,7 +84,7 @@ for file in $files; do
   # determine copyrightable years from commit log and format as year1, year2,
   # ..., yearn (TODO: join consecutive years with dash)
   years=$(
-    git log --format='%aD %s' -- "$file" \
+    git log --format='%aD %s' --follow -- "$file" \
       | grep -vF '[copyright]' \
       | cut -d' ' -f4 \
       | sort -u \
