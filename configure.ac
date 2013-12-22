@@ -22,6 +22,13 @@ AC_INIT([ease.js], [0.2.0-dev], [bugs@easejs.org])
 AC_CONFIG_AUX_DIR([tools])
 AM_INIT_AUTOMAKE([foreign])
 
+# provide more granular version numbers based on the above AC_INIT line
+m4_define([ver_split], m4_split(m4_translit(AC_PACKAGE_VERSION, [-], [.]), [\.]))
+AC_SUBST(MAJOR, m4_argn(1, ver_split))
+AC_SUBST(MINOR, m4_argn(2, ver_split))
+AC_SUBST(REV, m4_argn(3, ver_split))
+AC_SUBST(SUFFIX, m4_argn(4, ver_split))
+
 AC_PROG_MKDIR_P
 
 # check for node, which is required for nearly every operation
@@ -98,5 +105,5 @@ AS_IF(test "$JAVA" -a ! "$CCJAR",
 
 AM_CONDITIONAL(HAS_CCJAR, [test "$CCJAR"])
 
-AC_CONFIG_FILES([Makefile doc/Makefile package.json])
+AC_CONFIG_FILES([Makefile doc/Makefile package.json lib/version.js])
 AC_OUTPUT
