@@ -4,7 +4,7 @@
  * This script must be fed the tests to be run as arguments, one test case per
  * argument. All test cases should use common.testCase().
  *
- *  Copyright (C) 2011, 2013 Mike Gerwitz
+ *  Copyright (C) 2010, 2011, 2013 Mike Gerwitz
  *
  *  This file is part of ease.js.
  *
