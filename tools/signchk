@@ -28,7 +28,8 @@ chkafter="${1:-1b1790029}"
 
 # Check every commit after chkcommit (or all commits if chkcommit was not
 # provided) for a trusted signature, listing invalid commits. %G? will output
-# "G" if the signature is trusted.
+# "G" if the signature is trusted. In the case of a merge commit, the merge
+# commit itself need only be signed.
 t=$'\t'
-git log --pretty="format:%H %aN$t%s$t%G?" "$chkafter.." \
+git log --first-parent --pretty="format:%H %aN$t%s$t%G?" "$chkafter.." \
   | grep -v "${t}G$"
