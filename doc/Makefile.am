@@ -21,11 +21,19 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
+info_TEXINFOS = manual.texi
+manual_TEXINFOS = license.texi about.texi classes.texi				\
+impl-details.texi integration.texi mkeywords.texi source-tree.texi
+EXTRA_DIST = README highlight.pack.js interactive.js manual.css		\
+img/composition-uml.dia img/composition-uml.txt inheritance-ex.dia	\
+inheritance-ex.txt visobj-collection-wide.dia						\
+visobj-collection-wide.txt visobj.dia visobj.txt
+
 path_doc=.
 path_build=../build
 path_lib=../lib
+docdir = @docdir@
 path_doc_output=${path_build}/doc
-path_doc_output_info=${path_doc_output}/easejs.info
 path_doc_output_plain=${path_doc_output}/manual.txt
 path_doc_output_html=${path_doc_output}/manual
 path_doc_output_html1=${path_doc_output}/manual.html
@@ -33,8 +41,6 @@ path_doc_css=${path_doc}/manual.css
 path_doc_img=${path_doc}/img
 path_doc_css_ref=manual.css
 path_manual_texi=${path_doc}/manual.texi
-
-path_info_install := /usr/local/share/info
 
 doc_src := $(wildcard $(path_doc)/*.texi)
 doc_imgs := $(patsubst %.dia, %.png, $(wildcard $(path_doc_img)/*.dia))
@@ -44,7 +50,7 @@ doc_replace := s/<\/body>/<script type="text\/javascript" \
 	src="highlight.pack.js"><\/script><script type="text\/javascript" \
 	src="interactive.js"><\/script><\/body>/\
 	;s/\&gt\;=/\&\#8805\;/g\
-	;s/\&lt\;=/\&\#8804\;/g\
+	;s/\&lt\;=/\&\#8804\;/g
 
 .PHONY: doc mkbuild-doc img pdf info plain html
 
@@ -73,10 +79,6 @@ $(path_doc_output)/%.pdf: $(doc_src) $(doc_imgs) | mkbuild-doc img
 		pdftex -output-directory "${path_doc}" "${path_manual_texi}"
 	mv -f "${path_doc}"/*.pdf "${path_doc_output}"
 	cd "$(path_doc)" && rm -f $(shell cat "$(path_doc)/.gitignore")
-
-# doc info
-$(path_doc_output_info): $(doc_src) $(doc_imgs_txt) | mkbuild-doc
-	makeinfo -I "$(path_doc)" -o $@ "$(path_manual_texi)";
 
 # doc plain text
 $(path_doc_output_plain): $(doc_imgs_txt) | mkbuild-doc
@@ -121,9 +123,20 @@ $(path_doc_output_html)/%.css: $(path_doc)/%.css
 
 img: $(doc_imgs)
 pdf: $(path_doc_output)/manual.pdf
-info: $(path_doc_output_info)
+install-pdf: pdf
+	install -d $(DESTDIR)$(docdir)
+	install -m644 $(path_doc_output)/manual.pdf $(DESTDIR)$(docdir)/manual.pdf
+
 plain: $(path_doc_output_plain)
+install-plain: plain
+	install -d $(DESTDIR)$(docdir)
+	install -m644 $(path_doc_output_plain) $(DESTDIR)$(docdir)/manual.txt
+
 html: $(path_doc_output_html)/index.html $(path_doc_output_html1)
+install-html: html
+	install -d $(DESTDIR)$(docdir)/manual
+	install -m644 $(path_doc_output_html)/index.html $(DESTDIR)$(docdir)/manual/index.html
+	install -m644 $(path_doc_output_html1) $(DESTDIR)$(docdir)/manual.html
 
 clean:
 	rm -rf $(path_doc_output)

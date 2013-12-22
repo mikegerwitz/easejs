@@ -1,6 +1,7 @@
 ## ease.js Makefile.am
 
 # see README
+SUBDIRS = doc
 EXTRA_DIST = AUTHORS NEWS ChangeLog
 
 path_build = $(top_builddir)/build
@@ -19,8 +20,8 @@ perf_tests            = @PERF_TESTS@
 path_externs_internal = $(path_build)/externs-internal.js
 
 combine  = $(path_tools)/combine
-compiler = $(path_tools)/closure-compiler.jar
-
+compiler = @CCJAR@
+MKDIR_P = @MKDIR_P@
 
 .PHONY: mkbuild combine min doc test perf
 
@@ -31,7 +32,7 @@ mkbuild: $(path_build)
 
 # create build dir
 $(path_build):
-	mkdir -p "$(path_build)"
+	$(MKDIR_P) "$(path_build)"
 
 
 combine: $(path_combine_output) $(path_build)/browser-test.html
