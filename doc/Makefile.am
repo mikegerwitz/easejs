@@ -24,10 +24,7 @@ info_TEXINFOS = easejs.texi
 easejs_TEXINFOS = license.texi about.texi classes.texi              \
 impl-details.texi integration.texi mkeywords.texi source-tree.texi
 
-EXTRA_DIST = README highlight.pack.js interactive.js easejs.css     \
-img/composition-uml.dia img/composition-uml.txt inheritance-ex.dia  \
-inheritance-ex.txt visobj-collection-wide.dia                       \
-visobj-collection-wide.txt visobj.dia visobj.txt
+EXTRA_DIST = img README highlight.pack.js interactive.js easejs.css
 
 path_doc=.
 path_build=../build
