@@ -113,6 +113,10 @@ ChangeLog:
 
 clean-local:
 	-rm -rf "$(path_build)"
+	-rm -f AUTHORS NEWS ChangeLog
+
+distclean-local:
+	-rm -f package.json
 
 maintainer-clean-local:
 	-rm -f "$(compiler)"
