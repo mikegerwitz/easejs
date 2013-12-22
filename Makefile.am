@@ -97,15 +97,19 @@ else
 endif
 
 # generate the familiar files that automake normally checks for
-dist-hook:
-	$(path_tools)/gitlog-to-authors > $(distdir)/AUTHORS
-	$(path_tools)/gitlog-to-news > $(distdir)/NEWS
+dist-hook: AUTHORS NEWS ChangeLog
+	cp $? $(distdir)
+AUTHORS:
+	$(path_tools)/gitlog-to-authors > AUTHORS
+NEWS:
+	$(path_tools)/gitlog-to-news > NEWS
+ChangeLog:
 	$(path_tools)/gitlog-to-changelog \
 		--strip-cherry-pick \
 		--format=%s \
 		-- \
 		--no-merges \
-		> $(distdir)/ChangeLog
+		> ChangeLog
 
 clean-local:
 	-rm -rf "$(path_build)"
