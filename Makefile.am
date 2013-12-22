@@ -2,7 +2,7 @@
 
 # see README
 SUBDIRS = doc
-EXTRA_DIST = AUTHORS NEWS ChangeLog
+EXTRA_DIST = AUTHORS NEWS ChangeLog package.json
 
 path_build = $(top_builddir)/build
 path_tools = $(top_builddir)/tools

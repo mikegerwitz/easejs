@@ -98,5 +98,5 @@ AS_IF(test "$JAVA" -a ! "$CCJAR",
 
 AM_CONDITIONAL(HAS_CCJAR, [test "$CCJAR"])
 
-AC_CONFIG_FILES([Makefile doc/Makefile])
+AC_CONFIG_FILES([Makefile doc/Makefile package.json])
 AC_OUTPUT

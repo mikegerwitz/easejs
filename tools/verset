@@ -39,8 +39,5 @@ cat version.js.tpl | sed "
   s/@SUFFIX@/${suffix#-}/;
 " > ../lib/version.js
 
-# update package.json for npm
-sed -i 's/"version":.*/"version":     "'$version'",/' ../package.json
-
 # update configure script by replacing the second argument of AC_INIT
 sed -i '/^AC_INIT/s/, \[[^]]\+\]/, ['$version']/' ../configure.ac
