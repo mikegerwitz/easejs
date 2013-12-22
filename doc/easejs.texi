@@ -1,6 +1,6 @@
 \input texinfo   @c -*-texinfo-*-
 @c %**start of header
-@setfilename manual.info
+@setfilename easejs.info
 @include version.texi
 @settitle ease.js Manual v@value{VERSION}
 @c %**end of header
