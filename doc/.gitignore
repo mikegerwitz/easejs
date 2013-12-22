@@ -10,3 +10,7 @@
 *.vr
 *.pdf
 *.toc
+
+version.texi
+easejs.info
+stamp-vti

@@ -14,10 +14,12 @@ Makefile
 configure
 config.*
 
-# should be added using automake --add-missing
+# should be added using autoreconf -i
 INSTALL
 tools/install-sh
 tools/missing
+tools/mdate-sh
+tools/texinfo.tex
 
 # downloaded manually by user
 tools/closure-compiler.jar

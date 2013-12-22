@@ -20,11 +20,12 @@
 
 AC_INIT([ease.js], [0.2.0-dev], [bugs@easejs.org])
 AC_CONFIG_AUX_DIR([tools])
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([foreign])
 
-AC_CONFIG_FILES([Makefile])
+AC_PROG_MKDIR_P
 
 # check for node, which is required for nearly every operation
+AC_ARG_VAR([NODE], [The node.js interpreter])
 AC_CHECK_PROGS(NODE, [node nodejs])
 AM_CONDITIONAL(HAS_NODE, [test "$NODE"])
 
@@ -74,20 +75,28 @@ else
 fi
 
 # Java is used for Closure Compiler
+AC_ARG_VAR([JAVA], [The Java executable])
+AC_ARG_VAR([CCJAR], [The Clojure Compiler jar file])
 AC_CHECK_PROGS(JAVA, [java])
 AM_CONDITIONAL(HAS_JAVA, [test "$JAVA"])
 
 ccjar=
-if test "$JAVA"; then
-  AC_CHECK_FILE([tools/closure-compiler.jar], [ccjar=1], [AC_MSG_NOTICE([
+AS_IF(test "$JAVA" -a ! "$CCJAR",
+  [AC_CHECK_FILE([$srcdir/tools/closure-compiler.jar],
+        [AC_SUBST([CCJAR], [$srcdir/tools/closure-compiler.jar])],
+        [AC_MSG_NOTICE([
 
     If you wish perform minification of the combined source file, you must
-    download closure-compiler.jar into the tools directory; it is available
-    here:
+    download closure-compiler.jar into the tools sub-directory; it is
+    available here:
 
     https://developers.google.com/closure/compiler/
-  ])])
-fi
-AM_CONDITIONAL(HAS_CCJAR, [test "$ccjar"])
 
+    If it is installed elsewhere on your system, specify its location with
+    the CCJAR environment variable.
+  ])])], [])
+
+AM_CONDITIONAL(HAS_CCJAR, [test "$CCJAR"])
+
+AC_CONFIG_FILES([Makefile doc/Makefile])
 AC_OUTPUT
