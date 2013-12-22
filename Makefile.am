@@ -2,7 +2,13 @@
 
 # see README
 SUBDIRS = doc
-EXTRA_DIST = AUTHORS NEWS ChangeLog package.json
+EXTRA_DIST = AUTHORS NEWS ChangeLog README.md README.hacking \
+             lib test doc index.js package.json \
+             tools/combine tools/mkexterns tools/rmtrail \
+             tools/signchk tools/browser-test.html tools/combine-order.js \
+             tools/combine-test.tpl tools/combine.tpl tools/externs-global.js \
+             tools/externs.js tools/license-min.tpl tools/license.tpl \
+             tools/linechk-ignores
 
 path_build = $(top_builddir)/build
 path_tools = $(top_builddir)/tools
