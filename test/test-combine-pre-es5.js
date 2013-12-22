@@ -8,7 +8,7 @@
  *
  *  Copyright (C) 2011, 2013 Mike Gerwitz
  *
- *  This file is part of ease.js.
+ *  This file is part of GNU ease.js.
  *
  *  ease.js is free software: you can redistribute it and/or modify it under the
  *  terms of the GNU General Public License as published by the Free Software

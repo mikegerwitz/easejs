@@ -3,7 +3,7 @@
 #
 #  Copyright (C) 2013 Mike Gerwitz
 #
-#  This file is part of ease.js.
+#  This file is part of GNU ease.js.
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ shopt -s extglob || {
 }
 
 # we will be updating all files that contain this line
-ident='This file is part of ease.js.$'
+ident='This file is part of GNU ease.js$'
 
 ignorepath='.git|build|webroot|node_modules'
 files=$( grep -rl "$ident" ../!($ignorepath) )

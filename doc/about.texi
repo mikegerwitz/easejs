@@ -1,4 +1,4 @@
-@c  This document is part of the ease.js manual
+@c  This document is part of the GNU ease.js manual.
 @c  Copyright (c) 2011 Mike Gerwitz
 @c    Permission is granted to copy, distribute and/or modify this document
 @c    under the terms of the GNU Free Documentation License, Version 1.3
@@ -8,12 +8,11 @@
 @c    Free Documentation License''.
 
 @node About
-@unnumbered About ease.js
+@unnumbered About GNU ease.js
 
-ease.js is a collection of @uref{http://commonjs.org, CommonJS} modules intended
-to ``ease'' the transition into JavaScript from other Object-Oriented languages.
-It provides an intuitive means of achieving classical inheritance and has
-planned support for traits/mixins, function overloading and more.
+GNU ease.js is a classical object-oriented framework for Javascript, intended to
+eliminate boilerplate code and "ease" the transition into JavaScript from other
+object-oriented languages.
 
 Current support includes:
 @itemize @bullet
@@ -30,10 +29,11 @@ that ease.js will expand to other paradigms in the future.
 
 
 @section History
-ease.js was initially developed for use at Mike's place of employment in order to
-move the familiar concept of Object Oriented development over to JavaScript for
-use in robust web applications. JavaScript lacks basic core principals of Object
-Oriented development, the most major of which is proper encapsulation.
+ease.js was initially developed for use at the author's place of employment in
+order to move the familiar concept of object-oriented development over to
+JavaScript for use in robust web applications. JavaScript lacks basic core
+principals of object-oriented development, the most major of which is proper
+encapsulation.
 
 The library would be required to work both server and client-side, supporting
 all major web browsers as far back as Internet Explorer 6. Since it would be
@@ -72,6 +72,9 @@ the future.
 
 The project is owned and developed independently by Mike Gerwitz. There is no
 ownership by his employer.
+
+On 22 December 2013, ease.js officially became a part of GNU with the kind help
+and supervision of Brandon Invergo.
 
 
 @section Why ease.js?

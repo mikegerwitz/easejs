@@ -1,4 +1,4 @@
-@c  This document is part of the ease.js manual
+@c  This document is part of the GNU ease.js manual.
 @c  Copyright (c) 2011 Mike Gerwitz
 @c    Permission is granted to copy, distribute and/or modify this document
 @c    under the terms of the GNU Free Documentation License, Version 1.3

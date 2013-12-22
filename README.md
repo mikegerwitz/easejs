@@ -1,8 +1,8 @@
-# ease.js
+# GNU ease.js
 
-ease.js is a collection of CommonJS modules intended to "ease" the transition
-into JavaScript from other Object-Oriented languages. It provides an intuitive
-means of achieving classical inheritance and has planned support traits/mixins.
+GNU ease.js is a classical object-oriented framework for Javascript, intended to
+eliminate boilerplate code and "ease" the transition into JavaScript from other
+object-oriented languages.
 
 Current support includes:
 
@@ -13,7 +13,7 @@ Current support includes:
 * Visibility (public, protected and private members)
 * Static and constant members
 
-While the current focus of the project is Object-Oriented design, it is likely
+While the current focus of the project is object-oriented design, it is likely
 that ease.js will expand to other paradigms in the future.
 
 **This project is under active development. Please see the manual for more
@@ -32,7 +32,7 @@ http://easejs.org/bugs/
 
 ## Why ease.js?
 There are already a number of libraries/frameworks that permit basic classical
-Object-Oriented development, so why ease.js? While many of the existing
+object-oriented development, so why ease.js? While many of the existing
 solutions certainly provide viable solutions, they are largely incomplete. Until
 the appearance of ECMAScript 5, many of the features enjoyed by classical OO
 developers were elusive to JavaScript.  The aim of this project is to provide an
@@ -49,7 +49,7 @@ whatever native ECMAScript implementation is decided upon.
 ### Why Classical OOP in JavaScript?
 ease.js was created (historically) for a number of reasons:
 
-* To "ease" Object-Oriented developers into JavaScript by providing a familiar
+* To "ease" object-oriented developers into JavaScript by providing a familiar
   environment.
 * To provide the maintenance and development benefits of classical OOP.
 * To provide features missing from the language, such as proper encapsulation
@@ -57,9 +57,9 @@ ease.js was created (historically) for a number of reasons:
   etc.
 * To encapsulate the hacks commonly used to perform the above tasks.
 
-Many JS purists believe that classical Object-Oriented programming should be
+Many JS purists believe that classical object-oriented programming should be
 left out of the language and one should stick strictly to prototypal
-development. While the two are related (both Object-Oriented), they can be
+development. While the two are related (both object-oriented), they can be
 applied to different problem domains in order to achieve results that are more
 natural or intuitive to developers. ease.js works seamlessly with existing
 prototypes, allowing the developer to choose whether or not they want to use

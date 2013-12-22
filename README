@@ -3,7 +3,7 @@ Configuring ease.js
 
   Copyright (C) 2013 Mike Gerwitz
 
-  This file is part of ease.js.
+  This file is part of GNU ease.js.
 
   Copying and distribution of this file, with or without modification, are
   permitted in any medium without royalty provided the copyright notice and
@@ -11,9 +11,9 @@ Configuring ease.js
   of any kind.
 
 
-This file contains information on configuring and building ease.js; for
-information on using the library, please see the Markdown-formatted
-README.md file or the Texinfo manual.
+This file contains information on configuring and building GNU ease.js; for
+information on using the library, please see the Markdown-formatted README.md
+file or the Texinfo manual.
 
 
 Installing
