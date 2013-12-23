@@ -131,11 +131,11 @@ endif
 # generate the familiar files that automake normally checks for
 dist-hook: AUTHORS NEWS ChangeLog
 	cp $? $(distdir)
-AUTHORS:
+AUTHORS: FORCE
 	$(path_tools)/gitlog-to-authors > AUTHORS
-NEWS:
+NEWS: FORCE
 	$(path_tools)/gitlog-to-news > NEWS
-ChangeLog:
+ChangeLog: FORCE
 	$(path_tools)/gitlog-to-changelog \
 		--strip-cherry-pick \
 		--format=%s \
