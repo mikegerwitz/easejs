@@ -222,3 +222,18 @@ To implement an interface, use the `implement()` class method:
 
 Note that, if a concrete implementation for each method is not provided, the
 implementing type must be declared abstract.
+
+## License
+ease.js is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+**N.B.:** Versions prior to 0.2.0 were released under the LGPLv3+. Upon becoming
+a GNU project, it was relicensed under the GPLv3+ to help the FSF stand strong
+in its fight against proprietary JavaScript. For more information, please see
+the NEWS file (which can be built with `make NEWS`).
