@@ -9,7 +9,7 @@
 # to keep it as simple (and fast) as possible. The below implementation is
 # suitable for our needs.
 #
-#  Copyright (C) 2010, 2011, 2012 Mike Gerwitz
+#  Copyright (C) 2010, 2011, 2012, 2013 Mike Gerwitz
 #
 #  This file is part of GNU ease.js.
 #
