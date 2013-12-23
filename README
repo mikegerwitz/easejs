@@ -42,3 +42,10 @@ may generate it by issuing the following commands:
 Please note that certain files (such as AUTHORS, NEWS, and ChangeLog) are
 generated as part of the `dist' target and do not exist as part of the
 repository.
+
+
+
+Hacking
+=======
+For information on hacking and contributing to GNU ease.js, please see
+README.hacking.
