@@ -1,4 +1,22 @@
 ## ease.js Makefile.am
+#
+#  Copyright (C) 2013 Mike Gerwitz
+#
+#  This file is part of GNU ease.js.
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##
 
 # see README
 SUBDIRS = doc
@@ -16,23 +34,20 @@ path_lib   = $(top_builddir)/lib
 path_test  = $(top_builddir)/test
 path_doc   = $(top_builddir)/doc
 
-path_perf_test           = $(path_test)/perf
 path_combine_output      = $(path_build)/ease.js
 path_combine_output_full = $(path_build)/ease-full.js
 path_browser_test        = $(path_tools)/browser-test.html
 
 src_js                = @SRC_JS@
-perf_tests            = @PERF_TESTS@
 path_externs_internal = $(path_build)/externs-internal.js
 
 combine  = $(path_tools)/combine
 compiler = @CCJAR@
 MKDIR_P = @MKDIR_P@
 
-.PHONY: mkbuild combine min doc test perf
+.PHONY: mkbuild combine min doc check test test-suite perf FORCE
 
-default: all-local
-all-local: combine min
+default: combine
 
 mkbuild: $(path_build)
 
@@ -83,16 +98,33 @@ doc:
 	$(MAKE) -C "$(path_doc)"
 
 test: check
-check: default
-	$(MAKE) -C "$(path_test)"
+check: @SRC_TESTS@ test-suite
 
 # performance tests
-perf: default $(perf_tests)
-perf-%.js: default
+perf: @PERF_TESTS@
+perf-%.js: FORCE
 if HAS_NODE
 	@$(NODE) $@
 else
 	@echo "Node.js must be installed in order to run performance tests"
+	@exit 1
+endif
+
+# test cases (old format)
+test/%.js: FORCE
+	NODE_PATH="$(path_test):$(NODE_PATH)" $(NODE) --stack_trace_limit=20 "$@"
+test/test-%: FORCE
+	./"$@"
+
+# test suite (new format)
+test-suite:
+if HAS_NODE
+	@echo "ease.js Test Suite"
+	@echo
+	@NODE_PATH="$(path_test):$(NODE_PATH)" $(NODE) --stack_trace_limit=20 \
+		$(path_test)/runner.js @TEST_CASES@
+else
+	@echo "Node.js must be installed in order to run the test suite"
 	@exit 1
 endif
 

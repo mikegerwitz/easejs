@@ -40,7 +40,7 @@ process.argv.forEach( function( val, i )
     }
 
     // the tests will run themselves; we need only require 'em
-    require( __dirname + '/' + val );
+    require( val );
 } );
 
 // output statistics

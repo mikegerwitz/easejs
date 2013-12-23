@@ -57,30 +57,6 @@ else
     AC_MSG_ERROR(failed!)
 fi
 
-# unit tests
-AC_MSG_CHECKING([for unit tests])
-SRC_TESTS="$( find test/ -name test-* \
-    -o -name *Test* \
-    -o -name inc-*.js \
-    | tr '\n' ' ' \
-)"
-AC_SUBST(SRC_TESTS)
-if test "$SRC_TESTS"; then
-    AC_MSG_RESULT(ok)
-else
-    AC_MSG_WARN(none found)
-fi
-
-# check for performance tests
-AC_MSG_CHECKING([for performance tests])
-PERF_TESTS=$( find test/perf -name 'perf-*.js' | tr '\n' ' ' )
-AC_SUBST(PERF_TESTS)
-if test "$PERF_TESTS"; then
-    AC_MSG_RESULT(ok)
-else
-    AC_MSG_WARN(none found)
-fi
-
 # Java is used for Closure Compiler
 AC_ARG_VAR([JAVA], [The Java executable])
 AC_ARG_VAR([CCJAR], [The Clojure Compiler jar file])
@@ -104,6 +80,24 @@ AS_IF(test "$JAVA" -a ! "$CCJAR",
   ])])], [])
 
 AM_CONDITIONAL(HAS_CCJAR, [test "$CCJAR"])
+
+# unit tests (old test system; refactoring needed)
+AC_MSG_CHECKING([for unit tests])
+SRC_TESTS="$( find test/ -name test-* | tr '\n' ' ' )"
+AC_SUBST(SRC_TESTS)
+AS_IF([test "$SRC_TESTS"], [AC_MSG_RESULT(ok)], [AC_MSG_WARN(none found)])
+
+# test cases (new test system)
+AC_MSG_CHECKING([for test cases])
+TEST_CASES="$( find test/ -name '*Test.*' | tr '\n' ' ' )"
+AC_SUBST(TEST_CASES)
+AS_IF([test "$TEST_CASES"], [AC_MSG_RESULT(ok)], [AC_MSG_WARN(none found)])
+
+# check for performance tests
+AC_MSG_CHECKING([for performance tests])
+PERF_TESTS=$( find test/perf -name 'perf-*.js' | tr '\n' ' ' )
+AC_SUBST(PERF_TESTS)
+AS_IF([test "$PERF_TESTS"], [AC_MSG_RESULT(ok)], [AC_MSG_WARN(none found)])
 
 AC_CONFIG_FILES([Makefile doc/Makefile package.json lib/version.js])
 AC_OUTPUT
