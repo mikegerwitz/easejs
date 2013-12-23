@@ -21,7 +21,7 @@
 # see README
 SUBDIRS = doc
 EXTRA_DIST = AUTHORS NEWS ChangeLog README.md README.hacking \
-             lib test index.js package.json \
+             build lib test index.js package.json \
              tools/combine tools/mkexterns tools/rmtrail \
              tools/signchk tools/browser-test.html tools/combine-order.js \
              tools/combine-test.tpl tools/combine.tpl tools/externs-global.js \
