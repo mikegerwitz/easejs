@@ -222,14 +222,3 @@ To implement an interface, use the `implement()` class method:
 
 Note that, if a concrete implementation for each method is not provided, the
 implementing type must be declared abstract.
-
-
-## Use of Reserved Words
-Though JavaScript doesn't currently implement classes, interfaces, etc, it does
-reserve the keywords. In an effort to ensure that ease.js will not clash, the
-following precautions are taken:
-
-* `Class` is used with a capital 'C'
-* `Interface` is used with a capital 'I'
-* Reserved keywords are quoted when used (e.g. in property strings)
-
