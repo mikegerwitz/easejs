@@ -134,7 +134,7 @@ dist-hook: AUTHORS NEWS ChangeLog
 AUTHORS: FORCE
 	$(path_tools)/gitlog-to-authors > AUTHORS
 NEWS: FORCE
-	$(path_tools)/gitlog-to-news > NEWS
+	$(path_tools)/gitlog-to-news $(path_tools)/news-ignore > NEWS
 ChangeLog: FORCE
 	$(path_tools)/gitlog-to-changelog \
 		--strip-cherry-pick \

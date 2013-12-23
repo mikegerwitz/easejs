@@ -23,5 +23,6 @@
 git log --log-size --format="%H%n%B" \
   | grep -A1 '^log size \([5-9][0-9]\{2,\}\|[0-9]\{4,\}\)$' \
   | grep -o '^[a-z0-9]\+$' \
+  | grep -vFf "${1:-/dev/null}" \
   | xargs -n1 git log -n1 --date=rfc --no-notes \
   | awk '/^commit/ && NR!=1 { printf "\n\n" } { print }'
