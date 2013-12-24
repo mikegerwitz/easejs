@@ -6,7 +6,7 @@
 # (apart from the website) to have its own style; that makes sense, considering
 # the master branch should have no knowledge of the website.
 #
-#  Copyright (C) 2010 Mike Gerwitz
+#  Copyright (C) 2012, 2013 Mike Gerwitz
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
@@ -20,6 +20,10 @@
 #
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# This will produce documentation in the following format:
+#   manual/                      multi-page HTML
+#   manual/easejs.html           single-page HTML
 ##
 
 # ensure that we are within the git repository (otherwise, we cannot generate
@@ -100,11 +104,9 @@ webify()
 git checkout "${WEBDOC_BRANCH:-origin/master}" \
   && make doc-html \
   && git checkout - \
-    && webify "$path_doc_single" \
+    && ln -sf "../manual.html" "$path_doc_multi/easejs.html" \
     && for path in $( find "$path_doc_multi" -name '*.htm?' )
       do
         webify "$path" "../"
       done \
-    && ln -sf \
-      "../$path_doc_single" "../$path_img" "../$path_js" "../$path_doc_multi" \
-      "$path_dest/"
+    && ln -sf "../$path_img" "../$path_js" "../$path_doc_multi" "$path_dest/"
