@@ -130,7 +130,7 @@ a:hover {
 
 #menu a:hover,
 body.index #about a,
-body.blog #blog a,
+body.news #news a,
 body.download #download a,
 body.man #manual a,
 body.source #source a {
@@ -138,7 +138,7 @@ body.source #source a {
 }
 
 body.index #about a,
-body.blog #blog a,
+body.news #news a,
 body.download #download a,
 body.man #manual a,
 body.source #source a {
@@ -304,7 +304,7 @@ span.release-current .date {
 }
 
 
-/** blog **/
+/** news **/
 h3.git-commit {
   margin-bottom: 0.1em;
   padding-bottom: 0.1em;

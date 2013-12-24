@@ -23,7 +23,7 @@
 
 header      := includes/header.html
 footer      := includes/footer.html
-header_blog := includes/blog-header.html
+header_news := includes/news-header.html
 
 input_html := $(wildcard *.html)
 input_images := $(wildcard images/*.png)
@@ -34,7 +34,7 @@ output_html := $(addprefix $(outdir)/, $(input_html))
 output_images := $(addprefix $(outdir)/, $(input_images))
 output_scripts := $(addprefix $(outdir)/, $(input_scripts))
 
-.PHONY: default clean blog publish
+.PHONY: default clean news publish
 
 default: $(outdir) $(output_html) $(output_images) \
          $(output_scripts) $(outdir)/style.css
@@ -60,7 +60,7 @@ $(outdir)/%.html: %.html $(header) $(footer) tools/page-parse | $(outdir)
 		> $@
 
 # requires git-weblog from mikegerwitz's git-supp package
-blog:
+news:
 	@[ "$$( which git-weblog )" ] \
 		|| ( echo "Please add git-weblog to PATH" >&2 && false )
 	git fetch origin refs/notes/*:refs/notes/*
@@ -68,9 +68,9 @@ blog:
 		| grep -A1 '^log size \([5-9][0-9]\{2,\}\|[0-9]\{4,\}\)$$' \
 		| grep -o '^[a-z0-9]\+$$' \
 		| xargs git weblog -Dn $$( git tag -l ) \
-		| cat $(header) $(header_blog) - $(footer) \
-		| sed 's/\(<body\)/\1 class="blog"/' \
-		> "$(outdir)/blog.html"
+		| cat $(header) $(header_news) - $(footer) \
+		| sed 's/\(<body\)/\1 class="news"/' \
+		> "$(outdir)/news.html"
 
 # documentation, styled to match the rest of the website
 webdoc:
