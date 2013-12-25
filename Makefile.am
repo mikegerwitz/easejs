@@ -96,6 +96,8 @@ $(path_externs_internal): | mkbuild
 
 doc:
 	$(MAKE) -C "$(path_doc)"
+html-single:
+	$(MAKE) -C "$(path_doc)" html-single
 
 test: check
 check: @SRC_TESTS@ test-suite
