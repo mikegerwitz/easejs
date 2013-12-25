@@ -69,7 +69,7 @@ $(path_doc_output_plain): $(doc_imgs_txt)
 
 # doc html (multiple pages); override default target to call automake's first
 # and then post-process output (it has no *-hook target support)
-html: html-am $(path_doc_output_html)/$(path_doc_css_ref)
+html: html-local html-am $(path_doc_output_html)/$(path_doc_css_ref)
 	sed -i '$(doc_replace)' easejs.html/*.htm?
 
 # doc html (single page)
