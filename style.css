@@ -132,7 +132,8 @@ a:hover {
 body.index #about a,
 body.news #news a,
 body.download #download a,
-body.man #manual a,
+body.manual #manual a,
+body.bugs #bugs a,
 body.source #source a {
   background-color: #204a87;
 }
@@ -140,7 +141,8 @@ body.source #source a {
 body.index #about a,
 body.news #news a,
 body.download #download a,
-body.man #manual a,
+body.manual #manual a,
+body.bugs #bugs a,
 body.source #source a {
   color: #f57900;
 }
