@@ -103,6 +103,8 @@ webify()
 
 # generate the documentation from the master branch
 git checkout "${WEBDOC_BRANCH:-origin/master}" \
+  && autoreconf -fvi \
+  && ./configure \
   && make doc-html \
   && git checkout - \
     && ln -sf "../manual.html" "$path_doc_multi/easejs.html" \
