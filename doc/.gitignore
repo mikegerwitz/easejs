@@ -11,6 +11,9 @@
 *.pdf
 *.toc
 
+stamp-vti
 version.texi
 easejs.info
-stamp-vti
+easejs.txt
+easejs.html
+easejs-single.html
