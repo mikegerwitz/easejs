@@ -84,7 +84,7 @@ webify()
   ' "$docpath" \
     | awk '
       /<body>/ {
-        print "<body class=\"man\">";
+        print "<body class=\"manual\">";
         system( "awk \"/body/{i=1;next;} i\" includes/header.html | '"$shref"'" );
         next
       }
