@@ -695,7 +695,7 @@ inherited from the parent.
         /**
          * Bark when we're poked
          */
-        'public poke': function()
+        'virtual public poke': function()
         {
             this.bark();
         }
@@ -925,14 +925,14 @@ Let's take a look at an example.
 @verbatim
     var Foo = Class(
         {
-            'protected canEscalate': 'baz',
+            'virtual protected canEscalate': 'baz',
 
-            'protected escalateMe': function( arg )
+            'virtual protected escalateMe': function( arg )
             {
                 console.log( 'In escalateMe' );
             },
 
-            'public cannotMakeProtected': function()
+            'virtual public cannotMakeProtected': function()
             {
             }
         } ),
