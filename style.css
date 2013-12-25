@@ -509,3 +509,15 @@ pre .chunk {
 pre .tex .formula {
   opacity: 0.5;
 }
+
+
+/* GNU/Linux page fold */
+#gnuinside {
+  position: absolute;
+  display:  block;
+
+  top:    0px;
+  right:  0px;
+  width:  50px;
+  height: 50px;
+}

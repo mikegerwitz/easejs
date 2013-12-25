@@ -68,7 +68,8 @@ webify()
   # if necessary, rewrite links to point to the proper directory (we do not use
   # absolute paths, as that is not friendly to viewing the documentation on a
   # filesystem)
-  shref='sed \"s#href=\\\"\\([^\\\"]\\+\\)\\\"#href=\\\"'"$root"'\\1\\\"#g\"'
+  shref='sed \"s#\\(src\\|href\\)=\\\"\\([^\\\"]\\+\\)\\\"#'
+  shref="$shref"'\\1=\\\"'"$root"'\\2\\\"#g\"'
   shref="$shref | sed 's#//\\\"#\\\"#g'"
 
   echo "Styling $path..."
