@@ -51,12 +51,11 @@ git rev-parse --git-dir >/dev/null 2>/dev/null || {
 }
 
 
-path_dest=webroot
-path_doc=build/doc
+path_dest=webroot/manual
+path_doc=doc-cp
 path_img=$path_doc/img
 path_js=$path_doc/interactive.js
-path_doc_single=$path_doc/manual.html
-path_doc_multi=$path_doc/manual
+path_doc_multi=$path_doc/easejs.html
 
 # style a particular file, rewriting relevant portions of the HTML
 webify()
@@ -105,11 +104,13 @@ webify()
 git checkout "${WEBDOC_BRANCH:-origin/master}" \
   && autoreconf -fvi \
   && ./configure \
-  && make doc-html \
+  && make html html-single \
+  && cp -rl doc "$path_doc" \
   && git checkout - \
-    && ln -sf "../manual.html" "$path_doc_multi/easejs.html" \
+    && ln -sf "../easejs-single.html" "$path_doc_multi/easejs.html" \
     && for path in $( find "$path_doc_multi" -name '*.htm?' )
       do
         webify "$path" "../"
       done \
-    && ln -sf "../$path_img" "../$path_js" "../$path_doc_multi" "$path_dest/"
+    && ln -sf "../$path_doc_multi" "$path_dest" \
+    && ln -sf "../../$path_img" "../../$path_js" "$path_dest/"
