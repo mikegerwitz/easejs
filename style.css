@@ -372,6 +372,64 @@ pre.js, div.float {
   padding:   1em;
 }
 
+
+/** Free JS */
+#menu ul #whyfreejs {
+  position: absolute;
+
+  background-color: #f57900;
+
+  text-align:  center;
+  line-height: 1.25em;
+
+  right:        0em;
+  width:        8em;
+  margin:       -4.25em 0em 0em 0em;
+  border-radius: 0.5em 0em 0em 0.5em;
+}
+
+#menu ul #whyfreejs a:hover {
+  /* retain style */
+  background-color: #f57900;
+  border-radius: 0.5em 0em 0em 0.5em;
+}
+
+body.whyfreejs #menu {
+  background-color:    #f57900;
+  border-bottom-color: #ce5c00;
+}
+
+body.whyfreejs #menu ul {
+  visibility: hidden;
+}
+
+h3.menuhead {
+  position: absolute;
+
+  font-size:      1.25em;
+  font-weight:    normal;
+  letter-spacing: 0.2em;
+
+  top:    -2.25em;
+  padding: 0px;
+  margin:  0px;
+}
+
+body.whyfreejs #content {
+  font-family: times;
+  text-align: justify;
+}
+
+body.whyfreejs #content h3 {
+  /* original body font */
+  font-family: arial, serif;
+}
+
+blockquote.quote {
+  font-style:  italic;
+}
+
+
 /* from manual (overrides some of the styles above) */
 div.float {
   padding: 0;
