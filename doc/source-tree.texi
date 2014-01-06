@@ -10,8 +10,8 @@
 @node Source Tree
 @appendix Source Tree
 You should already have gotten a hold of the source tree
-(@pxref{Getting ease.js}). If not, please do so first and feel free to follow
-along.
+(@pxref{Getting GNU ease.js}). If not, please do so first and feel free to
+follow along.
 
 @example
   $ cd easejs
