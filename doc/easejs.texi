@@ -18,7 +18,7 @@
 @copying
 This manual is for GNU ease.js, version @value{VERSION}.
 
-Copyright @copyright{} 2011, 2012, 2013 Mike Gerwitz.
+Copyright @copyright{} 2011, 2012, 2013, 2014 Mike Gerwitz.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
