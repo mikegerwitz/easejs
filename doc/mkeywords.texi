@@ -48,6 +48,9 @@ without this keyword may not be overridden. May only be used with methods.
 @tab Overrides method @var{name} of supertype of @var{C} with @var{value}. May
 only override virtual methods. May only be used with methods.
 @xref{Inheritance}.
+@item @code{proxy}
+@tab Proxies calls to method @var{name} to the object stored in property
+@var{value}.
 @end multitable
 @caption{Supported keywords}
 @end float

@@ -1,5 +1,5 @@
 @c  This document is part of the GNU ease.js manual.
-@c  Copyright (C) 2011, 2012, 2013 Mike Gerwitz
+@c  Copyright (C) 2011, 2012, 2013, 2014 Mike Gerwitz
 @c    Permission is granted to copy, distribute and/or modify this document
 @c    under the terms of the GNU Free Documentation License, Version 1.3
 @c    or any later version published by the Free Software Foundation;
@@ -73,6 +73,7 @@ ease.js, until such a point where prototypes are no longer adequate.
 * Inheritance::       Extending classes from another
 * Static Members::    Members whose use do not require instantiation
 * Abstract Members::  Declare members, deferring their definition to subtypes
+* Method Proxies::    Methods that proxy calls to another object
 @end menu
 
 
@@ -1734,3 +1735,90 @@ initialization code), but in doing so, we have tightly coupled each subtype with
 the supertype @code{WidgetFactory}. There are a number of trade-offs with each
 implementation; choose the one that best fits your particular problem.
 
+
+@node Method Proxies
+@section Method Proxies
+@table @code
+@item 'proxy [@var{keywords}] @var{name}': @var{destmember}
+Declare a proxy method @var{name}, having optional additional keywords
+@var{keywords}, that invokes a method of the same name on object
+@var{destmember} and returns its result.
+@end table
+Method proxies help to eliminate boilerplate code for calling methods on an
+encapsulated object---a task that is very common with proxy and decorator
+design patterns.
+
+@float Figure, f:method-proxy-use
+@verbatim
+var Pidgin = Class( 'Pidgin',
+{
+    'private _name': 'Flutter',
+
+    'public cheep': function( chirp )
+    {
+        return this._name + ": cheep " + chirp;
+    }
+
+    'public rename': function( name )
+    {
+        this._name = ''+name;
+        return this;
+    }
+} );
+
+var IratePidginCheep = Class( 'IratePidginCheep',
+{
+    'private _pidgin': null,
+
+    __construct: function( pidgin )
+    {
+        this._pidgin = pidgin;
+    }
+
+    // add our own method
+    'public irateCheep': function( chirp )
+    {
+        return this._pidgin.cheep( chirp ).toUpperCase();
+    },
+
+    // retain original methods
+    'proxy cheep':  '_pidgin',
+    'proxy rename': '_pidgin',
+} );
+
+var irate = IratePidginCheep( Pidgin() );
+
+irate.cheep( 'chirp' );
+// "Flutter: cheep chirp"
+irate.setName( 'Butter' ).cheep( 'chirp' );
+// "Butter: cheep chirp"
+irate.irateCheep( 'chop' );
+// "BUTTER: CHEEP CHOP"
+@end verbatim
+@caption{Using the @code{proxy} keyword to proxy @code{cheep} and
+@code{rename} method calls to the object stored in property @code{_pidgin}.}
+@end float
+
+Consider some object @code{O} whoose class uses method proxies.
+
+@itemize
+@item All arguments of proxy method @code{O.name} are forwarded to
+@code{destmember.name} untouched.
+
+@item The return value provided by @code{destmember.name} is returned to
+the caller of @code{O.name} untouched, except that
+@itemize
+@item If @code{destmember.name} returns @code{destmember} (that is,
+returns @code{this}), it will be replaced with @code{O}; this ensures
+that @code{destmember} remains encapsulated and preserves method
+chaining.
+@end itemize
+
+@item If @code{destmember} is not an object, calls to @code{O.name} will
+immediately fail in error.
+
+@item If @code{destmember.name} is not a function, calls to @code{O.name}
+will immediately fail in error.
+
+@item @emph{N.B.: Static method proxies are not yet supported.}
+@end itemize
