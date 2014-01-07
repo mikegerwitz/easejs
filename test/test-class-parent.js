@@ -48,7 +48,7 @@ var common = require( './common' ),
             return this;
         },
 
-        'virtual double': function()
+        'virtual dbl': function()
         {
             hitDouble = true;
         }
@@ -66,7 +66,7 @@ var common = require( './common' ),
             return this.__super( arg );
         },
 
-        'override double': function()
+        'override dbl': function()
         {
             this.myMethod();
             this.__super();
@@ -95,7 +95,7 @@ assert.equal(
 hitMethod = hitMethod2 = false;
 
 var arg = 'foobar';
-sub_foo.myMethod().myMethod2( arg ).double();
+sub_foo.myMethod().myMethod2( arg ).dbl();
 
 // myMethod overrides without calling parent
 assert.equal(
