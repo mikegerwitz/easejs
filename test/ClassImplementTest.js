@@ -19,36 +19,31 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var common    = require( './common' ),
-    assert    = require( 'assert' ),
-
-    Class         = common.require( 'class' ),
-    Interface     = common.require( 'interface' ),
-    AbstractClass = common.require( 'class_abstract' )
-;
-
-
-// test with and without abstract keyword
-var Type = Interface.extend( {
-        'abstract foo': [],
-    }),
-
-    Type2 = Interface.extend( {
-        foo2: [],
-    }),
-
-    Foo       = {},
-    PlainFoo  = Class.extend(),
-    PlainFoo2 = {}
-;
-
-
 require( 'common' ).testCase(
 {
+    caseSetUp: function()
+    {
+        this.Class         = this.require( 'class' );
+        this.Interface     = this.require( 'interface' );
+        this.AbstractClass = this.require( 'class_abstract' );
+
+        // test with and without abstract keyword
+        this.Type = this.Interface.extend( {
+            'abstract foo': [],
+        } );
+
+        this.Type2 = this.Interface.extend( {
+            foo2: [],
+        } );
+
+        this.PlainFoo = this.Class.extend();
+    },
+
+
     'Class exports contain implement method for no base class': function()
     {
         this.assertOk(
-            ( Class.implement instanceof Function ),
+            ( this.Class.implement instanceof Function ),
             "Class provides method to implement interfaces"
         );
     },
@@ -57,7 +52,7 @@ require( 'common' ).testCase(
     'Clsss object contains implement method for self as base': function()
     {
         this.assertOk(
-            ( PlainFoo.implement instanceof Function ),
+            ( this.PlainFoo.implement instanceof Function ),
             "Classes contain an implement() method"
         );
     },
@@ -65,9 +60,10 @@ require( 'common' ).testCase(
 
     'Can implement interface from an empty base': function()
     {
+        var _self = this;
         this.assertDoesNotThrow( function()
         {
-            Class.implement( Type, Type2 );
+            _self.Class.implement( _self.Type, _self.Type2 );
         }, Error, "Class can implement interfaces" );
     },
 
@@ -84,10 +80,11 @@ require( 'common' ).testCase(
      */
     'Result of implement is not usable as a class': function()
     {
-        var result = Class.implement( Type );
+        var _self  = this,
+            result = this.Class.implement( this.Type );
 
         this.assertEqual(
-            ( Class.isClass( result ) ),
+            ( _self.Class.isClass( result ) ),
             false,
             "Result of implement operation on class is not usable as a Class"
         );
@@ -100,7 +97,8 @@ require( 'common' ).testCase(
      */
     'Abstract methods are copied into new class using empty base': function()
     {
-        Foo = AbstractClass.implement( Type, Type2 ).extend( {} );
+        var Foo = this.AbstractClass.implement( this.Type, this.Type2 )
+            .extend( {} );
 
         this.assertOk(
             ( ( Foo.prototype.foo instanceof Function )
@@ -112,11 +110,13 @@ require( 'common' ).testCase(
     },
 
 
-    'Can implement interface atop an exist class': function()
+    'Can implement interface atop an existing class': function()
     {
+        var _self = this;
+
         this.assertDoesNotThrow( function()
         {
-            PlainFoo.implement( Type, Type2 );
+            _self.PlainFoo.implement( _self.Type, _self.Type2 );
         }, Error, "Classes can implement interfaces" );
     },
 
@@ -128,10 +128,10 @@ require( 'common' ).testCase(
     'Implementing interface atop existing class not usable by default':
     function()
     {
-        var result = PlainFoo.implement( Type );
+        var result = this.PlainFoo.implement( this.Type );
 
         this.assertEqual(
-            ( Class.isClass( result ) ),
+            ( this.Class.isClass( result ) ),
             false,
             "Result of implementing interfaces on an existing base is not " +
                 "usable as a Class"
@@ -141,8 +141,9 @@ require( 'common' ).testCase(
 
     'Abstract method copied into new class using existing base': function()
     {
-        PlainFoo2 = AbstractClass.implement( Type, Type2 )
-            .extend( PlainFoo, {} );
+        var PlainFoo2 = this.AbstractClass
+            .implement( this.Type, this.Type2 )
+            .extend( this.PlainFoo, {} );
 
         this.assertOk(
             ( ( PlainFoo2.prototype.foo instanceof Function )
@@ -155,15 +156,17 @@ require( 'common' ).testCase(
 
 
     /**
-     * Since interfaces can contain only abstract methods, it stands to reason
-     * that any class implementing an interface without providing any concrete
-     * methods should be abstract by default.
+     * Since interfaces can contain only abstract methods, it stands to
+     * reason that any class implementing an interface without providing any
+     * concrete methods should be abstract by default.
      */
     'Classes implementing interfaces are considered abstract by default':
     function()
     {
+        var Foo = this.AbstractClass.implement( this.Type ).extend( {} );
+
         this.assertEqual(
-            ( Foo.isAbstract() && PlainFoo2.isAbstract() ),
+            Foo.isAbstract(),
             true,
             "Classes that implements interface(s) are considered abstract if " +
                 "the implemented methods have no concrete implementations"
@@ -174,6 +177,9 @@ require( 'common' ).testCase(
     'Instances of classes are instances of their implemented interfaces':
     function()
     {
+        var Foo = this.AbstractClass.implement( this.Type, this.Type2 )
+            .extend( {} );
+
         // concrete implementation so that we can instantiate it
         var ConcreteFoo = Foo.extend(
             {
@@ -185,8 +191,8 @@ require( 'common' ).testCase(
         ;
 
         this.assertOk(
-            ( concrete_inst.isInstanceOf( Type )
-                && concrete_inst.isInstanceOf( Type2 )
+            ( concrete_inst.isInstanceOf( this.Type )
+                && concrete_inst.isInstanceOf( this.Type2 )
             ),
             "Instances of classes implementing interfaces are considered to " +
                 "be instances of the implemented interfaces"
@@ -212,10 +218,15 @@ require( 'common' ).testCase(
      */
     'Cannot specify parent after implementing atop existing class': function()
     {
+        var PlainFoo2 = this.AbstractClass
+            .implement( this.Type, this.Type2 )
+            .extend( this.PlainFoo, {} );
+
         this.assertThrows( function()
             {
                 // should not be permitted
-                PlainFoo.implement( Type, Type2 ).extend( PlainFoo2, {} );
+                this.PlainFoo.implement( this.Type, this.Type2 )
+                    .extend( PlainFoo2, {} );
             },
             Error,
             "Cannot specify new parent for extend() when implementing from " +
@@ -230,14 +241,17 @@ require( 'common' ).testCase(
      */
     'Can specify parent if implementing atop empty class': function()
     {
+        var _self = this;
+
         this.assertDoesNotThrow(
             function()
             {
                 // this /should/ work
-                AbstractClass.implement( Type ).extend( PlainFoo, {} );
+                _self.AbstractClass.implement( _self.Type )
+                    .extend( _self.PlainFoo, {} );
             },
             Error,
-            "Can specify parent for exetnd() when implementing atop an " +
+            "Can specify parent for extend() when implementing atop an " +
                 "empty base"
         );
     },
@@ -250,9 +264,12 @@ require( 'common' ).testCase(
      */
     'Throws exception if extend contains too many arguments': function()
     {
+        var _self = this;
+
         this.assertThrows( function()
         {
-            Class.implement( Type ).extend( PlainFoo, {}, 'extra' );
+            _self.Class.implement( _self.Type )
+                .extend( _self.PlainFoo, {}, 'extra' );
         }, Error, "extend() after implementing accepts no more than two args" );
     },
 } );
