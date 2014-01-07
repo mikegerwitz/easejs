@@ -81,18 +81,6 @@ AS_IF(test "$JAVA" -a ! "$CCJAR",
 
 AM_CONDITIONAL(HAS_CCJAR, [test "$CCJAR"])
 
-# unit tests (old test system; refactoring needed)
-AC_MSG_CHECKING([for unit tests])
-SRC_TESTS="$( find test/ -name test-* | tr '\n' ' ' )"
-AC_SUBST(SRC_TESTS)
-AS_IF([test "$SRC_TESTS"], [AC_MSG_RESULT(ok)], [AC_MSG_WARN(none found)])
-
-# test cases (new test system)
-AC_MSG_CHECKING([for test cases])
-TEST_CASES="$( find test/ -name '*Test.*' | tr '\n' ' ' )"
-AC_SUBST(TEST_CASES)
-AS_IF([test "$TEST_CASES"], [AC_MSG_RESULT(ok)], [AC_MSG_WARN(none found)])
-
 # check for performance tests
 AC_MSG_CHECKING([for performance tests])
 PERF_TESTS=$( find test/perf -name 'perf-*.js' | tr '\n' ' ' )
