@@ -18,16 +18,6 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-# see README
-SUBDIRS = doc
-EXTRA_DIST = AUTHORS NEWS ChangeLog README.md README.hacking \
-             build lib test index.js package.json \
-             tools/combine tools/mkexterns tools/rmtrail \
-             tools/signchk tools/browser-test.html tools/combine-order.js \
-             tools/combine-test.tpl tools/combine.tpl tools/externs-global.js \
-             tools/externs.js tools/license-min.tpl tools/license.tpl \
-             tools/linechk-ignores
-
 path_build = $(top_builddir)/build
 path_tools = $(top_builddir)/tools
 path_lib   = $(top_builddir)/lib
@@ -38,12 +28,28 @@ path_combine_output      = $(path_build)/ease.js
 path_combine_output_full = $(path_build)/ease-full.js
 path_browser_test        = $(path_tools)/browser-test.html
 
+path_combine_output_min      = $(path_combine_output:.js=.min.js)
+path_combine_output_full_min = $(path_combine_output_full:.js=.min.js)
+
 src_js                = @SRC_JS@
 path_externs_internal = $(path_build)/externs-internal.js
 
 combine  = $(path_tools)/combine
 compiler = @CCJAR@
 MKDIR_P = @MKDIR_P@
+
+# see README
+SUBDIRS = doc
+EXTRA_DIST = AUTHORS NEWS ChangeLog README.md README.hacking \
+             lib test index.js package.json \
+             $(path_combine_output) $(path_combine_output_full) \
+             $(path_browser_test) $(path_combine_output_min) \
+             $(path_combine_output_full_min) \
+             tools/combine tools/mkexterns tools/rmtrail \
+             tools/signchk tools/browser-test.html tools/combine-order.js \
+             tools/combine-test.tpl tools/combine.tpl tools/externs-global.js \
+             tools/externs.js tools/license-min.tpl tools/license.tpl \
+             tools/linechk-ignores
 
 .PHONY: mkbuild combine min doc check test test-suite perf FORCE
 
