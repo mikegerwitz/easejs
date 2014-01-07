@@ -1,6 +1,6 @@
 ## ease.js Makefile.am
 #
-#  Copyright (C) 2013 Mike Gerwitz
+#  Copyright (C) 2013, 2014 Mike Gerwitz
 #
 #  This file is part of GNU ease.js.
 #
