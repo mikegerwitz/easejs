@@ -147,6 +147,7 @@ ChangeLog: FORCE
 
 clean-local:
 	-rm -rf "$(path_build)"
+	-rm -rf doc-cp  # created by website branch build
 	-rm -f AUTHORS NEWS ChangeLog
 
 distclean-local:
