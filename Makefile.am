@@ -130,7 +130,7 @@ test/test-%: FORCE
 # test suite (new format)
 test-suite:
 if HAS_NODE
-	@echo "ease.js Test Suite"
+	@echo "GNU ease.js Test Suite"
 	@echo
 	@NODE_PATH="$(path_test):$(NODE_PATH)" $(NODE) --stack_trace_limit=20 \
 		$(path_test)/runner.js $(test_cases)
