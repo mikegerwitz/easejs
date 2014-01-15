@@ -116,6 +116,11 @@ module.exports = function( test_case )
 
         if ( method === 'each' )
         {
+            if ( !( context[ prop ] ) )
+            {
+                throw Error( "Unknown @each context: " + prop );
+            }
+
             count = context[ prop ].length;
             args  = [];
 
