@@ -78,7 +78,7 @@ copyupdate()
 
 getyears()
 {
-  grep -vF '[copyright]' \
+  grep -vF '[copyright]'$'\n''[no-copyright]' \
     | cut -d' ' -f4 \
     | sort -u \
     | tr '\n' , \
