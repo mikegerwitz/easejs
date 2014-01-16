@@ -1,13 +1,14 @@
 #!/bin/sh
 #
-# Removes trailing commas from array and object declarations (certain browsers,
-# such as earlier versions of IE, do not parse trailing commas correctly)
+# Removes trailing commas from array and object declarations (certain
+# browsers, such as earlier versions of IE, do not parse trailing commas
+# correctly)
 #
 # This is a very simple (dumb) system. It does not check to ensure we're not
-# replacing text inside a string, nor is it 100% certain we're in an array or
-# object declaration. However, until such an implementation is needed, I'd like
-# to keep it as simple (and fast) as possible. The below implementation is
-# suitable for our needs.
+# replacing text inside a string, nor is it 100% certain we're in an array
+# or object declaration. However, until such an implementation is needed,
+# I'd like to keep it as simple (and fast) as possible. The below
+# implementation is suitable for our needs.
 #
 #  Copyright (C) 2010, 2011, 2012, 2013 Mike Gerwitz
 #

@@ -1,6 +1,7 @@
 #!/bin/bash
 #
-# Lists all commits after a given commit that do not have a trusted signature
+# Lists all commits after a given commit that do not have a trusted
+# signature
 #
 # Allows for automated detection of potential attacks or false authorship of
 # commits by validating signatures against trusted public GPG keys.
