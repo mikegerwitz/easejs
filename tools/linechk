@@ -39,5 +39,5 @@ cd "$root" && \
   find lib/ tools/ test/ doc/ README* Makefile.am configure.ac *.js \
     -type f -exec wc -L {} \; \
       | hideignores \
-      | grep -v '^\([0-7][0-9]\?\|80\?\) ' \
+      | grep -v '^\([0-6][0-9]\?\|7[0-6]\) ' \
       || exit 0
