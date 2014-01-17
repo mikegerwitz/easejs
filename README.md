@@ -1,3 +1,14 @@
+<!--
+  Copyright (C) 2013 Mike Gerwitz
+
+  This file is part of GNU ease.js.
+
+  Copying and distribution of this file, with or without modification, are
+  permitted in any medium without royalty provided the copyright notice and
+  this notice are preserved.  This file is offered as-is, without warranty
+  of any kind.
+-->
+
 # GNU ease.js
 
 GNU ease.js is a classical object-oriented framework for Javascript, intended to
