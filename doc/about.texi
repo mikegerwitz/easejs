@@ -31,9 +31,10 @@ likely that ease.js will expand to other paradigms in the future.
 @section History
 ease.js was initially developed for use at the author's place of employment
 in order to move the familiar concept of object-oriented development over to
-JavaScript for use in robust web applications. JavaScript lacks basic core
-principals of object-oriented development, the most major of which is proper
-encapsulation.
+JavaScript for use in what would one day be liberated under the
+@uref{https://github.com/lovullo/liza,Liza Data Collection Framework}.
+JavaScript lacks basic core principals of object-oriented development, the
+most major of which is proper encapsulation.
 
 The library would be required to work both server and client-side,
 supporting all major web browsers as far back as Internet Explorer 6. Since
