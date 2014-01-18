@@ -27,7 +27,7 @@ body, .float-caption
 }
 
 .float pre, var {
-  font-family: 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', Courier, monospace;
+  font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', Courier, monospace;
 }
 
 table {

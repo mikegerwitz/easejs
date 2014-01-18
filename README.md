@@ -21,7 +21,7 @@ Current support includes:
 * Classical inheritance
 * Abstract classes and methods
 * Interfaces
-* Visibility (public, protected and private members)
+* Visibility (public, protected, and private members)
 * Static and constant members
 
 While the current focus of the project is object-oriented design, it is likely

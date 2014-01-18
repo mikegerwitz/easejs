@@ -1,28 +1,28 @@
 @c  This document is part of the GNU ease.js manual.
-@c  Copyright (C) 2011, 2012, 2013 Mike Gerwitz
+@c  Copyright (C) 2011, 2012, 2013, 2014 Mike Gerwitz
 @c    Permission is granted to copy, distribute and/or modify this document
-@c    under the terms of the GNU Free Documentation License, Version 1.3
-@c    or any later version published by the Free Software Foundation;
-@c    with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
-@c    Texts.  A copy of the license is included in the section entitled ``GNU
-@c    Free Documentation License''.
+@c    under the terms of the GNU Free Documentation License, Version 1.3 or
+@c    any later version published by the Free Software Foundation; with no
+@c    Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+@c    A copy of the license is included in the section entitled ``GNU Free
+@c    Documentation License''.
 
 @node Implementation Details
 @appendix Implementation Details / Rationale
-The majority of the development time spent on ease.js was not hacking away at
-the source code. Rather, it was spent with pen and paper. Every aspect of
-ease.js was heavily planned from the start. Every detail was important to ensure
-a consistent implementation that worked, was fast and that developers would
-enjoy working with. Failures upfront or alterations to the design in later
-versions would break backwards compatibility unnecessarily and damage the
-reputation of the project.
+The majority of the development time spent on ease.js was not hacking away
+at the source code. Rather, it was spent with pen and paper. Every aspect of
+ease.js was heavily planned from the start. Every detail was important to
+ensure a consistent implementation that worked, was fast and that developers
+would enjoy working with. Failures upfront or alterations to the design in
+later versions would break backwards compatibility unnecessarily and damage
+the reputation of the project.
 
 When using ease.js, developers may wonder why things were implemented in the
-manner that they were. Perhaps they have a problem with the implementation, or
-just want to learn how the project works. This project was an excellent learning
-experience that deals very closely with the power and flexibility of prototypal
-programming. In an attempt to appease both parties, this appendix is provided to
-provide some details and rationale behind ease.js.
+manner that they were. Perhaps they have a problem with the implementation,
+or just want to learn how the project works. This project was an excellent
+learning experience that deals very closely with the power and flexibility
+of prototypal programming. In an attempt to appease both parties, this
+appendix is provided to provide some details and rationale behind ease.js.
 
 @menu
 * Class Module Design::
@@ -33,23 +33,24 @@ provide some details and rationale behind ease.js.
 
 @node Class Module Design
 @section Class Module Design
-The @var{Class} module, which is accessible via @samp{require( 'easejs'
-).Class}, is the backbone of the entire project. In a class-based
+The @var{Class} module, which is accessible via @samp{require(
+'easejs').Class}, is the backbone of the entire project. In a class-based
 Object-Oriented model, as one could guess by the name, the class is the star
-player. When the project began, this was the only initial implementation detail.
-Everything else was later layered atop of it.
+player. When the project began, this was the only initial implementation
+detail.  Everything else was later layered atop of it.
 
 As such, developing the Class module took the most thought and presented the
 largest challenge throughout the project. Every detail of its implementation
-exists for a reason. Nothing was put in place because the author simply ``felt
-like it''. The project aims to exist as a strong, reliable standard for the
-development of JavaScript-based applications. If such a goal is to be attained,
-the feature set and implementation details would have to be strongly functional,
-easy to use and make sense to the Object-Oriented developer community.
+exists for a reason. Nothing was put in place because the author simply
+``felt like it''. The project aims to exist as a strong, reliable standard
+for the development of JavaScript-based applications. If such a goal is to
+be attained, the feature set and implementation details would have to be
+strongly functional, easy to use and make sense to the Object-Oriented
+developer community.
 
-The design also requires a strong understanding of Object-Oriented development.
-Attention was paid to the nuances that could otherwise introduce bugs or an
-inconsistent implementation.
+The design also requires a strong understanding of Object-Oriented
+development.  Attention was paid to the nuances that could otherwise
+introduce bugs or an inconsistent implementation.
 
 @menu
 * Class Declaration Syntax::
@@ -61,27 +62,29 @@ inconsistent implementation.
 @node Class Declaration Syntax
 @subsection Class Declaration Syntax
 Much thought was put into how a class should be declared. The chosen style
-serves as syntatic sugar, making the declarations appear very similar to classes
-in other Object-Oriented languages.
+serves as syntatic sugar, making the declarations appear very similar to
+classes in other Object-Oriented languages.
 
-The original style was based on John Resig's blog post about a basic means of
-extending class-like objects (@pxref{About}). That style was
-@samp{Class.extend()} to declare a new class and @samp{Foo.extend()} to extend
-an existing class. This implementation is still supported for creating anonymous
-classes. However, a means needed to be provided to create named classes. In
-addition, invoking @code{extend()} on an empty class seemed unnecessary.
+The original style was based on John Resig's blog post about a basic means
+of extending class-like objects (@pxref{About}). That style was
+@samp{Class.extend()} to declare a new class and @samp{Foo.extend()} to
+extend an existing class. This implementation is still supported for
+creating anonymous classes. However, a means needed to be provided to create
+named classes. In addition, invoking @code{extend()} on an empty class
+seemed unnecessary.
 
-The next incarnation made the @var{Class} module invokable. Anonymous classes
-could be defined using @samp{Class( @{@} )} and named classes could be defined
-by passing in a string as the first argument: @samp{Class( 'Foo', @{@} )}.
-Classes could still be extended using the previously mentioned syntax, but that
-did no justice if we need to provide a class name. Therefore, the @samp{Class(
-'SubFoo' ).extend( Supertype, @{@} )} syntax was also adopted.
+The next incarnation made the @var{Class} module invokable. Anonymous
+classes could be defined using @samp{Class( @{@} )} and named classes could
+be defined by passing in a string as the first argument: @samp{Class( 'Foo',
+@{@} )}.  Classes could still be extended using the previously mentioned
+syntax, but that did no justice if we need to provide a class name.
+Therefore, the @samp{Class( 'SubFoo' ).extend( Supertype, @{@} )} syntax was
+also adopted.
 
-JavaScript's use of curly braces to represent objects provides a very convenient
-means of making class definitions look like actual class definitions. By
-convention, the opening brace for the declaration object is on its own line, to
-make it look like an opening block.
+JavaScript's use of curly braces to represent objects provides a very
+convenient means of making class definitions look like actual class
+definitions. By convention, the opening brace for the declaration object is
+on its own line, to make it look like an opening block.
 
 @float Figure, f:class-def-syntax
 @verbatim
@@ -99,112 +102,120 @@ make it look like an opening block.
 
 Syntax for implementing interfaces and extending classes was another
 consideration. The implementation shown above was chosen for a couple of
-reasons. Firstly, verbs were chosen in order to (a) prevent the use of reserved
-words and (b) to represent that the process was taking place at @emph{runtime},
-@emph{as} the code was being executed. Unlike a language like C++ or Java, the
-classes are not prepared at compile-time.
+reasons. Firstly, verbs were chosen in order to (a) prevent the use of
+reserved words and (b) to represent that the process was taking place at
+@emph{runtime}, @emph{as} the code was being executed. Unlike a language
+like C++ or Java, the classes are not prepared at compile-time.
 
 @node Class Storage
 @subsection Class Storage
-One of the more powerful features of ease.js is how classes (and other objects,
-such as Interfaces) are stored. Rather than adopting its own model, the decision
-was instead to blend into how JavaScript already structures its data. Everything
-in JavaScript can be assigned to a variable, including functions. Classes are no
-different.
+One of the more powerful features of ease.js is how classes (and other
+objects, such as Interfaces) are stored. Rather than adopting its own model,
+the decision was instead to blend into how JavaScript already structures its
+data. Everything in JavaScript can be assigned to a variable, including
+functions. Classes are no different.
 
-One decision was whether or not to store classes internally by name, then permit
-accessing it globally (wherever ease.js is available). This is how most
-Object-Oriented languages work. If the file in which the class is defined is
-available, the class can generally be referenced by name. This may seem natural
-to developers coming from other Object-Oriented languages. The decision was to
-@emph{not} adopt this model.
+One decision was whether or not to store classes internally by name, then
+permit accessing it globally (wherever ease.js is available). This is how
+most Object-Oriented languages work. If the file in which the class is
+defined is available, the class can generally be referenced by name. This
+may seem natural to developers coming from other Object-Oriented languages.
+The decision was to @emph{not} adopt this model.
 
 By storing classes @emph{only} in variables, we have fine control over the
-scope and permit the developer to adopt their own mechanism for organizing their
-classes. For example, if the developer wishes to use namespacing, then he/she is
-free to assign the class to a namespace (e.g. @samp{org.foo.my.ns.Foo =
-Class( @{@} )}). More importantly, we can take advantage of the CommonJS format
-that ease.js was initially built for by assigning the class to
-@code{module.exports}. This permits @samp{require( 'filename' )} to return the
-class.
+scope and permit the developer to adopt their own mechanism for organizing
+their classes. For example, if the developer wishes to use namespacing, then
+he/she is free to assign the class to a namespace (e.g.
+@samp{org.foo.my.ns.Foo = Class( @{@} )}). More importantly, we can take
+advantage of the CommonJS format that ease.js was initially built for by
+assigning the class to @code{module.exports}. This permits @samp{require(
+'filename' )} to return the class.
 
 This method also permits defining anonymous classes (while not necessarily
 recommended, they have their uses just as anonymous functions do), mimic the
-concept of Java's inner classes and create temporary classes (@pxref{Temporary
-Classes}). Indeed, we can do whatever scoping that JavaScript permits.
+concept of Java's inner classes and create temporary classes
+(@pxref{Temporary Classes}). Indeed, we can do whatever scoping that
+JavaScript permits.
 
 @subsubsection Memory Management
 Memory management is perhaps one of the most important considerations.
 Initially, ease.js encapsulated class metadata and visibility structures
-(@pxref{Hacking Around the Issue of Encapsulation}).  However, it quickly became
-apparent that this method of storing data, although excellent for protecting it
-from being manipulated, caused what appeared to be memory leaks in long-running
-software. These were in fact not memory leaks, but ease.js keeping references to
-class data with no idea when to free them.
+(@pxref{Hacking Around the Issue of Encapsulation}).  However, it quickly
+became apparent that this method of storing data, although excellent for
+protecting it from being manipulated, caused what appeared to be memory
+leaks in long-running software. These were in fact not memory leaks, but
+ease.js keeping references to class data with no idea when to free them.
 
-To solve this issue, all class data is stored within the class itself (that is,
-the constructor in JavaScript terms). They are stored in obscure variables that
-are non-enumerable and subject to change in future releases. This ensures that
-developers cannot rely on using them for reflection purposes or for manipulating
-class data during runtime. This is important, since looking at such members can
-give access to protected and private instance data. In the future, the names may
-be randomly chosen at runtime to further mitigate exploits. Until that time,
-developers should be aware of potential security issues.
+To solve this issue, all class data is stored within the class itself (that
+is, the constructor in JavaScript terms). They are stored in obscure
+variables that are non-enumerable and subject to change in future releases.
+This ensures that developers cannot rely on using them for reflection
+purposes or for manipulating class data during runtime. This is important,
+since looking at such members can give access to protected and private
+instance data. In the future, the names may be randomly chosen at runtime to
+further mitigate exploits. Until that time, developers should be aware of
+potential security issues.
 
 If the globally accessible model would have been adopted (storing classes
-internally by class name rather than in variables), classes would not have been
-freed from memory when they went out of scope. This raises the memory footprint
-unnecessarily, especially for temporary classes. It would make sense that, after
-a temporary class is done being used, that the class be freed from memory.
+internally by class name rather than in variables), classes would not have
+been freed from memory when they went out of scope. This raises the memory
+footprint unnecessarily, especially for temporary classes. It would make
+sense that, after a temporary class is done being used, that the class be
+freed from memory.
 
-Given this fact alone, the author firmly believes that the model that was chosen
-was the best choice.
+Given this fact alone, the author firmly believes that the model that was
+chosen was the best choice.
 
 @node Constructor Implementation
 @subsection Constructor Implementation
-ease.js uses a PHP-style constructor. Rather than using the class name as the
-constructor, a @code{__construct()} method is used. This was chosen primarily
-because ease.js does not always know the name of the class. In fact, in the
-early stages of development, named classes were unsupported. With the PHP-style
-constructor, the class name does not need to be known, allowing constructors to
-be written for anonymous and named classes alike.
+ease.js uses a PHP-style constructor. Rather than using the class name as
+the constructor, a @code{__construct()} method is used. This was chosen
+primarily because ease.js does not always know the name of the class. In
+fact, in the early stages of development, named classes were unsupported.
+With the PHP-style constructor, the class name does not need to be known,
+allowing constructors to be written for anonymous and named classes alike.
 
-In addition, the PHP-style constructor is consistent between class definitions.
-To look up a constructor, one need only search for ``__construct'', rather than
-the class name. This makes certain operations, such as global searching (using
-@command{grep} or any other utility), much simpler.
+In addition, the PHP-style constructor is consistent between class
+definitions.  To look up a constructor, one need only search for
+``__construct'', rather than the class name. This makes certain operations,
+such as global searching (using @command{grep} or any other utility), much
+simpler.
 
-One difference from PHP is the means of preventing instantiation. In PHP, if the
-constructor is declared as non-public, then an error will be raised when the
-developer attempts to instantiate the class. ease.js did not go this route, as
-the method seems cryptic. Instead, an exception should be thrown in the
-constructor if the developer doesn't wish the class to be instantiated. In the
-future, a common method may be added for consistency/convenience.
+One difference from PHP is the means of preventing instantiation. In PHP, if
+the constructor is declared as non-public, then an error will be raised when
+the developer attempts to instantiate the class. ease.js did not go this
+route, as the method seems cryptic. Instead, an exception should be thrown
+in the constructor if the developer doesn't wish the class to be
+instantiated. In the future, a common method may be added for
+consistency/convenience.
 
-The constructor is optional. If one is not provided, nothing is done after the
-class is instantiated (aside from the internal ease.js initialization tasks).
+The constructor is optional. If one is not provided, nothing is done after
+the class is instantiated (aside from the internal ease.js initialization
+tasks).
 
-The constructor is called after all initialization tasks have been completed.
+The constructor is called after all initialization tasks have been
+completed.
 
 @node Static Implementation
 @subsection Static Implementation
-The decisions behind ease.js's static implementation were very difficult. More
-thought and time was spent on paper designing how the static implementation
-should be represented than most other features in the project. The reason for
-this is not because the concept of static members is complicated. Rather, it is
-due to limitations of pre-ECMAScript 5 engines.
+The decisions behind ease.js's static implementation were very difficult.
+More thought and time was spent on paper designing how the static
+implementation should be represented than most other features in the
+project. The reason for this is not because the concept of static members is
+complicated. Rather, it is due to limitations of pre-ECMAScript 5 engines.
 
 @subsubsection How Static Members Are Supposed To Work
-The first insight into the problems a static implementation would present was
-the concept itself. Take any common Object-Oriented language such as C++, Java,
-or even PHP. Static members are inherited by subtypes @emph{by reference}. What
-does this mean? Consider two classes: @var{Foo} and @var{SubFoo}, the latter of
-which inherits from the former. @var{Foo} defines a static property @var{count}
-to be incremented each time the class is instantiated. The subtype @var{SubFoo},
-when instantiated (assuming the constructor is not overridden), would increment
-that very same count. Therefore, we can represent this by stating that
-@samp{Foo.count === SubFoo.count}. In the example below, we demonstrate this
-concept in pseudocode:
+The first insight into the problems a static implementation would present
+was the concept itself. Take any common Object-Oriented language such as
+C++, Java, or even PHP. Static members are inherited by subtypes @emph{by
+reference}. What does this mean? Consider two classes: @var{Foo} and
+@var{SubFoo}, the latter of which inherits from the former. @var{Foo}
+defines a static property @var{count} to be incremented each time the class
+is instantiated. The subtype @var{SubFoo}, when instantiated (assuming the
+constructor is not overridden), would increment that very same count.
+Therefore, we can represent this by stating that @samp{Foo.count ===
+SubFoo.count}. In the example below, we demonstrate this concept in
+pseudocode:
 
 @float Figure, f:static-ref-pseudocode
 @verbatim
@@ -221,11 +232,11 @@ concept in pseudocode:
 @end float
 
 As you may imagine, this is a problem. The above example does not look very
-JS-like. That is because it isn't. JS does not provide a means for variables to
-share references to the same primitive. In fact, even Objects are passed by
-value in the sense that, if the variable is reassigned, the other variable
-remains unaffected. The concept we are looking to support is similar to a
-pointer in C/C++, or a reference in PHP.
+JS-like. That is because it isn't. JS does not provide a means for variables
+to share references to the same primitive. In fact, even Objects are passed
+by value in the sense that, if the variable is reassigned, the other
+variable remains unaffected. The concept we are looking to support is
+similar to a pointer in C/C++, or a reference in PHP.
 
 We have no such luxury.
 
@@ -264,10 +275,11 @@ supertype:
 @caption{Emulating references with getters/setters (proxy)}
 @end float
 
-This comes with considerable overhead when compared to accessing the properties
-directly (in fact, at the time of writing this, V8 doesn't even attempt to
-optimize calls to getters/setters, so it is even slower than invoking accessor
-methods). That point aside, it works well and accomplishes what we need it to.
+This comes with considerable overhead when compared to accessing the
+properties directly (in fact, at the time of writing this, V8 doesn't even
+attempt to optimize calls to getters/setters, so it is even slower than
+invoking accessor methods). That point aside, it works well and accomplishes
+what we need it to.
 
 There's just one problem. @emph{This does not work in pre-ES5 environments!}
 ease.js needs to support older environments, falling back to ensure that
@@ -275,18 +287,18 @@ everything operates the same (even though features such as visibility aren't
 present).
 
 This means that we cannot use this proxy implementation. It is used for
-visibility in class instances, but that is because a fallback is possible. It is
-not possible to provide a fallback that works with two separate objects. If
-there were, we wouldn't have this problem in the first place.
+visibility in class instances, but that is because a fallback is possible.
+It is not possible to provide a fallback that works with two separate
+objects. If there were, we wouldn't have this problem in the first place.
 
 @subsubsection Deciding On a Compromise
 A number of options were available regarding how static properties should be
-implemented. Methods are not a problem -- they are only accessed by reference,
-never written to. Therefore, they can keep their convenient @samp{Foo.method()}
-syntax. Unfortunately, that cannot be the case for properties without the
-ability to implement a proxy through the use of getters/setters (which, as
-aforementioned, requires the services of ECMAScript 5, which is not available in
-older environments).
+implemented. Methods are not a problem -- they are only accessed by
+reference, never written to. Therefore, they can keep their convenient
+@samp{Foo.method()} syntax. Unfortunately, that cannot be the case for
+properties without the ability to implement a proxy through the use of
+getters/setters (which, as aforementioned, requires the services of
+ECMAScript 5, which is not available in older environments).
 
 The choices were has follows:
 
@@ -295,35 +307,38 @@ The choices were has follows:
 Add another object to be shared between classes (e.g. @samp{Foo.$}).
 
 @item
-Do not inherit by reference. Each subtype would have their own distinct value.
+Do not inherit by reference. Each subtype would have their own distinct
+value.
 
 @item
-Access properties via an accessor method (e.g. @samp{Foo.$('var')}), allowing us
-to properly proxy much like a getter/setter.
+Access properties via an accessor method (e.g. @samp{Foo.$('var')}),
+allowing us to properly proxy much like a getter/setter.
 @end enumerate
 
 There are problems with all of the above options. The first option, which
 involves sharing an object, would cause awkward inheritance in the case of a
-fallback. Subtypes would set their static properties on the object, which would
-make that property available to the @emph{supertype}! That is tolerable in the
-case of a fallback. However, the real problem lies in two other concepts: when a
-class has two subtypes that attempt to define a property with the same name, or
-when a subtype attempts to override a property. The former would cause both
-subtypes (which are entirely separate from one-another, with the exception of
-sharing the same parent) to share the same values, which is unacceptable. The
-latter case can be circumvented by simply preventing overriding of static
-properties, but the former just blows this idea out of the water entirely.
+fallback. Subtypes would set their static properties on the object, which
+would make that property available to the @emph{supertype}! That is
+tolerable in the case of a fallback. However, the real problem lies in two
+other concepts: when a class has two subtypes that attempt to define a
+property with the same name, or when a subtype attempts to override a
+property. The former would cause both subtypes (which are entirely separate
+from one-another, with the exception of sharing the same parent) to share
+the same values, which is unacceptable. The latter case can be circumvented
+by simply preventing overriding of static properties, but the former just
+blows this idea out of the water entirely.
 
-The second option is to @emph{not} inherit by reference. This was the initial
-implementation (due to JavaScript limitations) until it was realized that this
-caused far too many inconsistencies between other Object-Oriented languages.
-There is no use in introducing a different implementation when we are attempting
-to mirror classic Object-Oriented principals to present a familiar paradigm to
-developers. Given this inconsistency alone, this option simply will not work.
+The second option is to @emph{not} inherit by reference. This was the
+initial implementation (due to JavaScript limitations) until it was realized
+that this caused far too many inconsistencies between other Object-Oriented
+languages.  There is no use in introducing a different implementation when
+we are attempting to mirror classic Object-Oriented principals to present a
+familiar paradigm to developers. Given this inconsistency alone, this option
+simply will not work.
 
 The final option is to provide an accessor method, much like the style of
-jQuery. This would serve as an ugly alternative for getters/setters. It would
-operate as follows:
+jQuery. This would serve as an ugly alternative for getters/setters. It
+would operate as follows:
 
 @float Figure, f:static-accessor-impl
 @verbatim
@@ -348,7 +363,8 @@ It provides an implementation that is @emph{consistent with other
 Object-Oriented languages}. This is the most important point.
 
 @item
-The accessor method parameter style is common in other frameworks like jQuery.
+The accessor method parameter style is common in other frameworks like
+jQuery.
 
 @item
 The method name (@var{$}) is commonly used to denote a variable in scripting
@@ -358,65 +374,66 @@ languages (such as PHP and shells, or to denote a scalar in Perl).
 It works consistently in ES5 and pre-ES5 environments alike.
 @end itemize
 
-So, although the syntax is inconsistent with the rest of the framework, it does
-address all of our key requirements. This makes it a viable option for our
-implementation.
+So, although the syntax is inconsistent with the rest of the framework, it
+does address all of our key requirements. This makes it a viable option for
+our implementation.
 
 @subsubsection Appeasing ES5-Only Developers
-There is another argument to be had. ease.js is designed to operate across all
-major browsers for all major versions, no matter how ridiculous (e.g. Internet
-Explorer 5.5), so long as it does not require unreasonable development effort.
-That is great and all, but what about those developers who are developing
-@emph{only} for an ECMAScript 5 environment? This includes developers leveraging
-modern HTML 5 features and those using Node.js who do not intend to share code
-with pre-ES5 clients. Why should they suffer from an ugly, unnecessary syntax
-when a beautiful, natural [and elegant] implementation is available using
-proxies via getters/setters?
+There is another argument to be had. ease.js is designed to operate across
+all major browsers for all major versions, no matter how ridiculous (e.g.
+Internet Explorer 5.5), so long as it does not require unreasonable
+development effort.  That is great and all, but what about those developers
+who are developing @emph{only} for an ECMAScript 5 environment? This
+includes developers leveraging modern HTML 5 features and those using
+Node.js who do not intend to share code with pre-ES5 clients. Why should
+they suffer from an ugly, unnecessary syntax when a beautiful, natural [and
+elegant] implementation is available using proxies via getters/setters?
 
 There are certainly two sides to this argument. On one hand, it is perfectly
-acceptable to request a natural syntax if it is supported. On the other hand,
-this introduces a number of problems:
+acceptable to request a natural syntax if it is supported. On the other
+hand, this introduces a number of problems:
 
 @itemize
 @item
 This may make libraries written using ease.js unportable (to older
-environments). If written using an ES5-only syntax, they would have no way to
-fall back for static properties.
+environments). If written using an ES5-only syntax, they would have no way
+to fall back for static properties.
 
 @item
-The syntax differences could be very confusing, especially to those beginning to
-learn ease.js. They may not clearly understand the differences, or may go to use
-a library in their own code, and find that things do not work as intended.
-Code examples would also have to make clear note of what static syntax they
-decided to use. It adds a layer of complexity.
+The syntax differences could be very confusing, especially to those
+beginning to learn ease.js. They may not clearly understand the differences,
+or may go to use a library in their own code, and find that things do not
+work as intended.  Code examples would also have to make clear note of what
+static syntax they decided to use. It adds a layer of complexity.
 @end itemize
 
 Now, those arguing for the cleaner syntax can also argue that all newer
-environments moving forward will support the clean, ES5-only syntax, therefore
-it would be beneficial to have. Especially when used for web applications that
-can fall back to an entirely different implementation or refuse service entirely
-to older browsers. Why hold ease.js back for those stragglers if there's no
-intent on ever supporting them?
+environments moving forward will support the clean, ES5-only syntax,
+therefore it would be beneficial to have. Especially when used for web
+applications that can fall back to an entirely different implementation or
+refuse service entirely to older browsers. Why hold ease.js back for those
+stragglers if there's no intent on ever supporting them?
 
-Both arguments are solid. Ultimately, ease.js will likely favor the argument of
-implementing the cleaner syntax by providing a runtime flag. If enabled, static
-members will be set using proxies. If not, it will fall back to the uglier
-implementation using the accessor method. If the environment doesn't support the
-flag when set, ease.js will throw an error and refuse to run, or will invoke a
-fallback specified by the developer to run an alternative code base that uses
-the portable, pre-ES5 syntax.
+Both arguments are solid. Ultimately, ease.js will likely favor the argument
+of implementing the cleaner syntax by providing a runtime flag. If enabled,
+static members will be set using proxies. If not, it will fall back to the
+uglier implementation using the accessor method. If the environment doesn't
+support the flag when set, ease.js will throw an error and refuse to run, or
+will invoke a fallback specified by the developer to run an alternative code
+base that uses the portable, pre-ES5 syntax.
 
-This decision will ultimately be made in the future. For the time being, ease.js
-will support and encourage use of the portable static property syntax.
+This decision will ultimately be made in the future. For the time being,
+ease.js will support and encourage use of the portable static property
+syntax.
 
 
 @node Visibility Implementation
 @section Visibility Implementation
 One of the major distinguishing factors of ease.js is its full visibility
-support (@pxref{Access Modifiers}). This feature was the main motivator behind
-the project. Before we can understand the use of this feature, we have to
-understand certain limitations of JavaScript and how we may be able to work
-around them.
+support (@pxref{Access Modifiers}). This feature was the main motivator
+behind the project. Before we can understand the use of this feature, we
+have to understand certain limitations of JavaScript and how we may be able
+to work around them.
 
 @menu
 * Encapsulation In JavaScript::
@@ -430,7 +447,8 @@ around them.
 @subsection Encapsulation In JavaScript
 Encapsulation is a cornerstone of many strong software development paradigms
 (@pxref{Encapsulation}). This concept is relatively simply to achieve using
-closures in JavaScript, as shown in the following example stack implementation:
+closures in JavaScript, as shown in the following example stack
+implementation:
 
 @float Figure, f:js-encapsulation-ex
 @verbatim
@@ -457,21 +475,22 @@ stack.pop(); // foo
 @caption{Encapsulation example using closures in JavaScript}
 @end float
 
-Because functions introduce scope in JavaScript, data can be hidden within them.
-In @ref{f:js-encapsulation-ex} above, a self-executing function is used to
-encapsulate the actual data in the stack (@var{data}). The function accepts a
-single argument, which will hold the functions used to push and pop values
-to/from the stack respectively. These functions are closures that have access to
-the @var{data} variable, allowing them to alter its data. However, nothing
-outside of the self-executing function has access to the data. Therefore, we
-present the user with an API that allows them to push/pop from the stack, but
-never allows them to see what data is actually @emph{in} the stack@footnote{The
-pattern used in the stack implementation is commonly referred to as the
-@dfn{module} pattern and is the same concept used by CommonJS. Another common
-implementation is to return an object containing the functions from the
-self-executing function, rather than accepting an object to store the values in.
-We used the former implementation here for the sake of clarity and because it
-more closely represents the syntax used by CommonJS.}.
+Because functions introduce scope in JavaScript, data can be hidden within
+them.  In @ref{f:js-encapsulation-ex} above, a self-executing function is
+used to encapsulate the actual data in the stack (@var{data}). The function
+accepts a single argument, which will hold the functions used to push and
+pop values to/from the stack respectively. These functions are closures that
+have access to the @var{data} variable, allowing them to alter its data.
+However, nothing outside of the self-executing function has access to the
+data. Therefore, we present the user with an API that allows them to
+push/pop from the stack, but never allows them to see what data is actually
+@emph{in} the stack@footnote{The pattern used in the stack implementation is
+commonly referred to as the @dfn{module} pattern and is the same concept
+used by CommonJS. Another common implementation is to return an object
+containing the functions from the self-executing function, rather than
+accepting an object to store the values in.  We used the former
+implementation here for the sake of clarity and because it more closely
+represents the syntax used by CommonJS.}.
 
 Let's translate some of the above into Object-Oriented terms:
 
@@ -481,10 +500,10 @@ Let's translate some of the above into Object-Oriented terms:
 @item @var{stack} is a Singleton.
 @end itemize
 
-We can take this a bit further by defining a @code{Stack} prototype so that we
-can create multiple instances of our stack implementation. A single instance
-hardly seems useful for reuse. However, in attempting to do so, we run into a
-bit of a problem:
+We can take this a bit further by defining a @code{Stack} prototype so that
+we can create multiple instances of our stack implementation. A single
+instance hardly seems useful for reuse. However, in attempting to do so, we
+run into a bit of a problem:
 
 @float Figure, f:js-proto-inst-noencapsulate
 @verbatim
@@ -523,14 +542,14 @@ encapsulation}
 By defining our methods on the prototype and our data in the constructor, we
 have created a bit of a problem. Although the data is easy to work with,
 @emph{it is no longer encapsulated}. The @var{_data} property is now public,
-accessible for the entire work to inspect and modify. As such, a common practice
-in JavaScript is to simply declare members that are "supposed to be" private
-with an underscore prefix, as we have done above, and then trust that nobody
-will make use of them. Not a great solution.
+accessible for the entire work to inspect and modify. As such, a common
+practice in JavaScript is to simply declare members that are "supposed to
+be" private with an underscore prefix, as we have done above, and then trust
+that nobody will make use of them. Not a great solution.
 
-Another solution is to use a concept called @dfn{privileged members}, which uses
-closures defined in the constructor rather than functions defined in the
-prototype:
+Another solution is to use a concept called @dfn{privileged members}, which
+uses closures defined in the constructor rather than functions defined in
+the prototype:
 
 @float Figure, f:js-privileged-members
 @verbatim
@@ -560,39 +579,40 @@ console.log( inst._data ); // undefined
 @end float
 
 You may notice a strong similarity between @ref{f:js-encapsulation-ex} and
-@ref{f:js-privileged-members}. They are doing essentially the same thing, the
-only difference being that @ref{f:js-encapsulation-ex} is returning a single
-object and @ref{f:js-privileged-members} represents a constructor that may be
-instantiated.
+@ref{f:js-privileged-members}. They are doing essentially the same thing,
+the only difference being that @ref{f:js-encapsulation-ex} is returning a
+single object and @ref{f:js-privileged-members} represents a constructor
+that may be instantiated.
 
-When using privileged members, one would define all members that need access to
-such members in the constructor and define all remaining members in the
+When using privileged members, one would define all members that need access
+to such members in the constructor and define all remaining members in the
 prototype. However, this introduces a rather large problem that makes this
 design decision a poor one in practice: @emph{Each time @var{Stack} is
 instantiated, @var{push} and @var{pop} have to be redefined, taking up
-additional memory and CPU cycles}. Those methods will be kept in memory until
-the instance of @var{Stack} is garbage collected.
+additional memory and CPU cycles}. Those methods will be kept in memory
+until the instance of @var{Stack} is garbage collected.
 
-In @ref{f:js-privileged-members}, these considerations may not seem like much of
-an issue. However, consider a constructor that defines tens of methods and could
-potentially have hundreds of instances. For this reason, you will often see the
-concepts demonstrated in @ref{f:js-proto-inst-noencapsulate} used more
-frequently in libraries that have even modest performance requirements.
+In @ref{f:js-privileged-members}, these considerations may not seem like
+much of an issue. However, consider a constructor that defines tens of
+methods and could potentially have hundreds of instances. For this reason,
+you will often see the concepts demonstrated in
+@ref{f:js-proto-inst-noencapsulate} used more frequently in libraries that
+have even modest performance requirements.
 
 @node Hacking Around the Issue of Encapsulation
 @subsection Hacking Around the Issue of Encapsulation
-Since neither @ref{f:js-encapsulation-ex} nor @ref{f:js-privileged-members} are
-acceptable implementations for strong Classical Object-Oriented code, another
-solution is needed. Based on what we have seen thus far, let's consider our
-requirements:
+Since neither @ref{f:js-encapsulation-ex} nor @ref{f:js-privileged-members}
+are acceptable implementations for strong Classical Object-Oriented code,
+another solution is needed. Based on what we have seen thus far, let's
+consider our requirements:
 
 @itemize
 @item
-Our implementation must not break encapsulation. That is - we should be
+Our implementation must not break encapsulation. That is---we should be
 enforcing encapsulation, not simply trusting our users not to touch.
 @item
-We must be gentle with our memory allocations and processing. This means placing
-@emph{all} methods within the prototype.
+We must be gentle with our memory allocations and processing. This means
+placing @emph{all} methods within the prototype.
 @item
 We should not require any changes to how the developer uses the
 constructor/object. It should operate just like any other construct in
@@ -602,11 +622,11 @@ JavaScript.
 We can accomplish the above by using the encapsulation concepts from
 @ref{f:js-encapsulation-ex} and the same prototype model demonstrated in
 @ref{f:js-proto-inst-noencapsulate}. The problem with
-@ref{f:js-encapsulation-ex}, which provided proper encapsulation, was that it
-acted as a Singleton. We could not create multiple instances of it and, even if
-we could, they would end up sharing the same data. To solve this problem, we
-need a means of distinguishing between each of the instances so that we can
-access the data of each separately:
+@ref{f:js-encapsulation-ex}, which provided proper encapsulation, was that
+it acted as a Singleton. We could not create multiple instances of it and,
+even if we could, they would end up sharing the same data. To solve this
+problem, we need a means of distinguishing between each of the instances so
+that we can access the data of each separately:
 
 @float Figure, f:js-encapsulate-instance
 @verbatim
@@ -617,8 +637,8 @@ var Stack = ( function()
 
     var S = function()
     {
-        // set the instance id of this instance, then increment it to ensure the
-        // value is unique for the next instance
+        // set the instance id of this instance, then increment it to ensure
+        // the value is unique for the next instance
         this.__iid = iid++;
 
         // initialize our data for this instance
@@ -654,23 +674,24 @@ stack2.pop(); // bar
 @caption{Encapsulating data per instance}
 @end float
 
-This would seem to accomplish each of our above goals. Our implementation does
-not break encapsulation, as nobody can get at the data. Our methods are part of
-the @var{Stack} prototype, so we are not redefining it with each instance,
-eliminating our memory and processing issues. Finally, @var{Stack} instances can
-be instantiated and used just like any other object in JavaScript; the developer
-needn't adhere to any obscure standards in order to emulate encapsulation.
+This would seem to accomplish each of our above goals. Our implementation
+does not break encapsulation, as nobody can get at the data. Our methods are
+part of the @var{Stack} prototype, so we are not redefining it with each
+instance, eliminating our memory and processing issues. Finally, @var{Stack}
+instances can be instantiated and used just like any other object in
+JavaScript; the developer needn't adhere to any obscure standards in order
+to emulate encapsulation.
 
-Excellent! However, our implementation does introduce a number of issues that we
-hadn't previously considered:
+Excellent! However, our implementation does introduce a number of issues
+that we hadn't previously considered:
 
 @itemize
 @item
-Our implementation is hardly concise. Working with our ``private'' properties
-requires that we add ugly instance lookup code@footnote{We could encapsulate
-this lookup code, but we would then have the overhead of an additional method
-call with very little benefit; we cannot do something like: @samp{this.stack}.},
-obscuring the actual domain logic.
+Our implementation is hardly concise. Working with our ``private''
+properties requires that we add ugly instance lookup code@footnote{We could
+encapsulate this lookup code, but we would then have the overhead of an
+additional method call with very little benefit; we cannot do something
+like: @samp{this.stack}.}, obscuring the actual domain logic.
 @item
 Most importantly: @emph{this implementation introduces memory leaks}.
 @end itemize
@@ -678,68 +699,71 @@ Most importantly: @emph{this implementation introduces memory leaks}.
 What do we mean by ``memory leaks''? Consider the usage example in
 @ref{f:js-encapsulate-instance}. What happens when were are done using
 @var{stack1} and @var{stack2} and they fall out of scope? They will be GC'd.
-However, take a look at our @var{idata} variable. The garbage collector will not
-know to free up the data for our particular instance. Indeed, it cannot, because
-we are still holding a reference to that data as a member of the @var{idata}
-array.
+However, take a look at our @var{idata} variable. The garbage collector will
+not know to free up the data for our particular instance. Indeed, it cannot,
+because we are still holding a reference to that data as a member of the
+@var{idata} array.
 
-Now imagine that we have a long-running piece of software that makes heavy use
-of @var{Stack}. This software will use thousands of instances throughout its
-life, but they are used only briefly and then discarded. Let us also imagine
-that the stacks are very large, perhaps holding hundreds of elements, and that
-we do not necessarily @code{pop()} every element off of the stack before we
-discard it.
+Now imagine that we have a long-running piece of software that makes heavy
+use of @var{Stack}. This software will use thousands of instances throughout
+its life, but they are used only briefly and then discarded. Let us also
+imagine that the stacks are very large, perhaps holding hundreds of
+elements, and that we do not necessarily @code{pop()} every element off of
+the stack before we discard it.
 
-Imagine that we examine the memory usage throughout the life of this software.
-Each time a stack is used, additional memory will be allocated. Each time we
-@code{push()} an element onto the stack, additional memory is allocated for that
-element. Because our @var{idata} structure is not freed when the @var{Stack}
-instance goes out of scope, we will see the memory continue to rise. The memory
-would not drop until @var{Stack} itself falls out of scope, which may not be
-until the user navigates away from the page.
+Imagine that we examine the memory usage throughout the life of this
+software.  Each time a stack is used, additional memory will be allocated.
+Each time we @code{push()} an element onto the stack, additional memory is
+allocated for that element. Because our @var{idata} structure is not freed
+when the @var{Stack} instance goes out of scope, we will see the memory
+continue to rise. The memory would not drop until @var{Stack} itself falls
+out of scope, which may not be until the user navigates away from the page.
 
-From our perspective, this is not a memory leak. Our implementation is working
-exactly as it was developer. However, to the user of our stack implementation,
-this memory management is out of their control. From their perspective, this is
-indeed a memory leak that could have terrible consequences on their software.
+From our perspective, this is not a memory leak. Our implementation is
+working exactly as it was developer. However, to the user of our stack
+implementation, this memory management is out of their control. From their
+perspective, this is indeed a memory leak that could have terrible
+consequences on their software.
 
-This method of storing instance data was ease.js's initial ``proof-of-concept''
-implementation (@pxref{Class Storage}). Clearly, this was not going to work;
-some changes to this implementation were needed.
+This method of storing instance data was ease.js's initial
+``proof-of-concept'' implementation (@pxref{Class Storage}). Clearly, this
+was not going to work; some changes to this implementation were needed.
 
 @anchor{Instance Memory Considerations}
 @subsubsection Instance Memory Considerations
-JavaScript does not provide destructors to let us know when an instance is about
-to be GC'd, so we unfortunately cannot know when to free instance data from
-memory in @ref{f:js-encapsulate-instance}. We are also not provided with an API
-that can return the reference count for a given object. We could provide a
-method that the user could call when they were done with the object, but that is
-not natural to a JavaScript developer and they could easily forget to call the
-method.
+JavaScript does not provide destructors to let us know when an instance is
+about to be GC'd, so we unfortunately cannot know when to free instance data
+from memory in @ref{f:js-encapsulate-instance}. We are also not provided
+with an API that can return the reference count for a given object. We could
+provide a method that the user could call when they were done with the
+object, but that is not natural to a JavaScript developer and they could
+easily forget to call the method.
 
-As such, it seems that the only solution for this rather large issue is to store
-instance data on the instance itself so that it will be freed with the instance
-when it is garbage collected (remember, we decided that privileged members were
-not an option in the discussion of @ref{f:js-privileged-members}). Hold on - we
-already did that in @ref{f:js-proto-inst-noencapsulate}; that caused our data to
-be available publicly. How do we approach this situation?
+As such, it seems that the only solution for this rather large issue is to
+store instance data on the instance itself so that it will be freed with the
+instance when it is garbage collected (remember, we decided that privileged
+members were not an option in the discussion of
+@ref{f:js-privileged-members}). Hold on - we already did that in
+@ref{f:js-proto-inst-noencapsulate}; that caused our data to be available
+publicly. How do we approach this situation?
 
-If we are adding data to an instance itself, there is no way to prevent it from
-being accessed in some manner, making true encapsulation impossible. The only
-options are to obscure it as best as possible, to make it too difficult to
-access in any sane implementation. For example:
+If we are adding data to an instance itself, there is no way to prevent it
+from being accessed in some manner, making true encapsulation impossible.
+The only options are to obscure it as best as possible, to make it too
+difficult to access in any sane implementation. For example:
 
 @itemize
 @item
-The property storing the private data could be made non-enumerable, requiring
-the use of a debugger or looking at the source code to determine the object
-name.
+The property storing the private data could be made non-enumerable,
+requiring the use of a debugger or looking at the source code to determine
+the object name.
   @itemize
   @item This would work only with ECMAScript 5 and later environments.
   @end itemize
 @item
 We could store all private data in an obscure property name, such as
-@var{___$$priv$$___}, which would make it clear that it should not be accessed.
+@var{___$$priv$$___}, which would make it clear that it should not be
+accessed.
   @itemize
   @item
   We could take that a step further and randomize the name, making it very
@@ -749,9 +773,9 @@ We could store all private data in an obscure property name, such as
   @end itemize
 @end itemize
 
-Regardless, it is clear that our data will only be ``encapsulated'' in the sense
-that it will not be available conveniently via a public API. Let's take a look
-at how something like that may work:
+Regardless, it is clear that our data will only be ``encapsulated'' in the
+sense that it will not be available conveniently via a public API. Let's
+take a look at how something like that may work:
 
 @float Figure, f:js-obscure-private
 @verbatim
@@ -762,8 +786,8 @@ var Stack = ( function()
 
     var S = function()
     {
-        // define a non-enumerable property to store our private data (will only
-        // work in ES5+ environments)
+        // define a non-enumerable property to store our private data (will
+        // only work in ES5+ environments)
         Object.defineProperty( this, _privname, {
             enumerable:   false,
             writable:     false,
@@ -794,31 +818,33 @@ var inst = new Stack();
 inst.push( 'foo' );
 inst.pop(); // foo
 @end verbatim
-@caption{Using a random, non-enumerable property name to store private members}
+@caption{Using a random, non-enumerable property name to store private
+members}
 @end float
 
-Now we are really starting to hack around what JavaScript provides for us. We
-seem to be combining the encapsulation issues presented in
+Now we are really starting to hack around what JavaScript provides for us.
+We seem to be combining the encapsulation issues presented in
 @ref{f:js-proto-inst-noencapsulate} and the obscurity demonstrated in
-@ref{f:js-encapsulate-instance}. In addition, we our implementation depends on
-ECMAScript 5 (ideally, we would detect that and fall back to normal, enumerable
-properties in pre-ES5 environments, which ease.js does indeed do). This seems to
-be a case of encapsulation through obscurity@footnote{A play on ``security
-through obscurity''.}. While our implementation certainly makes it difficult to
-get at the private member data, it is also very obscure and inconvenient to work
-with. Who wants to write Object-Oriented code like that?
+@ref{f:js-encapsulate-instance}. In addition, we our implementation depends
+on ECMAScript 5 (ideally, we would detect that and fall back to normal,
+enumerable properties in pre-ES5 environments, which ease.js does indeed
+do). This seems to be a case of encapsulation through obscurity@footnote{A
+play on ``security through obscurity''.}. While our implementation certainly
+makes it difficult to get at the private member data, it is also very
+obscure and inconvenient to work with. Who wants to write Object-Oriented
+code like that?
 
 @subsubsection Other Considerations
 We have conveniently omitted a number of other important factors in our
-discussion thus far. Before continuing, they deserve some mention and careful
-consideration.
+discussion thus far. Before continuing, they deserve some mention and
+careful consideration.
 
-How would we implement private methods? We could add them to our private member
-object, just as we defined @var{stack} in @ref{f:js-obscure-private}, but that
-would cause it to be redefined with each instance, raising the same issues that
-were discussed with @ref{f:js-privileged-members}. Therefore, we would have to
-define them in a separate ``prototype'', if you will, that only we have access
-to:
+How would we implement private methods? We could add them to our private
+member object, just as we defined @var{stack} in @ref{f:js-obscure-private},
+but that would cause it to be redefined with each instance, raising the same
+issues that were discussed with @ref{f:js-privileged-members}. Therefore, we
+would have to define them in a separate ``prototype'', if you will, that
+only we have access to:
 
 @float Figure, f:js-obscure-private-methods
 @verbatim
@@ -829,8 +855,8 @@ var Stack = ( function()
 
     var S = function()
     {
-        // define a non-enumerable property to store our private data (will only
-        // work in ES5+ environments)
+        // define a non-enumerable property to store our private data (will
+        // only work in ES5+ environments)
         Object.defineProperty( this, _privname, {
             // ... (see previous example)
         } );
@@ -840,8 +866,8 @@ var Stack = ( function()
     var priv_methods = {
         getStack: function()
         {
-            // note that, in order for 'this' to be bound to our instance, it
-            // must be passed as first argument to call() or apply()
+            // note that, in order for 'this' to be bound to our instance,
+            // it must be passed as first argument to call() or apply()
             return this[ _privname ].stack;
         },
     };
@@ -872,31 +898,33 @@ inst.pop(); // foo
 @end float
 
 While this does solve our problem, it further reduces code clarity. The
-implementation in @ref{f:js-obscure-private-methods} is certainly a far cry from
-something like @samp{this._getStack()}, which is all you would need to do in
-ease.js.
+implementation in @ref{f:js-obscure-private-methods} is certainly a far cry
+from something like @samp{this._getStack()}, which is all you would need to
+do in ease.js.
 
 Another consideration is a protected (@pxref{Access Modifiers}) member
 implementation, the idea being that subtypes should inherit both public and
-protected members. Inheritance is not something that we had to worry about with
-private members, so this adds an entirely new layer of complexity to the
-implementation. This would mean somehow making a protected prototype available
-to subtypes through the public prototype. Given our implementation in the
-previous figures, this would likely mean an awkward call that somewhat
-resembles: @samp{this[ _protname ].name}.
+protected members. Inheritance is not something that we had to worry about
+with private members, so this adds an entirely new layer of complexity to
+the implementation. This would mean somehow making a protected prototype
+available to subtypes through the public prototype. Given our implementation
+in the previous figures, this would likely mean an awkward call that
+somewhat resembles: @samp{this[ _protname ].name}.
 
 Although the implementations show in @ref{f:js-obscure-private} and
-@ref{f:js-obscure-private-methods} represent a creative hack, this is precisely
-one of the reasons ease.js was created - to encapsulate such atrocities that
-would make code that is difficult to use, hard to maintain and easy to introduce
-bugs. One shouldn't have to have a deep understanding of JavaScript's prototype
-model in order to write the most elementary of Classical Object-Oriented code.
-For example, the constructors in the aforementioned figures directly set up an
-object in which to store private members. ease.js will do this for you before
-calling the @code{__construct()} method. Furthermore, ease.js does not require
+@ref{f:js-obscure-private-methods} represent a creative hack, this is
+precisely one of the reasons ease.js was created - to encapsulate such
+atrocities that would make code that is difficult to use, hard to maintain
+and easy to introduce bugs. One shouldn't have to have a deep understanding
+of JavaScript's prototype model in order to write the most elementary of
+Classical Object-Oriented code.  For example, the constructors in the
+aforementioned figures directly set up an object in which to store private
+members. ease.js will do this for you before calling the
+@code{__construct()} method. Furthermore, ease.js does not require
 referencing that object directly, like we must do in our methods in
-@ref{f:js-obscure-private}. Nor does ease.js have an awkward syntax for invoking
-private methods. We will explore how this is handled in the following section.
+@ref{f:js-obscure-private}. Nor does ease.js have an awkward syntax for
+invoking private methods. We will explore how this is handled in the
+following section.
 
 
 @node The Visibility Object
@@ -929,24 +957,25 @@ inst.pop(); // foo
 @end float
 
 The above implementation is much less impressive looking than our prior
-examples. What we have done is encapsulate the excess logic needed to emulate a
-class and got right down to business. ease.js will take the class definition
-above and generate an object much like we had done in the prior examples, with a
-few improvements.
+examples. What we have done is encapsulate the excess logic needed to
+emulate a class and got right down to business. ease.js will take the class
+definition above and generate an object much like we had done in the prior
+examples, with a few improvements.
 
-If you have not read over the previous sections, you are recommended to do so
-before continuing in order to better understand the rationale and finer
+If you have not read over the previous sections, you are recommended to do
+so before continuing in order to better understand the rationale and finer
 implementation details.
 
 The secret behind ease.js's visibility implementation (@pxref{Access
 Modifiers}) is referred to internally as the @dfn{visibility object} (or, in
-older commits and some notes, the @dfn{property object}). Consider the problem
-regarding the verbosity of our private property accessors and method calls in
-@ref{f:js-obscure-private-methods}. It would be much more convenient if the
-properties and methods were bound to @var{this} so that they can be accessed
-more naturally, as would be expected by a programmer familiar with classes in
-other Classical Object-Oriented languages (@pxref{f:stack-using-easejs}). This
-can be done using @code{call()} or @code{apply()}:
+older commits and some notes, the @dfn{property object}). Consider the
+problem regarding the verbosity of our private property accessors and method
+calls in @ref{f:js-obscure-private-methods}. It would be much more
+convenient if the properties and methods were bound to @var{this} so that
+they can be accessed more naturally, as would be expected by a programmer
+familiar with classes in other Classical Object-Oriented languages
+(@pxref{f:stack-using-easejs}). This can be done using @code{call()} or
+@code{apply()}:
 
 @float Figure, f:function-context
 @verbatim
@@ -961,13 +990,13 @@ getName.call( obj ); // "foo"
 @caption{Calling a function within the context of a given object}
 @end float
 
-@ref{f:function-context} demonstrates the concept we are referring to. Given an
-arbitrary object @var{obj}, we can call any given method (in this case,
+@ref{f:function-context} demonstrates the concept we are referring to. Given
+an arbitrary object @var{obj}, we can call any given method (in this case,
 @code{getName()}, binding @var{this} to that object. This is precisely what
 ease.js does with each method call. To understand this process, we have to
-explore two concepts: the visibility object itself and method wrapping. We will
-start by discussing the visibility object in more detail and cover method
-wrapping later on (@pxref{Method Wrapping}).
+explore two concepts: the visibility object itself and method wrapping. We
+will start by discussing the visibility object in more detail and cover
+method wrapping later on (@pxref{Method Wrapping}).
 
 @menu
 * Visibility Object Implementation::  Design of the visibility object
@@ -983,35 +1012,37 @@ The visibility object is mostly simply represented in the following diagram:
 @caption{Structure of the visibility object}
 @end float
 
-Specifically, the visibility object is a prototype chain containing the private
-members of the class associated with the method currently being invoked on the
-current instance, its protected members (including those inherited from its
-supertype) and the public members (also including those inherited from the
-supertype). To accomplish this, the visibility object has the following
-properties:
+Specifically, the visibility object is a prototype chain containing the
+private members of the class associated with the method currently being
+invoked on the current instance, its protected members (including those
+inherited from its supertype) and the public members (also including those
+inherited from the supertype). To accomplish this, the visibility object has
+the following properties:
 
 @itemize
 @item
-The private object is @dfn{swappable} - that is, it is the only portion of the
-prototype chain that is replaced between calls to various methods.
+The private object is @dfn{swappable} - that is, it is the only portion of
+the prototype chain that is replaced between calls to various methods.
   @itemize
   @item
   It is for this reason that the private object is placed atop the prototype
-  chain. This allows it to be swapped very cheaply by simply passing different
-  objects to be bound to @code{this}.
+  chain. This allows it to be swapped very cheaply by simply passing
+  different objects to be bound to @code{this}.
   @end itemize
 @item
-Both the private and protected objects are initialized during instantiation by
-the @code{__initProps()} method attached by @code{ClassBuilder} to each class
-during definition.
+Both the private and protected objects are initialized during instantiation
+by the @code{__initProps()} method attached by @code{ClassBuilder} to each
+class during definition.
   @itemize
   @item
-  Properties are cloned to ensure references are not shared between instances.
+  Properties are cloned to ensure references are not shared between
+  instances.
   @item
-  Methods are copied by reference, since their implementations are immutable.
+  Methods are copied by reference, since their implementations are
+  immutable.
   @item
-  This must be done because neither protected nor private members may be added
-  to the prototype chain of a class.
+  This must be done because neither protected nor private members may be
+  added to the prototype chain of a class.
     @itemize
     @item
     Doing so would effectively make them public.
@@ -1020,21 +1051,21 @@ during definition.
     @end itemize
   @end itemize
 @item
-Public members are a part of the class prototype chain as you would expect in
-any conventional prototype.
+Public members are a part of the class prototype chain as you would expect
+in any conventional prototype.
   @itemize
   @item
-  Public @emph{properties} only are initialized by @code{__initProps()}, just as
-  private and protected properties, to ensure that no references are shared
-  between instances.
+  Public @emph{properties} only are initialized by @code{__initProps()},
+  just as private and protected properties, to ensure that no references are
+  shared between instances.
   @end itemize
 @end itemize
 
-As a consequence of the above, it is then clear that there must be a separate
-visibility object (prototype chain) @emph{for each supertype of each instance},
-because there must be a separate private object for each subtype of each
-instance. Let us consider for a moment why this is necessary with the following
-sample of code:
+As a consequence of the above, it is then clear that there must be a
+separate visibility object (prototype chain) @emph{for each supertype of
+each instance}, because there must be a separate private object for each
+subtype of each instance. Let us consider for a moment why this is necessary
+with the following sample of code:
 
 @float Figure, f:priv-swap-rationale
 @verbatim
@@ -1065,23 +1096,23 @@ C0().getName(); // "Foo"
 
 @ref{f:priv-swap-rationale} demonstrates why the private object
 swapping@footnote{The term ``swapping'' can be a bit deceptive. While we are
-swapping in the sense that we are passing an entirely new private object as the
-context to a method, we are @emph{not} removing an object from the prototype chain and
-adding another in place of it. They @emph{do}, however, share the same prototype
-chain.} is indeed necessary. If a subtype does @emph{not} override a super
-method that uses a private member, it is important that the private member be
-accessible to the method when it is called. In @ref{f:priv-swap-rationale}, if
-we did not swap out the object, @var{_name} would be undefined when invoked on
-@var{C2}.
+swapping in the sense that we are passing an entirely new private object as
+the context to a method, we are @emph{not} removing an object from the
+prototype chain and adding another in place of it. They @emph{do}, however,
+share the same prototype chain.} is indeed necessary. If a subtype does
+@emph{not} override a super method that uses a private member, it is
+important that the private member be accessible to the method when it is
+called. In @ref{f:priv-swap-rationale}, if we did not swap out the object,
+@var{_name} would be undefined when invoked on @var{C2}.
 
 Given this new information, the implementation would more formally be
-represented as a collection of objects @var{V} for class @var{C} and each of its
-supertypes as denoted by @var{C\_n}, with @var{C\_0} representing the class
-having been instantiated and any integer @var{n} > 0 representing the closest
-supertype, such that each @var{V\_n} is associated with @var{C\_n},
-@var{V\_n\^x} is the visibility object bound to any method associated with class
-@var{C\_x} and each @var{V} shares the same prototype chain @var{P\_n} for any
-given instance of @var{C\_n}:
+represented as a collection of objects @var{V} for class @var{C} and each of
+its supertypes as denoted by @var{C\_n}, with @var{C\_0} representing the
+class having been instantiated and any integer @var{n} > 0 representing the
+closest supertype, such that each @var{V\_n} is associated with @var{C\_n},
+@var{V\_n\^x} is the visibility object bound to any method associated with
+class @var{C\_x} and each @var{V} shares the same prototype chain @var{P\_n}
+for any given instance of @var{C\_n}:
 
 @float Figure, f:visobj-collection
 @image{img/visobj-collection-wide}
@@ -1099,30 +1130,30 @@ prototype of every @var{V\_n}.
 @var{C\_n} is re-used as the prototype for each @var{P\_n}.
 @end itemize
 
-Consequently, on instantiation of class @var{C\_n}, we incur a performance hit
-from @code{__initProps()} for the initialization of each member of @var{V\_x}
-and @var{P\_x}, as well as each property of @var{C\_x}, recursively for each
-value of @var{m} >= @var{x} >= @var{n} (that is, supertypes are initialized
-first), where @var{m} is equal to the number of supertypes of class @var{C\_n} +
-1.@footnote{There is room for optimization in this implementation, which
-will be left for future versions of ease.js.}
+Consequently, on instantiation of class @var{C\_n}, we incur a performance
+hit from @code{__initProps()} for the initialization of each member of
+@var{V\_x} and @var{P\_x}, as well as each property of @var{C\_x},
+recursively for each value of @var{m} >= @var{x} >= @var{n} (that is,
+supertypes are initialized first), where @var{m} is equal to the number of
+supertypes of class @var{C\_n} + 1.@footnote{There is room for optimization
+in this implementation, which will be left for future versions of ease.js.}
 
 The instance stores a reference to each of the visibility objects @var{V},
-indexed by an internal class identifier (which is simply incremented for each
-new class definition, much like we did with the instance id in
-@ref{f:js-encapsulate-instance}). When a method is called, the visibility object
-that matches the class identifier associated with the invoked method is then
-passed as the context (bound to @var{this}) for that method (@pxref{Method
-Wrapping}).
+indexed by an internal class identifier (which is simply incremented for
+each new class definition, much like we did with the instance id in
+@ref{f:js-encapsulate-instance}). When a method is called, the visibility
+object that matches the class identifier associated with the invoked method
+is then passed as the context (bound to @var{this}) for that method
+(@pxref{Method Wrapping}).
 
 @node Property Proxies
 @subsubsection Property Proxies
-Astute readers may notice that the visibility implementation described in the
-previous section (@pxref{Visibility Object Implementation}) has one critical
-flaw stemming from how prototypes in JavaScript are implemented: setting a
-property on the visibility object bound to the method will set the property on
-that object, but @emph{not necessarily on its correct object}. The following
-example will demonstrate this issue:
+Astute readers may notice that the visibility implementation described in
+the previous section (@pxref{Visibility Object Implementation}) has one
+critical flaw stemming from how prototypes in JavaScript are implemented:
+setting a property on the visibility object bound to the method will set the
+property on that object, but @emph{not necessarily on its correct object}.
+The following example will demonstrate this issue:
 
 @float Figure, f:proto-set-issue
 @verbatim
@@ -1138,8 +1169,8 @@ var pub = {
     priv = function() {}
 ;
 
-// set up our visibility object's prototype chain (we're leaving the protected
-// layer out of the equation)
+// set up our visibility object's prototype chain (we're leaving the
+// protected layer out of the equation)
 priv.prototype = pub;
 
 // create our visibility object
@@ -1170,17 +1201,19 @@ vis.foo; // "moo"
 
 Retrieving property values and invoking methods are not a problem. This is
 because values further down the prototype chain peek through ``holes'' in
-objects further up the chain. Since @var{vis} in @ref{f:proto-set-issue} has no
-value for property @var{foo} (note that a value of @code{undefined} is still a
-value), it looks at its prototype, @var{pub}, and finds the value there.
+objects further up the chain. Since @var{vis} in @ref{f:proto-set-issue} has
+no value for property @var{foo} (note that a value of @code{undefined} is
+still a value), it looks at its prototype, @var{pub}, and finds the value
+there.
 
-However, the story changes a bit when we try to set a value. When we assign a
-value to member @var{foo} of @var{vis}, we are in fact setting the property on
-@var{vis} itself, @emph{not} @var{pub}. This fills that aforementioned ``hole'',
-masking the value further down the prototype chain (our value in @var{pub}).
-This has the terrible consequence that if we were to set a public/protected
-property value from within a method, it would only be accessible from within
-that instance, for @emph{only that visibility object}.
+However, the story changes a bit when we try to set a value. When we assign
+a value to member @var{foo} of @var{vis}, we are in fact setting the
+property on @var{vis} itself, @emph{not} @var{pub}. This fills that
+aforementioned ``hole'', masking the value further down the prototype chain
+(our value in @var{pub}).  This has the terrible consequence that if we were
+to set a public/protected property value from within a method, it would only
+be accessible from within that instance, for @emph{only that visibility
+object}.
 
 To summarize:
 
@@ -1188,28 +1221,30 @@ To summarize:
 @item
 Methods are never an issue, as they are immutable (in the sense of a class).
 @item
-Reading properties are never an issue; they properly ``peek'' through holes in
-the prototype chain.
+Reading properties are never an issue; they properly ``peek'' through holes
+in the prototype chain.
 @item
-Writing private values are never an issue, as they will be properly set on that
-visibility object. The value needn't be set on any other visibility objects,
-since private values are to remain exclusive to that instance within the context
-of that class only (it should not be available to methods of supertypes).
+Writing private values are never an issue, as they will be properly set on
+that visibility object. The value needn't be set on any other visibility
+objects, since private values are to remain exclusive to that instance
+within the context of that class only (it should not be available to methods
+of supertypes).
 @item
-We run into issues when @emph{setting} public or protected values, as they are
-not set on their appropriate object.
+We run into issues when @emph{setting} public or protected values, as they
+are not set on their appropriate object.
 @end itemize
 
 This issue is huge. Before ECMAScript 5, it may have been a show-stopper,
-preventing us from using a familiar @code{this.prop} syntax within classes and
-making the framework more of a mess than an elegant implementation. It is also
-likely that this is the reason that frameworks like ease.js did not yet exist;
-ECMAScript 5 and browsers that actually implement it are still relatively new.
+preventing us from using a familiar @code{this.prop} syntax within classes
+and making the framework more of a mess than an elegant implementation. It
+is also likely that this is the reason that frameworks like ease.js did not
+yet exist; ECMAScript 5 and browsers that actually implement it are still
+relatively new.
 
-Fortunately, ECMAScript 5 provides support for getters and setters. Using these,
-we can create a proxy from our visibility object to the appropriate members of
-the other layers (protected, public). Let us demonstrate this by building off of
-@ref{f:proto-set-issue}:
+Fortunately, ECMAScript 5 provides support for getters and setters. Using
+these, we can create a proxy from our visibility object to the appropriate
+members of the other layers (protected, public). Let us demonstrate this by
+building off of @ref{f:proto-set-issue}:
 
 @float Figure, f:proto-getset
 @verbatim
@@ -1239,16 +1274,17 @@ vis.foo; // "changed"
 @caption{Using getters/setters to proxy values to the appropriate object}
 @end float
 
-The implementation in @ref{f:proto-getset} is precisely how ease.js implements
-and @emph{enforces} the various levels of visibility.@footnote{One may wonder
-why we implemented a getter in @ref{f:proto-getset} when we had no trouble
-retrieving the value to begin with. In defining a @emph{setter} for @var{foo} on
-object @var{vis}, we filled that ``hole'', preventing us from ``seeing through''
-into the prototype (@var{pub}). Unfortunately, that means that we must use a
-getter in order to provide the illusion of the ``hole''.} This is both fortunate
+The implementation in @ref{f:proto-getset} is precisely how ease.js
+implements and @emph{enforces} the various levels of
+visibility.@footnote{One may wonder why we implemented a getter in
+@ref{f:proto-getset} when we had no trouble retrieving the value to begin
+with. In defining a @emph{setter} for @var{foo} on object @var{vis}, we
+filled that ``hole'', preventing us from ``seeing through'' into the
+prototype (@var{pub}). Unfortunately, that means that we must use a getter
+in order to provide the illusion of the ``hole''.} This is both fortunate
 and unfortunate; the project had been saved by getters/setters, but with a
-slight performance penalty. In order to implement this proxy, the following must
-be done:
+slight performance penalty. In order to implement this proxy, the following
+must be done:
 
 @itemize
 @item
@@ -1256,52 +1292,54 @@ For each public property, proxy from the protected object to the public.
 @item
 For each protected property, proxy from the private object to the
 protected.@footnote{One may also notice that we are not proxying public
-properties from the private member object to the public object. The reason for
-this is that getters/setters, being functions, @emph{are} properly invoked when
-nestled within the prototype chain. The reader may then question why ease.js did
-not simply convert each property to a getter/setter, which would prevent the
-need for proxying. The reason for this was performance - with the current
-implementation, there is only a penalty for accessing public members from within
-an instance, for example. However, accessing public members outside of the class
-is as fast as normal property access. By converting all properties to
-getters/setters, we would cause a performance hit across the board, which is
-unnecessary.}
+properties from the private member object to the public object. The reason
+for this is that getters/setters, being functions, @emph{are} properly
+invoked when nestled within the prototype chain. The reader may then
+question why ease.js did not simply convert each property to a
+getter/setter, which would prevent the need for proxying. The reason for
+this was performance - with the current implementation, there is only a
+penalty for accessing public members from within an instance, for example.
+However, accessing public members outside of the class is as fast as normal
+property access. By converting all properties to getters/setters, we would
+cause a performance hit across the board, which is unnecessary.}
 @end itemize
 
-Consequently, this means that accessing public properties from within the class
-will be slower than accessing the property outside of the class. Furthermore,
-accessing a protected property will @emph{always} incur a performance
-hit@footnote{How much of a performance hit are we talking? This will depend on
-environment. In the case of v8 (Node.js is used to run the performance tests
-currently), getters/setters are not yet optimized (converted to machine code),
-so they are considerably more slow than direct property access.
+Consequently, this means that accessing public properties from within the
+class will be slower than accessing the property outside of the class.
+Furthermore, accessing a protected property will @emph{always} incur a
+performance hit@footnote{How much of a performance hit are we talking? This
+will depend on environment. In the case of v8 (Node.js is used to run the
+performance tests currently), getters/setters are not yet optimized
+(converted to machine code), so they are considerably more slow than direct
+property access.
 
-For example: on one system using v8, reading public properties externally took
-only 0.0000000060s (direct access), whereas accessing the same property
+For example: on one system using v8, reading public properties externally
+took only 0.0000000060s (direct access), whereas accessing the same property
 internally took 0.0000001120s (through the proxy), which is a significant
-(18.6x) slow-down. Run that test 500,000 times, as the performance test does,
-and we're looking at 0.005s for direct access vs 0.056s for proxy access.},
-because it is always hidden behind the provide object and it cannot be accessed
-from outside of the class.  On the upside, accessing private members is fast (as
-in - ``normal'' speed). This has the benefit of encouraging proper OO practices
-by discouraging the use of public and protected properties. Note that methods,
-as they are not proxied, do not incur the same performance hit.
+(18.6x) slow-down. Run that test 500,000 times, as the performance test
+does, and we're looking at 0.005s for direct access vs 0.056s for proxy
+access.}, because it is always hidden behind the provide object and it
+cannot be accessed from outside of the class.  On the upside, accessing
+private members is fast (as in - ``normal'' speed). This has the benefit of
+encouraging proper OO practices by discouraging the use of public and
+protected properties. Note that methods, as they are not proxied, do not
+incur the same performance hit.
 
 Given the above implementation details, it is clear that ease.js has been
-optimized for the most common use case, indicative of proper OO development -
-the access of private properties from within classes, for which there will be no
-performance penalty.
+optimized for the most common use case, indicative of proper OO development
+- the access of private properties from within classes, for which there will
+be no performance penalty.
 
 @node Method Wrapping
 @subsection Method Wrapping
 The visibility object (@pxref{The Visibility Object}) is a useful tool for
-organizing the various members, but we still need some means of binding it to a
-method call. This is accomplished by wrapping each method in a closure that,
-among other things@footnote{The closure also sets the @code{__super()} method
-reference, if a super method exists, and returns the instance if @var{this} is
-returned from the method.}, uses @code{apply()} to forward the arguments to the
-method, binding @var{this} to the appropriate visibility object. This is very
-similar to the ES5 @code{Function.bind()} call.
+organizing the various members, but we still need some means of binding it
+to a method call. This is accomplished by wrapping each method in a closure
+that, among other things@footnote{The closure also sets the @code{__super()}
+method reference, if a super method exists, and returns the instance if
+@var{this} is returned from the method.}, uses @code{apply()} to forward the
+arguments to the method, binding @var{this} to the appropriate visibility
+object. This is very similar to the ES5 @code{Function.bind()} call.
 
 The following example demonstrates in an overly-simplistic way how ease.js
 handles class definitions and method wrapping.@footnote{ease.js, of course,
@@ -1311,8 +1349,8 @@ brevity, we simply provide one in our example.}
 @float Figure, f:method-wrapping
 @verbatim
 /**
- * Simple function that returns a prototype ("class"), generated from the given
- * definition and all methods bound to the provided visibility object
+ * Simple function that returns a prototype ("class"), generated from the
+ * given definition and all methods bound to the provided visibility object
  */
 function createClass( vis, dfn )
 {
@@ -1321,8 +1359,8 @@ function createClass( vis, dfn )
 
     for ( name in dfn )
     {
-        // ignore any members that are not part of our object (further down the
-        // chain)
+        // ignore any members that are not part of our object (further down
+        // the chain)
         if ( hasOwn.call( dfn, name ) === false )
         {
             continue;
@@ -1335,8 +1373,8 @@ function createClass( vis, dfn )
             continue;
         }
 
-        // enclose name in a closure to preserve it (otherwise it'll contain the
-        // name of the last member in the loop)
+        // enclose name in a closure to preserve it (otherwise it'll contain
+        // the name of the last member in the loop)
         C.prototype[ name ] = ( function( mname )
         {
             return function()
@@ -1378,176 +1416,181 @@ Each method call, unless optimized away by the engine, is equivalent to two
 function invocations, which cuts down on the available stack space.
   @itemize
   @item
-  The method wrapping may complicate tail call optimization, depending on the
-  JavaScript engine's implementation and whether or not it will optimize across
-  the stack, rather than just a single-depth recursive call.
+  The method wrapping may complicate tail call optimization, depending on
+  the JavaScript engine's implementation and whether or not it will optimize
+  across the stack, rather than just a single-depth recursive call.
   @item
-  As such, for operations that are highly dependent on stack space, one may wish
-  to avoid method calls and call functions directly.
+  As such, for operations that are highly dependent on stack space, one may
+  wish to avoid method calls and call functions directly.
   @end itemize
 @item
-There is a very slight performance hit (though worrying about this is likely to
-be a micro-optimization in the majority of circumstances).
+There is a very slight performance hit (though worrying about this is likely
+to be a micro-optimization in the majority of circumstances).
 @end itemize
 
-As mentioned previously, each visibility object is indexed by class identifier
-(@pxref{Visibility Object Implementation}). The appropriate visibility object is
-bound dynamically on method invocation based on the matching class identifier.
-Previously in this discussion, it was not clear how this identifier was
-determined at runtime. Since methods are shared by reference between subtypes,
-we cannot store a class identifier on the function itself.
+As mentioned previously, each visibility object is indexed by class
+identifier (@pxref{Visibility Object Implementation}). The appropriate
+visibility object is bound dynamically on method invocation based on the
+matching class identifier.  Previously in this discussion, it was not clear
+how this identifier was determined at runtime. Since methods are shared by
+reference between subtypes, we cannot store a class identifier on the
+function itself.
 
 The closure that wraps the actual method references the arguments that were
-passed to the function that created it when the class was defined. Among these
-arguments are the class identifier and a lookup method used to determine the
-appropriate visibility object to use for binding.@footnote{See
+passed to the function that created it when the class was defined. Among
+these arguments are the class identifier and a lookup method used to
+determine the appropriate visibility object to use for binding.@footnote{See
 @file{lib/MethodWrappers.js} for the method wrappers and
-@code{ClassBuilder.getMethodInstance()} for the lookup function.} Therefore, the
-wrapper closure will always know the appropriate class identifier. The lookup
-method is also passed @var{this}, which is bound to the instance automatically
-by JavaScript for the method call. It is on this object that the visibility
-objects are stored (non-enumerable; @pxref{Instance Memory Considerations}),
-indexed by class identifier. The appropriate is simply returned.
+@code{ClassBuilder.getMethodInstance()} for the lookup function.} Therefore,
+the wrapper closure will always know the appropriate class identifier. The
+lookup method is also passed @var{this}, which is bound to the instance
+automatically by JavaScript for the method call. It is on this object that
+the visibility objects are stored (non-enumerable; @pxref{Instance Memory
+Considerations}), indexed by class identifier. The appropriate is simply
+returned.
 
 If no visibility object is found, @code{null} is returned by the lookup
 function, which causes the wrapper function to default to @var{this} as
-determined by JavaScript, which will be the instance that the method was invoked
-on, or whatever was bound to the function via a call to @code{call()} or
-@code{apply()}. This means that, currently, a visibility object can be
-explicitly specified for any method by invoking the method in the form of:
-@samp{inst.methodName.apply( visobj, arguments )}, which is consistent with how
-JavaScript is commonly used with other prototypes. However, it should be noted
-that this behavior is undocumented and subject to change in future releases
-unless it is decided that this implementation is ideal. It is therefore
-recommended to avoid using this functionality for the time being.@footnote{One
-one hand, keeping this feature is excellent in the sense that it is predictable.
-If all other prototypes work this way, why not ``classes'' as created through
-ease.js? At the same time, this is not very class-like. It permits manipulating
-the internal state of the class, which is supposed to be encapsulated. It also
-allows bypassing constructor logic and replacing methods at runtime. This is
-useful for mocking, but a complete anti-pattern in terms of Classical
-Object-Oriented development.}
+determined by JavaScript, which will be the instance that the method was
+invoked on, or whatever was bound to the function via a call to
+@code{call()} or @code{apply()}. This means that, currently, a visibility
+object can be explicitly specified for any method by invoking the method in
+the form of: @samp{inst.methodName.apply( visobj, arguments )}, which is
+consistent with how JavaScript is commonly used with other prototypes.
+However, it should be noted that this behavior is undocumented and subject
+to change in future releases unless it is decided that this implementation
+is ideal. It is therefore recommended to avoid using this functionality for
+the time being.@footnote{One one hand, keeping this feature is excellent in
+the sense that it is predictable.  If all other prototypes work this way,
+why not ``classes'' as created through ease.js? At the same time, this is
+not very class-like. It permits manipulating the internal state of the
+class, which is supposed to be encapsulated. It also allows bypassing
+constructor logic and replacing methods at runtime. This is useful for
+mocking, but a complete anti-pattern in terms of Classical Object-Oriented
+development.}
 
 @node Pre-ES5 Fallback
 @subsection Pre-ES5 Fallback
 For any system that is to remain functionally compatible across a number of
-environments, one must develop around the one with the least set of features. In
-the case of ease.js, this means designing around the fact that it must maintain
-support for older, often unsupported, environments.@footnote{ease.js was
-originally developed for use in software that would have to maintain
-compatibility as far back as IE6, while still operating on modern web browsers
-and within a server-side environment.} The line is drawn between ECMAScript 5
-and its predecessors.
+environments, one must develop around the one with the least set of
+features. In the case of ease.js, this means designing around the fact that
+it must maintain support for older, often unsupported,
+environments.@footnote{ease.js was originally developed for use in software
+that would have to maintain compatibility as far back as IE6, while still
+operating on modern web browsers and within a server-side environment.} The
+line is drawn between ECMAScript 5 and its predecessors.
 
 As mentioned when describing the proxy implementation (@pxref{Property
 Proxies}), ease.js's ability to create a framework that is unobtrusive and
-fairly easy to work with is attributed to features introduced in ECMAScript 5,
-primarily getters and setters. Without them, we cannot proxy between the
+fairly easy to work with is attributed to features introduced in ECMAScript
+5, primarily getters and setters. Without them, we cannot proxy between the
 different visibility layers (@pxref{Visibility Object Implementation}). As a
 consequence, @emph{we cannot use visibility layers within a pre-ES5
 environment}.
 
-This brings about the subject of graceful feature degradation. How do we fall
-back while still allowing ease.js to operate the same in both environments?
+This brings about the subject of graceful feature degradation. How do we
+fall back while still allowing ease.js to operate the same in both
+environments?
 
 @itemize
 @item
 Because getters/setters are unsupported, we cannot proxy (@pxref{Property
-Proxies}) between visibility layers (@pxref{Visibility Object Implementation}).
+Proxies}) between visibility layers (@pxref{Visibility Object
+Implementation}).
   @itemize
   @item
-  Visibility support is enforced for development, but it is not necessary in a
-  production environment (unless that environment makes heavy use of 3rd party
-  libraries that may abuse the absence of the feature).
+  Visibility support is enforced for development, but it is not necessary in
+  a production environment (unless that environment makes heavy use of 3rd
+  party libraries that may abuse the absence of the feature).
     @itemize
       @item
       Therefore, the feature can be safely dropped.
       @item
-      It is important that the developer develops the software in an ECMAScript 5+
-      environment to ensure that the visibility constraints are properly enforced.
-      The developer may then rest assured that their code will work properly in
-      pre-ES5 environments (so long as they are not using ES5 features in their
-      own code).
+      It is important that the developer develops the software in an
+      ECMAScript 5+ environment to ensure that the visibility constraints
+      are properly enforced.  The developer may then rest assured that their
+      code will work properly in pre-ES5 environments (so long as they are
+      not using ES5 features in their own code).
     @end itemize
   @end itemize
 @end itemize
 
 @subsubsection Visibility Fallback
-Visibility fallback is handled fairly simply in ease.js polymorphically with the
-@code{FallbackVisibilityObjectFactory} prototype (as opposed to
-@code{VisibilityObjectFactory} which is used in ES5+ environments), which does
-the following:
+Visibility fallback is handled fairly simply in ease.js polymorphically with
+the @code{FallbackVisibilityObjectFactory} prototype (as opposed to
+@code{VisibilityObjectFactory} which is used in ES5+ environments), which
+does the following:
 
 @itemize
 @item
-Property proxies are unsupported. As such, rather than returning a proxy object,
-@code{createPropProxy()} will simply return the object that was originally
-passed to it.
+Property proxies are unsupported. As such, rather than returning a proxy
+object, @code{createPropProxy()} will simply return the object that was
+originally passed to it.
 @item
 This will ultimately result in each layer (public, protected and private)
-referencing the same object (the class prototype, also known as the ``public''
-layer).
+referencing the same object (the class prototype, also known as the
+``public'' layer).
   @itemize
   @item
-  Consequently, all members will be public, just as they would have been without
-  visibility constraints.
+  Consequently, all members will be public, just as they would have been
+  without visibility constraints.
   @end itemize
 @end itemize
 
-Classical Object-Oriented programming has many rich features, but many of its
-``features'' are simply restrictions it places on developers. This simple fact
-works to our benefit. However, in this case of a visibility implementation, we
-aren't dealing only with restrictions. There is one exception.
+Classical Object-Oriented programming has many rich features, but many of
+its ``features'' are simply restrictions it places on developers. This
+simple fact works to our benefit. However, in this case of a visibility
+implementation, we aren't dealing only with restrictions. There is one
+exception.
 
 Unfortunately, this necessary fallback introduces a startling limitation:
-Consider what might happen if a subtype defines a private member with the same
-name as the supertype. Generally, this is not an issue. Subtypes have no
-knowledge of supertypes' private members, so there is no potential for conflict.
-Indeed, this is the case with our visibility implementation (@pxref{Visibility
-Object Implementation}. Unfortunately, if we merge all those layers into one,
-we introduce a potential for conflict.
+Consider what might happen if a subtype defines a private member with the
+same name as the supertype. Generally, this is not an issue. Subtypes have
+no knowledge of supertypes' private members, so there is no potential for
+conflict.  Indeed, this is the case with our visibility implementation
+(@pxref{Visibility Object Implementation}. Unfortunately, if we merge all
+those layers into one, we introduce a potential for conflict.
 
 @anchor{Private Member Dilemma}
 @subsubsection Private Member Dilemma
-With public and protected members (@pxref{Access Modifiers}), we don't have to
-worry about conflicts because they are inherited by subtypes
-(@pxref{Inheritance}). Private members are intended to remain distinct from any
-supertypes; only that specific class has access to its own private members. As
-such, inheritance cannot be permitted. However, by placing all values in the
-prototype chain (the public layer), we are permitting inheritance of every
-member. Under this circumstance, if a subtype were to define a member of the
-same name as a supertype, it would effectively be altering the value of its
-supertype. Furthermore, the supertype would have access to the same member,
-allowing it to modify the values of its @emph{subtypes}, which does not make
-sense at all!
+With public and protected members (@pxref{Access Modifiers}), we don't have
+to worry about conflicts because they are inherited by subtypes
+(@pxref{Inheritance}). Private members are intended to remain distinct from
+any supertypes; only that specific class has access to its own private
+members. As such, inheritance cannot be permitted. However, by placing all
+values in the prototype chain (the public layer), we are permitting
+inheritance of every member. Under this circumstance, if a subtype were to
+define a member of the same name as a supertype, it would effectively be
+altering the value of its supertype. Furthermore, the supertype would have
+access to the same member, allowing it to modify the values of its
+@emph{subtypes}, which does not make sense at all!
 
-This means that we have to place a certain restriction on ease.js as a whole; we
-must prevent private member name conflicts even though they cannot occur in ES5
-environments. This is unfortunate, but necessary in order to ensure feature
-compatibility across the board. This also has the consequence of allowing the
-system to fall back purely for performance benefits (no overhead of the
-visibility object).
+This means that we have to place a certain restriction on ease.js as a
+whole; we must prevent private member name conflicts even though they cannot
+occur in ES5 environments. This is unfortunate, but necessary in order to
+ensure feature compatibility across the board. This also has the consequence
+of allowing the system to fall back purely for performance benefits (no
+overhead of the visibility object).
 
 @subsubsection Forefitting Fallbacks
 Although ease.js allows flexibility in what environment one develops for, a
 developer may choose to support only ES5+ environments and make use of ES5
-features. At this point, the developer may grow frustrated with ease.js limiting
-its implementation for pre-ES5 environments when their code will not even run in
-a pre-ES5 environment.
+features. At this point, the developer may grow frustrated with ease.js
+limiting its implementation for pre-ES5 environments when their code will
+not even run in a pre-ES5 environment.
 
-For this reason, ease.js may include a feature in the future to disable these
-limitations on a class-by-class@footnote{Will also include traits in the
-future.} basis in order to provide additional syntax benefits, such as omission
-of the static access modifiers (@pxref{Static Implementation}) and removal of
-the private member conflict check.
+For this reason, ease.js may include a feature in the future to disable
+these limitations on a class-by-class@footnote{Will also include traits in
+the future.} basis in order to provide additional syntax benefits, such as
+omission of the static access modifiers (@pxref{Static Implementation}) and
+removal of the private member conflict check.
 
 
 @node Internal Methods/Objects
 @section Internal Methods/Objects
-There are a number of internal methods/objects that may be useful to developers
-who are looking to use some features of ease.js without using the full class
-system. An API will be provided to many of these in the future, once refactoring
-is complete. Until that time, it is not recommended that you rely on any of the
-functionality that is not provided via the public API (@code{index.js} or the
-global @var{easejs} object).
-
+There are a number of internal methods/objects that may be useful to
+developers who are looking to use some features of ease.js without using the
+full class system. An API will be provided to many of these in the future,
+once refactoring is complete. Until that time, it is not recommended that
+you rely on any of the functionality that is not provided via the public API
+(@code{index.js} or the global @var{easejs} object).

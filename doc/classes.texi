@@ -1,28 +1,30 @@
 @c  This document is part of the GNU ease.js manual.
 @c  Copyright (C) 2011, 2012, 2013, 2014 Mike Gerwitz
 @c    Permission is granted to copy, distribute and/or modify this document
-@c    under the terms of the GNU Free Documentation License, Version 1.3
-@c    or any later version published by the Free Software Foundation;
-@c    with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
-@c    Texts.  A copy of the license is included in the section entitled ``GNU
-@c    Free Documentation License''.
+@c    under the terms of the GNU Free Documentation License, Version 1.3 or
+@c    any later version published by the Free Software Foundation; with no
+@c    Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+@c    A copy of the license is included in the section entitled ``GNU Free
+@c    Documentation License''.
 
 @node Classes
 @chapter Working With Classes
-In Object-Oriented programming, the most common term you are likely to encounter
-is ``Class''. A @dfn{class} is like a blueprint for creating an @dfn{object},
-which is an @dfn{instance} of that class. Classes contain @dfn{members}, which
-include primarily properties and methods. A @dfn{property} is a value, much like
-a variable, that a class ``owns''. A @dfn{method}, when comparing with
-JavaScript, is a function that is ``owned'' by a class. As a consequence,
-properties and methods are not part of the global scope.
+In Object-Oriented programming, the most common term you are likely to
+encounter is ``Class''. A @dfn{class} is like a blueprint for creating an
+@dfn{object}, which is an @dfn{instance} of that class. Classes contain
+@dfn{members}, which include primarily properties and methods. A
+@dfn{property} is a value, much like a variable, that a class ``owns''. A
+@dfn{method}, when comparing with JavaScript, is a function that is
+``owned'' by a class. As a consequence, properties and methods are not part
+of the global scope.
 
-JavaScript does not support classes in the manner traditionally understood by
-Object-Oriented programmers. This is because JavaScript follows a different
-model which instead uses prototypes. Using this model, JavaScript supports
-basic instantiation and inheritance. Rather than instantiating classes,
-JavaScript instantiates constructors, which are functions. The following example
-illustrates how you would typically create a class-like object in JavaScript:
+JavaScript does not support classes in the manner traditionally understood
+by Object-Oriented programmers. This is because JavaScript follows a
+different model which instead uses prototypes. Using this model, JavaScript
+supports basic instantiation and inheritance. Rather than instantiating
+classes, JavaScript instantiates constructors, which are functions. The
+following example illustrates how you would typically create a class-like
+object in JavaScript:
 
 @float Figure, f:class-js
 @verbatim
@@ -49,30 +51,31 @@ illustrates how you would typically create a class-like object in JavaScript:
 @caption{Basic ``Class'' in JavaScript @emph{without} using ease.js}
 @end float
 
-This gets the job done, but the prototypal paradigm has a number of limitations
-amongst its incredible flexibility. For Object-Oriented programmers, it's both
-alien and inadequate. That is not to say that it is not useful. In fact, it is
-so flexible that an entire Object-Oriented framework was able to be built atop
-of it.
+This gets the job done, but the prototypal paradigm has a number of
+limitations amongst its incredible flexibility. For Object-Oriented
+programmers, it's both alien and inadequate. That is not to say that it is
+not useful. In fact, it is so flexible that an entire Object-Oriented
+framework was able to be built atop of it.
 
 ease.js aims to address the limitations of the prototype model and provide a
-familiar environment for Object-Oriented developers. Developers should not have
-to worry about @emph{how} classes are implemented in JavaScript (indeed, those
-details should be encapsulated). You, as a developer, should be concerned with
-only how to declare and use the classes. If you do not understand what a
-prototype is, that should be perfectly fine. You shouldn't need to understand it
-in order to use the library (though, it's always good to understand what a
-prototype is when working with JavaScript).
+familiar environment for Object-Oriented developers. Developers should not
+have to worry about @emph{how} classes are implemented in JavaScript
+(indeed, those details should be encapsulated). You, as a developer, should
+be concerned with only how to declare and use the classes. If you do not
+understand what a prototype is, that should be perfectly fine. You shouldn't
+need to understand it in order to use the library (though, it's always good
+to understand what a prototype is when working with JavaScript).
 
-In this chapter and those that follow, we will see the limitations that ease.js
-addresses. We will also see how to declare the classes using both prototypes and
-ease.js, until such a point where prototypes are no longer adequate.
+In this chapter and those that follow, we will see the limitations that
+ease.js addresses. We will also see how to declare the classes using both
+prototypes and ease.js, until such a point where prototypes are no longer
+adequate.
 
 @menu
 * Defining Classes::  Learn how to define a class with ease.js
 * Inheritance::       Extending classes from another
 * Static Members::    Members whose use do not require instantiation
-* Abstract Members::  Declare members, deferring their definition to subtypes
+* Abstract Members::  Declare members, deferring definition to subtypes
 * Method Proxies::    Methods that proxy calls to another object
 @end menu
 
@@ -93,34 +96,35 @@ Define anonymous class @var{C} as described by @var{dfn}.
 Define anonymous class @var{C} as described by @var{dfn}.
 @end table
 
-Class @var{C} can be defined in a number of manners, as listed above, provided
-a @dfn{definition object} @var{dfn} containing the class members and options. An
-optional string @var{name} may be provided to set an internal identifier for
-@var{C}, which may be used for reflection and error messages. If @var{name} is
-omitted, @var{C} will be declared anonymous.
+Class @var{C} can be defined in a number of manners, as listed above,
+provided a @dfn{definition object} @var{dfn} containing the class members
+and options. An optional string @var{name} may be provided to set an
+internal identifier for @var{C}, which may be used for reflection and error
+messages. If @var{name} is omitted, @var{C} will be declared anonymous.
 
-@code{Class} must be imported (@pxref{Including}) from @code{easejs.Class}; it
-is not available in the global scope.
+@code{Class} must be imported (@pxref{Including}) from @code{easejs.Class};
+it is not available in the global scope.
 
 @anchor{dfnobj}
 @subsection Definition Object
 @table @code
 @item dfn = @{ '[@var{keywords}] @var{name}': @var{value}[, ...] @}
-Define definition object @var{dfn} containing a member identified by @var{name},
-described by optional @var{keywords} with the value of @var{value}. The member
-type is determined by @code{typeof} @var{value}. Multiple members may be
-provided in a single definition object.
+Define definition object @var{dfn} containing a member identified by
+@var{name}, described by optional @var{keywords} with the value of
+@var{value}. The member type is determined by @code{typeof} @var{value}.
+Multiple members may be provided in a single definition object.
 @end table
 
 The definition object @var{dfn} has the following properties:
 @enumerate
 @item
-The keys represent the @dfn{member declaration}, which may optionally contain
-one or more @var{keywords} delimited by spaces. A space must delimit the final
-keyword and @var{name}.
+The keys represent the @dfn{member declaration}, which may optionally
+contain one or more @var{keywords} delimited by spaces. A space must delimit
+the final keyword and @var{name}.
 @enumerate
   @item
-  @var{keywords} must consist only of recognized tokens, delimited by spaces.
+  @var{keywords} must consist only of recognized tokens, delimited by
+  spaces.
 
   @item
   Each token in @var{keywords} must be unique per @var{name}.
@@ -131,9 +135,9 @@ The @var{value} represents the @dfn{member definition}, the type of which
 determines what type of member will be declared.
 @enumerate
   @item
-  A @var{value} of type @code{function} will define a @dfn{method}, which is an
-  invokable member whose context is assigned to the class or class instance
-  depending on @var{keywords}.
+  A @var{value} of type @code{function} will define a @dfn{method}, which is
+  an invokable member whose context is assigned to the class or class
+  instance depending on @var{keywords}.
 
   @item
   All other types of @var{value} will define a @dfn{property} - a mutable
@@ -159,7 +163,8 @@ For any member @var{name}:
 See @ref{Member Keywords,,Member Keywords} for @var{keywords} restrictions.
 @end itemize
 
-For any member @var{name} declared as a @emph{method}, the following must hold
+For any member @var{name} declared as a @emph{method}, the following must
+hold
 true:
 @itemize
 @item
@@ -168,27 +173,28 @@ true:
 @var{name} (@pxref{Inheritance}).
 @item
 @var{keywords} of member @var{name} may not contain both
-@ref{Member Keywords,,@code{static}} and @ref{Member Keywords,,@code{virtual}}
-keywords (@pxref{Static Members} and @ref{Inheritance}).
+@ref{Member Keywords,,@code{static}} and @ref{Member
+Keywords,,@code{virtual}} keywords (@pxref{Static Members} and
+@ref{Inheritance}).
 @item
 @var{keywords} of member @var{name} may not contain the
 @ref{Member Keywords,,@code{const}} keyword.
 @item
 For any member @var{name} that contains the keyword
-@ref{t:keywords,,@code{abstract}} in @var{keywords}, class @var{C} must instead
-be declared as an @code{AbstractClass} (@pxref{Abstract Classes}).
+@ref{t:keywords,,@code{abstract}} in @var{keywords}, class @var{C} must
+instead be declared as an @code{AbstractClass} (@pxref{Abstract Classes}).
 @end itemize
 
 @subsection Discussion
-In @ref{f:class-js}, we saw how one would conventionally declare a class-like
-object (a prototype) in JavaScript. This method is preferred for many
-developers, but it is important to recognize that there is a distinct difference
-between Prototypal and Classical Object-Oriented development models. Prototypes
-lack many of the conveniences and features that are provided by Classical
-languages, but they can be emulated with prototypes. As an Object-Oriented
-developer, you shouldn't concern yourself with @emph{how} a class is declared in
-JavaScript. In true OO fashion, that behavior should be encapsulated. With
-ease.js, it is.
+In @ref{f:class-js}, we saw how one would conventionally declare a
+class-like object (a prototype) in JavaScript. This method is preferred for
+many developers, but it is important to recognize that there is a distinct
+difference between Prototypal and Classical Object-Oriented development
+models. Prototypes lack many of the conveniences and features that are
+provided by Classical languages, but they can be emulated with prototypes.
+As an Object-Oriented developer, you shouldn't concern yourself with
+@emph{how} a class is declared in JavaScript. In true OO fashion, that
+behavior should be encapsulated. With ease.js, it is.
 
 Let's take a look at how to declare that exact same class using ease.js:
 
@@ -213,48 +219,49 @@ Let's take a look at how to declare that exact same class using ease.js:
 @caption{Basic anonymous class declaration using ease.js}
 @end float
 
-That should look much more familiar to Object-Oriented developers. There are a
-couple important notes before we continue evaluating this example:
+That should look much more familiar to Object-Oriented developers. There are
+a couple important notes before we continue evaluating this example:
 
 @itemize
 @item
-The first thing you will likely notice is our use of the @code{public} keyword.
-This is optional (the default visibility is public), but always recommended.
-Future versions of ease.js may provide warnings when the visibility is omitted.
-We will get more into visibility later on.
+The first thing you will likely notice is our use of the @code{public}
+keyword.  This is optional (the default visibility is public), but always
+recommended.  Future versions of ease.js may provide warnings when the
+visibility is omitted.  We will get more into visibility later on.
 
 @item
 Unlike @ref{f:class-js,}, we do not use the @code{new} keyword in order to
-instantiate our class. You are more than welcome to use the @code{new} keyword
-if you wish, but it is optional when using ease.js. This is mainly because
-without this feature, if the keyword is omitted, the constructor is called as a
-normal function, which could have highly negative consequences. This style of
-instantiation also has its benefits, which will be discussed later on.
+instantiate our class. You are more than welcome to use the @code{new}
+keyword if you wish, but it is optional when using ease.js. This is mainly
+because without this feature, if the keyword is omitted, the constructor is
+called as a normal function, which could have highly negative consequences.
+This style of instantiation also has its benefits, which will be discussed
+later on.
 
 @item
-ease.js's class module is imported using @code{require()} in the above example.
-If using ease.js client-side (@pxref{Client-Side Include}), you can instead use
-@samp{var Class = easejs.Class}. From this point on, importing the module will
-not be included in examples.
+ease.js's class module is imported using @code{require()} in the above
+example.  If using ease.js client-side (@pxref{Client-Side Include}), you
+can instead use @samp{var Class = easejs.Class}. From this point on,
+importing the module will not be included in examples.
 @end itemize
 
 The above example declares an anonymous class, which is stored in the
-variable @var{MyClass}. By convention, we use CamelCase, with the first letter
-capital, for class names (and nothing else).
+variable @var{MyClass}. By convention, we use CamelCase, with the first
+letter capital, for class names (and nothing else).
 
 @menu
 * Anonymous vs. Named Classes::
-* Constructors::           How to declare a constructor
-* Temporary Classes::      Throwaway classes that only need to be used once
-* Temporary Instances::    Throwaway instances that only need to be used once
+* Constructors::         How to declare a constructor
+* Temporary Classes::    Throwaway classes that only need to be used once
+* Temporary Instances::  Throwaway instances that only need to be used once
 @end menu
 
 @node Anonymous vs. Named Classes
 @subsection Anonymous vs. Named Classes
-We state that @ref{f:class-easejs,} declared an @dfn{anyonmous class} because
-the class was not given a name. Rather, it was simply assigned to a variable,
-which itself has a name. To help keep this idea straight, consider the common
-act of creating anonymous functions in JavaScript:
+We state that @ref{f:class-easejs,} declared an @dfn{anyonmous class}
+because the class was not given a name. Rather, it was simply assigned to a
+variable, which itself has a name. To help keep this idea straight, consider
+the common act of creating anonymous functions in JavaScript:
 
 @float Figure, f:anon-func
 @verbatim
@@ -267,10 +274,11 @@ act of creating anonymous functions in JavaScript:
 @caption{Anonymous functions in JavaScript}
 @end float
 
-If the function itself is not given a name, it is considered to be anonymous,
-even though it is stored within a variable. Just as the engine has no idea what
-that function is named, ease.js has no idea what the class is named because it
-does not have access to the name of the variable to which it was assigned.
+If the function itself is not given a name, it is considered to be
+anonymous, even though it is stored within a variable. Just as the engine
+has no idea what that function is named, ease.js has no idea what the class
+is named because it does not have access to the name of the variable to
+which it was assigned.
 
 Names are not required for classes, but they are recommended. For example,
 consider what may happen when your class is output in an error message.
@@ -285,17 +293,17 @@ consider what may happen when your class is output in an error message.
 @caption{Anonymous classes do not make for useful error messages}
 @end float
 
-If you have more than a couple classes in your software, that error message is
-not too much help. You are left relying on the stack trace to track down the
-error. This same output applies to converting a class to a string or viewing it
-in a debugger. It is simply not helpful. If anything, it is confusing. If you've
-debugged large JS applications that make liberal use of anonymous functions, you
-might be able to understand that frustration.
+If you have more than a couple classes in your software, that error message
+is not too much help. You are left relying on the stack trace to track down
+the error. This same output applies to converting a class to a string or
+viewing it in a debugger. It is simply not helpful. If anything, it is
+confusing. If you've debugged large JS applications that make liberal use of
+anonymous functions, you might be able to understand that frustration.
 
-Fortunately, ease.js permits you to declare a named class. A @dfn{named class}
-is simply a class that is assigned a string for its name, so that error
-messages, debuggers, etc provide more useful information. @emph{There is
-functionally no difference between named and anonymous classes.}
+Fortunately, ease.js permits you to declare a named class. A @dfn{named
+class} is simply a class that is assigned a string for its name, so that
+error messages, debuggers, etc provide more useful information. @emph{There
+is functionally no difference between named and anonymous classes.}
 
 @float Figure, f:class-named
 @verbatim
@@ -310,16 +318,16 @@ functionally no difference between named and anonymous classes.}
 @caption{Declaring an empty @emph{named} class}
 @end float
 
-Much better! We now have a useful error message and immediately know which class
-is causing the issue.
+Much better! We now have a useful error message and immediately know which
+class is causing the issue.
 
 @node Constructors
 @subsection Constructors
-In JavaScript, we are used to functions themselves being a constructor because
-only constructors can be instantiated. With ease.js, constructors are handled in
-a manner similar to most other languages, by providing a separate method. The
-implementation ease.js chose is very similar to that of PHP's
-(@pxref{Constructor Implementation}).
+In JavaScript, we are used to functions themselves being a constructor
+because only constructors can be instantiated. With ease.js, constructors
+are handled in a manner similar to most other languages, by providing a
+separate method. The implementation ease.js chose is very similar to that of
+PHP's (@pxref{Constructor Implementation}).
 
 @float Figure, f:constructor
 @verbatim
@@ -340,12 +348,12 @@ implementation ease.js chose is very similar to that of PHP's
 @caption{Declaring constructors using ease.js}
 @end float
 
-When the class is instantiated, the constructor is invoked, permitting you do to
-any necessary initialization tasks before the class can be used. The constructor
-operates exactly how you would expect a constructor to in JavaScript, with one
-major difference. Returning an object in the constructor does @emph{not} return
-that object instead of the new class instance, since this does not make sense in
-a Class-based model.
+When the class is instantiated, the constructor is invoked, permitting you
+do to any necessary initialization tasks before the class can be used. The
+constructor operates exactly how you would expect a constructor to in
+JavaScript, with one major difference. Returning an object in the
+constructor does @emph{not} return that object instead of the new class
+instance, since this does not make sense in a Class-based model.
 
 If you wish to prevent a class from being instantiated, simply throw an
 exception within the constructor. This is useful if the class is intended to
@@ -371,9 +379,9 @@ instantiated.
 @node Temporary Classes
 @subsection Temporary Classes
 In @ref{f:class-easejs,}, we saw that the @code{new} keyword was unnecessary
-when instantiating classes. This permits a form of shorthand that is very useful
-for creating @dfn{temporary classes}, or ``throwaway`` classes which are used
-only once.
+when instantiating classes. This permits a form of shorthand that is very
+useful for creating @dfn{temporary classes}, or ``throwaway`` classes which
+are used only once.
 
 Consider the following example:
 
@@ -393,29 +401,29 @@ Consider the following example:
 @caption{Declaring a temporary (throwaway) class}
 @end float
 
-In @ref{f:class-tmp,} above, rather than declaring a class, storing that in a
-variable, then instantiating it separately, we are doing it in a single command.
-Notice the parenthesis at the end of the statement. This invokes the
-constructor. Since the @code{new} keyword is unnecessary, a new instance of the
-class is stored in the variable @var{foo}.
+In @ref{f:class-tmp,} above, rather than declaring a class, storing that in
+a variable, then instantiating it separately, we are doing it in a single
+command.  Notice the parenthesis at the end of the statement. This invokes
+the constructor. Since the @code{new} keyword is unnecessary, a new instance
+of the class is stored in the variable @var{foo}.
 
 We call this a temporary class because it is used only to create a single
-instance. The class is then never referenced again. Therefore, we needn't even
-store it - it's throwaway.
+instance. The class is then never referenced again. Therefore, we needn't
+even store it - it's throwaway.
 
-The downside of this feature is that it is difficult to notice unless the reader
-is paying very close attention. There is no keyword to tip them off. Therefore,
-it is very important to clearly document that you are storing an instance in the
-variable rather than an actual class definition. If you follow the CamelCase
-convention for class names, then simply do not capitalize the first letter of
-the destination variable for the instance.
+The downside of this feature is that it is difficult to notice unless the
+reader is paying very close attention. There is no keyword to tip them off.
+Therefore, it is very important to clearly document that you are storing an
+instance in the variable rather than an actual class definition. If you
+follow the CamelCase convention for class names, then simply do not
+capitalize the first letter of the destination variable for the instance.
 
 @node Temporary Instances
 @subsection Temporary Instances
 Similar to @ref{Temporary Classes,}, you may wish to use an @emph{instance}
-temporarily to invoke a method or chain of methods. @dfn{Temporary instances}
-are instances that are instantiated in order to invoke a method or chain of
-methods, then are immediately discarded.
+temporarily to invoke a method or chain of methods. @dfn{Temporary
+instances} are instances that are instantiated in order to invoke a method
+or chain of methods, then are immediately discarded.
 
 @float Figure, f:inst-tmp
 @verbatim
@@ -423,7 +431,11 @@ methods, then are immediately discarded.
     var name = Foo().getName();
 
     // method chaining
-    var car = VehicleFactory().createBody().addWheel( 4 ).addDoor( 2 ).build();
+    var car = VehicleFactory()
+        .createBody()
+        .addWheel( 4 )
+        .addDoor( 2 )
+        .build();
 
     // temporary class with callback
     HttpRequest( host, port ).get( path, function( data )
@@ -431,34 +443,34 @@ methods, then are immediately discarded.
         console.log( data );
     } );
 
-    // Conventionally (without ease.js), you'd accomplish the above using the
-    // 'new' keyword. You may still do this with ease.js, though it is less
-    // clean looking.
+    // Conventionally (without ease.js), you'd accomplish the above using
+    // the 'new' keyword. You may still do this with ease.js, though it is
+    // less clean looking.
     ( new Foo() ).someMethod();
 @end verbatim
 @caption{Declaring a temporary (throwaway) class}
 @end float
 
 Rather than storing the class instance, we are using it simply to invoke
-methods. The results of those methods are stored in the variable rather than the
-class instance. The instance is immediately discarded, since it is no longer
-able to be referenced, and is as such a temporary instance.
+methods. The results of those methods are stored in the variable rather than
+the class instance. The instance is immediately discarded, since it is no
+longer able to be referenced, and is as such a temporary instance.
 
 In order for method chaining to work, each method must return itself.
 
 This pattern is useful for when a class requires instantiation in order to
-invoke a method. Classes that intend to be frequently used in this manner should
-declare static methods so that they may be accessed without the overhead of
-creating a new class instance.
+invoke a method. Classes that intend to be frequently used in this manner
+should declare static methods so that they may be accessed without the
+overhead of creating a new class instance.
 
 
 @node Inheritance
 @section Inheritance
 @table @code
-@item C' = Class( string @var{name} ).extend( Object @var{base}, Object @var{dfn} )
-Define named class @var{C'} identified by @var{name} as a subtype of @var{base},
-described by @var{dfn}. @var{base} may be of type @code{Class} or may be any
-enumerable object.
+@item C' = Class( string @var{name} ).extend( Object @var{base}, Object
+@var{dfn} ) Define named class @var{C'} identified by @var{name} as a
+subtype of @var{base}, described by @var{dfn}. @var{base} may be of type
+@code{Class} or may be any enumerable object.
 
 @item C' = C.extend( Object @var{dfn} )
 Define anonymous class @var{C'} as a subtype of class @var{C}, described by
@@ -470,34 +482,35 @@ Define anonymous class @var{C'} as a subtype of @var{base}, described by
 object.
 @end table
 
-@var{C} is a class as defined in @ref{Defining Classes}. @var{base} may be any
-class or object containing enumerable members. @var{dfn} is to be a definition
-object as defined in @ref{dfnobj,,Definition Object}.
+@var{C} is a class as defined in @ref{Defining Classes}. @var{base} may be
+any class or object containing enumerable members. @var{dfn} is to be a
+definition object as defined in @ref{dfnobj,,Definition Object}.
 
 Provided non-final @var{C} or @var{base} to satisfy requirements of @var{C},
 class @var{C'} will be defined as a @dfn{subtype} (child) of @dfn{supertype}
 (parent) class @var{C}. Provided @var{base} that does @emph{not} satisfy
-requirements of @var{C}, @var{C'} will be functionally equivalent to a subtype
-of anonymous class @var{B} as defined by @var{B} = Class( @var{base} ).
+requirements of @var{C}, @var{C'} will be functionally equivalent to a
+subtype of anonymous class @var{B} as defined by @var{B} =
+Class( @var{base} ).
 
 
 @subsection Member Inheritance
 Let @var{dfn\_n\^c} denote a member of @var{dfn} in regards to class @var{c}
-that matches (case-sensitive) name @var{n}. Let @var{o\_n} denote an override,
-represented as boolean value that is true under the condition that both
-@var{dfn\_n\^C'} and @var{dfn\_n\^C} are defined values.
+that matches (case-sensitive) name @var{n}. Let @var{o\_n} denote an
+override, represented as boolean value that is true under the condition that
+both @var{dfn\_n\^C'} and @var{dfn\_n\^C} are defined values.
 
 @var{C'} will @dfn{inherit} all public and protected members of supertype
-@var{C} such that @var{dfn\_n\^C'} = @var{dfn\_n\^C} for each @var{dfn\^C}. For
-any positive condition @var{o\_n}, member @var{dfn\_n\^C'} will be said to
-@dfn{override} member @var{dfn\_n\^C}, provided that overriding member @var{n}
-passes all validation rules associated with the operation. A @code{protected}
-member may be @dfn{escalated} to @code{public}, but the reverse is untrue.
-@code{private} members are invisible to subtypes.@footnote{This is true
-conceptually, but untrue in pre-ES5 environments where ease.js is forced to fall
-back (@pxref{Private Member Dilemma}). As such, one should always develop in an
-ES5 or later environment to ensure visibility restrictions are properly
-enforced.}
+@var{C} such that @var{dfn\_n\^C'} = @var{dfn\_n\^C} for each @var{dfn\^C}.
+For any positive condition @var{o\_n}, member @var{dfn\_n\^C'} will be said
+to @dfn{override} member @var{dfn\_n\^C}, provided that overriding member
+@var{n} passes all validation rules associated with the operation. A
+@code{protected} member may be @dfn{escalated} to @code{public}, but the
+reverse is untrue.  @code{private} members are invisible to
+subtypes.@footnote{This is true conceptually, but untrue in pre-ES5
+environments where ease.js is forced to fall back (@pxref{Private Member
+Dilemma}). As such, one should always develop in an ES5 or later environment
+to ensure visibility restrictions are properly enforced.}
 
 For any positive condition @var{o\_n} where member @var{n} is defined as a
 @emph{method}:
@@ -512,32 +525,32 @@ One of the following conditions must always be true:
   @ref{Member Keywords,,@code{override}} keyword.
   @itemize
     @item
-    Note that @var{dfn\_n\^C'} will not become @ref{Member Keywords,,@code{virtual}}
-  by default (unlike languages such as C++); they
-    must be explicitly declared as such.
+    Note that @var{dfn\_n\^C'} will not become @ref{Member
+    Keywords,,@code{virtual}} by default (unlike languages such as C++);
+    they must be explicitly declared as such.
   @end itemize
   @item
-  @var{dfn\_n\^C} is declared with the @ref{Member Keywords,,@code{abstract}}
-  keyword and @var{dfn\_n\^C'} omits the @ref{Member Keywords,,@code{override}}
-  keywords.
+  @var{dfn\_n\^C} is declared with the @ref{Member
+  Keywords,,@code{abstract}} keyword and @var{dfn\_n\^C'} omits the
+  @ref{Member Keywords,,@code{override}} keywords.
   @end itemize
 @item
-The argument count of method @var{dfn\_n\^C'} must be >= the argument count of
-method @var{dfn\_n\^C} to permit polymorphism.
+The argument count of method @var{dfn\_n\^C'} must be >= the argument count
+of method @var{dfn\_n\^C} to permit polymorphism.
 @item
-A reference to super method @var{dfn\_n\^C} will be preserved and assigned to
-@samp{this.__super} within context of method @var{dfn\_n\^C'}.
+A reference to super method @var{dfn\_n\^C} will be preserved and assigned
+to @samp{this.__super} within context of method @var{dfn\_n\^C'}.
 @item
 A method is said to be @dfn{concrete} when it provides a definition and
 @dfn{abstract} when it provides only a declaration
 (@pxref{dfnobj,,Definition Object}).
 @itemize
   @item
-  Any method @var{n} such that @var{dfn\_n\^C} is declared @code{abstract} may
-  be overridden by a concrete or abstract method @var{dfn\_n\^C'}.
+  Any method @var{n} such that @var{dfn\_n\^C} is declared @code{abstract}
+  may be overridden by a concrete or abstract method @var{dfn\_n\^C'}.
   @item
-  A method @var{n} may @emph{not} be declared @ref{Member Keywords,,@code{abstract}}
-  if @var{dfn\_n\^C} is concrete.
+  A method @var{n} may @emph{not} be declared @ref{Member
+  Keywords,,@code{abstract}} if @var{dfn\_n\^C} is concrete.
 @end itemize
 @item
 Member @var{dfn\_n\^C'} must be a method.
@@ -550,11 +563,11 @@ Members that have been declared @code{static} cannot be overridden
 (@pxref{Static Members}).
 
 @subsection Discussion
-Inheritance can be a touchy subject among many Object-Oriented developers due to
-encapsulation concerns and design considerations over method overrides. The
-decision of whether or not inheritance is an appropriate choice over composition
-is left to the developer; ease.js provides the facilities for achieving
-classical inheritance where it is desired.
+Inheritance can be a touchy subject among many Object-Oriented developers
+due to encapsulation concerns and design considerations over method
+overrides. The decision of whether or not inheritance is an appropriate
+choice over composition is left to the developer; ease.js provides the
+facilities for achieving classical inheritance where it is desired.
 
 @float Figure, f:inheritance-ex
 @image{img/inheritance-ex}
@@ -577,12 +590,12 @@ of the two. We describe inheritance as an ``is a'' relationship. That is:
 @end itemize
 
 Subtypes @dfn{inherit} all public and protected members of their supertypes
-(@pxref{Access Modifiers}). This means that, in the case of our above example,
-the @code{walk()} and @code{bark()} methods would be available to our subtypes.
-If the subtype also defines a method of the same name, as was done above, it
-will @dfn{override} the parent functionality. For now, we will limit our
-discussion to public members. How would we represent these classes using
-ease.js?
+(@pxref{Access Modifiers}). This means that, in the case of our above
+example, the @code{walk()} and @code{bark()} methods would be available to
+our subtypes.  If the subtype also defines a method of the same name, as was
+done above, it will @dfn{override} the parent functionality. For now, we
+will limit our discussion to public members. How would we represent these
+classes using ease.js?
 
 @float Figure, f:inheritance
 @verbatim
@@ -621,52 +634,53 @@ ease.js?
 @caption{Inheritance in ease.js}
 @end float
 
-You should already understand how to define a class (@pxref{Defining Classes}).
-The above example introduced two means of @dfn{extending} classes -- defining a
-new class that inherits from a parent:
+You should already understand how to define a class (@pxref{Defining
+Classes}).  The above example introduced two means of @dfn{extending}
+classes -- defining a new class that inherits from a parent:
 
 @table @strong
 @item Named Subclasses
-@var{LazyDog} is defined as a @emph{named} subclass
-(@pxref{Anonymous vs. Named Classes}). This syntax requires the use of
-@samp{Class( 'Name' )}. The @code{extend()} method then allows you to extend
-from an existing class by passing the class reference in as the first argument.
+@var{LazyDog} is defined as a @emph{named} subclass (@pxref{Anonymous vs.
+Named Classes}). This syntax requires the use of @samp{Class( 'Name' )}. The
+@code{extend()} method then allows you to extend from an existing class by
+passing the class reference in as the first argument.
 
 @item Anonymous Subclasses
-@var{TwoLeggedDog} was declared as an @emph{anonymous} subclass. The syntax for
-this declaration is a bit more concise, but you forfeit the benefits of named
-classes (@pxref{Anonymous vs. Named Classes}). In this case, you can simply call
-the supertype's @code{extend()} method. Alternatively, you can use the
-@samp{Class.extend( Base, @{@} )} syntax, as was used with the named subclass
-@var{LazyDog}.
+@var{TwoLeggedDog} was declared as an @emph{anonymous} subclass. The syntax
+for this declaration is a bit more concise, but you forfeit the benefits of
+named classes (@pxref{Anonymous vs. Named Classes}). In this case, you can
+simply call the supertype's @code{extend()} method. Alternatively, you can
+use the @samp{Class.extend( Base, @{@} )} syntax, as was used with the named
+subclass @var{LazyDog}.
 @end table
 
-You are @emph{always} recommended to use the named syntax when declaring classes
-in order to provide more useful error messages. If you are willing to deal with
-the less helpful error messages, feel free to use anonymous classes for their
-conciseness.
+You are @emph{always} recommended to use the named syntax when declaring
+classes in order to provide more useful error messages. If you are willing
+to deal with the less helpful error messages, feel free to use anonymous
+classes for their conciseness.
 
 @menu
 * Understanding Member Inheritance::  How to work with inherited members
 * Overriding Methods::                Overriding inherited methods
 * Type Checks and Polymorphism::      Substituting similar classes for
-                                      one-another
-* Visibility Escalation::             Increasing visibility of inherited members
+                                        one-another
+* Visibility Escalation::             Increasing visibility of inherited
+                                        members
 * Final Classes::                     Classes that cannot be inherited from
 @end menu
 
 @node Understanding Member Inheritance
 @subsection Understanding Member Inheritance
-In @ref{f:inheritance}, we took a look at how to inherit from a parent class.
-What does it mean when we ``inherit'' from a parent? What are we inheriting? The
-answer is: the API.
+In @ref{f:inheritance}, we took a look at how to inherit from a parent
+class.  What does it mean when we ``inherit'' from a parent? What are we
+inheriting? The answer is: the API.
 
 There are two types of APIs that subtypes can inherit from their parents:
 
 @table @emph
 @item Public API
-This is the API that is accessible to everyone using your class. It contains all
-public members. We will be focusing on public members in this chapter.
+This is the API that is accessible to everyone using your class. It contains
+all public members. We will be focusing on public members in this chapter.
 
 @item Protected API
 Protected members make up a protected API, which is an API available to
@@ -676,18 +690,18 @@ this untouched for now.
 @end table
 
 When a subtype inherits a member from its parent, it acts almost as if that
-member was defined in the class itself@footnote{This statement is not to imply
-that inheritance is a case of copy-and-paste. There are slight variations, which
-are discussed in more detail in the Access Modifiers section (@pxref{Access
-Modifiers}).}. This means that the subtype can use the inherited members as if
-they were its own (keep in mind that members also include properties). This
-means that we @emph{do not} have to redefine the members in order to use them
-ourselves.
+member was defined in the class itself@footnote{This statement is not to
+imply that inheritance is a case of copy-and-paste. There are slight
+variations, which are discussed in more detail in the Access Modifiers
+section (@pxref{Access Modifiers}).}. This means that the subtype can use
+the inherited members as if they were its own (keep in mind that members
+also include properties). This means that we @emph{do not} have to redefine
+the members in order to use them ourselves.
 
 @var{LazyDog} and @var{TwoLeggedDog} both inherit the @code{walk()} and
-@code{bark()} methods from the @var{Dog} supertype. Using @var{LazyDog} as an
-example, let's see what happens when we attempt to use the @code{bark()} method
-inherited from the parent.
+@code{bark()} methods from the @var{Dog} supertype. Using @var{LazyDog} as
+an example, let's see what happens when we attempt to use the @code{bark()}
+method inherited from the parent.
 
 @float Figure, f:using-inherited-members
 @verbatim
@@ -711,29 +725,29 @@ inherited from the parent.
 @caption{Using inherited members}
 @end float
 
-In @ref{f:using-inherited-members} above, we added a @code{poke()} method to our
-@var{LazyDog} class. This method will call the @code{bark()} method that was
-inherited from @var{Dog}. If we actually run the example, you will notice that
-the dog does indeed bark, showing that we are able to call our parent's method
-even though we did not define it ourselves.
+In @ref{f:using-inherited-members} above, we added a @code{poke()} method to
+our @var{LazyDog} class. This method will call the @code{bark()} method that
+was inherited from @var{Dog}. If we actually run the example, you will
+notice that the dog does indeed bark, showing that we are able to call our
+parent's method even though we did not define it ourselves.
 
 @node Overriding Methods
 @subsection Overriding Methods
-When a method is inherited, you have the option of either keeping the parent's
-implementation or overriding it to provide your own. When you override a method,
-you replace whatever functionality was defined by the parent. This concept was
-used to make our @var{LazyDog} lazy and our @var{TwoLeggedDog} walk on two legs
-in @ref{f:inheritance}.
+When a method is inherited, you have the option of either keeping the
+parent's implementation or overriding it to provide your own. When you
+override a method, you replace whatever functionality was defined by the
+parent. This concept was used to make our @var{LazyDog} lazy and our
+@var{TwoLeggedDog} walk on two legs in @ref{f:inheritance}.
 
 After overriding a method, you may still want to invoke the parent's method.
 This allows you to @emph{augment} the functionality rather than replacing it
 entirely.  ease.js provides a magic @code{__super()} method to do this. This
-method is defined only for the overriding methods and calls the parent method
-that was overridden.
+method is defined only for the overriding methods and calls the parent
+method that was overridden.
 
-In order to demonstrate this, let's add an additional subtype to our hierarchy.
-@var{AngryDog} will be a subtype of @var{LazyDog}. Not only is this dog lazy,
-but he's rather moody.
+In order to demonstrate this, let's add an additional subtype to our
+hierarchy.  @var{AngryDog} will be a subtype of @var{LazyDog}. Not only is
+this dog lazy, but he's rather moody.
 
 @float Figure, f:super-method
 @verbatim
@@ -759,30 +773,31 @@ but he's rather moody.
 @caption{Using @code{__super()} method}
 @end float
 
-If you remember from @ref{f:using-inherited-members}, we added a @code{poke()}
-method to @var{LazyDog}. In @ref{f:super-method} above, we are overriding this
-method so that @var{AngryDog} growls when you poke him. However, we still want
-to invoke @var{LazyDog}'s default behavior when he's poked, so we also call the
-@code{__super()} method. This will also make @var{AngryDog} bark like
-@var{LazyDog}.
+If you remember from @ref{f:using-inherited-members}, we added a
+@code{poke()} method to @var{LazyDog}. In @ref{f:super-method} above, we are
+overriding this method so that @var{AngryDog} growls when you poke him.
+However, we still want to invoke @var{LazyDog}'s default behavior when he's
+poked, so we also call the @code{__super()} method. This will also make
+@var{AngryDog} bark like @var{LazyDog}.
 
 It is important to note that @code{__super()} must be invoked like any other
-method. That is, if the overridden method requires arguments, you must pass them
-to @code{__super()}. This allows you to modify the argument list before it is
-sent to the overridden method.
+method. That is, if the overridden method requires arguments, you must pass
+them to @code{__super()}. This allows you to modify the argument list before
+it is sent to the overridden method.
 
 @node Type Checks and Polymorphism
 @subsection Type Checks and Polymorphism
-The fact that the API of the parent is inherited is a very important detail. If
-the API of subtypes is guaranteed to be @emph{at least} that of the parent, then
-this means that a function expecting a certain type can also work with any
-subtypes. This concept is referred to as @dfn{polymorphism}, and is a very
-powerful aspect of Object-Oriented programming.
+The fact that the API of the parent is inherited is a very important detail.
+If the API of subtypes is guaranteed to be @emph{at least} that of the
+parent, then this means that a function expecting a certain type can also
+work with any subtypes. This concept is referred to as @dfn{polymorphism},
+and is a very powerful aspect of Object-Oriented programming.
 
-Let's consider a dog trainer. A dog trainer can generally train any type of dog
-(technicalities aside), so it would stand to reason that we would want our dog
-trainer to be able to train @var{LazyDog}, @var{AngryDog}, @var{TwoLeggedDog},
-or any other type of @var{Dog} that we may throw at him/her.
+Let's consider a dog trainer. A dog trainer can generally train any type of
+dog (technicalities aside), so it would stand to reason that we would want
+our dog trainer to be able to train @var{LazyDog}, @var{AngryDog},
+@var{TwoLeggedDog}, or any other type of @var{Dog} that we may throw at
+him/her.
 
 @float Figure, f:polymorphism-uml
 @image{img/composition-uml}
@@ -791,18 +806,18 @@ or any other type of @var{Dog} that we may throw at him/her.
 
 Type checks are traditionally performed in JavaScript using the
 @code{instanceOf} operator. While this can be used in most inheritance cases
-with ease.js, it is not recommended. Rather, you are encouraged to use ease.js's
-own methods for determining instance type@footnote{The reason for this will
-become clear in future chapters. ease.js's own methods permit checking for
-additional types, such as Interfaces.}. Support for the @code{instanceOf}
-operator is not guaranteed.
+with ease.js, it is not recommended. Rather, you are encouraged to use
+ease.js's own methods for determining instance type@footnote{The reason for
+this will become clear in future chapters. ease.js's own methods permit
+checking for additional types, such as Interfaces.}. Support for the
+@code{instanceOf} operator is not guaranteed.
 
 Instead, you have two choices with ease.js:
 
 @table @code
 @item Class.isInstanceOf( type, instance );
-Returns @code{true} if @var{instance} is of type @var{type}. Otherwise, returns
-@code{false}.
+Returns @code{true} if @var{instance} is of type @var{type}. Otherwise,
+returns @code{false}.
 
 @item Class.isA( type, instance );
 Alias for @code{Class.isInstanceOf()}. Permits code that may read better
@@ -830,12 +845,13 @@ For example:
 @caption{Using ease.js to determine instance type}
 @end float
 
-It is important to note that, as demonstrated in @ref{f:instanceof-ex} above, an
-@emph{instance} must be passed as a second argument, not a class.
+It is important to note that, as demonstrated in @ref{f:instanceof-ex}
+above, an @emph{instance} must be passed as a second argument, not a class.
 
-Using this method, we can ensure that the @var{DogTrainer} may only be used with
-an instance of @var{Dog}. It doesn't matter what instance of @var{Dog} - be it a
-@var{LazyDog} or otherwise. All that matters is that we are given a @var{Dog}.
+Using this method, we can ensure that the @var{DogTrainer} may only be used
+with an instance of @var{Dog}. It doesn't matter what instance of @var{Dog}
+- be it a @var{LazyDog} or otherwise. All that matters is that we are given
+a @var{Dog}.
 
 @float Figure, f:polymorphism-easejs
 @verbatim
@@ -866,25 +882,25 @@ an instance of @var{Dog}. It doesn't matter what instance of @var{Dog} - be it a
 @caption{Polymorphism in ease.js}
 @end float
 
-It is very important that you use @emph{only} the API of the type that you are
-expecting. For example, only @var{LazyDog} and @var{AngryDog} implement a
-@code{poke()} method. It is @emph{not} a part of @var{Dog}'s API. Therefore, it
-should not be used in the @var{DogTrainer} class. Instead, if you wished to use
-the @code{poke()} method, you should require that an instance of @var{LazyDog}
-be passed in, which would also permit @var{AngryDog} (since it is a subtype of
-@var{LazyDog}).
+It is very important that you use @emph{only} the API of the type that you
+are expecting. For example, only @var{LazyDog} and @var{AngryDog} implement
+a @code{poke()} method. It is @emph{not} a part of @var{Dog}'s API.
+Therefore, it should not be used in the @var{DogTrainer} class. Instead, if
+you wished to use the @code{poke()} method, you should require that an
+instance of @var{LazyDog} be passed in, which would also permit
+@var{AngryDog} (since it is a subtype of @var{LazyDog}).
 
 Currently, it is necessary to perform this type check yourself. In future
-versions, ease.js will allow for argument type hinting/strict typing, which will
-automate this check for you.
+versions, ease.js will allow for argument type hinting/strict typing, which
+will automate this check for you.
 
 @node Visibility Escalation
 @subsection Visibility Escalation
 Let @var{a\_n} denote a numeric level of visibility for @var{dfn\_n\^C} such
 that the access modifiers (@pxref{Access Modifiers}) @code{private},
 @code{protected} and @code{public} are associated with the values @code{1},
-@code{2} and @code{3} respectively. Let @var{a'} represent @var{a} in regards to
-@var{C'} (@pxref{Inheritance}).
+@code{2} and @code{3} respectively. Let @var{a'} represent @var{a} in
+regards to @var{C'} (@pxref{Inheritance}).
 
 For any member @var{n} of @var{dfn}, the following must be true:
 @itemize
@@ -896,29 +912,30 @@ For any member @var{n} of @var{dfn}, the following must be true:
 @end itemize
 
 @subsubsection Discussion
-@dfn{Visibility escalation} is the act of increasing the visibility of a member.
-Since private members cannot be inherited, this would then imply that the only
-act to be considered "escallation" would be increasing the level of visibility
-from @code{protected} to @code{private}.
+@dfn{Visibility escalation} is the act of increasing the visibility of a
+member.  Since private members cannot be inherited, this would then imply
+that the only act to be considered "escallation" would be increasing the
+level of visibility from @code{protected} to @code{private}.
 
-Many follow the convention of prefixing private members with an underscore but
-leaving omitting such a prefix from protected members. This is to permit
-visibility escalation without renaming the member. Alternatively, a new member
-can be defined without the prefix that will simply call the overridden member
-(although this would then not be considered an escalation, since the member name
-varies).
+Many follow the convention of prefixing private members with an underscore
+but leaving omitting such a prefix from protected members. This is to permit
+visibility escalation without renaming the member. Alternatively, a new
+member can be defined without the prefix that will simply call the
+overridden member (although this would then not be considered an escalation,
+since the member name varies).
 
-In order to increase the visibility, you must override the member; you cannot
-simply redeclare it, leaving the parent definition in tact. For properties, this
-has no discernible effect unless the @var{value} changes, as you are simply
-redefining it. For methods, this means that you are overriding the entire
-@var{value}. Therefore, you will either have to provide an alternate
-implementation or call @samp{this.__super()} to invoke the original method.
+In order to increase the visibility, you must override the member; you
+cannot simply redeclare it, leaving the parent definition in tact. For
+properties, this has no discernible effect unless the @var{value} changes,
+as you are simply redefining it. For methods, this means that you are
+overriding the entire @var{value}. Therefore, you will either have to
+provide an alternate implementation or call @samp{this.__super()} to invoke
+the original method.
 
 Note that @emph{you cannot de-escalate from public to protected}; this will
-result in an error. This ensures that once a class defines an API, subclasses
-cannot alter it. That API must be forever for all subtypes to ensure that it
-remains polymorphic.
+result in an error. This ensures that once a class defines an API,
+subclasses cannot alter it. That API must be forever for all subtypes to
+ensure that it remains polymorphic.
 
 Let's take a look at an example.
 
@@ -986,24 +1003,24 @@ Classes}), with the exception that they cannot be inherited from.
 @node Static Members
 @section Static Members
 @dfn{Static members} do not require instantiation of the containing class in
-order to be used, but may also be called by instances. They are attached to the
-class itself rather than an instance. Static members provide convenience under
-certain circumstances where class instantiation is unnecessary and permit
-sharing data between instances of a class. However, static members, when used
-improperly, can produce poorly designed classes and tightly coupled code that is
-also difficult to test. Static properties also introduce problems very similar
-to global variables.
+order to be used, but may also be called by instances. They are attached to
+the class itself rather than an instance. Static members provide convenience
+under certain circumstances where class instantiation is unnecessary and
+permit sharing data between instances of a class. However, static members,
+when used improperly, can produce poorly designed classes and tightly
+coupled code that is also difficult to test. Static properties also
+introduce problems very similar to global variables.
 
-Let us consider an implementation of the factory pattern.  Class @var{BigBang}
-will declare two static methods in order to satisfy different means of
-instantiation: @code{fromBraneCollision()} and @code{fromBigCrunch()} (for the
-sake of the example, we're not going to address every theory). Let us also
-consider that we want to keep track of the number of big bangs in our universe
-(perhaps to study whether or not a "Big Crunch" could have potentially
-happened in the past) by incrementing a counter each time a new big bang occurs.
-Because we are using a static method, we cannot use a property of an instance in
-order to store this data.  Therefore, we will use a static property of class
-@var{BigBang}.
+Let us consider an implementation of the factory pattern.  Class
+@var{BigBang} will declare two static methods in order to satisfy different
+means of instantiation: @code{fromBraneCollision()} and
+@code{fromBigCrunch()} (for the sake of the example, we're not going to
+address every theory). Let us also consider that we want to keep track of
+the number of big bangs in our universe (perhaps to study whether or not a
+"Big Crunch" could have potentially happened in the past) by incrementing a
+counter each time a new big bang occurs.  Because we are using a static
+method, we cannot use a property of an instance in order to store this data.
+Therefore, we will use a static property of class @var{BigBang}.
 
 @float Figure, f:static-ex
 @verbatim
@@ -1095,7 +1112,8 @@ order to store this data.  Therefore, we will use a static property of class
 @end float
 
 Due to limitations of pre-ECMAScript 5 implementations, ease.js's static
-implementation must be broken into two separate parts: properties and methods.
+implementation must be broken into two separate parts: properties and
+methods.
 
 @menu
 * Static Methods::
@@ -1105,18 +1123,19 @@ implementation must be broken into two separate parts: properties and methods.
 
 @node Static Methods
 @subsection Static Methods
-In @ref{f:static-ex}, we implemented three static methods: two factory methods,
-@code{fromBraneCollision()} and @code{FromBigCrunch()}, and one getter method to
-retrieve the total number of big bangs, @code{getTotalCount()}. These methods are
-very similar to instance methods we are already used to, with a few important
-differences:
+In @ref{f:static-ex}, we implemented three static methods: two factory
+methods, @code{fromBraneCollision()} and @code{FromBigCrunch()}, and one
+getter method to retrieve the total number of big bangs,
+@code{getTotalCount()}. These methods are very similar to instance methods
+we are already used to, with a few important differences:
 
 @enumerate
 @item
 Static methods are declared with the @code{static} keyword.
 
 @item
-In the body, @code{this} is bound to the class itself, rather than the instance.
+In the body, @code{this} is bound to the class itself, rather than the
+instance.
 
 @item
 Static methods cannot call any non-static methods of the same class without
@@ -1124,10 +1143,10 @@ first instantiating it.
 @end enumerate
 
 The final rule above is not true when the situation is reversed. Non-static
-methods @emph{can} call static methods through use of the @var{__self} object,
-which is a reference to the class itself. That is, @var{this} in a static method
-is the same object as @var{this.__self} in a non-static method. This is
-demonstrated by @code{getTotalCount()}
+methods @emph{can} call static methods through use of the @var{__self}
+object, which is a reference to the class itself. That is, @var{this} in a
+static method is the same object as @var{this.__self} in a non-static
+method. This is demonstrated by @code{getTotalCount()}
 
 @verbatim
     this.$('_count')
@@ -1140,24 +1159,24 @@ and @code{__construct()}.
 @end verbatim
 
 To help remember @var{__self}, consider what the name states. A class is a
-definition used to create an object. The body of a method is a definition, which
-is defined on the class. Therefore, even though the body of a method may be
-called in the context of an instance, it is still part of the class. As such,
-@var{__self} refers to the class.
+definition used to create an object. The body of a method is a definition,
+which is defined on the class. Therefore, even though the body of a method
+may be called in the context of an instance, it is still part of the class.
+As such, @var{__self} refers to the class.
 
 @node Static Properties
 @subsection Static Properties
 You have likely noticed by now that static properties are handled a bit
-differently than both static methods and non-static properties. This difference
-is due to pre-ECMAScript 5 limitations and is discussed at length in the
-@ref{Static Implementation} section.
+differently than both static methods and non-static properties. This
+difference is due to pre-ECMAScript 5 limitations and is discussed at length
+in the @ref{Static Implementation} section.
 
-Static properties are read from and written to using the @dfn{static accessor
-method} @code{$()}. This method name was chosen because the @code{$} prefix is
-common in scripting languages such as BASH, Perl (for scalars) and PHP. The
-accessor method accepts two arguments, the second being optional. If only the
-first argument is provided, the accessor method acts as a getter, as in
-@ref{f:static-ex}'s @code{getTotalCount()}:
+Static properties are read from and written to using the @dfn{static
+accessor method} @code{$()}. This method name was chosen because the
+@code{$} prefix is common in scripting languages such as BASH, Perl (for
+scalars) and PHP. The accessor method accepts two arguments, the second
+being optional. If only the first argument is provided, the accessor method
+acts as a getter, as in @ref{f:static-ex}'s @code{getTotalCount()}:
 
 @verbatim
     return this.$('_count');
@@ -1172,11 +1191,11 @@ If the second argument is provided, it acts as a setter, as in
     );
 @end verbatim
 
-Setting @code{undefined} values is supported. The @code{delete} operator is not
-supported, as its use is both restricted by the language itself and doesn't make
-sense to use in this context. As hinted by the example above, the increment and
-decrement operators (@code{++} and @code{--}) are not supported because
-JavaScript does not permit returning values by reference.
+Setting @code{undefined} values is supported. The @code{delete} operator is
+not supported, as its use is both restricted by the language itself and
+doesn't make sense to use in this context. As hinted by the example above,
+the increment and decrement operators (@code{++} and @code{--}) are not
+supported because JavaScript does not permit returning values by reference.
 
 It is important to understand that, currently, the accessor method cannot be
 omitted. Consider the following example:
@@ -1210,19 +1229,20 @@ omitted. Consider the following example:
 @subsection Constants
 @dfn{Constants}, in terms of classes, are immutable static properties. This
 means that, once defined, a constant cannot be modified. Since the value is
-immutable, it does not make sense to create instances of the property. As such,
-constant values are implicitly static. This ensures that each instance, as well
-as any static access, references the exact same value. This is especially
-important for objects and arrays.
+immutable, it does not make sense to create instances of the property. As
+such, constant values are implicitly static. This ensures that each
+instance, as well as any static access, references the exact same value.
+This is especially important for objects and arrays.
 
-One important difference between other languages, such as PHP, is that ease.js
-supports the @ref{Access Modifiers, visibility modifiers} in conjunction with
-the @code{const} keyword. That is, you can have public, protected and private
-constants. Constants are public by default, like every other type of member.
-This feature permits encapsulating constant values, which is important if you
-want an immutable value that shouldn't be exposed to the rest of the world (e.g.
-a service URL, file path, etc). Consider the following example in which we have
-a class responsible for reading mount mounts from @file{/etc/fstab}:
+One important difference between other languages, such as PHP, is that
+ease.js supports the @ref{Access Modifiers, visibility modifiers} in
+conjunction with the @code{const} keyword. That is, you can have public,
+protected and private constants. Constants are public by default, like every
+other type of member.  This feature permits encapsulating constant values,
+which is important if you want an immutable value that shouldn't be exposed
+to the rest of the world (e.g.  a service URL, file path, etc). Consider the
+following example in which we have a class responsible for reading mount
+mounts from @file{/etc/fstab}:
 
 @float Figure, f:const-ex
 @verbatim
@@ -1245,24 +1265,24 @@ a class responsible for reading mount mounts from @file{/etc/fstab}:
 @caption{Using the @code{const} keyword}
 @end float
 
-In the above example, attempting to access the @var{_PATH} constant from outside
-the class would return @code{undefined}. Had the constant been declared as
-public, or had the visibility modifier omitted, it could have been accessed just
-like any other static property:
+In the above example, attempting to access the @var{_PATH} constant from
+outside the class would return @code{undefined}. Had the constant been
+declared as public, or had the visibility modifier omitted, it could have
+been accessed just like any other static property:
 
 @verbatim
     // if PATH were a public constant value
     MountPointIterator.$('PATH');
 @end verbatim
 
-Any attempts to modify the value of a constant will result in an exception. This
-will also work in pre-ES5 engines due to use of the @ref{Static Properties,
-static accessor method} (@code{$()}).
+Any attempts to modify the value of a constant will result in an exception.
+This will also work in pre-ES5 engines due to use of the @ref{Static
+Properties, static accessor method} (@code{$()}).
 
-It is important to note that constants prevent the @emph{value of the property}
-from being reassigned. It @emph{does not} prevent modification of the value that
-is @emph{referenced} by the property. For example, if we had a constant
-@var{foo}, which references an object, such that
+It is important to note that constants prevent the @emph{value of the
+property} from being reassigned. It @emph{does not} prevent modification of
+the value that is @emph{referenced} by the property. For example, if we had
+a constant @var{foo}, which references an object, such that
 
 @verbatim
     'const foo': { a: 'b' }
@@ -1279,8 +1299,8 @@ it is perfectly legal to alter the object:
 @section Abstract Members
 @table @code
 @item 'abstract [@var{keywords}] @var{name}': @var{params}
-Declare an abstract method @var{name} as having @var{params} parameters, having
-optional additional keywords
+Declare an abstract method @var{name} as having @var{params} parameters,
+having optional additional keywords
 @var{keywords}.
 @end table
 Abstract members permit declaring an API, deferring the implementation to a
@@ -1288,8 +1308,8 @@ subtype. Abstract methods are declared as an array of string parameter names
 @var{params}.
 
 @verbatim
-    // declares abstract method 'connect' expecting the two parameters, 'host'
-    // and 'path'
+    // declares abstract method 'connect' expecting the two parameters,
+    // 'host' and 'path'
     { 'abstract connect': [ 'host', 'path' ] }
 @end verbatim
 
@@ -1309,8 +1329,8 @@ The subtype must implement at least the number of parameters declared in
 @var{params}, but the names needn't match.
   @itemize
   @item
-  Each name in @var{params} must be a valid variable name, as satisfied by the
-  regular expression @code{/^[a-z_][a-z0-9_]*$/i}.
+  Each name in @var{params} must be a valid variable name, as satisfied by
+  the regular expression @code{/^[a-z_][a-z0-9_]*$/i}.
   @item
   The names are use purely for documentation and are not semantic.
   @end itemize
@@ -1327,10 +1347,12 @@ Abstract members may only be a part of one of the following:
 @subsection Interfaces
 @table @code
 @item I = Interface( string @var{name}, Object @var{dfn} )
-Define named interface @var{I} identified by @var{name} described by @var{dfn}.
+Define named interface @var{I} identified by @var{name} described by
+@var{dfn}.
 
 @item I = Interface( string @var{name} ).extend( Object @var{dfn} )
-Define named interface @var{I} identified by @var{name} described by @var{dfn}.
+Define named interface @var{I} identified by @var{name} described by
+@var{dfn}.
 
 @item I = Interface( Object @var{dfn} )
 Define anonymous interface @var{I} as described by @var{dfn}.
@@ -1361,12 +1383,12 @@ Interfaces may only extend other interfaces (@pxref{Inheritance}).
 
 @subsubsection Implementing Interfaces
 @table @code
-@item C = Class( @var{name} ).implement( @var{I\_0}[, ...@var{I\_n}] ).extend( @var{dfn} )
-Define named class @var{C} identified by @var{name} implementing all interfaces
-@var{I}, described by @var{dfn}.
+@item C = Class( @var{name} ).implement( @var{I\_0}[, ...@var{I\_n}]
+).extend( @var{dfn} ) Define named class @var{C} identified by @var{name}
+implementing all interfaces @var{I}, described by @var{dfn}.
 @item C = Class.implement( @var{I\_0}[, ...@var{I\_n} ).extend( @var{dfn} )
-Define anonymous class @var{C} implementing all interfaces @var{I}, described
-by @var{dfn}.
+Define anonymous class @var{C} implementing all interfaces @var{I},
+described by @var{dfn}.
 @end table
 Any class @var{C} may implement any interface @var{I}, inheriting its API.
 Unlike class inheritance, any class @var{C} may implement one or more
@@ -1374,34 +1396,36 @@ interfaces.
 
 @itemize
 @item
-Class @var{C} implementing interfaces @var{I} will be considered a subtype of
-every @var{I}.
+Class @var{C} implementing interfaces @var{I} will be considered a subtype
+of every @var{I}.
 @item
 Class @var{C} must either:
   @itemize
-  @item Provide a concrete definition for every member of @var{dfn} of @var{I},
+  @item Provide a concrete definition for every member of @var{dfn} of
+  @var{I},
   @item or be declared as an @code{AbstractClass} (@pxref{Abstract Classes})
     @itemize
     @item
-    @var{C} may be declared as an @code{AbstractClass} while still providing a
-    concrete definition for some of @var{dfn} of @var{I}.
+    @var{C} may be declared as an @code{AbstractClass} while still providing
+    a concrete definition for some of @var{dfn} of @var{I}.
     @end itemize
   @end itemize
 @end itemize
 
 @subsubsection Discussion
-Consider a library that provides a websocket abstraction. Not all environments
-support web sockets, so an implementation may need to fall back on long polling
-via AJAX, Flash sockets, etc. If websocket support @emph{is} available, one
-would want to use that. Furthermore, an environment may provide its own type of
-socket that our library does not include support for. Therefore, we would want
-to provide developers for that environment the ability to define their own type
-of socket implementation to be used in our library.
+Consider a library that provides a websocket abstraction. Not all
+environments support web sockets, so an implementation may need to fall back
+on long polling via AJAX, Flash sockets, etc. If websocket support @emph{is}
+available, one would want to use that. Furthermore, an environment may
+provide its own type of socket that our library does not include support
+for. Therefore, we would want to provide developers for that environment the
+ability to define their own type of socket implementation to be used in our
+library.
 
-This type of abstraction can be solved simply by providing a generic API that
-any operation on websockets may use. For example, this API may provide
-@code{connect()}, @code{onReceive()} and @code{send()} operations, among others. We
-could define this API in a @code{Socket} interface:
+This type of abstraction can be solved simply by providing a generic API
+that any operation on websockets may use. For example, this API may provide
+@code{connect()}, @code{onReceive()} and @code{send()} operations, among
+others. We could define this API in a @code{Socket} interface:
 
 @float Figure, f:interface-def
 @verbatim
@@ -1441,7 +1465,8 @@ var WebSocket = Class( 'WebSocket' ).implement( Socket ).extend(
 @caption{Implementing an interface}
 @end float
 
-Anything wishing to use sockets can work with this interface polymorphically:
+Anything wishing to use sockets can work with this interface
+polymorphically:
 
 @float Figure, f:interface-poly
 @verbatim
@@ -1478,22 +1503,25 @@ implementations:
 @float Figure, f:interface-poly-use
 @verbatim
     ChatClient( WebSocket() ).sendMessage( '#lobby', "Sweet! WebSockets!" );
-    ChatClient( SomeCustomSocket() ).sendMessage( '#lobby', "I can chat too!" );
+    ChatClient( SomeCustomSocket() )
+        .sendMessage( '#lobby', "I can chat too!" );
 @end verbatim
 @caption{Obtaining flexibility via dependency injection}
 @end float
 
 The use of the @code{Socket} interface allowed us to create a powerful
-abstraction that will allow our library to work across any range of systems. The
-use of an interface allows us to define a common API through which all of our
-various components may interact without having to worry about the implementation
-details - something we couldn't worry about even if we tried, due to the fact
-that we want developers to support whatever environment they are developing for.
+abstraction that will allow our library to work across any range of systems.
+The use of an interface allows us to define a common API through which all
+of our various components may interact without having to worry about the
+implementation details - something we couldn't worry about even if we tried,
+due to the fact that we want developers to support whatever environment they
+are developing for.
 
 Let's make a further consideration. Above, we defined a @code{onReceive()}
-method which accepts a callback to be called when data is received. What if our
-library wished to use an @code{Event} interface as well, which would allow us to
-do something like @samp{some_socket.on( 'receive', function() @{@} )}?
+method which accepts a callback to be called when data is received. What if
+our library wished to use an @code{Event} interface as well, which would
+allow us to do something like @samp{some_socket.on( 'receive', function()
+@{@} )}?
 
 @float Figure, f:interface-impl-multi
 @verbatim
@@ -1508,34 +1536,36 @@ var AnotherSocket = Class.implement( Socket, Event ).extend(
 @end float
 
 Any class may implement any number of interfaces. In the above example,
-@code{AnotherSocket} implemented both @code{Socket} and @code{Event}, allowing
-it to be used wherever either type is expected. Let's take a look:
+@code{AnotherSocket} implemented both @code{Socket} and @code{Event},
+allowing it to be used wherever either type is expected. Let's take a look:
 
 @float Figure, f:interface-multi-isa
 @verbatim
     Class.isA( Socket, AnotherSocket() );  // true
     Class.isA( Event, AnotherSocket() );   // true
 @end verbatim
-@caption{Implementors of interfaces are considered subtypes of each implemented
-interface}
+@caption{Implementors of interfaces are considered subtypes of each
+implemented interface}
 @end float
 
-Interfaces do not suffer from the same problems as multiple inheritance, because
-we are not providing any sort of implementation that may cause conflicts.
+Interfaces do not suffer from the same problems as multiple inheritance,
+because we are not providing any sort of implementation that may cause
+conflicts.
 
-One might then ask - why interfaces instead of abstract classes (@pxref{Abstract
-Classes})? Abstract classes require subclassing, which tightly couples the
-subtype with its parent. One may also only inherit from a single supertype
-(@pxref{Inheritance}), which may cause a problem in our library if we used an
-abstract class for @code{Socket}, but a developer had to inherit from another
-class and still have that subtype act as a @code{Socket}.
+One might then ask - why interfaces instead of abstract classes
+(@pxref{Abstract Classes})? Abstract classes require subclassing, which
+tightly couples the subtype with its parent. One may also only inherit from
+a single supertype (@pxref{Inheritance}), which may cause a problem in our
+library if we used an abstract class for @code{Socket}, but a developer had
+to inherit from another class and still have that subtype act as a
+@code{Socket}.
 
 Interfaces have no such problem. Implementors are free to use interfaces
-wherever they wish and use as many as they wish; they needn't worry that they
-may be unable to use the interface due to inheritance or coupling issues.
-However, although interfaces facilitate API reuse, they do not aid in code
-reuse as abstract classes do@footnote{This is a problem that will eventually be
-solved by the introduction of traits/mixins.}.
+wherever they wish and use as many as they wish; they needn't worry that
+they may be unable to use the interface due to inheritance or coupling
+issues.  However, although interfaces facilitate API reuse, they do not aid
+in code reuse as abstract classes do@footnote{This is a problem that will
+eventually be solved by the introduction of traits/mixins.}.
 
 @node Abstract Classes
 @subsection Abstract Classes
@@ -1555,9 +1585,9 @@ Define anonymous abstract class @var{A} as described by @var{dfn}.
 Define anonymous abstract class @var{A} as described by @var{dfn}.
 @end table
 
-Abstract classes are defined with a syntax much like classes (@pxref{Defining
-Classes}). They act just as classes do, except with the following additional
-properties:
+Abstract classes are defined with a syntax much like classes
+(@pxref{Defining Classes}). They act just as classes do, except with the
+following additional properties:
 
 @itemize
 @item
@@ -1569,36 +1599,38 @@ explicitly declared as @ref{t:keywords,,@code{abstract}}.
 Abstract classes may extend both concrete and abstract classes
 @end itemize
 
-An abstract class @emph{must} be used if any member of @var{dfn} is declared as
-abstract. This serves as a form of self-documenting code, as it would otherwise
-not be immediately clear whether or not a class was abstract (one would have to
-look through every member of @var{dfn} to make that determination).
+An abstract class @emph{must} be used if any member of @var{dfn} is declared
+as abstract. This serves as a form of self-documenting code, as it would
+otherwise not be immediately clear whether or not a class was abstract (one
+would have to look through every member of @var{dfn} to make that
+determination).
 
 @code{AbstractClass} must be imported (@pxref{Including}) from
 @code{easejs.AbstractClass}; it is not available in the global scope.
 
 @subsubsection Discussion
-Abstract classes allow the partial implementation of an API, deferring portions
-of the implementation to subtypes (@pxref{Inheritance}). As an example, let's
-consider an implementation of the @dfn{Abstract Factory} pattern@footnote{See
-Abstract Factory, GoF}) which is responsible for the instantiation and
-initialization of an object without knowing its concrete type.
+Abstract classes allow the partial implementation of an API, deferring
+portions of the implementation to subtypes (@pxref{Inheritance}). As an
+example, let's consider an implementation of the @dfn{Abstract Factory}
+pattern@footnote{See Abstract Factory, GoF}) which is responsible for the
+instantiation and initialization of an object without knowing its concrete
+type.
 
-Our hypothetical library will be a widget abstraction. For this example, let us
-consider that we need a system that will work with any number of frameworks,
-including jQuery UI, Dojo, YUI and others. A particular dialog needs to render a
-simple @code{Button} widget so that the user may click "OK" when they have
-finished reading. We cannot instantiate the widget from within the dialog
-itself, as that would tightly couple the chosen widget subsystem (jQuery UI,
-etc) to the dialog, preventing us from changing it in the future. Alternatively,
-we could have something akin to a switch statement in order to choose which type
-of widget to instantiate, but that would drastically inflate maintenance costs
-should we ever need to add or remove support for other widget system in the
-future.
+Our hypothetical library will be a widget abstraction. For this example, let
+us consider that we need a system that will work with any number of
+frameworks, including jQuery UI, Dojo, YUI and others. A particular dialog
+needs to render a simple @code{Button} widget so that the user may click
+"OK" when they have finished reading. We cannot instantiate the widget from
+within the dialog itself, as that would tightly couple the chosen widget
+subsystem (jQuery UI, etc) to the dialog, preventing us from changing it in
+the future. Alternatively, we could have something akin to a switch
+statement in order to choose which type of widget to instantiate, but that
+would drastically inflate maintenance costs should we ever need to add or
+remove support for other widget system in the future.
 
-We can solve this problem by allowing another object, a @code{WidgetFactory}, to
-perform that instantiation for us. The dialog could accept the factory in its
-constructor, like so:
+We can solve this problem by allowing another object, a
+@code{WidgetFactory}, to perform that instantiation for us. The dialog could
+accept the factory in its constructor, like so:
 
 @float Figure, f:abstract-factory-use
 @verbatim
@@ -1628,20 +1660,22 @@ Class( 'Dialog',
 @caption{Hypothetical use case for our Abstract Factory}
 @end float
 
-We now have some other important considerations. As was previously mentioned,
-@code{Dialog} itself could have determined which widget to instantiate. By using
-a factory instead, we are moving that logic to the factory, but we are now
-presented with a similar issue. If we use something like a switch statement to
-decide what class should be instantiated, we are stuck with modifying the
-factory each and every time we add or remove support for another widget library.
+We now have some other important considerations. As was previously
+mentioned, @code{Dialog} itself could have determined which widget to
+instantiate. By using a factory instead, we are moving that logic to the
+factory, but we are now presented with a similar issue. If we use something
+like a switch statement to decide what class should be instantiated, we are
+stuck with modifying the factory each and every time we add or remove
+support for another widget library.
 
 This is where an abstract class could be of some benefit. Let's consider the
-above call to @code{createButtonWidget()}, which accepted two arguments: an id
-for the generated DOM element and a label for the button. Clearly, there is some
-common initialization logic that can occur between each of the widgets. However,
-we do not want to muddy the factory up with log to determine what widget can be
-instantiated. The solution is to define the common logic, but defer the actual
-instantiation of the @code{Widget} to subtypes:
+above call to @code{createButtonWidget()}, which accepted two arguments: an
+id for the generated DOM element and a label for the button. Clearly, there
+is some common initialization logic that can occur between each of the
+widgets. However, we do not want to muddy the factory up with log to
+determine what widget can be instantiated. The solution is to define the
+common logic, but defer the actual instantiation of the @code{Widget} to
+subtypes:
 
 @float Figure, f:abstract-factory-define
 @verbatim
@@ -1649,8 +1683,8 @@ AbstractClass( 'WidgetFactory',
 {
     'public createButtonWidget': function( id, label )
     {
-        // note that this is a call to an abstract method; the implementation is
-        // not yet defined
+        // note that this is a call to an abstract method; the
+        // implementation is not yet defined
         var widget = this.getNewButtonWidget();
 
         // perform common initialization tasks
@@ -1670,23 +1704,23 @@ AbstractClass( 'WidgetFactory',
 @end float
 
 As demonstrated in @ref{f:abstract-factory-define} above, we can see a very
-interesting aspect of abstract classes: we are making a call to a method that is
-not yet defined (@code{getNewButtonWidget()}@footnote{Note that we declared this
-method as @ref{t:keywords,,@code{protected}} in order to encapsulate which
-the widget creation logic (@pxref{Access Modifiers Discussion}). Users of the
-class should not be concerned with how we accomplish our job. Indeed, they
-should be concerned only with the fact that we save them the trouble of
-determining which classes need to be instantiated by providing them with a
-convenient API.}). Instead, by declaring it
-@ref{t:keywords,,@code{abstract}}, we are stating that we want to call this
-method, but it is up to a subtype to actually define it. It is for this reason
-that abstract classes cannot be instantiated - they cannot be used until each of
-the abstract methods have a defined implementation.
+interesting aspect of abstract classes: we are making a call to a method
+that is not yet defined (@code{getNewButtonWidget()}@footnote{Note that we
+declared this method as @ref{t:keywords,,@code{protected}} in order to
+encapsulate which the widget creation logic (@pxref{Access Modifiers
+Discussion}). Users of the class should not be concerned with how we
+accomplish our job. Indeed, they should be concerned only with the fact that
+we save them the trouble of determining which classes need to be
+instantiated by providing them with a convenient API.}). Instead, by
+declaring it @ref{t:keywords,,@code{abstract}}, we are stating that we want
+to call this method, but it is up to a subtype to actually define it. It is
+for this reason that abstract classes cannot be instantiated - they cannot
+be used until each of the abstract methods have a defined implementation.
 
-We can now define a concrete widget factory (@pxref{Inheritance}) for each of
-the available widget libraries@footnote{Of course, the @code{Widget} itself
-would be its own abstraction, which may be best accomplished by the Adapter
-pattern.}:
+We can now define a concrete widget factory (@pxref{Inheritance}) for each
+of the available widget libraries@footnote{Of course, the @code{Widget}
+itself would be its own abstraction, which may be best accomplished by the
+Adapter pattern.}:
 
 @float Figure, f:concrete-abstract-factory
 @verbatim
@@ -1716,7 +1750,8 @@ statement, we opted for a polymorphic solution:
 
 @float Figure, f:abstract-factory-inject
 @verbatim
-    // we can use whatever widget library we wish by injecting it into Dialog
+    // we can use whatever widget library we wish by injecting it into
+    // Dialog
     Dialog( JqueryUiWidgetFactory() ).show();
     Dialog( DojoWidgetFactory() ).show();
     Dialog( YuiWidgetFactory() ).show();
@@ -1728,12 +1763,13 @@ injection}
 Now, adding or removing libraries is as simple as defining or removing a
 @code{WidgetFactory} class.
 
-Another noteworthy mention is that this solution could have just as easily used
-an interface instead of an abstract class (@pxref{Interfaces}). The reason we
-opted for an abstract class in this scenario is due to code reuse (the common
-initialization code), but in doing so, we have tightly coupled each subtype with
-the supertype @code{WidgetFactory}. There are a number of trade-offs with each
-implementation; choose the one that best fits your particular problem.
+Another noteworthy mention is that this solution could have just as easily
+used an interface instead of an abstract class (@pxref{Interfaces}). The
+reason we opted for an abstract class in this scenario is due to code reuse
+(the common initialization code), but in doing so, we have tightly coupled
+each subtype with the supertype @code{WidgetFactory}. There are a number of
+trade-offs with each implementation; choose the one that best fits your
+particular problem.
 
 
 @node Method Proxies

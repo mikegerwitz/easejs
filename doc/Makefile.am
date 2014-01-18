@@ -67,8 +67,8 @@ img/%.png: img/%.dia
 $(path_doc_output_plain): $(doc_imgs_txt)
 	makeinfo --plain -I "." "${path_easejs_texi}" -o "$@"
 
-# doc html (multiple pages); override default target to call automake's first
-# and then post-process output (it has no *-hook target support)
+# doc html (multiple pages); override default target to call automake's
+# first and then post-process output (it has no *-hook target support)
 html: html-local html-am $(path_doc_output_html)/$(path_doc_css_ref)
 	sed -i '$(doc_replace)' easejs.html/*.htm?
 
@@ -76,7 +76,7 @@ html: html-local html-am $(path_doc_output_html)/$(path_doc_css_ref)
 html-single: $(path_doc_output_html1)
 $(path_doc_output_html1): html-local
 	$(MAKEINFO) --no-split --html --css-include="${path_doc_css}" \
-		-I "." -o "$(path_doc_output_html1)" "${path_easejs_texi}" \
+		-I . -o "$(path_doc_output_html1)" "${path_easejs_texi}" \
 		&& sed -i '$(doc_replace)' "$(path_doc_output_html1)"
 
 # doc images (in build dir)
@@ -103,7 +103,8 @@ img: $(doc_imgs)
 plain: $(path_doc_output_plain)
 install-plain: plain
 	install -d $(DESTDIR)$(docdir)
-	install -m644 $(path_doc_output_plain) $(DESTDIR)$(docdir)/easejs.txt
+	install -m644 $(path_doc_output_plain) \
+		$(DESTDIR)$(docdir)/easejs.txt
 
 clean-local:
 	rm -rf $(path_doc_img)/*.png
