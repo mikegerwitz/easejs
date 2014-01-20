@@ -121,13 +121,11 @@ else
 	@exit 1
 endif
 
-# test cases (old format)
-test/%.js: FORCE
-	NODE_PATH="$(path_test):$(NODE_PATH)" $(NODE) --stack_trace_limit=20 "$@"
+# non-JS test cases
 test/test-%: FORCE
 	./"$@"
 
-# test suite (new format)
+# JS test cases
 test-suite:
 if HAS_NODE
 	@echo "GNU ease.js Test Suite"
