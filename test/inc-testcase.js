@@ -236,7 +236,11 @@ function init()
  */
 function endStats()
 {
-    testPrint( "\n\n" );
+    testPrint( "\n" );
+    if ( tcount % 60 !== 0 )
+    {
+        testPrint( "\n" );
+    }
 
     if ( failures.length )
     {
