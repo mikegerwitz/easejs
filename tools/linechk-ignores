@@ -1,6 +1,9 @@
 # any file matching any pattern in this file is ignored by the line check tool
 # (uses POSIX regular expressions, as is default in grep)
-doc/highlight.pack.js$
-.png$
-.dia$
-.jar$
+doc/highlight.pack\.js$
+doc/.*\.html\?$
+doc/Makefile\(\.in\)\?$
+\.png$
+\.dia$
+\.jar$
+\.info$

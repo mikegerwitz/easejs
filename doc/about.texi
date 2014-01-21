@@ -1,19 +1,18 @@
-@c  This document is part of the ease.js manual
-@c  Copyright (c) 2011 Mike Gerwitz
+@c  This document is part of the GNU ease.js manual.
+@c  Copyright (C) 2011, 2013, 2014 Mike Gerwitz
 @c    Permission is granted to copy, distribute and/or modify this document
-@c    under the terms of the GNU Free Documentation License, Version 1.3
-@c    or any later version published by the Free Software Foundation;
-@c    with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
-@c    Texts.  A copy of the license is included in the section entitled ``GNU
-@c    Free Documentation License''.
+@c    under the terms of the GNU Free Documentation License, Version 1.3 or
+@c    any later version published by the Free Software Foundation; with no
+@c    Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+@c    A copy of the license is included in the section entitled ``GNU Free
+@c    Documentation License''.
 
 @node About
-@unnumbered About ease.js
+@unnumbered About GNU ease.js
 
-ease.js is a collection of @uref{http://commonjs.org, CommonJS} modules intended
-to ``ease'' the transition into JavaScript from other Object-Oriented languages.
-It provides an intuitive means of achieving classical inheritance and has
-planned support for traits/mixins, function overloading and more.
+GNU ease.js is a classical object-oriented framework for Javascript,
+intended to eliminate boilerplate code and ``ease'' the transition into
+JavaScript from other object-oriented languages.
 
 Current support includes:
 @itemize @bullet
@@ -21,161 +20,172 @@ Current support includes:
 @item Classical inheritance
 @item Abstract classes and methods
 @item Interfaces
-@item Visibility (public, protected and private members)
-@item Static, constant and final members
+@item Visibility (public, protected, and private members)
+@item Static, constant, and final members
 @end itemize
 
-While the current focus of the project is Object-Oriented design, it is likely
-that ease.js will expand to other paradigms in the future.
+While the current focus of the project is Object-Oriented design, it is
+likely that ease.js will expand to other paradigms in the future.
 
 
 @section History
-ease.js was initially developed for use at Mike's place of employment in order to
-move the familiar concept of Object Oriented development over to JavaScript for
-use in robust web applications. JavaScript lacks basic core principals of Object
-Oriented development, the most major of which is proper encapsulation.
+ease.js was initially developed for use at the author's place of employment
+in order to move the familiar concept of object-oriented development over to
+JavaScript for use in what would one day be liberated under the
+@uref{https://github.com/lovullo/liza,Liza Data Collection Framework}.
+JavaScript lacks basic core principals of object-oriented development, the
+most major of which is proper encapsulation.
 
-The library would be required to work both server and client-side, supporting
-all major web browsers as far back as Internet Explorer 6. Since it would be
-used in a production system and would be used to develop a core business
-application, it must also work flawlessly. This meant heavy unit testing.
+The library would be required to work both server and client-side,
+supporting all major web browsers as far back as Internet Explorer 6. Since
+it would be used in a production system and would be used to develop a core
+business application, it must also work flawlessly. This meant heavy unit
+testing.
 
 The solution was to develop a library that would first work server-side. The
 software of choice for server-side JavaScript was @uref{http://nodejs.org,
-Node.js}. Node uses the CommonJS format for modules. This provided an intuitive
-means of modularizing the code without use of an Object Oriented development
-style (the closest other option would be Prototypal). ease.js was first
-developed to work on Node.js.
+Node.js}. Node uses the CommonJS format for modules. This provided an
+intuitive means of modularizing the code without use of an Object Oriented
+development style (the closest other option would be Prototypal). ease.js
+was first developed to work on Node.js.
 
-Moving the code over to the browser is not a difficult concept, since the entire
-library relied only on standard JavaScript. A couple important factors had to be
-taken into account, mainly that CommonJS modules don't simply ``work''
-client-side without some type of wrapper, not all browsers support ECMAScript 5
-and the assertion system used for tests is a Node.js module.
+Moving the code over to the browser is not a difficult concept, since the
+entire library relied only on standard JavaScript. A couple important
+factors had to be taken into account, mainly that CommonJS modules don't
+simply ``work'' client-side without some type of wrapper, not all browsers
+support ECMAScript 5 and the assertion system used for tests is a Node.js
+module.
 
 This involved writing a simple script to concatenate all the modules and
 appropriately wrap them in closures, thereby solving the CommonJS issue. The
 required assertions were ported over to the client. The only issue was then
-ECMAScript 5 support, which with a little thought, the browser could gracefully
-fall back on by sacrificing certain features but leaving the core functionality
-relatively unscathed. This provides a proper cross-browser implementation and,
-very importantly, allows the unit tests to be run both server and client side.
-One can then be confident that ease.js will operate on both the server and a
-wide range of web browsers without having to maintain separate tests for each.
+ECMAScript 5 support, which with a little thought, the browser could
+gracefully fall back on by sacrificing certain features but leaving the core
+functionality relatively unscathed. This provides a proper cross-browser
+implementation and, very importantly, allows the unit tests to be run both
+server and client side.  One can then be confident that ease.js will operate
+on both the server and a wide range of web browsers without having to
+maintain separate tests for each.
 
-Needless to say, the development was successful and the project has been used in
-production long before v0.1.0-pre was even conceived. It was thought at the
-beginning of the project that versions would be unnecessary, due to its relative
-simplicity and fairly basic feature set. The project has since evolved past its
-original specification and hopes to introduce a number of exciting features in
-the future.
+Needless to say, the development was successful and the project has been
+used in production long before v0.1.0-pre was even conceived. It was thought
+at the beginning of the project that versions would be unnecessary, due to
+its relative simplicity and fairly basic feature set. The project has since
+evolved past its original specification and hopes to introduce a number of
+exciting features in the future.
 
-The project is owned and developed independently by Mike Gerwitz. There is no
-ownership by his employer.
+The project is owned and developed independently by Mike Gerwitz. There is
+no ownership by his employer.
+
+On 22 December 2013, ease.js officially became a part of GNU with the kind
+help and supervision of Brandon Invergo.
 
 
 @section Why ease.js?
-There already exists a number of different ways to accomplish inheritance and
-various levels of encapsulation in JavaScript. Why ease.js? Though a number of
-frameworks did provide class-like definitions, basic inheritance and other minor
-feature sets, none of them seemed to be an all-encompassing solution to providing
-a strong framework for Object-Oriented development in JavaScript.
+There already exists a number of different ways to accomplish inheritance
+and various levels of encapsulation in JavaScript. Why ease.js? Though a
+number of frameworks did provide class-like definitions, basic inheritance
+and other minor feature sets, none of them seemed to be an all-encompassing
+solution to providing a strong framework for Object-Oriented development in
+JavaScript.
 
-ease.js was first inspired by John Resig's post on "Simple JavasScript
-Inheritance"@footnote{John's blog post is available at
-@uref{http://ejohn.org/blog/simple-javascript-inheritance/}.}. This very basic
-example provided a means to define a ``class'' and extend it. It used a
-PHP-style constructor and was intuitive to use. Though it was an excellent
+ease.js was first inspired by John Resig's post on ``Simple JavasScript
+Inheritance''@footnote{John's blog post is available at
+@uref{http://ejohn.org/blog/simple-javascript-inheritance/}.}. This very
+basic example provided a means to define a ``class'' and extend it. It used
+a PHP-style constructor and was intuitive to use. Though it was an excellent
 alternative to defining and inheriting classes by working directly with
 prototypes, it was far from a solid solution. It lacked abstract methods,
-interfaces, encapsulation (visibility) and many other important features.
+interfaces, encapsulation (visibility), and many other important features.
 Another solution was needed.
 
-Using John's example as a base concept, ease.js was developed to address those
-core issues. Importantly, the project needed to fulfill the following goals:
+Using John's example as a base concept, ease.js was developed to address
+those core issues. Importantly, the project needed to fulfill the following
+goals:
 
 @table @strong
 @item Intuitive Class Definitions
 Users of Object-Oriented languages are used to a certain style of class
-declaration that is fairly consistent. Class definitions within the framework
-should be reflective of this. A programmer familiar with Object-Oriented
-development should be able to look at the code and clearly see what the class is
-doing and how it is defined.
+declaration that is fairly consistent. Class definitions within the
+framework should be reflective of this. A programmer familiar with
+Object-Oriented development should be able to look at the code and clearly
+see what the class is doing and how it is defined.
 
 @item Encapsulation
-The absolute most important concept that ease.js wished to address was that of
-encapsulation. Encapsulation is one of the most important principals of
+The absolute most important concept that ease.js wished to address was that
+of encapsulation. Encapsulation is one of the most important principals of
 Object-Oriented development. This meant implementing a system that would not
 only support public and private members (which can be done conventionally in
 JavaScript through ``privileged members''), but must also support
-@emph{protected} members. Protected members have long been elusive to JavaScript
-developers.
+@emph{protected} members. Protected members have long been elusive to
+JavaScript developers.
 
 @item Interfaces / Abstract Classes
-Interfaces and Abstract Classes are a core concept and facilitate code reuse and
-the development of consistent APIs. They also prove to be very useful for
-polymorphism. Without them, we must trust that the developer has implemented the
-correct API. If not, it will likely result in confusing runtime errors.
-We also cannot ensure an object is passed with the expected API through the use
-of polymorphism.
+Interfaces and Abstract Classes are a core concept and facilitate code reuse
+and the development of consistent APIs. They also prove to be very useful
+for polymorphism. Without them, we must trust that the developer has
+implemented the correct API. If not, it will likely result in confusing
+runtime errors.  We also cannot ensure an object is passed with the expected
+API through the use of polymorphism.
 
 @item Inheritance
 Basic inheritance can be done through use of prototype chains. However, the
-above concepts introduce additional complications. Firstly, we must be able to
-implement interfaces. A simple prototype chain cannot do this (an object cannot
-have multiple prototypes). Furthermore, protected members must be inherited by
-subtypes, while making private members unavailable. In the future, when traits
-are added to the mix, we run into the same problem as we do with interfaces.
+above concepts introduce additional complications. Firstly, we must be able
+to implement interfaces. A simple prototype chain cannot do this (an object
+cannot have multiple prototypes). Furthermore, protected members must be
+inherited by subtypes, while making private members unavailable. In the
+future, when traits are added to the mix, we run into the same problem as we
+do with interfaces.
 
 @item CommonJS, Server and Client
-The framework would have to be used on both the server and client. Server-side,
-@uref{http://nodejs.org, Node.js} was chosen. It used a CommonJS format for
-modules. In order to get ease.js working client side, it would have to be
-wrapped in such a way that the code could remain unchanged and still operate the
-same. Furthermore, all tests written for the framework would have to run both
-server and client-side, ensuring a consistent experience on the server and
-across all supported browsers. Support would have to go as far back as Internet
-Explorer 6 to support legacy systems.
+The framework would have to be used on both the server and client.
+Server-side, @uref{http://nodejs.org, Node.js} was chosen. It used a
+CommonJS format for modules. In order to get ease.js working client side, it
+would have to be wrapped in such a way that the code could remain unchanged
+and still operate the same. Furthermore, all tests written for the framework
+would have to run both server and client-side, ensuring a consistent
+experience on the server and across all supported browsers. Support would
+have to go as far back as Internet Explorer 6 to support legacy systems.
 
 @item Performance
 Everyone knows that Object-Oriented programming incurs a performance hit in
 return for numerous benefits. ease.js is not magic; it too would incur a
-performance it. This hit must be low. Throughout the entire time the software is
-running, the hit must be low enough that it is insignificant (less than 1% of
-the total running time). This applies to any time the framework is used - from
-class creation to method invocation.
+performance it. This hit must be low. Throughout the entire time the
+software is running, the hit must be low enough that it is insignificant
+(less than 1% of the total running time). This applies to any time the
+framework is used - from class creation to method invocation.
 
 @item Quality Design
 A quality design for the system is important for a number of reasons. This
 includes consistency with other languages and performance considerations. It
-must also be easily maintainable and extensible. Object-Oriented programming is
-all about @emph{restricting} what the developer can do. It is important to do so
-properly and ensure it is consistent with other languages. If something is
-inconsistent early on, and that inconsistency is adopted throughout a piece of
-software, fixing the inconsistency could potentially result in breaking the
-software.
+must also be easily maintainable and extensible. Object-Oriented programming
+is all about @emph{restricting} what the developer can do. It is important
+to do so properly and ensure it is consistent with other languages. If
+something is inconsistent early on, and that inconsistency is adopted
+throughout a piece of software, fixing the inconsistency could potentially
+result in breaking the software.
 
 @item Heavily Tested
-The framework would be used to develop critical business applications. It needed
-to perform flawlessly. A bug could potentially introduce flaws into the entire
-system. Furthermore, bugs in the framework could create a debugging nightmare,
-with developers wondering if the flaw exists in their own software or the
-framework. This is a framework that would be very tightly coupled with the
-software built atop of it. In order to ensure production quality, the framework
-would have to be heavily tested. As such, a test-driven development cycle is
-preferred.
+The framework would be used to develop critical business applications. It
+needed to perform flawlessly. A bug could potentially introduce flaws into
+the entire system. Furthermore, bugs in the framework could create a
+debugging nightmare, with developers wondering if the flaw exists in their
+own software or the framework. This is a framework that would be very
+tightly coupled with the software built atop of it. In order to ensure
+production quality, the framework would have to be heavily tested. As such,
+a test-driven development cycle is preferred.
 
 @item Well Documented
 The framework should be intuitive enough that documentation is generally
 unneeded, but in the event the developer does need help in implementing the
-framework in their own software, the help should be readily available. Wasting
-time attempting to figure out the framework is both frustrating and increases
-project cost.
+framework in their own software, the help should be readily available.
+Wasting time attempting to figure out the framework is both frustrating and
+increases project cost.
 
 @end table
 
-The above are the main factors taken into consideration when first developing
-ease.js. There were no existing frameworks that met all of the above criteria.
-Therefore, it was determined that ease.js was a valid project that addressed
-genuine needs for which there was no current, all-encompassing solution.
-
+The above are the main factors taken into consideration when first
+developing ease.js. There were no existing frameworks that met all of the
+above criteria.  Therefore, it was determined that ease.js was a valid
+project that addressed genuine needs for which there was no current,
+all-encompassing solution.

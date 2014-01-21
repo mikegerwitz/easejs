@@ -1,13 +1,14 @@
 #!/bin/bash
 #
-# Lists all commits after a given commit that do not have a trusted signature
+# Lists all commits after a given commit that do not have a trusted
+# signature
 #
 # Allows for automated detection of potential attacks or false authorship of
 # commits by validating signatures against trusted public GPG keys.
 #
-#  Copyright (C) 2012  Mike Gerwitz
+#  Copyright (C) 2012, 2013 Mike Gerwitz
 #
-#  This file is part of ease.js.
+#  This file is part of GNU ease.js.
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -28,7 +29,8 @@ chkafter="${1:-1b1790029}"
 
 # Check every commit after chkcommit (or all commits if chkcommit was not
 # provided) for a trusted signature, listing invalid commits. %G? will output
-# "G" if the signature is trusted.
+# "G" if the signature is trusted. In the case of a merge commit, the merge
+# commit itself need only be signed.
 t=$'\t'
-git log --pretty="format:%H %aN$t%s$t%G?" "$chkafter.." \
+git log --first-parent --pretty="format:%H %aN$t%s$t%G?" "$chkafter.." \
   | grep -v "${t}G$"

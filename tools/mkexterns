@@ -1,13 +1,13 @@
 #!/bin/bash
 #
-# Because this project consists of a bunch of CommonJS modules, the constructors
-# have restricted scope. This means that they cannot be used as types in other
-# modules. Therefore, to permit this, we must generate an extern file containing
-# basic definitions of each.
+# Because this project consists of a bunch of CommonJS modules, the
+# constructors have restricted scope. This means that they cannot be used as
+# types in other modules. Therefore, to permit this, we must generate an
+# extern file containing basic definitions of each.
 #
-#  Copyright (C) 2012  Mike Gerwitz
+#  Copyright (C) 2011, 2012, 2013 Mike Gerwitz
 #
-#  This file is part of ease.js.
+#  This file is part of GNU ease.js.
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by

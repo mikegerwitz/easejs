@@ -1,40 +1,41 @@
-@c  This document is part of the ease.js manual
-@c  Copyright (c) 2011 Mike Gerwitz
+@c  This document is part of the GNU ease.js manual.
+@c  Copyright (C) 2011, 2013, 2014 Mike Gerwitz
 @c    Permission is granted to copy, distribute and/or modify this document
-@c    under the terms of the GNU Free Documentation License, Version 1.3
-@c    or any later version published by the Free Software Foundation;
-@c    with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
-@c    Texts.  A copy of the license is included in the section entitled ``GNU
-@c    Free Documentation License''.
+@c    under the terms of the GNU Free Documentation License, Version 1.3 or
+@c    any later version published by the Free Software Foundation; with no
+@c    Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+@c    A copy of the license is included in the section entitled ``GNU Free
+@c    Documentation License''.
 
 @node Integration
-@chapter Integrating ease.js
+@chapter Integrating GNU ease.js
 
-Before diving into ease.js, let's take a moment to get you set up. How ease.js
-is integrated depends on how it is being used - on the server or in the client
-(web browser). You may also wish to build ease.js yourself rather than
-downloading pre-built packages. Depending on what you are doing, you may not
-have to build ease.js at all.
+Before diving into ease.js, let's take a moment to get you set up. How
+ease.js is integrated depends on how it is being used---on the server or in
+the client (web browser). You may also wish to build ease.js yourself rather
+than downloading pre-built packages. Depending on what you are doing, you
+may not have to build ease.js at all.
 
 @menu
-* Getting ease.js::  How to get ease.js
-* Building::         How to build ease.js
-* Including::        Including ease.js in your own project
+* Getting GNU ease.js::  How to get GNU ease.js
+* Building::             How to build GNU ease.js
+* Including::            Including GNU ease.js in your own project
 @end menu
 
 
-@node Getting ease.js
-@section Getting ease.js
+@node Getting GNU ease.js
+@section Getting GNU ease.js
 If you simply want to use ease.js in your project, you may be interested in
 simply grabbing an archive (tarball, zip, etc), or installing through your
-favorite package manger. More information on those options will become available
-as ease.js nears its first release.
+favorite package manger. More information on those options will become
+available as ease.js nears its first release.
 
-If you are interested in building ease.js, you need to get a hold of the source
-tree. Either download an archive (tarball, zip, etc), or clone the Git
-repository. We will do the latter in the example below. Feel free to clone from
-your favorite source.
+If you are interested in building ease.js, you need to get a hold of the
+source tree. Either download an archive (tarball, zip, etc), or clone the
+Git repository. We will do the latter in the example below. Feel free to
+clone from your favorite source.
 
+@c TODO: Savannah
 @example
   # to clone from GitHub (do one or the other, not both)
   $ git clone git://github.com/mikegerwitz/easejs
@@ -52,11 +53,11 @@ Feel free to skip this section if you have no interest in building ease.js
 yourself. The build process is fast, and is unnecessary if using ease.js
 server-side.
 
-First, we should clarify what the term ``build'' means in context of ease.js.
-JavaScript is compiled on the fly. That is, we don't actually need to compile it
-manually through a build process. So when we are talking about ``building''
-ease.js, we are not talking about compiling the source code. Rather, we are
-referring to any of the following:
+First, we should clarify what the term ``build'' means in context of
+ease.js.  JavaScript is compiled on the fly. That is, we don't actually need
+to compile it manually through a build process. So when we are talking about
+``building'' ease.js, we are not talking about compiling the source code.
+Rather, we are referring to any of the following:
 
 @itemize
 @item
@@ -66,49 +67,53 @@ Prepare the script for client-side deployment [and testing]
 Generate the documentation (manual and API)
 @end itemize
 
-In fact, if you're using ease.js server-side with software such as Node.js, you
-do not need to build anything at all. You can simply begin using it.
+In fact, if you're using ease.js server-side with software such as Node.js,
+you do not need to build anything at all. You can simply begin using it.
 
-The aforementioned are built using @command{make}. The process that is run will
-vary depending on your system. The command will read @file{Makefile} in the root
-directory and execute the associated command. The following are the targets
-available to you:
+The aforementioned are built using @command{make}. The process that is run
+will vary depending on your system. The command will read @file{Makefile} in
+the root directory and execute the associated command. The following are the
+targets available to you:
 
 @table @command
 @item mkbuild
-Creates the @file{build/} directory, where all output will be stored. This is run
-automatically by any of the targets.
+Creates the @file{build/} directory, where all output will be stored. This
+is run automatically by any of the targets.
 
 @item combine
-Runs the @command{combine} @ref{Tools Directory, tool} to produce two separate
-files: @file{ease.js}, which can be used to use ease.js within the web browser,
-and @file{ease-full.js}, which permits both using ease.js and running the unit
-tests within the browser. The output is stored in the @file{build/} directory.
+Runs the @command{combine} @ref{Tools Directory, tool} to produce two
+separate files: @file{ease.js}, which can be used to use ease.js within the
+web browser, and @file{ease-full.js}, which permits both using ease.js and
+running the unit tests within the browser. The output is stored in the
+@file{build/} directory.
 
-The unit tests can be run by opening the @file{build/browser-test.html} file in your
-web browser.
+The unit tests can be run by opening the @file{build/browser-test.html} file
+in your web browser.
 
 @item min
-Runs @command{combine} and minifies the resulting combined files. These files
-are output in the @file{build/} directory and are useful for distribution. It is
-recommended that you use the minified files in production.
+Runs @command{combine} and minifies the resulting combined files. These
+files are output in the @file{build/} directory and are useful for
+distribution. It is recommended that you use the minified files in
+production.
 
 @item test
-Run unit tests. This will first perform the @command{combine} process and will
-also run the tests for the combined script, ensuring that it was properly
-combined.
+Run unit tests. This will first perform the @command{combine} process and
+will also run the tests for the combined script, ensuring that it was
+properly combined.
 
 Unit tests will be covered later in the chapter.
 
 @item doc
-Generates documentation. Currently, only the manual is build. API documentation
-will be added in the near future. The resulting documentation will be stored in
-@file{build/doc/}. For your convenience, the manual is output in the following
-forms: PDF, HTML (single page), HTML (multiple pages) and plain text.
+Generates documentation. Currently, only the manual is build. API
+documentation will be added in the near future. The resulting documentation
+will be stored in @file{build/doc/}. For your convenience, the manual is
+output in the following forms: PDF, HTML (single page), HTML (multiple
+pages) and plain text.
 
-In order to build the documentation, you must have Texinfo installed. You likely
-also need LaTeX installed. If you are on a Debian-based system, for example, you
-will likely be able to run the following command to get started:
+In order to build the documentation, you must have Texinfo installed. You
+likely also need LaTeX installed. If you are on a Debian-based system, for
+example, you will likely be able to run the following command to get
+started:
 
 @example
   $ sudo apt-get install texlive texinfo
@@ -116,8 +121,8 @@ will likely be able to run the following command to get started:
 
 @item install
 Installs info documentation. Must first build @command{doc-info}. After
-installation, the manual may be viewed from the command line with: @samp{info
-easejs}.
+installation, the manual may be viewed from the command line with:
+@samp{info easejs}.
 
 @item uninstall
 Removes everything from the system that was installed with @command{make
@@ -130,15 +135,15 @@ Runs all targets, except for clean, install and uninstall.
 Cleans up after the build process by removing the @file{build/} directory.
 @end table
 
-If you do not want to build ease.js yourself, you are welcome to download the
-pre-built files.
+If you do not want to build ease.js yourself, you are welcome to download
+the pre-built files.
 
 
 @node Including
-@section Including ease.js In Your Projects
-Using ease.js in your projects should be quick and painless. We'll worry about
-the details of how to actually @emph{use} ease.js in a bit. For now, let's just
-worry about how to include it in your project.
+@section Including GNU ease.js In Your Projects
+Using ease.js in your projects should be quick and painless. We'll worry
+about the details of how to actually @emph{use} ease.js in a bit. For now,
+let's just worry about how to include it in your project.
 
 @menu
 * Server-Side Include::  Including ease.js server-side
@@ -147,12 +152,13 @@ worry about how to include it in your project.
 
 @node Server-Side Include
 @subsection Server-Side Include
-ease.js should work with any CommonJS-compliant system. The examples below have
-been tested with Node.js. Support is not guaranteed with any other software.
+ease.js should work with any CommonJS-compliant system. The examples below
+have been tested with Node.js. Support is not guaranteed with any other
+software.
 
 Let's assume that you have installed ease.js somewhere that is accessible to
-@code{require.paths}. If you used a tool such as @command{npm}, this should have
-been done for you.
+@code{require.paths}. If you used a tool such as @command{npm}, this should
+have been done for you.
 
 @float Figure, f:inc-serverside
 @verbatim
@@ -163,22 +169,24 @@ var easejs = require( 'easejs' );
 @end float
 
 It's important to understand what exactly the above command is doing. We are
-including the @file{easejs/} directory (adjust your path as needed). Inside that
-directory is the @file{index.js} file, which is loaded. The exports of that
-module are returned and assigned to the @var{easejs} variable. We will discuss
-what to actually do with those exports later on.
+including the @file{easejs/} directory (adjust your path as needed). Inside
+that directory is the @file{index.js} file, which is loaded. The exports of
+that module are returned and assigned to the @var{easejs} variable. We will
+discuss what to actually do with those exports later on.
 
 That's it. You should now have ease.js available to your project.
 
 @node Client-Side Include
 @subsection Client-Side Include (Web Browser)
-ease.js can also be included in the web browser. Not only does this give you a
-powerful Object-Oriented framework client-side, but it also facilitates code
-reuse by permitting you to reuse your server-side code that depends on ease.js.
+ease.js can also be included in the web browser. Not only does this give you
+a powerful Object-Oriented framework client-side, but it also facilitates
+code reuse by permitting you to reuse your server-side code that depends on
+ease.js.
 
 In order for ease.js to operate within the client, you must either download
-@file{ease.js} or @ref{Building, build it yourself}. Let's assume that you have
-placed @file{ease.js} within the @file{scripts/} directory of your web root.
+@file{ease.js} or @ref{Building, build it yourself}. Let's assume that you
+have placed @file{ease.js} within the @file{scripts/} directory of your web
+root.
 
 @float Figure, f:inc-clientside
 @verbatim
@@ -191,10 +199,10 @@ placed @file{ease.js} within the @file{scripts/} directory of your web root.
 @caption{Including ease.js client-side}
 @end float
 
-Likely, you only want the first one. The unit tests can more easily be run by
-loading @file{build/browser-test.html} in your web browser (@pxref{Building}).
+Likely, you only want the first one. The unit tests can more easily be run
+by loading @file{build/browser-test.html} in your web browser
+(@pxref{Building}).
 
-The script will define a global @var{easejs} variable, which can be used exactly
-like the server-side @code{require()} (@pxref{Server-Side Include}). Keep that
-in mind when going through the examples in this manual.
-
+The script will define a global @var{easejs} variable, which can be used
+exactly like the server-side @code{require()} (@pxref{Server-Side Include}).
+Keep that in mind when going through the examples in this manual.

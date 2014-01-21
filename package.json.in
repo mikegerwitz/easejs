@@ -1,7 +1,7 @@
 {
   "name":        "easejs",
   "description": "A Classical Object-Oriented Framework for JavaScript",
-  "version":     "0.1.0",
+  "version":     "@VERSION@",
   "author":      "Mike Gerwitz <mike@mikegerwitz.com> (http://mikegerwitz.com)",
   "homepage":    "http://easejs.org",
 
@@ -19,8 +19,8 @@
 
   "licenses": [
     {
-      "type": "LGPLv3+",
-      "url": "http://www.gnu.org/licenses/lgpl.html"
+      "type": "GPLv3+",
+      "url": "http://www.gnu.org/licenses/gpl.html"
     }
   ],
 

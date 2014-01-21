@@ -1,24 +1,22 @@
 /**
  * Tests class parent invocation
  *
- *  Copyright (C) 2010,2011 Mike Gerwitz
+ *  Copyright (C) 2010, 2011, 2013 Mike Gerwitz
  *
- *  This file is part of ease.js.
+ *  This file is part of GNU ease.js.
  *
- *  ease.js is free software: you can redistribute it and/or modify it under the
- *  terms of the GNU Lesser General Public License as published by the Free
- *  Software Foundation, either version 3 of the License, or (at your option)
- *  any later version.
+ *  ease.js is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful, but WITHOUT
- *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- *  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
- *  for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU Lesser General Public License
+ *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @author  Mike Gerwitz
  */
 
 var common = require( './common' ),
@@ -48,7 +46,7 @@ var common = require( './common' ),
             return this;
         },
 
-        'virtual double': function()
+        'virtual dbl': function()
         {
             hitDouble = true;
         }
@@ -66,7 +64,7 @@ var common = require( './common' ),
             return this.__super( arg );
         },
 
-        'override double': function()
+        'override dbl': function()
         {
             this.myMethod();
             this.__super();
@@ -95,7 +93,7 @@ assert.equal(
 hitMethod = hitMethod2 = false;
 
 var arg = 'foobar';
-sub_foo.myMethod().myMethod2( arg ).double();
+sub_foo.myMethod().myMethod2( arg ).dbl();
 
 // myMethod overrides without calling parent
 assert.equal(

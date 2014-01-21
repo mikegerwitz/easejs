@@ -1,11 +1,9 @@
-##
-# ease.js test Makefile
+#!/bin/sh
+# Outputs all contributor names and e-mail addresses.
 #
-# Responsible for running the ease.js test suite.
+#  Copyright (C) 2012, 2013 Mike Gerwitz
 #
-#  Copyright (C) 2012  Mike Gerwitz
-#
-#  This file is part of ease.js.
+#  This file is part of GNU ease.js.
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -21,26 +19,5 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-tests := $(shell find . \
-	-name 'test-*' \
-	-a ! -name 'test-combine*.js'\
-)
-cases := $(shell find . \
-	-name '*Test.*' \
-)
-tests_combine := test-combine*.js
-
-.PHONY: FORCE test test-combine suite
-
-
-default: $(tests) suite combine
-combine: $(tests_combine)
-
-suite:
-	@echo "ease.js Test Suite"
-	@echo
-	@NODE_PATH=".:$(NODE_PATH)" node --stack_trace_limit=20 runner.js ${cases}
-%.js: FORCE
-	NODE_PATH=".:$(NODE_PATH)" node --stack_trace_limit=20 "$@"
-test-%: FORCE
-	./$@
+git shortlog --summary --email \
+  | cut -f2-

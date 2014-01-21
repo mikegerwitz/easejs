@@ -1,6 +1,5 @@
-#!/bin/bash
-#
-# Simple version update script
+#!/bin/sh
+# Formats and concatenates long commit messages
 #
 #  Copyright (C) 2012, 2013 Mike Gerwitz
 #
@@ -20,24 +19,10 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-major="$1"
-minor="$2"
-rev="$3"
-suffix="${4:+-$4}"
-
-version="$major.$minor.$rev$suffix"
-
-# pre-formatted suffix
-fsuffix=
-[ -n "$suffix" ] && fsuffix="-$suffix"
-
-# generate version.js
-cat version.js.tpl | sed "
-  s/@MAJOR@/$major/;
-  s/@MINOR@/$minor/;
-  s/@REV@/$rev/;
-  s/@SUFFIX@/${suffix#-}/;
-" > ../lib/version.js
-
-# update configure script by replacing the second argument of AC_INIT
-sed -i '/^AC_INIT/s/, \[[^]]\+\]/, ['$version']/' ../configure.ac
+# format long commit messages
+git log --log-size --format="%H%n%B" \
+  | grep -A1 '^log size \([5-9][0-9]\{2,\}\|[0-9]\{4,\}\)$' \
+  | grep -o '^[a-z0-9]\+$' \
+  | grep -vFf "${1:-/dev/null}" \
+  | xargs -n1 git log -n1 --date=rfc --no-notes \
+  | awk '/^commit/ && NR!=1 { printf "\n\n" } { print }'

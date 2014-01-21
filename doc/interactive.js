@@ -39,12 +39,15 @@ jqueryCheck( function()
     $( document ).ready( function()
     {
         // syntax highlighting for code samples
-        $( '.verbatim, .samp, .code, .example' ).each( function( i, element )
-        {
-            hljs.highlightBlock( element, '    ' );
-        } );
+        $( '.verbatim, .samp, .code, .example' ).each(
+            function( i, element )
+            {
+                hljs.highlightBlock( element, '    ' );
+            }
+        );
 
-        // quick-n-dirty sub and super script impl (it is by no means perfect)
+        // quick-n-dirty sub and super script impl (it is by no means
+        // perfect)
         $( 'var:contains("\\")' ).each( function()
         {
             var $this = $( this );

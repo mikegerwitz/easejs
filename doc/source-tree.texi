@@ -1,17 +1,17 @@
-@c  This document is part of the ease.js manual
-@c  Copyright (c) 2011 Mike Gerwitz
+@c  This document is part of the GNU ease.js manual.
+@c  Copyright (C) 2011, 2013, 2014 Mike Gerwitz
 @c    Permission is granted to copy, distribute and/or modify this document
-@c    under the terms of the GNU Free Documentation License, Version 1.3
-@c    or any later version published by the Free Software Foundation;
-@c    with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
-@c    Texts.  A copy of the license is included in the section entitled ``GNU
-@c    Free Documentation License''.
+@c    under the terms of the GNU Free Documentation License, Version 1.3 or
+@c    any later version published by the Free Software Foundation; with no
+@c    Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+@c    A copy of the license is included in the section entitled ``GNU Free
+@c    Documentation License''.
 
 @node Source Tree
 @appendix Source Tree
 You should already have gotten a hold of the source tree
-(@pxref{Getting ease.js}). If not, please do so first and feel free to follow
-along.
+(@pxref{Getting GNU ease.js}). If not, please do so first and feel free to
+follow along.
 
 @example
   $ cd easejs
@@ -19,7 +19,8 @@ along.
   doc/  lib/  test/  tools/
 @end example
 
-The project contains four main directories in addition to the root directory:
+The project contains four main directories in addition to the root
+directory:
 
 @table @file
 @item ./
@@ -27,8 +28,8 @@ The root directory contains basic project files, such as @file{README},
 @file{Makefile} and @file{index.js}.
 
 @item doc/
-Contains documentation source files (you are currently reading part of it - the
-manual).
+Contains documentation source files (you are currently reading part of it -
+the manual).
 
 @item lib/
 Contains the actual source code for the various modules.
@@ -65,20 +66,21 @@ Contains the project license.
 Invoked by the @command{make} command. Used for building ease.js.
 
 @item package.json
-Used by @command{npm}, a package manager for Node.js, to automate installation.
+Used by @command{npm}, a package manager for Node.js, to automate
+installation.
 
 @item README.hacking
 Useful information for those looking to modify/contribute to the project.
 
 @item README.md
 Serves as a quick reference for the project, in markdown@footnote{See
-@uref{http://en.wikipedia.org/wiki/Markdown}.} format. This format was chosen
-because it is displayed nicely on GitHub.
+@uref{http://en.wikipedia.org/wiki/Markdown}.} format. This format was
+chosen because it is displayed nicely on GitHub.
 
 @item README.todo
 Incomplete tasks. Future direction of the project. If you're looking to help
-out, take a look at this file to see what needs to be done. (See also the bug
-tracker at @uref{http://easejs.org/bugs}).
+out, take a look at this file to see what needs to be done. (See also the
+bug tracker at @uref{http://easejs.org/bugs}).
 @end table
 
 These files will be discussed in further detail when they are actually used.
@@ -86,51 +88,53 @@ These files will be discussed in further detail when they are actually used.
 
 @node Doc Directory
 @section Doc Directory
-The @file{doc/} directory contains the source files for the manual. The source
-files are in Texinfo@footnote{See @uref{http://www.gnu.org/software/texinfo/}.}
-format. Instructions for compiling the documentation are included later in this
-chapter.
+The @file{doc/} directory contains the source files for the manual. The
+source files are in Texinfo@footnote{See
+@uref{http://www.gnu.org/software/texinfo/}.} format. Instructions for
+compiling the documentation are included later in this chapter.
 
-API documentation is @emph{not} included in this directory. It is generated from
-the source code.
+API documentation is @emph{not} included in this directory. It is generated
+from the source code.
 
 
 @node Lib Directory
 @section Lib Directory
-The @file{lib/} directory contains the source code for the project. Each source
-file represents a single CommonJS module, often containing a prototype, and is
-written in JavaScript. Additional information about each of the modules can be
-found in the header of each file.
+The @file{lib/} directory contains the source code for the project. Each
+source file represents a single CommonJS module, often containing a
+prototype, and is written in JavaScript. Additional information about each
+of the modules can be found in the header of each file.
 
-Unless you are developing for ease.js, you needn't concern yourself with these
-files. @file{index.js}, in the root directory, contains mappings to these files
-where necessary, exposing the useful portions of the API for general use. You
-can use ease.js without even recognizing that the @file{lib/} directory even
-exists.
+Unless you are developing for ease.js, you needn't concern yourself with
+these files. @file{index.js}, in the root directory, contains mappings to
+these files where necessary, exposing the useful portions of the API for
+general use. You can use ease.js without even recognizing that the
+@file{lib/} directory even exists.
 
 
 @node Test Directory
 @section Test Directory
-The @file{test/} directory contains all the unit tests for the project. ease.js
-follows a test-driven development model; every single aspect of the framework is
-tested to ensure that features work as intended both server-side and across all
-supported web browsers. The tests also serve as regression tests, ensuring that
-bugs are not introduced for anything that has been covered. These tests should
-also give outside developers confidence; if a developer makes a modification to
-ease.js and does not cause any failing tests, it's likely that their change
-didn't have negative consequences on the integrity of the framework.
+The @file{test/} directory contains all the unit tests for the project.
+ease.js follows a test-driven development model; every single aspect of the
+framework is tested to ensure that features work as intended both
+server-side and across all supported web browsers. The tests also serve as
+regression tests, ensuring that bugs are not introduced for anything that
+has been covered. These tests should also give outside developers
+confidence; if a developer makes a modification to ease.js and does not
+cause any failing tests, it's likely that their change didn't have negative
+consequences on the integrity of the framework.
 
-ease.js is currently in a transition period in regards to the style of the test
-cases. Tests written in the original format are prefixed with @samp{test-},
-followed by the name of the module, followed optionally by the specific part of
-the module that is being tested. Newer test cases are prefixed with the
-prototype name of the unit being tested, followed by @samp{Test.js}. If there
-are a number of test cases for a given prototype, any number of tests will be
-included (with the same suffix) in a directory with the same name as the
-prototype. The tests are written in JavaScript and use Node.js's @file{assert}
-module. Newer tests use a test case system that was developed to suit the needs
-of the project (still using the @file{assert} module). They may be run
-individually or all at once during the build process.
+ease.js is currently in a transition period in regards to the style of the
+test cases. Tests written in the original format are prefixed with
+@samp{test-}, followed by the name of the module, followed optionally by the
+specific part of the module that is being tested. Newer test cases are
+prefixed with the prototype name of the unit being tested, followed by
+@samp{Test.js}. If there are a number of test cases for a given prototype,
+any number of tests will be included (with the same suffix) in a directory
+with the same name as the prototype. The tests are written in JavaScript and
+use Node.js's @file{assert} module. Newer tests use a test case system that
+was developed to suit the needs of the project (still using the
+@file{assert} module). They may be run individually or all at once during
+the build process.
 
 Developers interested in contributing to ease.js can aid in this transition
 process by helping to move all @file{test-*} tests over to the new test case
@@ -142,26 +146,27 @@ performance tests used for benchmarking.
 
 @node Tools Directory
 @section Tools Directory
-The @file{tools/} directory contains scripts and data necessary for the build
-process. The tools are shell scripts that may be run independently of the build
-process if you find them to be useful. The remaining files are data to accompany
-those tools.
+The @file{tools/} directory contains scripts and data necessary for the
+build process. The tools are shell scripts that may be run independently of
+the build process if you find them to be useful. The remaining files are
+data to accompany those tools.
 
 @table @file
 @item combine
 Concatenates all the modules and wraps them for client-side deployment. If
-requested, the tests are also wrapped and concatenated so that they may be run
-in the web browser. The contents are stripped of trailing commas using the
-@command{rmtrail} tool. The resulting file is @emph{not} minified; the user can
-use whatever process he/she wishes to do so. In the future, minification will be
-part of the build script.
+requested, the tests are also wrapped and concatenated so that they may be
+run in the web browser. The contents are stripped of trailing commas using
+the @command{rmtrail} tool. The resulting file is @emph{not} minified; the
+user can use whatever process he/she wishes to do so. In the future,
+minification will be part of the build script.
 
 @item rmtrail
-Removes trailing commas from object and array definitions. Reads from standard
-in. @emph{This script is not intelligent.} It was designed to work with ease.js.
-It does not, for example, check to ensure that it is not removing commas from
-within strings. This would not be a difficult addition, but is currently
-unnecessary. Use caution when using this tool outside of ease.js.
+Removes trailing commas from object and array definitions. Reads from
+standard in. @emph{This script is not intelligent.} It was designed to work
+with ease.js.  It does not, for example, check to ensure that it is not
+removing commas from within strings. This would not be a difficult addition,
+but is currently unnecessary. Use caution when using this tool outside of
+ease.js.
 
 @item minify.js
 Responsible for receiving input from stdin and writing minified output to
@@ -169,33 +174,31 @@ stdout. This script uses UglifyJS to minify source files for distribution,
 improving download times.
 
 @item browser-test.html
-Skeleton page to be used after the build process. Runs ease.js unit tests in the
-web browser and reports any failures. This is very important to ensure that
-ease.js operates consistently between all supported browsers. The tests that are
-run are the same exact tests that are run server-side.
+Skeleton page to be used after the build process. Runs ease.js unit tests in
+the web browser and reports any failures. This is very important to ensure
+that ease.js operates consistently between all supported browsers. The tests
+that are run are the same exact tests that are run server-side.
 
 @item combine-test.tpl
-Contains a client-side implementation of any modules required for testing. This
-file contains mainly assertions. It is included by the @command{combine} script
-when tests are requested.
+Contains a client-side implementation of any modules required for testing.
+This file contains mainly assertions. It is included by the
+@command{combine} script when tests are requested.
 
 @item combine.tpl
 Contains the basic functionality required to get CommonJS modules working
-client-side. This is a very basic implementation, only doing what is necessary
-for ease.js to work properly. It is not meant to be a solution for all of your
-client-side CommonJS problems.
+client-side. This is a very basic implementation, only doing what is
+necessary for ease.js to work properly. It is not meant to be a solution for
+all of your client-side CommonJS problems.
 
 @item license.tpl
 Contains the license that is to appear atop every combined file, including
 minified. The original text must remain in tact. If you make changes to the
-source code, you are welcome to add additional text. See the @file{LICENSE} file
-in the root directory for more information on what is permitted.
+source code, you are welcome to add additional text. See the @file{LICENSE}
+file in the root directory for more information on what is permitted.
 @end table
 
 While the tools may be useful outside of ease.js in some regard, please note
 that they have been tailored especially for ease.js. They do not contain
-unnecessary features that ease.js does not need to make use of. Therefore, you
-may need to adapt them to your own project and individual needs should you
-decide to use them in your own projects.
-
-
+unnecessary features that ease.js does not need to make use of. Therefore,
+you may need to adapt them to your own project and individual needs should
+you decide to use them in your own projects.
