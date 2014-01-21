@@ -19,27 +19,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var common  = require( './common' ),
-
-    // XXX: get rid of this disgusting mess; we're mid-refactor and all these
-    // dependencies should not be necessary for testing
-    ClassBuilder         = common.require( '/ClassBuilder' ),
-    MethodWrapperFactory = common.require( '/MethodWrapperFactory' ),
-    wrappers             = common.require( '/MethodWrappers' ).standard
-;
-
 require( 'common' ).testCase(
 {
+    caseSetUp: function()
+    {
+        // XXX: get rid of this disgusting mess; we're mid-refactor and all
+        // these dependencies should not be necessary for testing
+        this.Sut =  this.require( 'ClassBuilder' );
+        this.MethodWrapperFactory = this.require( 'MethodWrapperFactory' );
+
+        this.wrappers = this.require( 'MethodWrappers' ).standard;
+    },
+
+
     setUp: function()
     {
-        this.builder = ClassBuilder(
+        this.builder = this.Sut(
             this.require( '/MemberBuilder' )(
-                MethodWrapperFactory( wrappers.wrapNew ),
-                MethodWrapperFactory( wrappers.wrapOverride ),
-                MethodWrapperFactory( wrappers.wrapProxy ),
+                this.MethodWrapperFactory( this.wrappers.wrapNew ),
+                this.MethodWrapperFactory( this.wrappers.wrapOverride ),
+                this.MethodWrapperFactory( this.wrappers.wrapProxy ),
                 this.getMock( 'MemberBuilderValidator' )
             ),
-            this.require( '/VisibilityObjectFactoryFactory' ).fromEnvironment()
+            this.require( '/VisibilityObjectFactoryFactory' )
+                .fromEnvironment()
         )
     },
 

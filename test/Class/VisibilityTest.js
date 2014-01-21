@@ -19,121 +19,126 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var common    = require( './common' ),
-    Class     = common.require( 'class' ),
-    Interface = common.require( 'interface' ),
-    util      = common.require( 'util' ),
-
-    pub  = 'foo',
+var pub  = 'foo',
     prot = 'bar',
     priv = 'baz',
 
     pubf  = function() { return pub; },
     protf = function() { return prot; },
-    privf = function() { return priv; },
-
-    // new anonymous class instance
-    Foo = Class.extend( {
-        'public pub':      pub,
-        'protected peeps': prot,
-        'private parts':   priv,
-
-        'public pubf':     pubf,
-        'protected protf': protf,
-        'private privf':   privf,
-
-
-        'virtual public getProp': function( name )
-        {
-            // return property, allowing us to break encapsulation for
-            // protected/private properties (for testing purposes)
-            return this[ name ];
-        },
-
-
-        /**
-         * Does the same as the above, but we won't override this one
-         */
-        'public nonOverrideGetProp': function( name )
-        {
-            return this[ name ];
-        },
-
-
-        /**
-         * Allows us to set a value from within the class
-         */
-        'public setValue': function( name, value )
-        {
-            this[ name ] = value;
-        },
-
-
-        'public getSelf': function()
-        {
-            return this;
-        },
-
-
-        'virtual public getSelfOverride': function()
-        {
-            // override me
-        },
-
-
-        'public getPrivProp': function()
-        {
-            return this.parts;
-        },
-
-
-        'public invokePriv': function()
-        {
-            return this._priv();
-        },
-
-
-        'private _priv': function()
-        {
-            return priv;
-        },
-    }),
-
-    // instance of Foo
-    foo = Foo(),
-
-    // subtype
-    SubFoo  = Foo.extend({
-        'private _pfoo': 'baz',
-
-        'override public getSelfOverride': function()
-        {
-            // return this from overridden method
-            return this;
-        },
-
-
-        /**
-         * We have to override this so that 'this' is not bound to the supertype
-         */
-        'override public getProp': function( name )
-        {
-            // return property, allowing us to break encapsulation for
-            // protected/private properties (for testing purposes)
-            return this[ name ];
-        },
-
-
-        'private myOwnPrivateFoo': function() {},
-    }),
-    sub_foo = SubFoo(),
-
-    sub_sub_foo = SubFoo.extend( {} )()
+    privf = function() { return priv; }
 ;
 
 
 require( 'common' ).testCase(
 {
+    caseSetUp: function()
+    {
+        this.Class     = this.require( 'class' );
+        this.Interface = this.require( 'interface' );
+        this.util      = this.require( 'util' );
+
+        // new anonymous class instance
+        this.Foo = this.Class.extend( {
+            'public pub':      pub,
+            'protected peeps': prot,
+            'private parts':   priv,
+
+            'public pubf':     pubf,
+            'protected protf': protf,
+            'private privf':   privf,
+
+
+            'virtual public getProp': function( name )
+            {
+                // return property, allowing us to break encapsulation for
+                // protected/private properties (for testing purposes)
+                return this[ name ];
+            },
+
+
+            /**
+             * Does the same as the above, but we won't override this one
+             */
+            'public nonOverrideGetProp': function( name )
+            {
+                return this[ name ];
+            },
+
+
+            /**
+             * Allows us to set a value from within the class
+             */
+            'public setValue': function( name, value )
+            {
+                this[ name ] = value;
+            },
+
+
+            'public getSelf': function()
+            {
+                return this;
+            },
+
+
+            'virtual public getSelfOverride': function()
+            {
+                // override me
+            },
+
+
+            'public getPrivProp': function()
+            {
+                return this.parts;
+            },
+
+
+            'public invokePriv': function()
+            {
+                return this._priv();
+            },
+
+
+            'private _priv': function()
+            {
+                return priv;
+            },
+        } );
+
+        // subtype
+        this.SubFoo = this.Foo.extend( {
+            'private _pfoo': 'baz',
+
+            'override public getSelfOverride': function()
+            {
+                // return this from overridden method
+                return this;
+            },
+
+
+            /**
+             * We have to override this so that 'this' is not bound to the supertype
+             */
+            'override public getProp': function( name )
+            {
+                // return property, allowing us to break encapsulation for
+                // protected/private properties (for testing purposes)
+                return this[ name ];
+            },
+
+
+            'private myOwnPrivateFoo': function() {},
+        } );
+    },
+
+
+    setUp: function()
+    {
+        // instance of Foo
+        this.foo     = this.Foo();
+        this.sub_foo = this.SubFoo();
+    },
+
+
     /**
      * Public members are the only members added to the instance's prototype to
      * be accessible externally
@@ -141,13 +146,13 @@ require( 'common' ).testCase(
     'Public members are accessible externally': function()
     {
         this.assertEqual(
-            foo.pub,
+            this.foo.pub,
             pub,
             "Public properties are accessible via public interface"
         );
 
         this.assertEqual(
-            foo.pubf(),
+            this.foo.pubf(),
             pub,
             "Public methods are accessible via public interface"
         );
@@ -166,13 +171,13 @@ require( 'common' ).testCase(
     'Public members are accessible internally': function()
     {
         this.assertEqual(
-            foo.getProp( 'pub' ),
+            this.foo.getProp( 'pub' ),
             pub,
             "Public properties are accessible internally"
         );
 
         this.assertEqual(
-            foo.getProp( 'pubf' )(),
+            this.foo.getProp( 'pubf' )(),
             pub,
             "Public methods are accessible internally"
         );
@@ -197,11 +202,11 @@ require( 'common' ).testCase(
         var val = 'moomookittypoo';
 
         // start by setting the value
-        foo.setValue( 'pub', val );
+        this.foo.setValue( 'pub', val );
 
         // we should see that change internally...
         this.assertEqual(
-            foo.getProp( 'pub' ),
+            this.foo.getProp( 'pub' ),
             val,
             "Setting the value of a public property internally should be " +
                 "observable /internally/"
@@ -209,7 +214,7 @@ require( 'common' ).testCase(
 
         // ...as well as externally
         this.assertEqual(
-            foo.pub,
+            this.foo.pub,
             val,
             "Setting the value of a public property internally should be " +
                 "observable /externally/"
@@ -221,31 +226,31 @@ require( 'common' ).testCase(
     {
         // browsers that do not support the property proxy will not support
         // encapsulating properties
-        if ( util.definePropertyFallback() )
+        if ( this.util.definePropertyFallback() )
         {
             return;
         }
 
         this.assertEqual(
-            foo.peeps,
+            this.foo.peeps,
             undefined,
             "Protected properties are inaccessible via public interface"
         );
 
         this.assertEqual(
-            foo.parts,
+            this.foo.parts,
             undefined,
             "Private properties are inaccessible via public interface"
         );
 
         this.assertEqual(
-            foo.protf,
+            this.foo.protf,
             undefined,
             "Protected methods are inaccessible via public interface"
         );
 
         this.assertEqual(
-            foo.privf,
+            this.foo.privf,
             undefined,
             "Private methods are inaccessible via public interface"
         );
@@ -258,7 +263,7 @@ require( 'common' ).testCase(
     'Protected members are accessible internally': function()
     {
         this.assertEqual(
-            foo.getProp( 'peeps' ),
+            this.foo.getProp( 'peeps' ),
             prot,
             "Protected properties are available internally"
         );
@@ -266,7 +271,7 @@ require( 'common' ).testCase(
         // invoke rather than checking for equality, because the method may be
         // wrapped
         this.assertEqual(
-            foo.getProp( 'protf' )(),
+            this.foo.getProp( 'protf' )(),
             prot,
             "Protected methods are available internally"
         );
@@ -279,7 +284,7 @@ require( 'common' ).testCase(
     'Private members are accessible internally': function()
     {
         this.assertEqual(
-            foo.getProp( 'parts' ),
+            this.foo.getProp( 'parts' ),
             priv,
             "Private properties are available internally"
         );
@@ -287,7 +292,7 @@ require( 'common' ).testCase(
         // invoke rather than checking for equality, because the method may be
         // wrapped
         this.assertEqual(
-            foo.getProp( 'privf' )(),
+            this.foo.getProp( 'privf' )(),
             priv,
             "Private methods are available internally"
         );
@@ -300,7 +305,7 @@ require( 'common' ).testCase(
     'Protected members are inherited from parent': function()
     {
         this.assertEqual(
-            sub_foo.getProp( 'peeps' ),
+            this.sub_foo.getProp( 'peeps' ),
             prot,
             "Protected properties are available to subtypes"
         );
@@ -308,7 +313,7 @@ require( 'common' ).testCase(
         // invoke rather than checking for equality, because the method may be
         // wrapped
         this.assertEqual(
-            sub_foo.getProp( 'protf' )(),
+            this.sub_foo.getProp( 'protf' )(),
             prot,
             "Protected methods are available to subtypes"
         );
@@ -323,13 +328,13 @@ require( 'common' ).testCase(
     {
         // browsers that do not support the property proxy will not support
         // encapsulating properties
-        if ( util.definePropertyFallback() )
+        if ( this.util.definePropertyFallback() )
         {
             return;
         }
 
         this.assertEqual(
-            sub_foo.getProp( 'parts' ),
+            this.sub_foo.getProp( 'parts' ),
             undefined,
             "Private properties of supertypes should be unavailable to subtypes"
         );
@@ -337,7 +342,7 @@ require( 'common' ).testCase(
         // invoke rather than checking for equality, because the method may be
         // wrapped
         this.assertEqual(
-            sub_foo.getProp( 'privf' ),
+            this.sub_foo.getProp( 'privf' ),
             undefined,
             "Private methods of supertypes should be unavailable to subtypes"
         );
@@ -353,22 +358,22 @@ require( 'common' ).testCase(
     {
         var val = 'foobar';
 
-        foo.setValue( 'prot', val );
+        this.foo.setValue( 'prot', val );
 
         // ensure that class instances do not share values (ensuring the same
         // object isn't somehow being passed around)
         this.assertNotEqual(
-            sub_foo.getProp( 'prot' ),
+            this.sub_foo.getProp( 'prot' ),
             val,
             "Class instances do not share protected values (subtype)"
         );
 
         // do the same for multiple instances of the same type
-        var sub_foo2 = SubFoo();
+        var sub_foo2 = this.SubFoo();
         sub_foo2.setValue( 'prot', val );
 
         this.assertNotEqual(
-            sub_foo.getProp( 'prot' ),
+            this.sub_foo.getProp( 'prot' ),
             val,
             "Class instances do not share protected values (same type)"
         );
@@ -389,22 +394,22 @@ require( 'common' ).testCase(
     'Returning self from method should return instance not prop obj': function()
     {
         this.assertDeepEqual(
-            foo.getSelf(),
-            foo,
+            this.foo.getSelf(),
+            this.foo,
             "Returning 'this' from a method should return instance of self"
         );
 
         // what happens in the case of inheritance?
         this.assertDeepEqual(
-            sub_foo.getSelf(),
-            sub_foo,
+            this.sub_foo.getSelf(),
+            this.sub_foo,
             "Returning 'this' from a super method should return the subtype"
         );
 
         // finally, overridden methods should still return the instance
         this.assertDeepEqual(
-            sub_foo.getSelfOverride(),
-            sub_foo,
+            this.sub_foo.getSelfOverride(),
+            this.sub_foo,
             "Returning 'this' from a overridden method should return subtype"
         );
     },
@@ -428,7 +433,7 @@ require( 'common' ).testCase(
     {
         // properties
         this.assertEqual(
-            sub_foo.getPrivProp(),
+            this.sub_foo.getPrivProp(),
             priv,
             "Parent methods should have access to the private properties of " +
                 "the parent"
@@ -436,11 +441,13 @@ require( 'common' ).testCase(
 
         // methods
         this.assertEqual(
-            sub_foo.invokePriv(),
+            this.sub_foo.invokePriv(),
             priv,
             "Parent methods should have access to the private methods of the " +
                 "parent"
         );
+
+        var sub_sub_foo = this.SubFoo.extend( {} )()
 
         // should apply to super-supertypes too
         this.assertEqual(
@@ -484,14 +491,14 @@ require( 'common' ).testCase(
     {
         // browsers that do not support the property proxy will not support
         // encapsulating properties
-        if ( util.definePropertyFallback() )
+        if ( this.util.definePropertyFallback() )
         {
             return;
         }
 
         // property
         this.assertEqual(
-            sub_foo.nonOverrideGetProp( '_pfoo' ),
+            this.sub_foo.nonOverrideGetProp( '_pfoo' ),
             undefined,
             "Parent should not have access to private properties of subtype " +
                 "whena parent method is invoked"
@@ -499,7 +506,7 @@ require( 'common' ).testCase(
 
         // member
         this.assertEqual(
-            sub_foo.nonOverrideGetProp( '_myOwnPrivateFoo' ),
+            this.sub_foo.nonOverrideGetProp( '_myOwnPrivateFoo' ),
             undefined,
             "Parent should not have access to private methods of subtype " +
                 "when a parent method is invoked"
@@ -512,10 +519,12 @@ require( 'common' ).testCase(
      */
     'Can escalate member visibility': function()
     {
+        var _self = this;
+
         // escalate
         this.assertDoesNotThrow( function()
         {
-            Class(
+            _self.Class(
             {
                 'protected foo': 'bar',
                 'virtual protected baz': function() {},
@@ -528,7 +537,7 @@ require( 'common' ).testCase(
         // same level of visibility
         this.assertDoesNotThrow( function()
         {
-            Class(
+            _self.Class(
             {
                 'protected foo': 'bar',
                 'virtual protected baz': function() {},
@@ -546,10 +555,12 @@ require( 'common' ).testCase(
      */
     'Cannot de-escalate member visibility': function()
     {
+        var _self = this;
+
         // public -> protected
         this.assertThrows( function()
         {
-            Class(
+            _self.Class(
             {
                 'public foo': 'bar',
             } ).extend( {
@@ -559,7 +570,7 @@ require( 'common' ).testCase(
 
         this.assertThrows( function()
         {
-            Class(
+            _self.Class(
             {
                 'virtual public baz': function() {},
             } ).extend( {
@@ -571,7 +582,7 @@ require( 'common' ).testCase(
         // public -> private
         this.assertThrows( function()
         {
-            Class(
+            _self.Class(
             {
                 'public foo': 'bar',
             } ).extend( {
@@ -581,7 +592,7 @@ require( 'common' ).testCase(
 
         this.assertThrows( function()
         {
-            Class(
+            _self.Class(
             {
                 'virtual public baz': function() {},
             } ).extend( {
@@ -593,7 +604,7 @@ require( 'common' ).testCase(
         // protected -> private
         this.assertThrows( function()
         {
-            Class(
+            _self.Class(
             {
                 'protected foo': 'bar',
             } ).extend( {
@@ -603,7 +614,7 @@ require( 'common' ).testCase(
 
         this.assertThrows( function()
         {
-            Class(
+            _self.Class(
             {
                 'virtual protected baz': function() {},
             } ).extend( {
@@ -622,7 +633,7 @@ require( 'common' ).testCase(
     'Calling super method works properly with protected methods': function()
     {
         var val = 'foobar',
-            result = Class( {
+            result = this.Class( {
                 'virtual protected foo': function()
                 {
                     return val;
@@ -650,9 +661,11 @@ require( 'common' ).testCase(
      */
     'Visibility de-escalation rulse apply to interfaces': function()
     {
+        var _self = this;
+
         this.assertThrows( function()
         {
-            Class.implement( Interface( { 'abstract public foo': [] } ) )
+            Class.implement( _self.Interface( { 'abstract public foo': [] } ) )
                 .extend(
                 {
                     // should throw an exception; visibility de-escalation
@@ -675,7 +688,7 @@ require( 'common' ).testCase(
     'Can override protected method functionality with public': function()
     {
         // get the result of invoking overridden foo()
-        var result = Class(
+        var result = this.Class(
             {
                 'virtual protected foo': function()
                 {
@@ -708,7 +721,7 @@ require( 'common' ).testCase(
     'Protected values are available to subtypes when set by parent': function()
     {
         var expected = 5,
-            result   = Class(
+            result   = this.Class(
             {
                 'protected val': 0,
 
@@ -742,7 +755,7 @@ require( 'common' ).testCase(
     'Can properly override protected with protected': function()
     {
         var val    = 'foobar',
-            result = Class(
+            result = this.Class(
             {
                 'virtual protected foo': function() {},
             } ).extend(

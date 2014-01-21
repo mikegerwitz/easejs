@@ -116,6 +116,11 @@ module.exports = function( test_case )
 
         if ( method === 'each' )
         {
+            if ( !( context[ prop ] ) )
+            {
+                throw Error( "Unknown @each context: " + prop );
+            }
+
             count = context[ prop ].length;
             args  = [];
 
@@ -231,7 +236,11 @@ function init()
  */
 function endStats()
 {
-    testPrint( "\n\n" );
+    testPrint( "\n" );
+    if ( tcount % 60 !== 0 )
+    {
+        testPrint( "\n" );
+    }
 
     if ( failures.length )
     {
@@ -374,12 +383,12 @@ function outputTestFailures( failures )
         cur = failures[ i ];
 
         name = cur[ 0 ];
-        e    = cur[ 1 ];
+        e    = cur[ 1 ];  // ideally Error, but may not be
 
         // output the name followed by the stack trace
         testPrint(
             '#' + i + ' ' + name + '\n'
-            + e.stack + "\n\n"
+            + ( e.stack || e ) + "\n\n"
         );
     }
 }

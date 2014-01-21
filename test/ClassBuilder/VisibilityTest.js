@@ -1,8 +1,6 @@
 /**
  * Tests class builder visibility implementation
  *
- * See also: test-class-visibility.js
- *
  *  Copyright (C) 2011, 2012, 2013 Mike Gerwitz
  *
  *  This file is part of GNU ease.js.
@@ -19,29 +17,31 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+ * See also: Class/VisibilityTest
  */
-
-var common  = require( './common' ),
-    assert  = require( 'assert' ),
-    util    = common.require( 'util' ),
-
-    // XXX: get rid of this disgusting mess; we're mid-refactor and all these
-    // dependencies should not be necessary for testing
-    ClassBuilder         = common.require( '/ClassBuilder' ),
-    MethodWrapperFactory = common.require( '/MethodWrapperFactory' ),
-    wrappers             = common.require( '/MethodWrappers' ).standard
-;
-
 
 require( 'common' ).testCase(
 {
+    caseSetUp: function()
+    {
+        // XXX: get rid of this disgusting mess; we're mid-refactor and all
+        // these dependencies should not be necessary for testing
+        this.Sut                  = this.require( 'ClassBuilder' );
+        this.MethodWrapperFactory = this.require( 'MethodWrapperFactory' );
+
+        this.wrappers = this.require( 'MethodWrappers' ).standard;
+        this.util     = this.require( 'util' );
+    },
+
+
     setUp: function()
     {
-        this.builder = ClassBuilder(
+        this.builder = this.Sut(
             this.require( '/MemberBuilder' )(
-                MethodWrapperFactory( wrappers.wrapNew ),
-                MethodWrapperFactory( wrappers.wrapOverride ),
-                MethodWrapperFactory( wrappers.wrapProxy ),
+                this.MethodWrapperFactory( this.wrappers.wrapNew ),
+                this.MethodWrapperFactory( this.wrappers.wrapOverride ),
+                this.MethodWrapperFactory( this.wrappers.wrapProxy ),
                 this.getMock( 'MemberBuilderValidator' )
             ),
             this.require( '/VisibilityObjectFactoryFactory' ).fromEnvironment()
@@ -79,9 +79,9 @@ require( 'common' ).testCase(
         );
 
         // the property should be read-only
-        if ( util.definePropertyFallback() === false )
+        if ( this.util.definePropertyFallback() === false )
         {
-            assert.equal(
+            this.assertEqual(
                 Object.getOwnPropertyDescriptor( ref, '__inst' ).writable,
                 false,
                 "this.__inst is not writable"

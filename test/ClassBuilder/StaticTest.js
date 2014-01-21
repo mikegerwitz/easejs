@@ -19,29 +19,34 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var common   = require( './common' ),
-    fallback = common.require( 'util' ).definePropertyFallback(),
-
-    // XXX: get rid of this disgusting mess; we're mid-refactor and all these
-    // dependencies should not be necessary for testing
-    ClassBuilder         = common.require( '/ClassBuilder' ),
-    MethodWrapperFactory = common.require( '/MethodWrapperFactory' ),
-    wrappers             = common.require( '/MethodWrappers' ).standard
-;
-
 
 require( 'common' ).testCase(
 {
+    caseSetUp: function()
+    {
+        this.fallback = this.require( 'util' ).definePropertyFallback();
+
+        // XXX: get rid of this disgusting mess; we're mid-refactor and all
+        // these dependencies should not be necessary for testing
+        this.ClassBuilder         = this.require( 'ClassBuilder' );
+        this.MemberBuilder        = this.require( 'MemberBuilder' );
+        this.MethodWrapperFactory = this.require( 'MethodWrapperFactory' );
+
+        this.wrappers = this.require( 'MethodWrappers' ).standard;
+    },
+
+
     setUp: function()
     {
-        this.builder = ClassBuilder(
-            common.require( '/MemberBuilder' )(
-                MethodWrapperFactory( wrappers.wrapNew ),
-                MethodWrapperFactory( wrappers.wrapOverride ),
-                MethodWrapperFactory( wrappers.wrapProxy ),
+        this.builder = this.ClassBuilder(
+            this.MemberBuilder(
+                this.MethodWrapperFactory( this.wrappers.wrapNew ),
+                this.MethodWrapperFactory( this.wrappers.wrapOverride ),
+                this.MethodWrapperFactory( this.wrappers.wrapProxy ),
                 this.getMock( 'MemberBuilderValidator' )
             ),
-            common.require( '/VisibilityObjectFactoryFactory' ).fromEnvironment()
+            this.require( 'VisibilityObjectFactoryFactory' )
+                .fromEnvironment()
         );
     },
 
@@ -99,7 +104,7 @@ require( 'common' ).testCase(
             Foo = this.builder.build( {} );
 
         // don't perform the test if unsupported
-        if ( fallback )
+        if ( this.fallback )
         {
             return;
         }
@@ -174,7 +179,7 @@ require( 'common' ).testCase(
     'Public static getters/setter accessible via class dfn only': function()
     {
         // if unsupported, don't bother with the test
-        if ( fallback )
+        if ( this.fallback )
         {
             return;
         }
@@ -277,7 +282,7 @@ require( 'common' ).testCase(
         };
 
         // also test getters/setters if supported
-        if ( !fallback )
+        if ( !this.fallback )
         {
             Object.defineProperty( def, 'public static bar', {
                 get: function() {},
@@ -322,7 +327,7 @@ require( 'common' ).testCase(
         );
 
         // getters/setters (if supported by engine)
-        if ( !fallback )
+        if ( !this.fallback )
         {
             var super_data   = Object.getOwnPropertyDescriptor( Foo, 'bar' ),
                 sub_data     = Object.getOwnPropertyDescriptor( SubFoo, 'bar' ),
@@ -594,7 +599,7 @@ require( 'common' ).testCase(
     'Protected static getters/setters accessible inside class only': function()
     {
         // if unsupported, don't bother with the test
-        if ( fallback )
+        if ( this.fallback )
         {
             return;
         }
@@ -662,7 +667,7 @@ require( 'common' ).testCase(
         };
 
         // also test getters/setters if supported
-        if ( !fallback )
+        if ( !this.fallback )
         {
             Object.defineProperty( def, 'protected static bar', {
                 get: function() {},
@@ -730,7 +735,7 @@ require( 'common' ).testCase(
         );
 
         // getters/setters (if supported by engine)
-        if ( !fallback )
+        if ( !this.fallback )
         {
             var super_data   = Foo.getPropDesc( 'bar' ),
                 sub_data     = SubFoo.getPropDesc( 'bar' ),
@@ -830,7 +835,7 @@ require( 'common' ).testCase(
             'private static priv': function() {},
         };
 
-        if ( !fallback )
+        if ( !this.fallback )
         {
             Object.defineProperty( def, 'private static foo', {
                 get: function() { return 'foo'; },
@@ -894,7 +899,7 @@ require( 'common' ).testCase(
     'Private static getters/setters accessible inside class only': function()
     {
         // if unsupported, don't bother with the test
-        if ( fallback )
+        if ( this.fallback )
         {
             return;
         }
