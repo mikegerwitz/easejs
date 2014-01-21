@@ -132,13 +132,10 @@ done
 # include tests?
 if [ "$INC_TEST" ]; then
     # note that not all tests are included
-    TEST_CASES=$( cd "$PATH_TEST"; find . \
-        \( -name 'test-*.js' \
-            -o -name '*Test*.js' \
-        \) \
+    TEST_CASES=$( cd "$PATH_TEST"; find . -name '*Test*.js' \
         | sed 's/^.\///' \
         | sort \
-        | grep -v 'test-\(combine\(-pre-es5\)\?\|index\).js' \
+        | grep -v '\(Combine\(PreEs5\)\?\|Index\)Test.js' \
     )
 
     # find include files separately so we can output those before the tests
