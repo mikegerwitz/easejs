@@ -1,7 +1,7 @@
 /**
  * Tests combined file, attempting to emulate a pre-ECMAScript5 environment.
  *
- *  Copyright (C) 2011, 2013 Mike Gerwitz
+ *  Copyright (C) 2014 Mike Gerwitz
  *
  *  This file is part of GNU ease.js.
  *
