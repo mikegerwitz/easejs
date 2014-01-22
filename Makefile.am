@@ -126,7 +126,7 @@ test/test-%: FORCE
 	./"$@"
 
 # JS test cases
-test-suite: combine
+test-suite:
 if HAS_NODE
 	@echo "GNU ease.js Test Suite"
 	@echo
