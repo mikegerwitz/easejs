@@ -31,6 +31,38 @@ require( 'common' ).testCase(
             this.Sut.extend,
             this.Sut,
         ];
+
+        // trait field name conflicts
+        this.fconflict = [
+            // same name; property
+            [ 'foo',
+                { foo: 'a' },
+                { foo: 'b' },
+            ],
+
+            // same name; prop and method
+            [ 'foo',
+                { foo: 'a' },
+                { foo: function() {} },
+            ],
+
+            // same keywords
+            [ 'foo',
+                { 'public foo': 'a' },
+                { 'public foo': 'b' },
+            ],
+
+            // different keywords should be (for the time being) picked up
+            // by existing class error checks
+            [ 'foo',
+                { 'public foo': 'a' },
+                { 'protected foo': 'b' },
+            ],
+            [ 'bar',
+                { 'virtual bar': function() {} },
+                { 'override bar': function() {} },
+            ],
+        ];
     },
 
 
@@ -153,4 +185,124 @@ require( 'common' ).testCase(
     // (that is---the same); we will proceed to test only a single method of
     // construction under that assumption.
     //
+
+
+    /**
+     * Traits cannot be instantiated, so they need not define __construct
+     * for themselves; however, they may wish to influence the construction
+     * of anything that uses them. This is poor practice, since that
+     * introduces a war between traits to take over the constructor;
+     * instead, the class using the traits should handle calling the methods
+     * on the traits and we should disallow traits from attempting to set
+     * the constructor.
+     */
+    'Traits cannot define __construct': function()
+    {
+        try
+        {
+            this.Class
+                .use( this.Sut( { __construct: function() {} } ) )
+                .extend( {} );
+        }
+        catch ( e )
+        {
+            this.assertOk( e.message.match( /\b__construct\b/ ) );
+            return;
+        }
+
+        this.fail( "Traits should not be able to define __construct" );
+    },
+
+
+    /**
+     * If two traits attempt to define the same field (by name, regardless
+     * of its type), then an error should be thrown to warn the developer of
+     * a problem; automatic resolution would be a fertile source of nasty
+     * and confusing bugs.
+     *
+     * TODO: conflict resolution through aliasing
+     */
+    '@each(fconflict) Cannot use multiple traits definining same field':
+    function( dfns )
+    {
+        var fname = dfns[ 0 ];
+
+        // both traits define `foo'
+        var A = this.Sut( dfns[ 1 ] ),
+            B = this.Sut( dfns[ 2 ] );
+
+        // this, therefore, should error
+        try
+        {
+            this.Class.use( A, B ).extend( {} );
+        }
+        catch ( e )
+        {
+            // the assertion should contain the name of the field that
+            // caused the error
+            this.assertOk(
+                e.message.match( '\\b' + fname + '\\b' ),
+                "Missing field name"
+            );
+
+            // TODO: we can also make less people hate us if we include the
+            // names of the conflicting traits; in the case of an anonymous
+            // trait, maybe include its index in the use list
+
+            return;
+        }
+
+        this.fail( "Mixin must fail on conflict" );
+    },
+
+
+    /**
+     * Once a trait is mixed in, its methods should execute with `this'
+     * bound to the instance of the class that it was mixed into, not the
+     * trait itself. In particular, this means that the trait can access
+     * members of the class in which it mixes into (but see tests that
+     * follow).
+     */
+    'Trait methods execute within context of the containing class':
+    function()
+    {
+        var expected = 'bar';
+
+        var T = this.Sut(
+        {
+            // attempts to invoke protected method of containing class
+            'public setFoo': function( val ) { this.doSet( val ); },
+        } );
+
+        var C = this.Class.use( T ).extend(
+        {
+            'private _foo': null,
+            'protected doSet': function( val ) { this._foo = val; },
+            'public getFoo': function() { return this._foo; },
+        } );
+
+        // we do not use method chaining for this test just to ensure that
+        // any hiccups with returning `this' from setFoo will not compromise
+        // the assertion
+        var inst = C();
+        inst.setFoo( expected );
+        this.assertEqual( inst.getFoo(), expected );
+    },
+
+
+    'Private class members are not accessible to useed traits': function()
+    {
+        // TODO: this is not yet the case
+    },
+
+
+    /**
+     * Traits will need to be able to keep and manipulate their own internal
+     * state.
+     */
+    'Private trait members are not accessible to containing class':
+    function()
+    {
+        // TODO: this is not yet the case
+    },
 } );
