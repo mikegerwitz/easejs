@@ -245,21 +245,4 @@ require( 'common' ).testCase(
 
         this.fail( false, true, "Mixin must fail on conflict: " + desc );
     },
-
-
-    'Private class members are not accessible to used traits': function()
-    {
-        // TODO: this is not yet the case
-    },
-
-
-    /**
-     * Traits will need to be able to keep and manipulate their own internal
-     * state.
-     */
-    'Private trait members are not accessible to containing class':
-    function()
-    {
-        // TODO: this is not yet the case
-    },
 } );
