@@ -32,36 +32,31 @@ require( 'common' ).testCase(
             this.Sut,
         ];
 
-        // trait field name conflicts
+        // trait field name conflicts (methods)
         this.fconflict = [
-            // same name; property
-            [ 'foo',
-                { foo: 'a' },
-                { foo: 'b' },
-            ],
-
-            // same name; prop and method
-            [ 'foo',
-                { foo: 'a' },
+            [ 'foo', "same name; no keywords",
+                { foo: function() {} },
                 { foo: function() {} },
             ],
 
-            // same keywords
-            [ 'foo',
-                { 'public foo': 'a' },
-                { 'public foo': 'b' },
+            [ 'foo', "same keywords; same visibility",
+                { 'public foo': function() {} },
+                { 'public foo': function() {} },
             ],
 
-            // different keywords should be (for the time being) picked up
-            // by existing class error checks
-            [ 'foo',
-                { 'public foo': 'a' },
-                { 'protected foo': 'b' },
+            // should (at least for the time being) be picked up by existing
+            // class error checks
+            [ 'foo', "varying keywords; same visibility",
+                { 'virtual public foo': function() {} },
+                { 'public virtual foo': function() {} },
             ],
-            [ 'bar',
-                { 'virtual bar': function() {} },
-                { 'public bar': function() {} },
+
+            /* TODO
+            [ 'foo', "different visibility",
+                { 'public foo':    function() {} },
+                { 'protected foo': function() {} },
             ],
+            */
         ];
     },
 
@@ -223,14 +218,10 @@ require( 'common' ).testCase(
     '@each(fconflict) Cannot mix in multiple concrete methods of same name':
     function( dfns )
     {
-        // TODO: not yet working with composition approach
-        this.skip();
-
-        var fname = dfns[ 0 ];
-
-        // both traits define `foo'
-        var A = this.Sut( dfns[ 1 ] ),
-            B = this.Sut( dfns[ 2 ] );
+        var fname = dfns[ 0 ],
+            desc  = dfns[ 1 ],
+            A     = this.Sut( dfns[ 2 ] ),
+            B     = this.Sut( dfns[ 3 ] );
 
         // this, therefore, should error
         try
@@ -253,7 +244,7 @@ require( 'common' ).testCase(
             return;
         }
 
-        this.fail( "Mixin must fail on conflict" );
+        this.fail( false, true, "Mixin must fail on conflict: " + desc );
     },
 
 
