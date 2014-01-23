@@ -45,18 +45,17 @@ require( 'common' ).testCase(
             ],
 
             // should (at least for the time being) be picked up by existing
-            // class error checks
+            // class error checks; TODO: but let's provide trait-specific
+            // error messages to avoid frustration and infuriation
             [ 'foo', "varying keywords; same visibility",
                 { 'virtual public foo': function() {} },
                 { 'public virtual foo': function() {} },
             ],
 
-            /* TODO
             [ 'foo', "different visibility",
                 { 'public foo':    function() {} },
                 { 'protected foo': function() {} },
             ],
-            */
         ];
     },
 
@@ -234,7 +233,7 @@ require( 'common' ).testCase(
             // caused the error
             this.assertOk(
                 e.message.match( '\\b' + fname + '\\b' ),
-                "Missing field name"
+                "Error message missing field name: " + e.message
             );
 
             // TODO: we can also make less people hate us if we include the
