@@ -126,4 +126,27 @@ require( 'common' ).testCase(
             inst.invokePriv();
         }, Error );
     },
+
+
+    /**
+     * If this seems odd at first, consider this: traits provide
+     * copy/paste-style functionality, meaning they need to be able to
+     * provide public methods. However, we may not always want to mix trait
+     * features into a public API; therefore, we need the ability to mix in
+     * protected members.
+     */
+    'Classes can access protected trait members': function()
+    {
+        var T = this.Sut( { 'protected foo': function() {} } );
+
+        var _self = this;
+        this.assertDoesNotThrow( function()
+        {
+            _self.Class.use( T ).extend(
+            {
+                // invokes protected trait method
+                'public callFoo': function() { this.foo(); }
+            } )().callFoo();
+        } );
+    },
 } );
