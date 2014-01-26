@@ -296,7 +296,6 @@ require( 'common' ).testCase(
             name  = 'foo',
             amethod = _self.util.createAbstractMethod( [ 'one' ] );
 
-
         // abstract appears before
         this.quickFailureTest( name, 'compatible', function()
         {
