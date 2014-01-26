@@ -52,6 +52,10 @@ require( 'common' ).testCase(
                 };
             } );
         };
+
+        // simply intended to execute test two two perspectives
+        this.weakab = [
+        ];
     },
 
 
@@ -105,9 +109,9 @@ require( 'common' ).testCase(
             _self.testArgs( arguments, name, value, keywords );
         };
 
-        this.sut.buildMethod(
+        this.assertOk( this.sut.buildMethod(
             this.members, {}, name, value, keywords, function() {}, 1, {}
-        );
+        ) );
 
         this.assertEqual( true, called, 'validateMethod() was not called' );
     },
@@ -133,9 +137,9 @@ require( 'common' ).testCase(
             _self.testArgs( arguments, name, value, keywords );
         };
 
-        this.sut.buildMethod(
+        this.assertOk( this.sut.buildMethod(
             this.members, {}, name, value, keywords, function() {}, 1, {}
-        );
+        ) );
 
         this.assertEqual( true, called, 'validateMethod() was not called' );
     },
@@ -159,9 +163,9 @@ require( 'common' ).testCase(
         ;
 
         // build the proxy
-        this.sut.buildMethod(
+        this.assertOk( this.sut.buildMethod(
             this.members, {}, name, value, keywords, instCallback, cid, {}
-        );
+        ) );
 
         this.assertNotEqual( null, this.proxyFactoryCall,
             "Proxy factory should be used when `proxy' keyword is provided"
@@ -180,5 +184,51 @@ require( 'common' ).testCase(
             this.members[ 'public' ][ name ],
             "Generated proxy method should be properly assigned to members"
         );
+    },
+
+
+    /**
+     * A weak abstract method may exist in a situation where a code
+     * generator is not certain whether a concrete implementation may be
+     * provided. In this case, we would not want to actually create an
+     * abstract method if a concrete one already exists.
+     */
+    'Weak abstract methods are not processed if concrete is available':
+    function()
+    {
+         var _self  = this,
+            called = false,
+
+            cid      = 1,
+            name     = 'foo',
+            cval     = function() { called = true; },
+            aval     = [],
+
+            ckeywords = {},
+            akeywords = { weak: true, 'abstract': true, },
+
+            instCallback = function() {}
+        ;
+
+        // first define abstract
+        this.assertOk( this.sut.buildMethod(
+            this.members, {}, name, aval, akeywords, instCallback, cid, {}
+        ) );
+
+        // concrete should take precedence
+        this.assertOk( this.sut.buildMethod(
+            this.members, {}, name, cval, ckeywords, instCallback, cid, {}
+        ) );
+
+        this.members[ 'public' ].foo();
+        this.assertOk( called, "Concrete method did not take precedence" );
+
+        // now try abstract again to ensure this works from both directions
+        this.assertOk( this.sut.buildMethod(
+            this.members, {}, name, aval, akeywords, instCallback, cid, {}
+        ) === false );
+
+        this.members[ 'public' ].foo();
+        this.assertOk( called, "Concrete method unkept" );
     },
 } );

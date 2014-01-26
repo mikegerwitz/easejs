@@ -27,6 +27,7 @@ require( 'common' ).testCase(
     caseSetUp: function()
     {
         var _self = this;
+        this.util = this.require( 'util' );
 
         this.quickKeywordMethodTest = function( keywords, identifier, prev )
         {
@@ -209,6 +210,21 @@ require( 'common' ).testCase(
 
 
     /**
+     * Contrary to the above test, an abstract method may appear after its
+     * concrete implementation if the `weak' keyword is provided; this
+     * exists to allow code generation tools to fall back to abstract
+     * without having to invoke the property parser directly, complicating
+     * their logic and duplicating work that ease.js will already do.
+     */
+    'Concrete method may appear with weak abstract method': function()
+    {
+        this.quickKeywordMethodTest(
+            [ 'weak', 'abstract' ], null, []
+        );
+    },
+
+
+    /**
      * The parameter list is part of the class interface. Changing the length
      * will make the interface incompatible with that of its parent and make
      * polymorphism difficult. However, since all parameters in JS are
@@ -264,6 +280,46 @@ require( 'common' ).testCase(
                 { 'virtual': true }
             );
         }, Error );
+    },
+
+
+    /**
+     * Same concept as the above test, but ensure that the logic for weak
+     * abstract members does not skip the valiation. Furthermore, if a weak
+     * abstract member is found *after* the concrete definition, the same
+     * restrictions should apply retroacively.
+     */
+    'Weak abstract overrides must meet compatibility requirements':
+    function()
+    {
+        var _self = this,
+            name  = 'foo',
+            amethod = _self.util.createAbstractMethod( [ 'one' ] );
+
+
+        // abstract appears before
+        this.quickFailureTest( name, 'compatible', function()
+        {
+            _self.sut.validateMethod(
+                name,
+                function() {},
+                {},
+                { member: amethod },
+                { 'weak': true, 'abstract': true }
+            );
+        } );
+
+        // abstract appears after
+        this.quickFailureTest( name, 'compatible', function()
+        {
+            _self.sut.validateMethod(
+                name,
+                amethod,
+                { 'weak': true, 'abstract': true },
+                { member: function() {} },
+                {}
+            );
+        } );
     },
 
 

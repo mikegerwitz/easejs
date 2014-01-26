@@ -68,7 +68,7 @@ exports.quickFailureTest = function( name, identifier, action )
         return;
     }
 
-    _self.fail( "Expected failure" );
+    _self.fail( false, true, "Expected failure" );
 };
 
 
@@ -124,7 +124,7 @@ exports.quickKeywordTest = function(
     }
     else
     {
-        this.assertDoesNotThrow( testfunc, Error );
+        this.assertDoesNotThrow( testfunc );
     }
 };
 
