@@ -1,5 +1,5 @@
 /**
- * Tests basic trait definition
+ * Tests abstract trait definition and use
  *
  *  Copyright (C) 2014 Mike Gerwitz
  *
@@ -88,7 +88,7 @@ require( 'common' ).testCase(
      */
     'Concrete classes must be compatible with abstract traits': function()
     {
-        var T      = this.Sut( { 'abstract traitfoo': [ 'foo' ] } );
+        var T = this.Sut( { 'abstract traitfoo': [ 'foo' ] } );
 
         var _self = this;
         this.assertThrows( function()
@@ -96,8 +96,94 @@ require( 'common' ).testCase(
             C = _self.Class.use( T ).extend(
             {
                 // missing param in definition
-                traitfoo: function() { called = true; },
+                traitfoo: function() {},
             } );
         } );
+    },
+
+
+    /**
+     * If a trait defines an abstract method, then it should be able to
+     * invoke a concrete method of the same name defined by a class.
+     */
+    'Traits can invoke concrete class implementation of abstract method':
+    function()
+    {
+        var expected = 'foobar';
+
+        var T = this.Sut(
+        {
+            'public getFoo': function()
+            {
+                return this.echo( expected );
+            },
+
+            'abstract protected echo': [ 'value' ],
+        } );
+
+        var result = this.Class.use( T ).extend(
+        {
+            // concrete implementation of abstract trait method
+            'protected echo': function( value )
+            {
+                return value;
+            },
+        } )().getFoo();
+
+        this.assertEqual( result, expected );
+    },
+
+
+    /**
+     * Even more kinky is when a trait provides a concrete implementation
+     * for an abstract method that is defined in another trait that is mixed
+     * into the same class. This makes sense, because that class acts as
+     * though the trait's abstract method is its own. This allows for
+     * message passing between two traits with the class as the mediator.
+     *
+     * This is otherwise pretty much the same as the above test. Note that
+     * we use a public `echo' method; this is to ensure that we do not break
+     * in the event that protected trait members break (that is: are not
+     * exposed to the class).
+     */
+    'Traits can invoke concrete trait implementation of abstract method':
+    function()
+    {
+        var expected = 'traitbar';
+
+        // same as the previous test
+        var Ta = this.Sut(
+        {
+            'public getFoo': function()
+            {
+                return this.echo( expected );
+            },
+
+            'abstract public echo': [ 'value' ],
+        } );
+
+        // but this is new
+        var Tc = this.Sut(
+        {
+            // concrete implementation of abstract trait method
+            'public echo': function( value )
+            {
+                return value;
+            },
+        } );
+
+        this.assertEqual(
+            this.Class.use( Ta, Tc ).extend( {} )().getFoo(),
+            expected
+        );
+
+        // order shouldn't matter (because that'd be confusing and
+        // frustrating to users, depending on how the traits are named), so
+        // let's do this again in reverse order
+        this.assertEqual(
+            this.Class.use( Tc, Ta ).extend( {} )().getFoo(),
+            expected,
+            "Crap; order matters?!"
+        );
     },
 } );
