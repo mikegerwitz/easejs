@@ -231,4 +231,51 @@ require( 'common' ).testCase(
         this.members[ 'public' ].foo();
         this.assertOk( called, "Concrete method unkept" );
     },
+
+
+    /**
+     * Same concept as the above, but with virtual methods (which have a
+     * concrete implementation available by default).
+     */
+    'Weak virtual methods are not processed if override is available':
+    function()
+    {
+         var _self  = this,
+            called = false,
+
+            cid      = 1,
+            name     = 'foo',
+            oval     = function() { called = true; },
+            vval     = function()
+            {
+                _self.fail( true, false, "Method not overridden." );
+            },
+
+            okeywords = { 'override': true },
+            vkeywords = { weak: true, 'virtual': true },
+
+            instCallback = function() {}
+        ;
+
+        // define the virtual method
+        this.assertOk( this.sut.buildMethod(
+            this.members, {}, name, vval, vkeywords, instCallback, cid, {}
+        ) );
+
+        // override should take precedence
+        this.assertOk( this.sut.buildMethod(
+            this.members, {}, name, oval, okeywords, instCallback, cid, {}
+        ) );
+
+        this.members[ 'public' ].foo();
+        this.assertOk( called, "Override did not take precedence" );
+
+        // now try virtual again to ensure this works from both directions
+        this.assertOk( this.sut.buildMethod(
+            this.members, {}, name, vval, vkeywords, instCallback, cid, {}
+        ) === false );
+
+        this.members[ 'public' ].foo();
+        this.assertOk( called, "Override unkept" );
+    },
 } );
