@@ -51,13 +51,18 @@ require( 'common' ).testCase(
                     startobj.virtual     = true;
                     overrideobj.override = true;
 
+                    var state = {};
+
                     _self.sut.validateMethod(
                         name,
                         function() {},
                         overrideobj,
                         { member: function() {} },
-                        startobj
+                        startobj,
+                        state
                     );
+
+                    _self.sut.end( state );
                 },
                 failstr
             );
@@ -128,7 +133,7 @@ require( 'common' ).testCase(
             _self.sut.validateMethod(
                 name, function() {}, {},
                 { get: function() {} },
-                {}
+                {}, {}
             );
         } );
 
@@ -138,7 +143,7 @@ require( 'common' ).testCase(
             _self.sut.validateMethod(
                 name, function() {}, {},
                 { set: function() {} },
-                {}
+                {}, {}
             );
         } );
     },
@@ -161,7 +166,7 @@ require( 'common' ).testCase(
             _self.sut.validateMethod(
                 name, function() {}, {},
                 { member: 'immaprop' },
-                {}
+                {}, {}
             );
         } );
     },
@@ -246,7 +251,8 @@ require( 'common' ).testCase(
                 // this function returns each of its arguments, otherwise
                 // they'll be optimized away by Closure Compiler.
                 { member: function( a, b, c ) { return [a,b,c]; } },
-                { 'virtual': true }
+                { 'virtual': true },
+                {}
             );
         } );
 
@@ -262,7 +268,8 @@ require( 'common' ).testCase(
                 function() {},
                 { 'override': true },
                 { member: parent_method },
-                { 'virtual': true }
+                { 'virtual': true },
+                {}
             );
         } );
 
@@ -277,7 +284,8 @@ require( 'common' ).testCase(
                 method,
                 { 'override': true },
                 { member: function( a, b, c ) {} },
-                { 'virtual': true }
+                { 'virtual': true },
+                {}
             );
         }, Error );
     },
@@ -304,7 +312,8 @@ require( 'common' ).testCase(
                 function() {},
                 {},
                 { member: amethod },
-                { 'weak': true, 'abstract': true }
+                { 'weak': true, 'abstract': true },
+                {}
             );
         } );
 
@@ -316,7 +325,7 @@ require( 'common' ).testCase(
                 amethod,
                 { 'weak': true, 'abstract': true },
                 { member: function() {} },
-                {}
+                {}, {}
             );
         } );
     },
@@ -448,7 +457,7 @@ require( 'common' ).testCase(
         {
             // provide function instead of string
             _self.sut.validateMethod(
-                name, function() {}, { 'proxy': true }, {}, {}
+                name, function() {}, { 'proxy': true }, {}, {}, {}
             );
         } );
     },
@@ -464,7 +473,7 @@ require( 'common' ).testCase(
         this.assertDoesNotThrow( function()
         {
             _self.sut.validateMethod(
-                'foo', 'dest', { 'proxy': true }, {}, {}
+                'foo', 'dest', { 'proxy': true }, {}, {}, {}
             );
         }, TypeError );
     },

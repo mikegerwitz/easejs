@@ -87,6 +87,7 @@ exports.quickKeywordTest = function(
         prev_obj    = {},
         prev_data   = prev_data || {},
         name        = exports.testName,
+        state       = {},
         _self       = this;
 
     // convert our convenient array into a keyword obj
@@ -114,7 +115,7 @@ exports.quickKeywordTest = function(
         var val = ( keyword_obj[ 'proxy' ] ) ? 'proxyDest': function() {};
 
         _self.sut[ type ](
-            name, val, keyword_obj, prev_data, prev_obj
+            name, val, keyword_obj, prev_data, prev_obj, state
         );
     };
 
@@ -126,6 +127,8 @@ exports.quickKeywordTest = function(
     {
         this.assertDoesNotThrow( testfunc );
     }
+
+    this.sut.end( state );
 };
 
 

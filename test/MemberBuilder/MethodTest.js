@@ -27,30 +27,32 @@ require( 'common' ).testCase(
     {
         var _self = this;
 
-        this.testArgs = function( args, name, value, keywords )
+        this.testArgs = function( args, name, value, keywords, state )
         {
-            shared.testArgs( _self, args, name, value, keywords, function(
-                prev_default, pval_given, pkey_given
-            )
-            {
-                var expected = _self.members[ 'public' ][ name ];
-
-                if ( !expected )
+            shared.testArgs( _self, args, name, value, keywords, state,
+                function(
+                    prev_default, pval_given, pkey_given
+                )
                 {
-                    return prev_default;
-                }
+                    var expected = _self.members[ 'public' ][ name ];
 
-                return {
-                    value: {
-                        expected: expected,
-                        given:    pval_given.member,
-                    },
-                    keywords: {
-                        expected: expected.___$$keywords$$, // XXX
-                        given:    pkey_given,
-                    },
-                };
-            } );
+                    if ( !expected )
+                    {
+                        return prev_default;
+                    }
+
+                    return {
+                        value: {
+                            expected: expected,
+                            given:    pval_given.member,
+                        },
+                        keywords: {
+                            expected: expected.___$$keywords$$, // XXX
+                            given:    pkey_given,
+                        },
+                    };
+                }
+            );
         };
 
         // simply intended to execute test two two perspectives
@@ -100,17 +102,19 @@ require( 'common' ).testCase(
 
             name     = 'foo',
             value    = function() {},
+            state    = {},
             keywords = {}
         ;
 
         this.mockValidate.validateMethod = function()
         {
             called = true;
-            _self.testArgs( arguments, name, value, keywords );
+            _self.testArgs( arguments, name, value, keywords, state );
         };
 
         this.assertOk( this.sut.buildMethod(
-            this.members, {}, name, value, keywords, function() {}, 1, {}
+            this.members, {}, name, value, keywords, function() {}, 1, {},
+            state
         ) );
 
         this.assertEqual( true, called, 'validateMethod() was not called' );

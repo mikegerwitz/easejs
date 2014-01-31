@@ -38,16 +38,6 @@ require( 'common' ).testCase(
     },
 
 
-    setUp: function()
-    {
-        this.builder = this.Sut(
-            this.require( 'MemberBuilder' )(),
-            this.require( 'VisibilityObjectFactoryFactory' )
-                .fromEnvironment()
-        );
-    },
-
-
     /**
      * It's always useful to be able to quickly reference a list of reserved
      * members so that an implementer can programatically handle runtime
@@ -287,5 +277,33 @@ require( 'common' ).testCase(
         {
             _self.AbstractClass( dfn );
         } );
+    },
+
+
+    /**
+     * During the course of processing, certain data are accumulated into
+     * the member builder state; this state must be post-processed to
+     * complete anything that may be pending.
+     */
+    'Member builder state is ended after processing': function()
+    {
+        var _self = this,
+            build = this.require( 'MemberBuilder' )();
+
+        var sut = this.Sut(
+            build,
+            this.require( 'VisibilityObjectFactoryFactory' )
+                .fromEnvironment()
+        );
+
+        // TODO: test that we're passed the right state
+        var called = false;
+        build.end = function( state )
+        {
+            called = true;
+        };
+
+        sut.build( {} );
+        this.assertOk( called );
     },
 } );

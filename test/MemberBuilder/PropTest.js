@@ -27,30 +27,32 @@ require( 'common' ).testCase(
     {
         var _self = this;
 
-        this.testArgs = function( args, name, value, keywords )
+        this.testArgs = function( args, name, value, keywords, state )
         {
-            shared.testArgs( _self, args, name, value, keywords, function(
-                prev_default, pval_given, pkey_given
-            )
-            {
-                var expected = _self.members[ 'public' ][ name ];
-
-                if ( !expected )
+            shared.testArgs( _self, args, name, value, keywords, state,
+                function(
+                    prev_default, pval_given, pkey_given
+                )
                 {
-                    return prev_default;
-                }
+                    var expected = _self.members[ 'public' ][ name ];
 
-                return {
-                    value: {
-                        expected: expected[ 0 ],
-                        given:    pval_given.member[ 0 ],
-                    },
-                    keywords: {
-                        expected: expected[ 1 ],
-                        given:    pkey_given,
-                    },
-                };
-            } );
+                    if ( !expected )
+                    {
+                        return prev_default;
+                    }
+
+                    return {
+                        value: {
+                            expected: expected[ 0 ],
+                            given:    pval_given.member[ 0 ],
+                        },
+                        keywords: {
+                            expected: expected[ 1 ],
+                            given:    pkey_given,
+                        },
+                    };
+                }
+            );
         };
     },
 
