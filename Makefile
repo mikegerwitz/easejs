@@ -37,7 +37,7 @@ output_scripts := $(addprefix $(outdir)/, $(input_scripts))
 .PHONY: default clean news publish
 
 default: $(outdir) $(output_html) $(output_images) \
-         $(output_scripts) $(outdir)/style.css
+         $(output_scripts) $(outdir)/style.css $(outdir)/fonts
 
 $(outdir):
 	mkdir -p $@ $@/images $@/scripts/ex
@@ -50,6 +50,9 @@ $(outdir)/scripts/%.js: scripts/%.js | $(outdir)
 
 $(outdir)/images/%.png: images/%.png | $(outdir)
 	cp -r $< $@
+
+$(outdir)/fonts: fonts
+	mkdir -p "$@" && cp $</*.woff "$@"
 
 $(outdir)/%.html: %.html $(header) $(footer) tools/page-parse | $(outdir)
 	cat $(header) \

@@ -4,6 +4,11 @@
  * Inspired by Tango Icon Theme
  */
 
+@font-face {
+  font-family: Open Sans;
+  src: url('fonts/OpenSans-Regular.woff');
+}
+
 html, body {
   background-color:  #eeeeec;
   background-image:  url( 'images/rough_diagonal.png' );
@@ -12,11 +17,16 @@ html, body {
   margin:  0px 0px 1.5em 0px;
   padding: 0;
 
-  font-family: arial, serif;
+  font-family: Open Sans, arial, serif;
   font-size:   16px;
+  line-height: 1.25em;
 
   /* for use with manual pages */
   border: none !important;
+}
+
+pre {
+  line-height: 1.25em;
 }
 
 a, a:active, a:link {
@@ -155,6 +165,8 @@ body.source #source a {
 
   font-size:  0.7em;
   text-align: center;
+
+  line-height: 1.1em;
 }
 
 .footer p.copyright {
