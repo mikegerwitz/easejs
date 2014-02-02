@@ -409,7 +409,7 @@ require( 'common' ).testCase(
             {}, null, 0, function() {}, '', {}
         );
 
-        this.assertEqual( f.__length, Infinity );
+        this.assertOk( !( 0 < f.__length ) );
     },
 } );
 
