@@ -424,6 +424,52 @@ require( 'common' ).testCase(
 
 
     /**
+     * The above test provides problems if we have a weak method that
+     * follows the definition of the override within the same definition
+     * object (that is---A' is defined before A where A' overrides A and A
+     * is weak); we must ensure that the warning is deferred until we're
+     * certain that we will not encounter a weak method.
+     */
+    'Does not throw warning when overriding a later weak method': function()
+    {
+        var _self = this;
+        this.warningHandler = function( warning )
+        {
+            _self.fail( true, false, "Warning was issued." );
+        };
+
+        this.assertDoesNotThrow( function()
+        {
+            var state = {};
+
+            // this should place a warning into the state
+            _self.sut.validateMethod(
+                'foo',
+                function() {},
+                { 'override': true },
+                undefined,  // no previous because weak was
+                undefined,  // not yet encountered
+                state
+            );
+
+            // this should remove it upon encountering `weak'
+            _self.sut.validateMethod(
+                'foo',
+                function() {},
+                { 'weak': true, 'abstract': true },
+                { member: function() {} },  // same as previously defined
+                { 'override': true },       // above
+                state
+            );
+
+            // hopefully we don't trigger warnings (if we do, the warning
+            // handler defined above will fail this test)
+            _self.sut.end( state );
+        } );
+    },
+
+
+    /**
      * Wait - what? That doesn't make sense from an OOP perspective, now does
      * it! Unfortunately, we're forced into this restriction in order to
      * properly support fallback to pre-ES5 environments where the visibility
