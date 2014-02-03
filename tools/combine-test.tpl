@@ -132,6 +132,8 @@ module.assert = { exports: {
 
     'throws': function ( test, expected, err )
     {
+        expected = expected || Error;
+
         try
         {
             test();
@@ -148,6 +150,8 @@ module.assert = { exports: {
 
     doesNotThrow: function ( test, not_expected, err )
     {
+        not_expected = not_expected || Error;
+
         try
         {
             test();
