@@ -97,4 +97,41 @@ require( 'common' ).testCase(
 
         this.assertEqual( C().foo(), expected );
     },
+
+
+    /**
+     * If C uses T and overrides T.Ma, and there is some method T.Mb that
+     * invokes T.Ma, then T.Mb should instead invoke C.Ma.
+     */
+    'Class-overridden virtual trait method is accessible by trait':
+    function()
+    {
+        var _self = this;
+
+        var T = this.Sut(
+        {
+            'public doFoo': function()
+            {
+                // should call overridden, not the one below
+                this.foo();
+            },
+
+            // to be overridden
+            'virtual protected foo': function()
+            {
+                _self.fail( true, false, "Method not overridden." );
+            },
+        } );
+
+        var called = false;
+
+        var C = this.Class.use( T ).extend(
+        {
+            // should be called by T.doFoo
+            'override protected foo': function() { called = true },
+        } );
+
+        C().doFoo();
+        this.assertOk( called );
+    },
 } );
