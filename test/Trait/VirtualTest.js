@@ -134,4 +134,53 @@ require( 'common' ).testCase(
         C().doFoo();
         this.assertOk( called );
     },
+
+
+    /**
+     * If a supertype mixes in a trait that provides a virtual method, a
+     * subtype should be able to provide its own concrete implementation.
+     * This is especially important to test in the case where a trait
+     * invokes its own virtual method---we must ensure that the message is
+     * properly passed to the subtype's override.
+     *
+     * For a more formal description of a similar matter, see the
+     * AbstractTest case; indeed, we're trying to mimic the same behavior
+     * that we'd expect with abstract methods.
+     */
+    'Subtype can override virtual method of trait mixed into supertype':
+    function()
+    {
+        var _self = this;
+
+        var T = this.Sut(
+        {
+            'public doFoo': function()
+            {
+                // this call should be passed to any overrides
+                return this.foo();
+            },
+
+            // this is the one we'll try to override
+            'virtual protected foo': function()
+            {
+                _self.fail( true, false, "Method not overridden." );
+            },
+        } );
+
+        var called = false;
+
+        // C is a subtype of a class that implements T
+        var C = this.Class.use( T ).extend( {} )
+            .extend(
+            {
+                // this should be called instead of T.foo
+                'override protected foo': function()
+                {
+                    called = true;
+                },
+            } );
+
+        C().doFoo();
+        this.assertOk( called );
+    },
 } );

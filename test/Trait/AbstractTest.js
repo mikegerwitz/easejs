@@ -186,4 +186,42 @@ require( 'common' ).testCase(
             "Crap; order matters?!"
         );
     },
+
+
+    /**
+     * If some trait T used by abstract class C defines abstract method M,
+     * then some subtype C' of C should be able to provide a concrete
+     * definition of M such that T.M() invokes C'.M.
+     */
+    'Abstract method inherited from trait can be implemented by subtype':
+    function()
+    {
+        var T = this.Sut(
+        {
+            'public doFoo': function()
+            {
+                // should invoke the concrete implementation
+                this.foo();
+            },
+
+            'abstract protected foo': [],
+        } );
+
+        var called = false;
+
+        // C is a concrete class that extends an abstract class that uses
+        // trait T
+        var C = this.AbstractClass.use( T ).extend( {} )
+            .extend(
+            {
+                // concrete definition that should be invoked by T.doFoo
+                'protected foo': function()
+                {
+                    called = true;
+                },
+            } );
+
+        C().doFoo();
+        this.assertOk( called );
+    },
 } );
