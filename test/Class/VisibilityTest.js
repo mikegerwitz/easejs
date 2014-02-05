@@ -712,6 +712,43 @@ require( 'common' ).testCase(
 
 
     /**
+     * Similar to above test, but ensure that overrides also take effect via
+     * the internal visibility object.
+     */
+    'Protected method overrides are observable by supertype': function()
+    {
+        var _self  = this,
+            called = false;
+
+        var C = this.Class(
+            {
+                'public doFoo': function()
+                {
+                    // will be overridden
+                    return this.foo();
+                },
+
+                // will be overridden
+                'virtual protected foo': function()
+                {
+                    _self.fail( true, false, "Method not overridden" );
+                },
+            } )
+            .extend(
+            {
+                // should be invoked by doFoo; visibiility escalation
+                'public override foo': function()
+                {
+                    called = true;
+                },
+            } );
+
+        C().doFoo();
+        this.assertOk( called );
+    },
+
+
+    /**
      * There was an issue where the private property object was not proxying
      * values to the true protected values. This would mean that when the parent
      * initialized protected values, those values would be unavailable to the
