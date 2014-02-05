@@ -268,6 +268,36 @@ require( 'common' ).testCase(
 
 
     /**
+     * This test addresses a particularily nasty bug that wasted hours of
+     * development time: When a visibility modifier keyword is omitted, then
+     * it should be implicitly public. In this case, however, the keyword is
+     * not automatically added to the keyword list (maybe one day it will
+     * be, but for now we'll maintain the distinction); therefore, we should
+     * not be checking for the `public' keyword when determining if we
+     * should write to the protected member object.
+     */
+    'Public methods are not overwritten when keyword is omitted': function()
+    {
+        var f = function() {};
+        f.___$$keywords$$ = {};
+
+        // no keywords; should be implicitly public
+        var dest = { fpub: f };
+
+        // add duplicate method to protected
+        this.methods[ 'protected' ].fpub = function() {};
+
+        this.sut.setup( dest, this.props, this.methods );
+
+        // ensure our public method is still referenced
+        this.assertStrictEqual( dest.fpub, f,
+            "Public methods should not be overwritten by protected methods"
+        );
+    },
+
+
+
+    /**
      * Same situation with private members as protected, with the exception that
      * we do not need to worry about the overlay problem (in regards to
      * methods). This is simply because private members are not inherited.
