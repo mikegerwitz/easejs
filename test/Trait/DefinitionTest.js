@@ -245,4 +245,26 @@ require( 'common' ).testCase(
 
         this.fail( false, true, "Mixin must fail on conflict: " + desc );
     },
+
+
+    /**
+     * Traits in ease.js were designed in such a way that an object can be
+     * considered to be a type of any of the traits that its class mixes in;
+     * this is consistent with the concept of interfaces and provides a very
+     * simple and intuitive type system.
+     */
+    'A class is considered to be a type of each used trait': function()
+    {
+        var Ta = this.Sut( {} ),
+            Tb = this.Sut( {} ),
+            Tc = this.Sut( {} ),
+            o  = this.Class.use( Ta, Tb ).extend( {} )();
+
+        // these two were mixed in
+        this.assertOk( this.Class.isA( Ta, o ) );
+        this.assertOk( this.Class.isA( Tb, o ) );
+
+        // this one was not
+        this.assertOk( this.Class.isA( Tc, o ) === false );
+    },
 } );

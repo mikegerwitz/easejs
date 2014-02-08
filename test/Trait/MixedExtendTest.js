@@ -56,4 +56,19 @@ require( 'common' ).testCase(
         C().foo();
         this.assertOk( called );
     },
+
+
+    /**
+     * Just as subtypes inherit the same polymorphisms with respect to
+     * interfaces, so too should subtypes inherit supertypes' mixed in
+     * traits' types.
+     */
+    'Subtype has same polymorphic qualities of parent mixins': function()
+    {
+        var T = this.Sut( {} ),
+            o = this.Class.use( T ).extend( {} ).extend( {} )();
+
+        // o's supertype mixes in T
+        this.assertOk( this.Class.isA( T, o ) );
+    },
 } );
