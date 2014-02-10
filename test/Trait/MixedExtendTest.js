@@ -71,4 +71,69 @@ require( 'common' ).testCase(
         // o's supertype mixes in T
         this.assertOk( this.Class.isA( T, o ) );
     },
+
+
+    /**
+     * Subtyping should impose no limits on mixins (except for the obvious
+     * API compatibility restrictions inherent in OOP).
+     */
+    'Subtype can mix in additional traits': function()
+    {
+        var a = false,
+            b = false;
+
+        var Ta = this.Sut(
+            {
+                'public ta': function() { a = true; },
+            } ),
+            Tb = this.Sut(
+            {
+                'public tb': function() { b = true; },
+            } ),
+            C  = null;
+
+        var _self = this;
+        this.assertDoesNotThrow( function()
+        {
+            var sup = _self.Class.use( Ta ).extend( {} );
+
+            // mixes in Tb; supertype already mixed in Ta
+            C = _self.Class.use( Tb ).extend( sup, {} );
+        } );
+
+        this.assertDoesNotThrow( function()
+        {
+            // ensures that instantiation does not throw an error and that
+            // the methods both exist
+            var o = C();
+            o.ta();
+            o.tb();
+        } );
+
+        // ensure both were properly called
+        this.assertOk( a );
+        this.assertOk( b );
+    },
+
+
+    /**
+     * As a sanity check, ensure that subtyping does not override parent
+     * type data with respect to traits.
+     *
+     * Note that this test makes the preceding test redundant, but the
+     * separation is useful for debugging any potential regressions.
+     */
+    'Subtype trait types do not overwrite supertype types': function()
+    {
+        var Ta = this.Sut( {} ),
+            Tb = this.Sut( {} ),
+            C  = this.Class.use( Ta ).extend( {} ),
+            o  = this.Class.use( Tb ).extend( C, {} )();
+
+        // o's supertype mixes in Ta
+        this.assertOk( this.Class.isA( Ta, o ) );
+
+        // o mixes in Tb
+        this.assertOk( this.Class.isA( Tb, o ) );
+    },
 } );
