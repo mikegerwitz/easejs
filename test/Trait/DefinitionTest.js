@@ -267,4 +267,17 @@ require( 'common' ).testCase(
         // this one was not
         this.assertOk( this.Class.isA( Tc, o ) === false );
     },
+
+
+    /**
+     * Ensure that the named class staging object permits mixins.
+     */
+    'Can mix traits into named class': function()
+    {
+        var called = false,
+            T = this.Sut( { foo: function() { called = true; } } );
+
+        this.Class( 'Named' ).use( T ).extend( {} )().foo();
+        this.assertOk( called );
+    },
 } );
