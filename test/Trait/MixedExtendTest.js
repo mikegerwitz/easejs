@@ -136,4 +136,43 @@ require( 'common' ).testCase(
         // o mixes in Tb
         this.assertOk( this.Class.isA( Tb, o ) );
     },
+
+
+    /**
+     * This alternative syntax mixes a trait directly into a base class and
+     * then omits the base class as an argument to the extend method; this
+     * syntax is most familiar with named classes, but we are not testing
+     * named classes here.
+     */
+    'Can mix in traits directly atop of existing class': function()
+    {
+        var called_foo = false,
+            called_bar = false,
+            called_baz = false;
+
+        var C = this.Class(
+        {
+            'public foo': function() { called_foo = true; },
+        } );
+
+        var T = this.Sut(
+        {
+            'public bar': function() { called_bar = true; },
+        } );
+
+        // we must ensure not only that we have mixed in the trait, but that
+        // we have also maintained C's interface and can further extend it
+        var inst = C.use( T ).extend(
+        {
+            'public baz': function() { called_baz = true; },
+        } )();
+
+        inst.foo();
+        inst.bar();
+        inst.baz();
+
+        this.assertOk( called_foo );
+        this.assertOk( called_bar );
+        this.assertOk( called_baz );
+    },
 } );
