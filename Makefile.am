@@ -34,7 +34,7 @@ path_combine_output_full_min = $(path_combine_output_full:.js=.min.js)
 src_js                = @SRC_JS@
 path_externs_internal = $(path_build)/externs-internal.js
 
-test_cases=$(shell find test/ -name '*Test.*' | tr '\n' ' ' )
+test_cases=$(shell cd test/ && find . -name '*Test.*' | tr '\n' ' ' )
 src_tests=$(shell find test/ -name test-* | tr '\n' ' ' )
 
 combine  = $(path_tools)/combine
@@ -130,8 +130,7 @@ test-suite:
 if HAS_NODE
 	@echo "GNU ease.js Test Suite"
 	@echo
-	@NODE_PATH="$(path_test):.:$(NODE_PATH)" $(NODE) --stack_trace_limit=20 \
-		$(path_test)/runner.js $(test_cases)
+	@(cd $(path_test) && ./runner $(test_cases))
 else
 	@echo "Node.js must be installed in order to run the test suite"
 	@exit 1

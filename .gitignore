@@ -9,6 +9,7 @@ NEWS
 ChangeLog
 
 # autotools- and configure-generated
+test/runner
 aclocal.m4
 Makefile.in
 Makefile

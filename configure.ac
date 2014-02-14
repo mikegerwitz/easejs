@@ -87,5 +87,7 @@ PERF_TESTS=$( find test/perf -name 'perf-*.js' | tr '\n' ' ' )
 AC_SUBST(PERF_TESTS)
 AS_IF([test "$PERF_TESTS"], [AC_MSG_RESULT(ok)], [AC_MSG_WARN(none found)])
 
-AC_CONFIG_FILES([Makefile doc/Makefile package.json lib/version.js])
+AC_CONFIG_FILES(
+  [Makefile doc/Makefile package.json lib/version.js test/runner],
+  [chmod +x test/runner])
 AC_OUTPUT
