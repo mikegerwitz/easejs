@@ -17,6 +17,9 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Note that tests for super calls are contained within LinearizationTest;
+ * these test cases simply ensure that overrides are actually taking place.
  */
 
 require( 'common' ).testCase(
@@ -34,23 +37,24 @@ require( 'common' ).testCase(
      */
     'Class inherits virtual trait method': function()
     {
-        var expected = 'foobar';
+        var called = false;
 
         var T = this.Sut(
         {
             'virtual foo': function()
             {
-                return expected;
+                called = true;
             }
         } );
 
         var C = this.Class.use( T ).extend( {} );
 
         // ensure that we are actually using the method
-        this.assertEqual( C().foo(), expected );
+        C().foo();
+        this.assertOk( called, "Virtual method not called" );
 
         // if virtual, we should be able to override it
-        var expected2 = 'foobaz',
+        var called2 = false,
             C2;
 
         this.assertDoesNotThrow( function()
@@ -59,12 +63,13 @@ require( 'common' ).testCase(
             {
                 'override foo': function()
                 {
-                    return expected2;
+                    called2 = true;
                 }
             } );
         } );
 
-        this.assertEqual( C2().foo(), expected2 );
+        C2().foo();
+        this.assertOk( called2, "Method not overridden" );
     },
 
 
