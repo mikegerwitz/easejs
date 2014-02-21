@@ -280,4 +280,28 @@ require( 'common' ).testCase(
         this.Class( 'Named' ).use( T ).extend( {} )().foo();
         this.assertOk( called );
     },
+
+
+    /**
+     * When a trait is mixed into a class, it acts as though it is part of
+     * that class. Therefore, it should stand to reason that, when a mixed
+     * in method returns `this', it should actually return the instance of
+     * the class that it is mixed into (in the case of this test, its
+     * private member object, since that's our context when invoking the
+     * trait method).
+     */
+    'Trait method that returns self will return containing class':
+    function()
+    {
+        var _self = this,
+            T     = this.Sut( { foo: function() { return this; } } );
+
+        this.Class.use( T ).extend(
+        {
+            go: function()
+            {
+                _self.assertStrictEqual( this, this.foo() );
+            },
+        } )().go();
+    },
 } );

@@ -188,4 +188,117 @@ require( 'common' ).testCase(
         C().doFoo();
         this.assertOk( called );
     },
+
+
+    /**
+     * This is the same concept as the non-virtual test found in the
+     * DefinitionTest case: since a trait is mixed into a class, if it
+     * returns itself, then it should in actuality return the instance of
+     * the class it is mixed into.
+     */
+    'Virtual trait method returning self returns class instance':
+    function()
+    {
+        var _self = this;
+
+        var T = this.Sut( { 'virtual foo': function() { return this; } } );
+
+        this.Class.use( T ).extend(
+        {
+            go: function()
+            {
+                _self.assertStrictEqual( this, this.foo() );
+            },
+        } )().go();
+    },
+
+
+    /**
+     * Same concept as the above test case, but ensures that invoking the
+     * super method does not screw anything up.
+     */
+    'Overridden virtual trait method returning self returns class instance':
+    function()
+    {
+        var _self = this;
+
+        var T = this.Sut( { 'virtual foo': function() { return this; } } );
+
+        this.Class.use( T ).extend(
+        {
+            'override foo': function()
+            {
+                return this.__super();
+            },
+
+            go: function()
+            {
+                _self.assertStrictEqual( this, this.foo() );
+            },
+        } )().go();
+    },
+
+
+    /**
+     * When a trait method is overridden, ensure that the data are properly
+     * proxied back to the caller. This differs from the above tests, which
+     * just make sure that the method is actually overridden and invoked.
+     */
+    'Data are properly returned from trait override super call': function()
+    {
+        var _self    = this,
+            expected = {};
+
+        var T = this.Sut(
+        {
+            'virtual foo': function() { return expected; }
+        } );
+
+        this.Class.use( T ).extend(
+        {
+            'override foo': function()
+            {
+                _self.assertStrictEqual( expected, this.__super() );
+            },
+        } )().foo();
+    },
+
+
+    /**
+     * When a trait method is overridden by the class that it is mixed into,
+     * and the super method is called, then the trait method should execute
+     * within the private member context of the trait itself (as if it were
+     * never overridden). Some kinky stuff would have to be going on (at
+     * least in the implementation at the time this was written) for this
+     * test to fail, but let's be on the safe side.
+     */
+    'Super trait method overrided in class executed within private context':
+    function()
+    {
+        var expected = {};
+
+        var T = this.Sut(
+        {
+            'virtual foo': function()
+            {
+                // should succeed
+                return this.priv();
+            },
+
+            'private priv': function()
+            {
+                return expected;
+            },
+        } );
+
+        this.assertStrictEqual( expected,
+            this.Class.use( T ).extend(
+            {
+                'override virtual foo': function()
+                {
+                    return this.__super();
+                },
+            } )().foo()
+        );
+    },
 } );
