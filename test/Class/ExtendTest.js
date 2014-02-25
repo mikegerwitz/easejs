@@ -428,4 +428,44 @@ require( 'common' ).testCase(
             "Should be able to use object as prototype"
         );
     },
+
+
+    /**
+     * Gathering metadata on public methods of supertypes N>1 distance away
+     * is easy, as it is part of the public prototype chain that is
+     * naturally traversed by JavaScript. However, we must ensure that we
+     * properly recurse on *all* visibility objects.
+     *
+     * This test addresses a pretty alarming bug that was not caught during
+     * initial development---indeed, until the trait implementation, which
+     * exploits the class system in some odd ways---because the author
+     * dislikes inheritence in general, letalone large hierarchies, so
+     * protected members of super-supertypes seems to have gone untested.
+     */
+    'Extending validates against non-public super-supertype methods':
+    function()
+    {
+        var called = false;
+
+        this.Sut.extend(
+        {
+            'virtual protected foo': function()
+            {
+                called = true;
+            }
+        } ).extend(
+        {
+            // intermediate to disconnect subtype
+        } ).extend(
+        {
+            'override public foo': function()
+            {
+                this.__super();
+            }
+        } )().foo();
+
+        // the override would have only actually taken place if the
+        // protected foo was recognized
+        this.assertOk( called );
+    },
 } );
