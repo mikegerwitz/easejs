@@ -28,8 +28,9 @@ require( 'common' ).testCase(
 {
     caseSetUp: function()
     {
-        this.Sut   = this.require( 'Trait' );
-        this.Class = this.require( 'class' );
+        this.Sut       = this.require( 'Trait' );
+        this.Class     = this.require( 'class' );
+        this.Interface = this.require( 'interface' );
     },
 
 
@@ -75,6 +76,48 @@ require( 'common' ).testCase(
         } )().foo();
 
         this.assertOk( scalled );
+    },
+
+
+    /**
+     * If a trait overrides a method of a class that it is mixed into, then
+     * super calls within the trait method should resolve to the class
+     * method.
+     */
+    'Mixin overriding class method has class method as super method':
+    function()
+    {
+        var _self = this;
+
+        var expected = {},
+            I        = this.Interface( { foo: [] } );
+
+        var T = this.Sut.implement( I ).extend(
+        {
+            // see ClassVirtualTest case for details on this
+            'abstract override foo': function()
+            {
+                // should reference C.foo
+                return this.__super( expected );
+            },
+        } );
+
+        var priv_expected = Math.random();
+
+        var C = this.Class.implement( I ).extend(
+        {
+            // asserting on this value will ensure that the below method is
+            // invoked in the proper context
+            'private _priv': priv_expected,
+
+            'virtual foo': function( given )
+            {
+                _self.assertEqual( priv_expected, this._priv );
+                return given;
+            },
+        } );
+
+        this.assertStrictEqual( C.use( T )().foo(), expected );
     },
 } );
 

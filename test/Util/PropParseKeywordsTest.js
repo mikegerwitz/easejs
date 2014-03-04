@@ -56,6 +56,33 @@ require( 'common' ).testCase(
 
 
     /**
+     * As an exception to the above rule, a method shall not considered to be
+     * abstract if the `override' keyword is too provided (an abstract
+     * override---see the trait tests for more information).
+     */
+    'Not considered abstract when `override\' also provided': function()
+    {
+        var _self = this;
+
+        var data  = { 'abstract override foo': function() {} },
+            found = null;
+
+        this.Sut.propParse( data, {
+            method: function ( name, func, is_abstract )
+            {
+                _self.assertOk( is_abstract === false );
+                _self.assertEqual( typeof func, 'function' );
+                _self.assertOk( _self.Sut.isAbstractMethod( func ) === false );
+
+                found = name;
+            },
+        } );
+
+        this.assertEqual( found, 'foo' );
+    },
+
+
+    /**
      * The idea behind supporting this functionality---which is unsued at
      * the time of writing this test---is to allow eventual customization of
      * ease.js' keywords for domain-specific purposes. Whether or not to

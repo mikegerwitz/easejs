@@ -177,8 +177,39 @@ require( 'common' ).testCase(
      * otherwise, override does not make sense, because I.M is clearly
      * abstract and there is nothing to override.
      */
-    'Trait can override virtual concrete interface methods at mixin':
+    'Mixin can override virtual concrete method defined by interface':
     function()
     {
+        var called = false,
+            I      = this.Interface( { foo: [] } );
+
+        var T = this.Sut.implement( I ).extend(
+        {
+            // the keyword combination `abstract override' indicates that we
+            // should override whatever concrete implementation was defined
+            // before our having been mixed in
+            'abstract override foo': function()
+            {
+                called = true;
+            },
+        } );
+
+        var _self = this;
+        var C = this.Class.implement( I ).extend(
+        {
+            // this should be overridden by the mixin and should therefore
+            // never be called (for __super tests, see LinearizationTest)
+            'virtual foo': function()
+            {
+                _self.fail( false, true,
+                    "Concrete class method was not overridden by mixin"
+                );
+            },
+        } );
+
+        // mixing in a trait atop of C should yield the results described
+        // above due to the `abstract override' keyword combination
+        C.use( T )().foo();
+        this.assertOk( called );
     },
 } );
