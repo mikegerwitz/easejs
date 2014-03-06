@@ -119,5 +119,85 @@ require( 'common' ).testCase(
 
         this.assertStrictEqual( C.use( T )().foo(), expected );
     },
+
+
+    /**
+     * Similar in spirit to the previous test: a supertype with a mixin
+     * should be treated just as any other class.
+     *
+     * Another way of phrasing this test is: "traits are stackable".
+     * Importantly, this also means that `virtual' must play nicely with
+     * `abstract override'.
+     */
+    'Mixin overriding another mixin method M has super method M': function()
+    {
+        var called = {};
+
+        var I = this.Interface( { foo: [] } );
+
+        var Ta = this.Sut.implement( I ).extend(
+        {
+            'virtual abstract override foo': function()
+            {
+                called.a = true;
+                this.__super();
+            },
+        } );
+
+        var Tb = this.Sut.implement( I ).extend(
+        {
+            'abstract override foo': function()
+            {
+                called.b = true;
+                this.__super();
+            },
+        } );
+
+        this.Class.implement( I ).extend(
+        {
+            'virtual foo': function() { called.base = true; },
+        } ).use( Ta ).use( Tb )().foo();
+
+        this.assertOk( called.a );
+        this.assertOk( called.b );
+        this.assertOk( called.base );
+    },
+
+
+    /**
+     * Essentially the same as the above test, but ensures that a mixin can
+     * be stacked multiple times atop of itself with no ill effects. We
+     * assume that all else is working (per the previous test).
+     *
+     * The number of times we stack the mixin is not really relevant, so
+     * long as it is >= 2; we did 3 here just for the hell of it to
+     * demonstrate that there is ideally no limit.
+     */
+    'Mixin can be mixed in atop of itself': function()
+    {
+        var called     = 0,
+            calledbase = false;
+
+        var I = this.Interface( { foo: [] } );
+
+        var T = this.Sut.implement( I ).extend(
+        {
+            'virtual abstract override foo': function()
+            {
+                called++;
+                this.__super();
+            },
+        } );
+
+        this.Class.implement( I ).extend(
+        {
+            'virtual foo': function() { calledbase = true; },
+        } ).use( T ).use( T ).use( T )().foo();
+
+
+        // mixed in thrice, so it should have stacked thrice
+        this.assertEqual( called, 3 );
+        this.assertOk( calledbase );
+    },
 } );
 
