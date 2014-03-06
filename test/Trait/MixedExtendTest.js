@@ -175,4 +175,38 @@ require( 'common' ).testCase(
         this.assertOk( called_bar );
         this.assertOk( called_baz );
     },
+
+
+    /**
+     * This test ensures that we can mix in traits using the syntax
+     * C.use(T1).use(T2), and so on; this may be necessary to disambiguate
+     * overrides if T1 and T2 provide definitions for the same method (and
+     * so the syntax C.use(T1, T2) cannot be used). This syntax is also
+     * important for the concept of stackable traits (see
+     * LinearizationTest).
+     *
+     * Note that this differs from C.use(T1).use(T2).extend({}); we're
+     * talking about C.extend({}).use(T1).use(T2). Therefore, this can be
+     * considered to be syntatic sugar for
+     * C.use( T1 ).extend( {} ).use( T2 ).
+     */
+    'Can chain use calls': function()
+    {
+        var T1 = this.Sut( { foo: function() {} } ),
+            T2 = this.Sut( { bar: function() {} } ),
+            C  = null;
+
+        var Class = this.Class;
+        this.assertDoesNotThrow( function()
+        {
+            C = Class.extend( {} ).use( T1 ).use( T2 );
+        } );
+
+        // ensure that the methods were actually mixed in
+        this.assertDoesNotThrow( function()
+        {
+            C().foo();
+            C().bar();
+        } );
+    },
 } );
