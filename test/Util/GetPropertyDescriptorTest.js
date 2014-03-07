@@ -53,7 +53,7 @@ require( 'common' ).testCase(
      */
     'Indicates whether property chain traversal is possible': function()
     {
-        var traversable = ( {}.__proto__ ) ? true : false;
+        var traversable = ( typeof Object.getPrototypeOf === 'function' );
 
         this.assertEqual(
             this.Sut.getPropertyDescriptor.canTraverse,
