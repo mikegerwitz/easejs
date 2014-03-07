@@ -27,7 +27,11 @@ TEST_DATA=$( echo '[a,b,]{a,b,}[
     ]{
     a,
     b,
-    }' \
+    }
+    [c, // comment]
+    [d, //comment
+    ]
+    [e,// comment]' \
     | $PATH_TOOLS/rmtrail
 )
 
@@ -38,7 +42,11 @@ TEST_CMP='[a,b]{a,b}[
     ]{
     a,
     b
-    }'
+    }
+    [c // comment]
+    [d //comment
+    ]
+    [e// comment]' \
 
 # perform the assertion
 if [ ! "$TEST_DATA" == "$TEST_CMP" ]; then

@@ -41,7 +41,7 @@ cat - \
         $ {
             # pull from hold and perform replacement
             g
-            s/,\(\s*[]}]\)/\1/g
+            s/,\(\s*\(\/\/[^]}\n]\+\s*\)\?[]}]\)/\1/g
 
             # print result
             p
