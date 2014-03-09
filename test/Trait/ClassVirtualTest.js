@@ -128,7 +128,7 @@ require( 'common' ).testCase(
         {
             // should invoke concrete foo; class definition should not fail,
             // because foo is no longer abstract
-            Class.use( T )().foo();
+            Class.use( T ).extend( {} )().foo();
         } );
 
         this.assertOk( called );
@@ -148,7 +148,7 @@ require( 'common' ).testCase(
             T = this.Sut.implement( I ).extend( {} );
 
         this.assertOk(
-            this.Class.isA( I, this.Class.use( T )() )
+            this.Class.isA( I, this.Class.use( T ).extend( {} )() )
         );
     },
 

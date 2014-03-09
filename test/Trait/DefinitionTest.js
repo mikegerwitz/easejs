@@ -23,8 +23,10 @@ require( 'common' ).testCase(
 {
     caseSetUp: function()
     {
-        this.Sut   = this.require( 'Trait' );
-        this.Class = this.require( 'class' );
+        this.Sut           = this.require( 'Trait' );
+        this.Class         = this.require( 'class' );
+        this.Interface     = this.require( 'interface' );
+        this.AbstractClass = this.require( 'class_abstract' );
 
         // means of creating anonymous traits
         this.ctor = [
@@ -279,6 +281,51 @@ require( 'common' ).testCase(
 
         this.Class( 'Named' ).use( T ).extend( {} )().foo();
         this.assertOk( called );
+    },
+
+
+    /**
+     * When explicitly defining a class (that is, not mixing into an
+     * existing class definition), which involves the use of Class or
+     * AbstractClass, mixins must be terminated with a call to `extend'.
+     * This allows the system to make a final determination as to whether
+     * the resulting class is abstract.
+     *
+     * Contrast this with Type.use( T )( ... ), where Type is not the base
+     * class (Class) or AbstractClass.
+     */
+    'Explicit class definitions must be terminated by an extend call':
+    function()
+    {
+        var _self = this,
+            Ta    = this.Sut( { foo: function() {} } ),
+            Tb    = this.Sut( { bar: function() {} } );
+
+        // does not complete with call to `extend'
+        this.assertThrows( function()
+        {
+            _self.Class.use( Ta )();
+        }, TypeError );
+
+        // nested uses; does not complete
+        this.assertThrows( function()
+        {
+            _self.Class.use( Ta ).use( Tb )();
+        }, TypeError );
+
+        // similar to above, with abstract; note that we're checking for
+        // TypeError here
+        this.assertThrows( function()
+        {
+            _self.AbstractClass.use( Ta )();
+        }, TypeError );
+
+        // does complete; OK
+        this.assertDoesNotThrow( function()
+        {
+            _self.Class.use( Ta ).extend( {} )();
+            _self.Class.use( Ta ).use( Tb ).extend( {} )();
+        } );
     },
 
 

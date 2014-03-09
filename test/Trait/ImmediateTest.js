@@ -35,6 +35,9 @@ require( 'common' ).testCase(
      * of the trait (so long as that is permitted). While this test exists
      * to ensure consistency throughout the system, it may be helpful in
      * situations where a trait is useful on its own.
+     *
+     * Note that we cannot simply use Class.use( T ), because this sets up a
+     * concrete class definition, not an immediate mixin.
      */
     'Invoking partial class after mixin instantiates': function()
     {
@@ -49,7 +52,7 @@ require( 'common' ).testCase(
         } );
 
         // mixes T into an empty base class and instantiates
-        this.Class.use( T )().foo();
+        this.Class.extend( {} ).use( T )().foo();
         this.assertOk( called );
     },
 
