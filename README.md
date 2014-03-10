@@ -21,6 +21,7 @@ Current support includes:
 * Classical inheritance
 * Abstract classes and methods
 * Interfaces
+* Traits as mixins
 * Visibility (public, protected, and private members)
 * Static and constant members
 
