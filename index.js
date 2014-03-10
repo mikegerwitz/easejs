@@ -23,5 +23,6 @@ exports.Class         = require( __dirname + '/lib/class' );
 exports.AbstractClass = require( __dirname + '/lib/class_abstract' );
 exports.FinalClass    = require( __dirname + '/lib/class_final' );
 exports.Interface     = require( __dirname + '/lib/interface' );
+exports.Trait         = require( __dirname + '/lib/Trait' );
 exports.version       = require( __dirname + '/lib/version' );
 

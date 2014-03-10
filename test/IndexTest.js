@@ -55,6 +55,10 @@ require( 'common' ).testCase(
     {
         this.exportedAs( 'Interface', 'interface' );
     },
+    'Trait module is exported as `Trait\'': function()
+    {
+        this.exportedAs( 'Trait', 'Trait' );
+    },
     'Version information is exported as `version\'': function()
     {
         this.exportedAs( 'version', 'version' );
