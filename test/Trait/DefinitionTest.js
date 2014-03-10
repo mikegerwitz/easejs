@@ -59,6 +59,8 @@ require( 'common' ).testCase(
                 { 'protected foo': function() {} },
             ],
         ];
+
+        this.base = [ this.Class ];
     },
 
 
@@ -326,6 +328,43 @@ require( 'common' ).testCase(
             _self.Class.use( Ta ).extend( {} )();
             _self.Class.use( Ta ).use( Tb ).extend( {} )();
         } );
+    },
+
+
+    /**
+     * Ensure that the staging object created by the `implement' call
+     * exposes a `use' method (and properly applies it).
+     */
+    'Can mix traits into class after implementing interface': function()
+    {
+        var _self  = this,
+            called = false,
+
+            T = this.Sut( { foo: function() { called = true; } } ),
+            I = this.Interface( { bar: [] } ),
+            A = null;
+
+        // by declaring this abstract, we ensure that the interface was
+        // actually implemented (otherwise, all methods would be concrete,
+        // resulting in an error)
+        this.assertDoesNotThrow( function()
+        {
+            A = _self.AbstractClass.implement( I ).use( T ).extend( {} );
+            _self.assertOk( A.isAbstract() );
+        } );
+
+        // ensure that we actually fail if there's no interface implemented
+        // (and thus no abstract members); if we fail and the previous test
+        // succeeds, that implies that somehow the mixin is causing the
+        // class to become abstract, and that is an issue (and the reason
+        // for this seemingly redundant test)
+        this.assertThrows( function()
+        {
+            _self.Class.implement( I ).use( T ).extend( {} );
+        } );
+
+        A.extend( { bar: function() {} } )().foo();
+        this.assertOk( called );
     },
 
 

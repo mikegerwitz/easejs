@@ -224,4 +224,140 @@ require( 'common' ).testCase(
         C().doFoo();
         this.assertOk( called );
     },
+
+
+    /**
+     * Ensure that chained mixins (that is, calling `use' multiple times
+     * independently) maintains the use of AbstractClass, and properly
+     * performs the abstract check at the final `extend' call.
+     */
+    'Chained mixins properly carry abstract flag': function()
+    {
+        var _self = this,
+            Ta    = this.Sut( { foo: function() {} } ),
+            Tc    = this.Sut( { baz: function() {} } ),
+            Tab   = this.Sut( { 'abstract baz': [] } );
+
+        // ensure that abstract definitions are carried through properly
+        this.assertDoesNotThrow( function()
+        {
+            // single, abstract
+            _self.assertOk(
+                _self.AbstractClass
+                    .use( Tab )
+                    .extend( {} )
+                    .isAbstract()
+            );
+
+            // single, concrete
+            _self.assertOk(
+                _self.AbstractClass
+                    .use( Ta )
+                    .extend( { 'abstract baz': [] } )
+                    .isAbstract()
+            );
+
+            // chained, both
+            _self.assertOk(
+                _self.AbstractClass
+                    .use( Ta )
+                    .use( Tab )
+                    .extend( {} )
+                    .isAbstract()
+
+            );
+            _self.assertOk(
+                _self.AbstractClass
+                    .use( Tab )
+                    .use( Ta )
+                    .extend( {} )
+                    .isAbstract()
+            );
+        } );
+
+        // and then ensure that we will properly throw an exception if not
+        this.assertThrows( function()
+        {
+            // not abstract
+            _self.AbstractClass.use( Tc ).extend( {} );
+        } );
+
+        this.assertThrows( function()
+        {
+            // initially abstract, but then not (by extend)
+            _self.AbstractClass.use( Tab ).extend(
+            {
+                // concrete definition; no longer abstract
+                baz: function() {},
+            } );
+        } );
+
+        this.assertThrows( function()
+        {
+            // initially abstract, but then second mix provides a concrete
+            // definition
+            _self.AbstractClass.use( Tab ).use( Tc ).extend( {} );
+        } );
+    },
+
+
+    /**
+     * Mixins can make a class auto-abstract (that is, not require the use
+     * of AbstractClass for the mixin) in order to permit the use of
+     * Type.use when the intent is not to subclass, but to decorate (yes,
+     * the result is still a subtype). Let's make sure that we're not
+     * breaking the AbstractClass requirement, whose sole purpose is to aid
+     * in documentation by creating self-documenting code.
+     */
+    'Explicitly-declared class will not be automatically abstract':
+    function()
+    {
+        var _self = this,
+            Tc    = this.Sut( { foo: function() {} } ),
+            Ta    = this.Sut( { 'abstract foo': [], } );
+
+        // if we provide no abstract methods, then declaring the class as
+        // abstract should result in an error
+        this.assertThrows( function()
+        {
+            // no abstract methods
+            _self.assertOk( !(
+                _self.AbstractClass.use( Tc ).extend( {} ).isAbstract()
+            ) );
+        } );
+
+        // similarily, if we provide abstract methods, then there should be
+        // no error
+        this.assertDoesNotThrow( function()
+        {
+            // abstract methods via extend
+            _self.assertOk(
+                _self.AbstractClass.use( Tc ).extend(
+                {
+                    'abstract bar': [],
+                } ).isAbstract()
+            );
+
+            // abstract via trait
+            _self.assertOk(
+                _self.AbstractClass.use( Ta ).extend( {} ).isAbstract()
+            );
+        } );
+
+        // if we provide abstract methods, then we should not be able to
+        // declare a class as concrete
+        this.assertThrows( function()
+        {
+            _self.Class.use( Tc ).extend(
+            {
+                'abstract bar': [],
+            } );
+        } );
+
+        // similar to above, but via trait
+        this.assertThrows( function()
+        {
+            _self.Class.use( Ta ).extend();
+        } );
+    },
 } );
