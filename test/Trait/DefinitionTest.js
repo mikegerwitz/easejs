@@ -390,4 +390,27 @@ require( 'common' ).testCase(
             },
         } )().go();
     },
+
+
+    /**
+     * Support for static members will be added in future versions; this is
+     * not something that the author wanted to rush for the first trait
+     * release, as static members have their own odd quirks.
+     */
+    'Trait static members are prohibited': function()
+    {
+        var Sut = this.Sut;
+
+        // property
+        this.assertThrows( function()
+        {
+            Sut( { 'static private foo': 'prop' } );
+        } );
+
+        // method
+        this.assertThrows( function()
+        {
+            Sut( { 'static foo': function() {} } );
+        } );
+    },
 } );
