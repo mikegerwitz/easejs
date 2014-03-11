@@ -28,6 +28,10 @@ require( 'common' ).testCase(
         this.Interface     = this.require( 'interface' );
         this.AbstractClass = this.require( 'class_abstract' );
 
+        this.hasGetSet = !(
+            this.require( 'util' ).definePropertyFallback()
+        );
+
         // means of creating anonymous traits
         this.ctor = [
             this.Sut.extend,
@@ -411,6 +415,40 @@ require( 'common' ).testCase(
         this.assertThrows( function()
         {
             Sut( { 'static foo': function() {} } );
+        } );
+    },
+
+
+    /**
+     * For the same reasons as static members (described immediately above),
+     * getters/setters are unsupported until future versions.
+     *
+     * Note that we use defineProperty instead of the short-hand object
+     * literal notation to avoid syntax errors in pre-ES5 environments.
+     */
+    'Trait getters and setters are prohibited': function()
+    {
+        // perform these tests only when getters/setters are supported by
+        // our environment
+        if ( !( this.hasGetSet ) )
+        {
+            return;
+        }
+
+        var Sut = this.Sut;
+
+        this.assertThrows( function()
+        {
+            var dfn = {};
+            Object.defineProperty( dfn, 'foo',
+            {
+                get: function() {},
+                set: function() {},
+
+                enumerable: true,
+            } );
+
+            Sut( dfn );
         } );
     },
 } );
