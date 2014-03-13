@@ -64,13 +64,7 @@ $(outdir)/%.html: %.html $(header) $(footer) tools/page-parse | $(outdir)
 
 # requires git-weblog from mikegerwitz's git-supp package
 news:
-	@[ "$$( which git-weblog )" ] \
-		|| ( echo "Please add git-weblog to PATH" >&2 && false )
-	git fetch origin refs/notes/*:refs/notes/*
-	git log --log-size --format="%H%n%B" master \
-		| grep -A1 '^log size \([5-9][0-9]\{2,\}\|[0-9]\{4,\}\)$$' \
-		| grep -o '^[a-z0-9]\+$$' \
-		| xargs git weblog -Dn $$( git tag -l ) \
+	tools/news-fmt < NEWS \
 		| cat $(header) $(header_news) - $(footer) \
 		| sed 's/\(<body\)/\1 class="news"/' \
 		> "$(outdir)/news.html"
