@@ -377,12 +377,17 @@ pre.js, div.float {
 #menu ul #whyfreejs {
   position: absolute;
 
-  text-align:  center;
+  text-align:  right;
   line-height: 1.25em;
 
-  right:        0em;
-  width:        8em;
-  margin:       -3.25em 0em 0em 0em;
+  right:  0em;
+  width:  8em;
+  margin: -3.25em 0em 0em 0em;
+}
+
+#menu ul #whyfreejs a {
+  margin: 0em;
+  padding: 0em 0.5em;
 }
 
 #menu ul #whyfreejs a {
