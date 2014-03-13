@@ -456,6 +456,7 @@ body.whyfreejs .essay .sign {
   margin-top: -1em;
 }
 
+a.subtle,
 body.whyfreejs .essay .sign a {
   color: inherit;
 }
