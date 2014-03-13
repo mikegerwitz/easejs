@@ -34,7 +34,7 @@ a, a:active, a:link {
   text-decoration: none;
 }
 a:visited {
-  color: #729fcf;
+  color: #488acf;
 }
 a:hover {
   text-decoration: underline;
@@ -371,6 +371,130 @@ pre.js, div.float {
   font-size: 0.9em;
   padding:   1em;
 }
+
+
+/** Free JS */
+#menu ul #whyfreejs {
+  position: absolute;
+
+  text-align:  center;
+  line-height: 1.25em;
+
+  right:        0em;
+  width:        8em;
+  margin:       -3.25em 0em 0em 0em;
+}
+
+#menu ul #whyfreejs a {
+  color: #f57900;
+}
+#menu ul #whyfreejs a:hover {
+  /* undo default style */
+  background-color: transparent;
+}
+
+body.whyfreejs #menu {
+  background-color:    #f57900;
+  border-bottom-color: #ce5c00;
+}
+
+body.whyfreejs #menu ul {
+  visibility: hidden;
+}
+
+h3.menuhead {
+  position: absolute;
+
+  font-size:      1.25em;
+  font-weight:    normal;
+  letter-spacing: 0.15em;
+
+  top:    -2.25em;
+  padding: 0px;
+  margin:  0px;
+}
+
+body.whyfreejs #content {
+  text-align: justify;
+}
+
+body.whyfreejs #content h3 {
+  /* original body font */
+  font-family: arial, serif;
+}
+
+body.whyfreejs .essay {
+  position: relative;
+
+  background-image: url('//www.gnu.org/graphics/another-gnu-type-sm.png');
+  background-position: bottom right;
+  background-repeat: no-repeat;
+  background-color: white;
+
+  border: 1px solid #888a85;
+  border-width: 0.25em 1px;
+  border-radius: 0.5em;
+
+  margin: 0em 5em;
+  padding: 1em;
+}
+
+body.whyfreejs .essay p:first-child {
+  margin-top: 0em;
+}
+
+body.whyfreejs .essay .firsts {
+  font-variant: small-caps;
+  font-size: 1.1em;
+}
+
+body.whyfreejs .essay .sign {
+  font-variant: small-caps;
+  text-align: right;
+  font-size: 0.9em;
+
+  margin-top: -1em;
+}
+
+a.subtle,
+body.whyfreejs .essay .sign a {
+  color: inherit;
+}
+
+body.whyfreejs .essay dl dt.imp {
+  font-weight: bold;
+}
+body.whyfreejs .essay dl dt.imp+dd {
+  margin-bottom: 1em;
+}
+
+body.whyfreejs .essay dl dd {
+  margin-left: 1.5em;
+}
+
+body.whyfreejs p.imgattr {
+  display: inline-block;
+  position: absolute;
+
+  margin: -1em 0px;
+  padding: 0px;
+  font-size: 0.7em;
+
+  transform: rotate(-90deg);
+
+  width: 30em;
+  right: -14.5em;
+  bottom: 16em;
+}
+
+body.whyfreejs p.imgattr a {
+  color: #888a85;
+}
+
+blockquote.quote {
+  font-style:  italic;
+}
+
 
 /* from manual (overrides some of the styles above) */
 div.float {
