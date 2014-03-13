@@ -37,16 +37,16 @@ function escprint( str )
 /^commit / { next }
 
 # store author
-match( $0, /^Author: *([^<]+)/, author ) { next }
+match( $0, /^Author: *([^<]+)/, a ) { author = a[1]; next }
 
 # store date
-match( $0, /^Date: *(.+)$/, date ) { next }
+match( $0, /^Date: *[^ ]+ ([^ ]+ [^ ]+ [^ ]+)/, a ) { date = a[1]; next }
 
 # commit messages are indented by four spaces, with the subject line
 # occupying the first paragraph (that is---until an empty line)
 /^    / {
   # begin the subject line output
-  printf "<h3>"
+  printf "<h3 class=\"git-commit\">"
 
   do {
     escprint( $0 " " )
@@ -54,6 +54,11 @@ match( $0, /^Date: *(.+)$/, date ) { next }
 
   # close subject line
   printf "</h3>"
+
+  # author
+  printf "<div class=\"git-commit-author\">%s</div>", author
+  # date
+  printf "<div class=\"git-commit-date\">%s</div>", date
 
   # the rest of the commit (that is, until we find a line with
   # non-whitespace in column one) is the body
