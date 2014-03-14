@@ -485,6 +485,11 @@ body.whyfreejs p.imgattr {
   padding: 0px;
   font-size: 0.7em;
 
+  /* these "vendor"-specific prefixes can one day be removed; indeed, modern
+   * versions of FF do not need the -moz- prefix; it's included for slightly
+   * out-of-date browsers */
+  -moz-transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
   transform: rotate(-90deg);
 
   width: 30em;
