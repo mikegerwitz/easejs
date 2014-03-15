@@ -458,10 +458,11 @@ pre.js, div.float {
 #menu ul #whyfreejs a {
   margin: 0em;
   padding: 0em 0.5em;
+  color: #f57900;
 }
 
-#menu ul #whyfreejs a {
-  color: #f57900;
+#menu ul #whyfreejs a:hover {
+  background-color: inherit;
 }
 
 body.whyfreejs #menu ul #whyfreejs {
