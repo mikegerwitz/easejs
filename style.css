@@ -187,7 +187,7 @@ body.source #source a {
   text-align:      center;
   text-shadow:     black 0px 0px 1px;
 
-  padding: 0.25em 0.5em;
+  padding: 0.5em;
 
   border:            1px solid #ce5c00;
   border-radius:      0.25em;
@@ -289,7 +289,10 @@ span.shell-start {
 }
 
 .btn.download .note {
-  font-size:  0.4em;
+  position: relative;
+  top: 0.55em;
+
+  font-size:  0.45em;
   font-style: italic;
 }
 
