@@ -110,7 +110,10 @@ a:hover {
 
 #menu {
   background-color: #3465a4;
-  border-bottom:    4px solid #204a87;
+
+  border-width: 2px 0px 4px 0px;
+  border-color: #204a87;
+  border-style: solid;
 }
 
 #menu ul {
