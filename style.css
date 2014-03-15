@@ -205,9 +205,19 @@ body.source #source a {
       rgb(245,123,0) 0%,
       rgb(206,93,0) 100%
   );
+
+  box-shadow: 0.05em 0.1em #ce5c00;
 }
 a.btn:hover {
   text-decoration: none;
+}
+a.btn:active {
+  position: relative;
+  box-shadow: none;
+
+  /* to replace shadow; appear depressed */
+  left: 0.05em;
+  top:  0.1em;
 }
 
 .btn.go {
@@ -226,6 +236,8 @@ a.btn:hover {
       rgb(116,210,22) 0%,
       rgb(139,226,52) 100%
   );
+
+  box-shadow: 0.05em 0.1em #4e9a06;
 }
 
 .btn.med {
