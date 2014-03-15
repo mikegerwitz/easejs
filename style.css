@@ -299,6 +299,8 @@ span.shell-start {
 
 /** index **/
 .headline {
+  position: relative;
+
   background-image:  url( 'images/dvsup.png' );
   padding: 1em 2em;
   margin: -0.5em -2em 0em -2em;
@@ -461,30 +463,9 @@ pre.js, div.float {
 #menu ul #whyfreejs a {
   color: #f57900;
 }
-#menu ul #whyfreejs a:hover {
-  /* undo default style */
-  background-color: transparent;
-}
 
-body.whyfreejs #menu {
-  background-color:    #f57900;
-  border-bottom-color: #ce5c00;
-}
-
-body.whyfreejs #menu ul {
+body.whyfreejs #menu ul #whyfreejs {
   visibility: hidden;
-}
-
-h3.menuhead {
-  position: absolute;
-
-  font-size:      1.25em;
-  font-weight:    normal;
-  letter-spacing: 0.15em;
-
-  top:    -2.25em;
-  padding: 0px;
-  margin:  0px;
 }
 
 body.whyfreejs #content {
@@ -571,6 +552,14 @@ body.whyfreejs p.imgattr a {
 
 blockquote.quote {
   font-style:  italic;
+}
+
+.headline blockquote.quote {
+  position: absolute;
+
+  width: 300px;
+  top: 2.5em;
+  right: 1em;
 }
 
 
