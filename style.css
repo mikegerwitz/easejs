@@ -334,6 +334,7 @@ a.man:before {
 /** download **/
 span.release-current {
   font-size:   1.2em;
+  line-height: 1.2em;
   font-weight: bold;
 }
 
@@ -341,7 +342,8 @@ span.release-current .version {
   font-weight: normal;
 }
 span.release-current .date {
-  font-size: 0.6em;
+  font-size: 0.9em;
+  float: right;
 }
 
 
