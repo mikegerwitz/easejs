@@ -309,6 +309,18 @@ span.shell-start {
 }
 
 
+.btn.download .inner:before {
+  position: relative;
+  top:      0.25em;
+
+  font-size:       1.25em;
+  padding-right:   0.25em;
+  text-decoration: underline;
+
+  content: '⇩';
+}
+
+
 .info {
   clear: both;
 }
