@@ -312,7 +312,7 @@ span.shell-start {
 
   font-variant: small-caps;
 }
-.headline ul a {
+.headline ul a:not(.subtle) {
   color: #488acf;
 }
 
