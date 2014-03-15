@@ -295,9 +295,45 @@ span.shell-start {
 
 
 /** index **/
+.headline {
+  background-image:  url( 'images/dvsup.png' );
+  padding: 1em 2em;
+  margin: -0.5em -2em 0em -2em;
+
+  border-width: 0px 2px 2px 2px;
+  border-color: #2e3436;
+  border-style: solid;
+
+  border-radius: 0em 0em 1em 1em;
+  color:       #d3d7cf;
+
+  font-variant: small-caps;
+}
+.headline ul a {
+  color: #488acf;
+}
+
+.headline h3 {
+  display: inline-block;
+  width:   400px;
+
+  text-align: center;
+  font-size:  2em;
+  font-weight: normal;
+  line-height: 1.5em;
+  color:       #f57900;
+  text-shadow: #f57900 1px 0px;  /* very slight bold effect */
+
+  margin: 0.5em 0em;
+}
+
 .btn.download {
   float: right;
-  margin-top: 0.6em;
+  margin-top: 0.65em;
+  margin-right: 1em;
+
+  text-shadow: #4e9a06 1px 1px,
+               #4e9a06 -1px -1px;
 }
 
 .btn.download .note {
@@ -307,7 +343,6 @@ span.shell-start {
   font-size:  0.45em;
   font-style: italic;
 }
-
 
 .btn.download .inner:before {
   position: relative;
@@ -406,8 +441,9 @@ pre.js, div.float {
 #menu ul #whyfreejs {
   position: absolute;
 
-  text-align:  right;
-  line-height: 1.25em;
+  text-align:   right;
+  line-height:  1.25em;
+  font-variant: small-caps;
 
   right:  0em;
   width:  8em;
