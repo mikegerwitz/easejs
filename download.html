@@ -8,20 +8,60 @@
   GNU ease.js can be downloaded in a variety of formats, depending on the
   environment in which it will be used.
 </p>
+
 <ul>
   <li>
-    <a href="scripts/ease.min.js">Production</a>
-    - Minified, 7.1 kB gzipped (25 kB uncompressed)
+    <a href="https://ftp.gnu.org/gnu/easejs/easejs-latest.tar.gz">Source Tarball</a>
+    - Full source code, debugging, development, production, and build files
+    <a href="https://ftp.gnu.org/gnu/easejs/easejs-latest.tar.gz.sig">(.sig)</a>
   </li>
   <li>
-    <a href="scripts/ease.js">Development</a>
-    - Unminified, 30 kB gzipped (137 kB uncompressed)
+    <a href="https://ftp.gnu.org/gnu/easejs/ease-latest.min.js">Production</a>
+    - Minified, 9.4 kB gzipped (32 kB uncompressed)
+    <a href="https://ftp.gnu.org/gnu/easejs/ease-latest.min.js.sig">(.sig)</a>
+  </li>
+  <li>
+    <a href="https://ftp.gnu.org/gnu/easejs/ease-latest.js">Development</a>
+    - Unminified, 42 kB gzipped (179 kB uncompressed)
+    <a href="https://ftp.gnu.org/gnu/easejs/ease-latest.js.sig">(.sig)</a>
   </li>
 </ul>
 
+<p>
+  The tarball contains the full source code, combined files for debugging GNU
+  ease.js itself, combined files for development using GNU ease.js, minified
+  files for production, and scripts needed to rebuild. The production and
+  development links contain the JavaScript files needed to run GNU ease.js, the
+  latter being unminified to allow easily stepping through the code with a
+  debugger.
+</p>
+
+<p>
+  You should verify the above files using their associated signatures to ensure
+  that they have not been altered. This can be done by placing both files in the
+  same directory and running the command:
+</p>
+
+<blockquote class="shell">
+  <span class="shell-start">$</span>
+  gpg --verify file.sig
+</blockquote>
+
+<p>
+  where <tt>file</tt> is the full filename, such as <tt>easejs-latest.tar.gz</tt>. If you do not have
+  the public signing key, you may download it by running this command:
+</p>
+
+<blockquote class="shell">
+  <span class="shell-start">$</span>
+  gpg --keyserver keys.gnupg.net --recv-keys 8EE30EAB
+</blockquote>
+
 <h3>npm</h3>
-ease.js is available via npm for use with Node.js. Alternatively, one can simply
-<a href="source.html">clone the repository</a> and use that directly.
+<p>
+  ease.js is available via npm for use with Node.js. Alternatively, one can simply
+  <a href="source.html">clone the repository</a> and use that directly.
+</p>
 
 <blockquote class="shell">
   <span class="shell-start">$</span> npm install easejs
