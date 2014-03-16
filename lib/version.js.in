@@ -36,7 +36,7 @@ version.suffix = suffix;
 version.toString = function()
 {
     return this.join( '.' )
-        .replace( /\.([^.]+)$/, '-$1' )
+        .replace( /\.([^.]*)$/, '-$1' )
         .replace( /-$/, '' );
 };
 
