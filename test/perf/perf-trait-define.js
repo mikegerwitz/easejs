@@ -1,7 +1,7 @@
 /**
  * Tests amount of time taken to declare N anonymous traits
  *
- *  Copyright (C) 2010, 2011, 2013 Mike Gerwitz
+ *  Copyright (C) 2010, 2011, 2013, 2014 Mike Gerwitz
  *
  *  This file is part of GNU ease.js.
  *
