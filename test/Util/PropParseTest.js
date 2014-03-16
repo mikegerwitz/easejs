@@ -210,4 +210,46 @@ require( 'common' ).testCase(
             propParse( { 'abstract foo': [ 'valid_name' ] }, {} );
         }, SyntaxError );
     },
+
+
+    /**
+     * The motivation behind this feature is to reduce the number of closures
+     * necessary to perform a particular task: this allows binding `this' of the
+     * handler to a custom context.
+     */
+    'Supports dynamic context to handlers': function()
+    {
+        var _self   = this;
+            context = {};
+
+        // should trigger all of the handlers
+        var all = {
+            prop:   'prop',
+            method: function() {},
+        };
+
+        // run test on getters/setters only if supported by the environment
+        if ( this.hasGetSet )
+        {
+            Object.defineProperty( all, 'getset', {
+                get: ( get = function () {} ),
+                set: ( set = function () {} ),
+
+                enumerable: true,
+            } );
+        }
+
+        function _chk()
+        {
+            _self.assertStrictEqual( this, context );
+        }
+
+        // check each supported handler for conformance
+        this.Sut.propParse( all, {
+            each:     _chk,
+            property: _chk,
+            getset:   _chk,
+            method:   _chk,
+        }, context );
+    },
 } );

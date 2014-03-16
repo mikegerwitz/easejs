@@ -27,6 +27,7 @@ require( 'common' ).testCase(
     caseSetUp: function()
     {
         var _self = this;
+        this.util = this.require( 'util' );
 
         this.quickKeywordMethodTest = function( keywords, identifier, prev )
         {
@@ -50,13 +51,18 @@ require( 'common' ).testCase(
                     startobj.virtual     = true;
                     overrideobj.override = true;
 
+                    var state = {};
+
                     _self.sut.validateMethod(
                         name,
                         function() {},
                         overrideobj,
                         { member: function() {} },
-                        startobj
+                        startobj,
+                        state
                     );
+
+                    _self.sut.end( state );
                 },
                 failstr
             );
@@ -127,7 +133,7 @@ require( 'common' ).testCase(
             _self.sut.validateMethod(
                 name, function() {}, {},
                 { get: function() {} },
-                {}
+                {}, {}
             );
         } );
 
@@ -137,7 +143,7 @@ require( 'common' ).testCase(
             _self.sut.validateMethod(
                 name, function() {}, {},
                 { set: function() {} },
-                {}
+                {}, {}
             );
         } );
     },
@@ -160,7 +166,7 @@ require( 'common' ).testCase(
             _self.sut.validateMethod(
                 name, function() {}, {},
                 { member: 'immaprop' },
-                {}
+                {}, {}
             );
         } );
     },
@@ -209,6 +215,21 @@ require( 'common' ).testCase(
 
 
     /**
+     * Contrary to the above test, an abstract method may appear after its
+     * concrete implementation if the `weak' keyword is provided; this
+     * exists to allow code generation tools to fall back to abstract
+     * without having to invoke the property parser directly, complicating
+     * their logic and duplicating work that ease.js will already do.
+     */
+    'Concrete method may appear with weak abstract method': function()
+    {
+        this.quickKeywordMethodTest(
+            [ 'weak', 'abstract' ], null, []
+        );
+    },
+
+
+    /**
      * The parameter list is part of the class interface. Changing the length
      * will make the interface incompatible with that of its parent and make
      * polymorphism difficult. However, since all parameters in JS are
@@ -230,7 +251,8 @@ require( 'common' ).testCase(
                 // this function returns each of its arguments, otherwise
                 // they'll be optimized away by Closure Compiler.
                 { member: function( a, b, c ) { return [a,b,c]; } },
-                { 'virtual': true }
+                { 'virtual': true },
+                {}
             );
         } );
 
@@ -246,7 +268,8 @@ require( 'common' ).testCase(
                 function() {},
                 { 'override': true },
                 { member: parent_method },
-                { 'virtual': true }
+                { 'virtual': true },
+                {}
             );
         } );
 
@@ -261,9 +284,50 @@ require( 'common' ).testCase(
                 method,
                 { 'override': true },
                 { member: function( a, b, c ) {} },
-                { 'virtual': true }
+                { 'virtual': true },
+                {}
             );
         }, Error );
+    },
+
+
+    /**
+     * Same concept as the above test, but ensure that the logic for weak
+     * abstract members does not skip the valiation. Furthermore, if a weak
+     * abstract member is found *after* the concrete definition, the same
+     * restrictions should apply retroacively.
+     */
+    'Weak abstract overrides must meet compatibility requirements':
+    function()
+    {
+        var _self = this,
+            name  = 'foo',
+            amethod = _self.util.createAbstractMethod( [ 'one' ] );
+
+        // abstract appears before
+        this.quickFailureTest( name, 'compatible', function()
+        {
+            _self.sut.validateMethod(
+                name,
+                function() {},
+                {},
+                { member: amethod },
+                { 'weak': true, 'abstract': true },
+                {}
+            );
+        } );
+
+        // abstract appears after
+        this.quickFailureTest( name, 'compatible', function()
+        {
+            _self.sut.validateMethod(
+                name,
+                amethod,
+                { 'weak': true, 'abstract': true },
+                { member: function() {} },
+                {}, {}
+            );
+        } );
     },
 
 
@@ -360,6 +424,52 @@ require( 'common' ).testCase(
 
 
     /**
+     * The above test provides problems if we have a weak method that
+     * follows the definition of the override within the same definition
+     * object (that is---A' is defined before A where A' overrides A and A
+     * is weak); we must ensure that the warning is deferred until we're
+     * certain that we will not encounter a weak method.
+     */
+    'Does not throw warning when overriding a later weak method': function()
+    {
+        var _self = this;
+        this.warningHandler = function( warning )
+        {
+            _self.fail( true, false, "Warning was issued." );
+        };
+
+        this.assertDoesNotThrow( function()
+        {
+            var state = {};
+
+            // this should place a warning into the state
+            _self.sut.validateMethod(
+                'foo',
+                function() {},
+                { 'override': true },
+                undefined,  // no previous because weak was
+                undefined,  // not yet encountered
+                state
+            );
+
+            // this should remove it upon encountering `weak'
+            _self.sut.validateMethod(
+                'foo',
+                function() {},
+                { 'weak': true, 'abstract': true },
+                { member: function() {} },  // same as previously defined
+                { 'override': true },       // above
+                state
+            );
+
+            // hopefully we don't trigger warnings (if we do, the warning
+            // handler defined above will fail this test)
+            _self.sut.end( state );
+        } );
+    },
+
+
+    /**
      * Wait - what? That doesn't make sense from an OOP perspective, now does
      * it! Unfortunately, we're forced into this restriction in order to
      * properly support fallback to pre-ES5 environments where the visibility
@@ -393,7 +503,7 @@ require( 'common' ).testCase(
         {
             // provide function instead of string
             _self.sut.validateMethod(
-                name, function() {}, { 'proxy': true }, {}, {}
+                name, function() {}, { 'proxy': true }, {}, {}, {}
             );
         } );
     },
@@ -409,7 +519,7 @@ require( 'common' ).testCase(
         this.assertDoesNotThrow( function()
         {
             _self.sut.validateMethod(
-                'foo', 'dest', { 'proxy': true }, {}, {}
+                'foo', 'dest', { 'proxy': true }, {}, {}, {}
             );
         }, TypeError );
     },

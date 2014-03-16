@@ -27,31 +27,37 @@ require( 'common' ).testCase(
     {
         var _self = this;
 
-        this.testArgs = function( args, name, value, keywords )
+        this.testArgs = function( args, name, value, keywords, state )
         {
-            shared.testArgs( _self, args, name, value, keywords, function(
-                prev_default, pval_given, pkey_given
-            )
-            {
-                var expected = _self.members[ 'public' ][ name ];
-
-                if ( !expected )
+            shared.testArgs( _self, args, name, value, keywords, state,
+                function(
+                    prev_default, pval_given, pkey_given
+                )
                 {
-                    return prev_default;
-                }
+                    var expected = _self.members[ 'public' ][ name ];
 
-                return {
-                    value: {
-                        expected: expected,
-                        given:    pval_given.member,
-                    },
-                    keywords: {
-                        expected: expected.___$$keywords$$, // XXX
-                        given:    pkey_given,
-                    },
-                };
-            } );
+                    if ( !expected )
+                    {
+                        return prev_default;
+                    }
+
+                    return {
+                        value: {
+                            expected: expected,
+                            given:    pval_given.member,
+                        },
+                        keywords: {
+                            expected: expected.___$$keywords$$, // XXX
+                            given:    pkey_given,
+                        },
+                    };
+                }
+            );
         };
+
+        // simply intended to execute test two two perspectives
+        this.weakab = [
+        ];
     },
 
 
@@ -96,18 +102,20 @@ require( 'common' ).testCase(
 
             name     = 'foo',
             value    = function() {},
+            state    = {},
             keywords = {}
         ;
 
         this.mockValidate.validateMethod = function()
         {
             called = true;
-            _self.testArgs( arguments, name, value, keywords );
+            _self.testArgs( arguments, name, value, keywords, state );
         };
 
-        this.sut.buildMethod(
-            this.members, {}, name, value, keywords, function() {}, 1, {}
-        );
+        this.assertOk( this.sut.buildMethod(
+            this.members, {}, name, value, keywords, function() {}, 1, {},
+            state
+        ) );
 
         this.assertEqual( true, called, 'validateMethod() was not called' );
     },
@@ -133,9 +141,9 @@ require( 'common' ).testCase(
             _self.testArgs( arguments, name, value, keywords );
         };
 
-        this.sut.buildMethod(
+        this.assertOk( this.sut.buildMethod(
             this.members, {}, name, value, keywords, function() {}, 1, {}
-        );
+        ) );
 
         this.assertEqual( true, called, 'validateMethod() was not called' );
     },
@@ -159,9 +167,9 @@ require( 'common' ).testCase(
         ;
 
         // build the proxy
-        this.sut.buildMethod(
+        this.assertOk( this.sut.buildMethod(
             this.members, {}, name, value, keywords, instCallback, cid, {}
-        );
+        ) );
 
         this.assertNotEqual( null, this.proxyFactoryCall,
             "Proxy factory should be used when `proxy' keyword is provided"
@@ -180,5 +188,98 @@ require( 'common' ).testCase(
             this.members[ 'public' ][ name ],
             "Generated proxy method should be properly assigned to members"
         );
+    },
+
+
+    /**
+     * A weak abstract method may exist in a situation where a code
+     * generator is not certain whether a concrete implementation may be
+     * provided. In this case, we would not want to actually create an
+     * abstract method if a concrete one already exists.
+     */
+    'Weak abstract methods are not processed if concrete is available':
+    function()
+    {
+         var _self  = this,
+            called = false,
+
+            cid      = 1,
+            name     = 'foo',
+            cval     = function() { called = true; },
+            aval     = [],
+
+            ckeywords = {},
+            akeywords = { weak: true, 'abstract': true, },
+
+            instCallback = function() {}
+        ;
+
+        // first define abstract
+        this.assertOk( this.sut.buildMethod(
+            this.members, {}, name, aval, akeywords, instCallback, cid, {}
+        ) );
+
+        // concrete should take precedence
+        this.assertOk( this.sut.buildMethod(
+            this.members, {}, name, cval, ckeywords, instCallback, cid, {}
+        ) );
+
+        this.members[ 'public' ].foo();
+        this.assertOk( called, "Concrete method did not take precedence" );
+
+        // now try abstract again to ensure this works from both directions
+        this.assertOk( this.sut.buildMethod(
+            this.members, {}, name, aval, akeywords, instCallback, cid, {}
+        ) === false );
+
+        this.members[ 'public' ].foo();
+        this.assertOk( called, "Concrete method unkept" );
+    },
+
+
+    /**
+     * Same concept as the above, but with virtual methods (which have a
+     * concrete implementation available by default).
+     */
+    'Weak virtual methods are not processed if override is available':
+    function()
+    {
+         var _self  = this,
+            called = false,
+
+            cid      = 1,
+            name     = 'foo',
+            oval     = function() { called = true; },
+            vval     = function()
+            {
+                _self.fail( true, false, "Method not overridden." );
+            },
+
+            okeywords = { 'override': true },
+            vkeywords = { weak: true, 'virtual': true },
+
+            instCallback = function() {}
+        ;
+
+        // define the virtual method
+        this.assertOk( this.sut.buildMethod(
+            this.members, {}, name, vval, vkeywords, instCallback, cid, {}
+        ) );
+
+        // override should take precedence
+        this.assertOk( this.sut.buildMethod(
+            this.members, {}, name, oval, okeywords, instCallback, cid, {}
+        ) );
+
+        this.members[ 'public' ].foo();
+        this.assertOk( called, "Override did not take precedence" );
+
+        // now try virtual again to ensure this works from both directions
+        this.assertOk( this.sut.buildMethod(
+            this.members, {}, name, vval, vkeywords, instCallback, cid, {}
+        ) === false );
+
+        this.members[ 'public' ].foo();
+        this.assertOk( called, "Override unkept" );
     },
 } );

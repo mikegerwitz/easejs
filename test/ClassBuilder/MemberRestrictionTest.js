@@ -23,18 +23,18 @@ require( 'common' ).testCase(
 {
     caseSetUp: function()
     {
-        this.Class = this.require( 'class' );
-        this.Sut   = this.require( 'ClassBuilder' );
-    },
+        // XXX: the Sut is not directly tested; get rid of these!
+        this.Class         = this.require( 'class' );
+        this.AbstractClass = this.require( 'class_abstract' );
 
+        this.Sut = this.require( 'ClassBuilder' );
 
-    setUp: function()
-    {
-        this.builder = this.Sut(
-            this.require( 'MemberBuilder' )(),
-            this.require( 'VisibilityObjectFactoryFactory' )
-                .fromEnvironment()
-        );
+        // weak flag test data
+        this.weak = [
+            [ 'weak foo', 'foo' ],       // former weak
+            [ 'foo', 'weak foo' ],       // latter weak
+            [ 'weak foo', 'weak foo' ],  // both weak
+        ];
     },
 
 
@@ -226,5 +226,84 @@ require( 'common' ).testCase(
                 _self.Class( obj );
             }, Error, "Forced-public methods must be declared as public" );
         }
+    },
+
+
+    /**
+     * If different keywords are used, then a definition object could
+     * contain two members of the same name. This is probably a bug in the
+     * user's implementation, so we should flip our shit.
+     *
+     * But, see the next test.
+     */
+    'Cannot define two members of the same name': function()
+    {
+        var _self = this;
+        this.assertThrows( function()
+        {
+            // duplicate foos
+            _self.Class(
+            {
+                'public foo':    function() {},
+                'protected foo': function() {},
+            } );
+        } );
+    },
+
+
+    /**
+     * Code generation tools may find it convenient to declare a duplicate
+     * member without knowing whether or not a duplicate will exist; this
+     * may save time and complexity when ease.js has been designed to handle
+     * certain situations. If at least one of the conflicting members has
+     * been flagged as `weak', then we should ignore the error.
+     *
+     * As an example, this is used interally with ease.js to inherit
+     * abstract members from traits while still permitting concrete
+     * definitions.
+     */
+    '@each(weak) Can define members of the same name if one is weak':
+    function( weak )
+    {
+        // TODO: this makes assumptions about how the code works; the code
+        // needs to be refactored to permit more sane testing (since right
+        // now it'd be a clusterfuck)
+        var dfn = {};
+        dfn[ 'abstract ' + weak[ 0 ] ] = [];
+        dfn[ 'abstract ' + weak[ 1 ] ] = [];
+
+        var _self = this;
+        this.assertDoesNotThrow( function()
+        {
+            _self.AbstractClass( dfn );
+        } );
+    },
+
+
+    /**
+     * During the course of processing, certain data are accumulated into
+     * the member builder state; this state must be post-processed to
+     * complete anything that may be pending.
+     */
+    'Member builder state is ended after processing': function()
+    {
+        var _self = this,
+            build = this.require( 'MemberBuilder' )();
+
+        var sut = this.Sut(
+            build,
+            this.require( 'VisibilityObjectFactoryFactory' )
+                .fromEnvironment()
+        );
+
+        // TODO: test that we're passed the right state
+        var called = false;
+        build.end = function( state )
+        {
+            called = true;
+        };
+
+        sut.build( {} );
+        this.assertOk( called );
     },
 } );

@@ -1,0 +1,98 @@
+GNU ease.js Traits
+==================
+The trait implementation is not yet complete; this is the list of known
+issues/TODOs. If you discover any problems, please send an e-mail to
+bug-easejs@gnu.org.
+
+Aside from the issues below, traits are stable and ready to be used in
+production. See the test cases and performance tests for more information
+and a plethora of examples until the documentation is complete.
+
+
+TODO: Trait Extending
+---------------------
+Currently, the only way for a trait to override methods of a class it is
+being mixed into is to implement a common interface. Traits should
+alternatively be able to "extend" classes, which will have effects similar
+to Scala in that the trait can only be mixed into that class. Further,
+traits should be able to extend and mix in other traits (though such should
+be done conservatively).
+
+
+TODO: Documentation
+-------------------
+Due to the trait implementation taking longer than expected to complete, and
+the importance of the first GNU release, trait documentation is not yet
+complete. Instead, traits have been released as a development preview, with
+the test cases and performance tests serving as interim documentation.
+
+Comprehensive documentation, including implementation details and rationale,
+will be available shortly.
+
+
+TODO: Static members
+--------------------
+Static members are currently unsupported. There is no particular difficulty
+in implementing them---the author didn't want it to hold up an initial
+release (the first GNU release) even further.
+
+
+TODO: Getters/setters
+---------------------
+Getters and setters, although they act like properties, should be treated as
+though they are methods. Further, they do not suffer from the same
+complications as properties, because they are only available in an ES5
+environment (as an ECMAScript language feature).
+
+
+TODO: Mixin Caching
+-------------------
+The pattern Type.use(...)(...)---that is, mix a trait into a class and
+immediate instantiate the result---is a common idiom that can often be
+better for self-documentation than storing the resulting class in another
+variable before instantiation. Currently, it's also a terrible thing to do
+in any sort of loop, as it re-mixes each and every time.
+
+We should introduce a caching system to avoid that cost and make it fairly
+cheap to use such an idiom. Further, this would permit the Scala-like
+ability to use Type.use in Class.isA checks.
+
+
+TODO: Public/Protected Property Support
+---------------------------------------
+Private properties are currently supported on traits because they do not
+affect the API of the type they are mixed into. However, due to limitations
+of pre-ES5 environments, implementing public and protected member epoxying
+becomes ugly in the event of a fallback, amounting essentially to
+re-assignment before/after trait method proxying. It is possible, though.
+
+This is not a necessary, or recommended, feature---one should aim to
+encapsulate all data, not expose it---but it does have its legitimate uses.
+As such, this is not a high-priority item.
+
+
+TODO: Trait-specific error messages
+-----------------------------------
+All error messages resulting from traits should refer to the trait by name
+and any problem members by name, and should offer context-specific
+suggestions for resolution. Currently, the errors may be more general and
+may reflect the internal construction of traits, which will be rather
+confusing to users.
+
+
+TODO: Performance enhancements
+------------------------------
+The current trait implementation works well, but is relatively slow
+(compared to how performant it could be). While this is sufficient for most
+users' uses, there is plenty of room for improvement. Until that time, be
+mindful of the performance test cases in the `test/perf' directory.
+
+
+TODO: Intermediate object as class
+----------------------------------
+The immediate syntax---Foo.use(T)()---is a short-hand equivalent of
+Foo.use(T).extend({})(). As such, for consistency, Class.isA should consider
+the intermediate object returned by a call to `use' to be a class.
+
+If we are to do so, though, we must make sure that the entire class API is
+supported.

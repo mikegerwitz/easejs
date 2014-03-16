@@ -20,6 +20,7 @@ Current support includes:
 @item Classical inheritance
 @item Abstract classes and methods
 @item Interfaces
+@item Traits as mixins
 @item Visibility (public, protected, and private members)
 @item Static, constant, and final members
 @end itemize

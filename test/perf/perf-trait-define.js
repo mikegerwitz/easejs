@@ -1,5 +1,5 @@
 /**
- * Provides ease of access to all submodules
+ * Tests amount of time taken to declare N anonymous traits
  *
  *  Copyright (C) 2010, 2011, 2013 Mike Gerwitz
  *
@@ -17,12 +17,24 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Contrast with respective class test.
  */
 
-exports.Class         = require( __dirname + '/lib/class' );
-exports.AbstractClass = require( __dirname + '/lib/class_abstract' );
-exports.FinalClass    = require( __dirname + '/lib/class_final' );
-exports.Interface     = require( __dirname + '/lib/interface' );
-exports.Trait         = require( __dirname + '/lib/Trait' );
-exports.version       = require( __dirname + '/lib/version' );
+var common = require( __dirname + '/common.js' ),
+    Trait  = common.require( 'Trait' ),
 
+    count = 1000
+;
+
+
+common.test( function()
+{
+    var i = count;
+
+    while ( i-- )
+    {
+         Trait( {} );
+    }
+
+}, count, 'Declare ' + count + ' empty anonymous traits' );

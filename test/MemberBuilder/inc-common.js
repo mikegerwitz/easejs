@@ -27,11 +27,14 @@
  * @param {string}     name       member name
  * @param {*}          value      expected value
  * @param {Object}     keywords   expected keywords
- * @param {function()} prevLookup function to use to look up prev member data
+ * @param {Object}     state      validation state
+ * @param {function()} prevLookup function to look up prev member data
  *
  * @return {undefined}
  */
-exports.testArgs = function( testcase, args, name, value, keywords, prevLookup )
+exports.testArgs = function(
+    testcase, args, name, value, keywords, state, prevLookup
+)
 {
     var prev = {
         value:    { expected: null, given: args[ 3 ] },
@@ -41,24 +44,28 @@ exports.testArgs = function( testcase, args, name, value, keywords, prevLookup )
     prev = prevLookup( prev, prev.value.given, prev.keywords.given );
 
     testcase.assertEqual( name, args[ 0 ],
-        'Incorrect name passed to validator'
+        "Incorrect name passed to validator"
     );
 
     testcase.assertDeepEqual( value, args[ 1 ],
-        'Incorrect value passed to validator'
+        "Incorrect value passed to validator"
     );
 
     testcase.assertStrictEqual( keywords, args[ 2 ],
-        'Incorrect keywords passed to validator'
+        "Incorrect keywords passed to validator"
     );
 
     testcase.assertStrictEqual( prev.value.expected, prev.value.given,
-        'Previous data should contain prev value if overriding, ' +
-        'otherwise null'
+        "Previous data should contain prev value if overriding, " +
+        "otherwise null"
     );
 
     testcase.assertDeepEqual( prev.keywords.expected, prev.keywords.given,
-        'Previous keywords should contain prev keyword if ' +
-        'overriding, otherwise null'
+        "Previous keywords should contain prev keyword if " +
+        "overriding, otherwise null"
+    );
+
+    testcase.assertStrictEqual( state, args[ 5 ],
+        "State object was not passed to validator"
     );
 };

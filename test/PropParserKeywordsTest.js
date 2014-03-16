@@ -100,7 +100,7 @@ require( 'common' ).testCase(
             parse(
                 'public protected private ' +
                 'virtual abstract override ' +
-                'static const proxy ' +
+                'static const proxy weak ' +
                 'var'
             );
         }, Error );

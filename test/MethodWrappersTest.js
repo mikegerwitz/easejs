@@ -389,5 +389,27 @@ require( 'common' ).testCase(
             "Should properly proxy to static membesr via static accessor method"
         );
     },
+
+
+    /**
+     * A proxy method should be able to be used as a concrete implementation
+     * for an abstract method; this means that it must properly expose the
+     * number of arguments of the method that it is proxying to. The problem
+     * is---it can't, because we do not have a type system and so we cannot
+     * know what we will be proxying to at runtime!
+     *
+     * As such, we have no choice (since validations are not at proxy time)
+     * but to set the length to something ridiculous so that it will never
+     * fail.
+     */
+    'Proxy methods are able to satisfy abstract method param requirements':
+    function()
+    {
+        var f = this._sut.standard.wrapProxy(
+            {}, null, 0, function() {}, '', {}
+        );
+
+        this.assertOk( !( 0 < f.__length ) );
+    },
 } );
 
