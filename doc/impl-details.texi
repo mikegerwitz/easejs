@@ -1469,6 +1469,65 @@ constructor logic and replacing methods at runtime. This is useful for
 mocking, but a complete anti-pattern in terms of Classical Object-Oriented
 development.}
 
+@subsubsection Private Method Performance
+A special exception to GNU ease.js' method wrapping implementation is made
+for private methods. As mentioned above, there are a number of downsides to
+method wrapping, including effectively halving the remaining stack space for
+heavily recursive operations, overhead of closure invocation, and thwarting
+of tail call optimization. This situation is rather awkward, because it
+essentially tells users that ease.js should not be used for
+performance-critical invocations or heavily recursive algorithms, which is
+very inconvenient and unintuitive.
+
+To eliminate this issue for the bulk of program logic, method wrapping does
+not occur on private methods. To see why it is not necessary, consider the
+purpose of the wrappers:
+
+@enumerate
+@item
+All wrappers perform a context lookup, binding to the instance's private
+visibility object of the class that defined that particular method.
+@item
+This context is restored upon returning from the call: if a method returns
+@var{this}, it is instead converted back to the context in which the method
+was invoked, which prevents the private member object from leaking out of a
+public interface.
+@item
+In the event of an override, @var{this.__super} is set up (and torn down).
+@end enumerate
+
+There are other details (e.g. the method wrapper used for @ref{Method
+Proxies,,method proxies}), but for the sake of this particular discussion,
+those are the only ones that really matter. Now, there are a couple of
+important details to consider about private members:
+
+@itemize
+@item
+Private members are only ever accessible from within the context of the
+private member object, which is always the context when executing a method.
+@item
+Private methods cannot be overridden, as they cannot be inherited.
+@end itemize
+
+Consequently:
+
+@enumerate
+@item
+We do not need to perform a context lookup: we are already in the proper
+context.
+@item
+We do not need to restore the context, as we never needed to change it to
+begin with.
+@item
+@var{this.__self} is never applicable.
+@end enumerate
+
+This is all the more motivation to use private members, which enforces
+encapsulation; keep in mind that, because use of private members is the
+ideal in well-encapsulated and well-factored code, ease.js has been designed
+to perform best under those circumstances.
+
+
 @node Pre-ES5 Fallback
 @subsection Pre-ES5 Fallback
 For any system that is to remain functionally compatible across a number of
