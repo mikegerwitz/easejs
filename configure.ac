@@ -18,7 +18,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-AC_INIT([easejs], [0.2.0], [bugs@easejs.org])
+AC_INIT([easejs], [0.2.1-dev], [bugs@easejs.org])
 AC_CONFIG_AUX_DIR([tools])
 AM_INIT_AUTOMAKE([foreign])
 
