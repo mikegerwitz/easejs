@@ -337,6 +337,10 @@ method}, with the name @var{_moveFrontLeg}. The old method will still be
 called.  Instead, we would have to override the public @var{walk} method to
 prevent our dog from moving his front feet.
 
+Note that GNU ease.js is optimized for private member access; see
+@ref{Property Proxies,,Property Proxies} and @ref{Method
+Wrapping,,Method Wrapping} for additional details.
+
 @subsection Protected Members
 Protected members are often misunderstood. Many developers will declare all
 of their members as either public or protected under the misconception that
