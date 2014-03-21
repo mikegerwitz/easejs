@@ -67,7 +67,11 @@ require( 'common' ).testCase(
 
         // stub factories used for testing
         var stubFactory = this.require( 'MethodWrapperFactory' )(
-             function( func ) { return func; }
+             function( func )
+             {
+                 // still wrap it so that the function is encapsulated
+                 return function() { return func() };
+             }
         );
 
         // used for testing proxies explicitly
@@ -281,5 +285,46 @@ require( 'common' ).testCase(
 
         this.members[ 'public' ].foo();
         this.assertOk( called, "Override unkept" );
+    },
+
+
+    /**
+     * This is a beautiful consequence of the necessay context in which
+     * private methods must be invoked.
+     *
+     * If a method has the ability to call a private method, then we must
+     * already be within a private context (that is---using the private
+     * member object, which happens whenever we're executing a method of
+     * that class). The purpose of the method wrapper is to (a) determine
+     * the proper context, (b) set up super method references, and (c)
+     * restore the context in the event that the method returns `this'. Not
+     * a single one of these applies: (a) is void beacuse we are already in
+     * the proper context; (b) is not applicable since private methods
+     * cannot have a super method; and (c) we do not need to restore context
+     * before returning because the context would be the same (per (a)).
+     *
+     * That has excellent performance implications: not only do we reduce
+     * class building times for private methods, but we also improve method
+     * invocation times, since we do not have to invoke a *closure* for each
+     * and every method call. Further, recursive private methods are no
+     * longer an issue since they do not gobble up the stack faster and,
+     * consequently, the JavaScript engine can now take advantage of tail
+     * call optimizations.
+     *
+     * This is also further encouragement to use private members. :)
+     */
+    'Private methods are not wrapped': function()
+    {
+        var f    = function() {},
+            name = 'foo';
+
+        this.sut.buildMethod(
+            this.members, {}, name, f, { 'private': true },
+            function() {}, 1, {}
+        );
+
+        // if the private method was not wrapped, then it should have been
+        // assigned to the member object unencapsulated
+        this.assertStrictEqual( this.members[ 'private' ][ name ], f );
     },
 } );
