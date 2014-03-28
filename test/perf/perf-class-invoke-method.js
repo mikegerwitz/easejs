@@ -105,3 +105,32 @@ common.test( function()
 // run the same test internally
 foo.testInternal();
 
+
+// allows us to compare private method invocation times with method
+// invocations on a conventional prototype (the increment of `i` is to
+// ensure that the function is not optimized away)
+( function()
+{
+    var p = function() {};
+    p.prototype.foo = function() { i++ };
+    var o = new p();
+
+    common.test( function()
+    {
+        var i = count;
+        while ( i-- ) o.foo();
+    }, count, '[baseline] Invoke method on prototype' );
+} )();
+
+
+// compare with plain old function invocation
+( function()
+{
+    var f = function() { i++ };
+    common.test( function()
+    {
+        var i = count;
+        while ( i-- ) f();
+    }, count, '[baseline] Invoke function' );
+} )();
+
