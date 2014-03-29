@@ -10,12 +10,16 @@ ChangeLog
 
 # autotools- and configure-generated
 test/runner
+test/perf/runner
 aclocal.m4
 Makefile.in
 Makefile
 *.cache/
 configure
 config.*
+
+# script output
+perf.out
 
 # should be added using autoreconf -i
 INSTALL

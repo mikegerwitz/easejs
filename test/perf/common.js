@@ -89,8 +89,6 @@ exports.report = function( count, desc )
         pers  = ( total / count ).toFixed( 10 )
     ;
 
-    console.log( total + "s (x" + count + " = " + pers + "s each)" +
-        ( ( desc ) ? ( ': ' + desc ) : '' )
-    );
+    console.log( "%s|%s|%s|%s", desc, count, pers, total );
 };
 
