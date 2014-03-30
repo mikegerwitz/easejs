@@ -111,7 +111,10 @@ html-single:
 test: check
 check: $(src_tests) test-suite
 
-# performance tests
+# performance tests (order matters here)
+perf-html: perf.log.html
+perf.%.html: perf.%
+	sort "$<" | $(path_tools)/perf2html -F\| > "$@"
 perf: perf.log
 perf.%: FORCE
 if HAS_NODE
