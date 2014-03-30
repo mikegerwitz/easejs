@@ -19,7 +19,7 @@ configure
 config.*
 
 # script output
-perf.out
+perf.*
 
 # should be added using autoreconf -i
 INSTALL

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 #  Copyright (C) 2014 Mike Gerwitz
 #
@@ -21,16 +21,10 @@
 #   $ column -ts\| perf.out
 # #
 
-rawout=perf.out
->"$rawout"
-
 for f in "$@"; do
   @NODE@ "$f" || exit $?
 done \
-  | tee -a "$rawout" \
-  | awk -F\| '
+  | tee >( awk -F\| '
     # format for display as the tests are running
     { printf "%s (x%s = %ss each): %s\n", $4, $2, $3, $1 }
-  '
-
-echo "Raw data written to $rawout" >&2
+  ' >&2 )

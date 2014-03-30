@@ -112,9 +112,10 @@ test: check
 check: $(src_tests) test-suite
 
 # performance tests
-perf:
+perf: perf.log
+perf.%: FORCE
 if HAS_NODE
-	@$(path_test)/perf/runner @PERF_TESTS@
+	@$(path_test)/perf/runner @PERF_TESTS@ > "$@"
 else
 	@echo "Node.js must be installed in order to run performance tests"
 	@exit 1
