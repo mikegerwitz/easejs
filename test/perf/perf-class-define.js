@@ -1,7 +1,7 @@
 /**
  * Tests amount of time taken to declare 1000 classes
  *
- *  Copyright (C) 2010, 2011, 2013 Mike Gerwitz
+ *  Copyright (C) 2010, 2011, 2013 Free Software Foundation, Inc.
  *
  *  This file is part of GNU ease.js.
  *

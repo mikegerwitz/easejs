@@ -1,7 +1,7 @@
 #!/bin/sh
 # Formats and concatenates long commit messages
 #
-#  Copyright (C) 2012, 2013 Mike Gerwitz
+#  Copyright (C) 2012, 2013 Free Software Foundation, Inc.
 #
 #  This file is part of GNU ease.js.
 #

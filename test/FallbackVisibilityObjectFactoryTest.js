@@ -1,7 +1,7 @@
 /**
  * Tests fallback visibility object factory
  *
- *  Copyright (C) 2011, 2012, 2013 Mike Gerwitz
+ *  Copyright (C) 2011, 2012, 2013 Free Software Foundation, Inc.
  *
  *  This file is part of GNU ease.js.
  *

@@ -7,7 +7,7 @@
  *
  * Circular dependencies are not supported, nor should they be.
  *
- *  Copyright (C) 2011, 2013 Mike Gerwitz
+ *  Copyright (C) 2011, 2013 Free Software Foundation, Inc.
  *
  *  This file is part of GNU ease.js.
  *
@@ -23,8 +23,6 @@
  *
  *  You should have received a copy of the GNU General Public License along
  *  with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @author  Mike Gerwitz
  */
 
 
