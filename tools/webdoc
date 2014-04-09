@@ -6,7 +6,7 @@
 # (apart from the website) to have its own style; that makes sense, considering
 # the master branch should have no knowledge of the website.
 #
-#  Copyright (C) 2012, 2013 Mike Gerwitz
+#  Copyright (C) 2012, 2013 Free Software Foundation, Inc.
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as

@@ -3,7 +3,7 @@
 #
 # Builds ease.js website (dynamically generated static content)
 #
-#  Copyright (C) 2010 Mike Gerwitz
+#  Copyright (C) 2010 Free Software Foundation, Inc.
 #
 #  This file is part of the ease.js website.
 #
