@@ -1,7 +1,7 @@
 /**
  * Shared functions for MemberBuilder tests
  *
- *  Copyright (C) 2011, 2013, 2014 Mike Gerwitz
+ *  Copyright (C) 2011, 2013, 2014 Free Software Foundation, Inc.
  *
  *  This file is part of GNU ease.js.
  *

@@ -2,7 +2,7 @@
  * Tests amount of time taken defining and invoking methods passing through
  * traits
  *
- *  Copyright (C) 2014 Mike Gerwitz
+ *  Copyright (C) 2014 Free Software Foundation, Inc.
  *
  *  This file is part of GNU ease.js.
  *

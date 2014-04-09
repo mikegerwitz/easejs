@@ -1,7 +1,7 @@
 /**
  * Tests extending of interfaces
  *
- *  Copyright (C) 2011, 2013 Mike Gerwitz
+ *  Copyright (C) 2011, 2013 Free Software Foundation, Inc.
  *
  *  This file is part of GNU ease.js.
  *

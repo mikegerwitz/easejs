@@ -1,5 +1,5 @@
 <!--
-  Copyright (C) 2010, 2011, 2013, 2014 Mike Gerwitz
+  Copyright (C) 2010, 2011, 2013, 2014 Free Software Foundation, Inc.
 
   This file is part of GNU ease.js.
 
@@ -58,7 +58,7 @@ they want to use "classes".
 
 
 ## License
-ease.js is free software: you can redistribute it and/or modify it under the
+GNU ease.js is free software: you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
 version.

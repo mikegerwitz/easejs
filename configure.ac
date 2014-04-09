@@ -1,6 +1,6 @@
 # For use by automake and autoconf
 #
-#  Copyright (C) 2013, 2014 Mike Gerwitz
+#  Copyright (C) 2013, 2014 Free Software Foundation, Inc.
 #
 #  This file is part of GNU ease.js.
 #

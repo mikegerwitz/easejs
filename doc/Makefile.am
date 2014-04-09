@@ -2,7 +2,7 @@
 #
 # Responsible for building the project documentation.
 #
-#  Copyright (C) 2010, 2011, 2012, 2013, 2014 Mike Gerwitz
+#  Copyright (C) 2010, 2011, 2012, 2013, 2014 Free Software Foundation, Inc.
 #
 #  This file is part of GNU ease.js.
 #
