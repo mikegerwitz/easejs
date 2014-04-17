@@ -111,11 +111,14 @@ html-single:
 test: check
 check: $(src_tests) test-suite
 
-# performance tests
-perf: @PERF_TESTS@
-perf-%.js: FORCE
+# performance tests (order matters here)
+perf-html: perf.log.html
+perf.%.html: perf.%
+	sort "$<" | $(path_tools)/perf2html -F\| > "$@"
+perf: perf.log
+perf.%: FORCE
 if HAS_NODE
-	@$(NODE) $@
+	@$(path_test)/perf/runner @PERF_TESTS@ > "$@"
 else
 	@echo "Node.js must be installed in order to run performance tests"
 	@exit 1

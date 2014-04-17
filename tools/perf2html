@@ -1,0 +1,97 @@
+#!/usr/bin/awk -f
+# Renders performance test output
+#
+#  Copyright (C) 2014 Mike Gerwitz
+#
+#  This file is part of GNU ease.js.
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# If you want more modest output, consider running this command instead:
+#   $ column -ts\| perf.out
+# #
+
+function styleout( i ) {
+  value = $i
+
+  # slow tests should reduce the number of iterations to eat up less time
+  if ( ( i == COL_TOTAL ) && ( value > 0.05 ) ) {
+    class = "slow"
+    if ( value > 0.1 )
+      class = "very " class
+
+    return "<span class=\"" class "\">" value "</span>"
+  }
+  else
+    return value
+}
+
+
+BEGIN {
+  # column constants
+  COL_DESC   = 1
+  COL_COUNT  = 2
+  COL_SINGLE = 3
+  COL_TOTAL  = 4
+
+  # running time tally
+  runtime = 0.00
+
+  # header
+  print "<!DOCTYPE html>" \
+    "<html>" \
+      "<head>" \
+        "<title>GNU ease.js Performance Test Results</title>" \
+        "<style type=\"text/css\">" \
+          "table th:first-child { text-align: left; }" \
+          "table td { padding: 0.1em 0.5em; }" \
+          "table td:not(:first-child) { text-align: right; }" \
+          ".slow { color: #c4a000; font-style: italic; }" \
+          ".very.slow { color: red; }" \
+        "</style>" \
+      "</head>" \
+      "<body>" \
+        "<h1>GNU ease.js Performance Test Results</h1>" \
+        "<table>" \
+          "<thead>" \
+            "<tr>" \
+              "<th>Description</th>" \
+              "<th>Iterations</th>" \
+              "<th>Seconds/iter</th>" \
+              "<th>Total (s)</th>" \
+            "</tr>" \
+          "</thead>" \
+          "<tbody>"
+}
+
+# format row of output (desc, count, time, total)
+{
+  runtime += $COL_TOTAL
+
+  printf "<tr>"
+  for ( i = 1; i <= NF; i++ )
+  {
+    printf "<td>%s</td>", styleout( i )
+  }
+  printf "</tr>\n"
+}
+
+END {
+  # footer
+  print   "</tbody>" \
+        "</table>" \
+        "<p>Total running time: " runtime " seconds</p>" \
+      "</body>" \
+    "</html>"
+}
