@@ -203,4 +203,53 @@ require( 'common' ).testCase(
             {}
         );
     },
+
+
+    /**
+     * As the keyword bit values are magic values, they must be exposed if
+     * the bitfield is to be used. The bitmasks are useful for quick and
+     * convenient checks in other parts of the framework.
+     */
+    'Exposes keyword bit values and masks': function()
+    {
+        this.assertOk( this.Sut.kvals );
+        this.assertOk( this.Sut.kmasks );
+    },
+
+
+    /**
+     * Access modifier checks are common; ensure that the bitmask can
+     * properly check them all and does not check for any other keywords.
+     */
+    'Access modifier bitmask catches all access modifiers': function()
+    {
+        var kvals = this.Sut.kvals;
+
+        // this can be easily checked by ensuring that the inclusive logical
+        // or of all the access modifier bits are no different than the mask
+        this.assertEqual(
+            this.Sut.kmasks.amods
+                | kvals[ 'public' ]
+                | kvals[ 'protected' ]
+                | kvals[ 'private' ],
+            this.Sut.kmasks.amods
+        );
+    },
+
+
+    /**
+     * Likewise, a virtual bitmask is also useful since it can be denoted by
+     * multiple keywords (abstract is implicitly virtual).
+     */
+    'Virtual bitmask catches abstract and virtual keywords': function()
+    {
+        var kvals = this.Sut.kvals;
+
+        this.assertEqual(
+            this.Sut.kmasks[ 'virtual' ]
+                | kvals[ 'abstract' ]
+                | kvals[ 'virtual' ],
+            this.Sut.kmasks[ 'virtual' ]
+        );
+    },
 } );
