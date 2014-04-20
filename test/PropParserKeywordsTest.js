@@ -141,4 +141,66 @@ require( 'common' ).testCase(
 
         this.assertFail( "Should not permit unknown keywords" );
     },
+
+
+    /**
+     * It's accepted convention in nearly every modern object-oriented
+     * language that underscore-prefixed members denote private. (Granted,
+     * the Java community sometimes uses underscore suffixes, but that's
+     * considerably less common in the JavaScript community.)
+     *
+     * For the sake of conciseness, this allows omission of the `private'
+     * keyword; this, coupled with the fact that all non-underscore-prefixed
+     * members are public by default, satisfies the two most common
+     * visibility modifiers for classes and allows a definition style more
+     * natural to JavaScript developers from prototypal development.
+     */
+    'Implciity marks underscore-prefixed members as private': function()
+    {
+        this.assertDeepEqual(
+            this.Sut.parseKeywords( '_foo' ).keywords,
+            { 'private': true }
+        );
+    },
+
+
+    /**
+     * All that said, we want users to be able to do what they want. Let's
+     * have explicit access modifier declarations override the implicit
+     * behavior rather than providing confusing errors (because multiple
+     * access modifiers were provided).
+     */
+    'Fields are not implicitly private with explicit access modifier':
+    function()
+    {
+        this.assertDeepEqual(
+            this.Sut.parseKeywords( 'public _foo' ).keywords,
+            { 'public': true }
+        );
+
+        this.assertDeepEqual(
+            this.Sut.parseKeywords( 'protected _foo' ).keywords,
+            { 'protected': true }
+        );
+
+        this.assertDeepEqual(
+            this.Sut.parseKeywords( 'private _foo' ).keywords,
+            { 'private': true }
+        );
+    },
+
+
+    /**
+     * Double-underscore members are reserved by ease.js for special purposes
+     * and are not included as part of the prototype chain. Further, if we
+     * did not have this exception, then __construct would be marked as
+     * private, which would be in error.
+     */
+    'Double-underscore members are not implicitly private': function()
+    {
+        this.assertDeepEqual(
+            this.Sut.parseKeywords( '__foo' ).keywords,
+            {}
+        );
+    },
 } );
