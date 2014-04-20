@@ -141,4 +141,115 @@ require( 'common' ).testCase(
 
         this.assertFail( "Should not permit unknown keywords" );
     },
+
+
+    /**
+     * It's accepted convention in nearly every modern object-oriented
+     * language that underscore-prefixed members denote private. (Granted,
+     * the Java community sometimes uses underscore suffixes, but that's
+     * considerably less common in the JavaScript community.)
+     *
+     * For the sake of conciseness, this allows omission of the `private'
+     * keyword; this, coupled with the fact that all non-underscore-prefixed
+     * members are public by default, satisfies the two most common
+     * visibility modifiers for classes and allows a definition style more
+     * natural to JavaScript developers from prototypal development.
+     */
+    'Implciity marks underscore-prefixed members as private': function()
+    {
+        this.assertDeepEqual(
+            this.Sut.parseKeywords( '_foo' ).keywords,
+            { 'private': true }
+        );
+    },
+
+
+    /**
+     * All that said, we want users to be able to do what they want. Let's
+     * have explicit access modifier declarations override the implicit
+     * behavior rather than providing confusing errors (because multiple
+     * access modifiers were provided).
+     */
+    'Fields are not implicitly private with explicit access modifier':
+    function()
+    {
+        this.assertDeepEqual(
+            this.Sut.parseKeywords( 'public _foo' ).keywords,
+            { 'public': true }
+        );
+
+        this.assertDeepEqual(
+            this.Sut.parseKeywords( 'protected _foo' ).keywords,
+            { 'protected': true }
+        );
+
+        this.assertDeepEqual(
+            this.Sut.parseKeywords( 'private _foo' ).keywords,
+            { 'private': true }
+        );
+    },
+
+
+    /**
+     * Double-underscore members are reserved by ease.js for special purposes
+     * and are not included as part of the prototype chain. Further, if we
+     * did not have this exception, then __construct would be marked as
+     * private, which would be in error.
+     */
+    'Double-underscore members are not implicitly private': function()
+    {
+        this.assertDeepEqual(
+            this.Sut.parseKeywords( '__foo' ).keywords,
+            {}
+        );
+    },
+
+
+    /**
+     * As the keyword bit values are magic values, they must be exposed if
+     * the bitfield is to be used. The bitmasks are useful for quick and
+     * convenient checks in other parts of the framework.
+     */
+    'Exposes keyword bit values and masks': function()
+    {
+        this.assertOk( this.Sut.kvals );
+        this.assertOk( this.Sut.kmasks );
+    },
+
+
+    /**
+     * Access modifier checks are common; ensure that the bitmask can
+     * properly check them all and does not check for any other keywords.
+     */
+    'Access modifier bitmask catches all access modifiers': function()
+    {
+        var kvals = this.Sut.kvals;
+
+        // this can be easily checked by ensuring that the inclusive logical
+        // or of all the access modifier bits are no different than the mask
+        this.assertEqual(
+            this.Sut.kmasks.amods
+                | kvals[ 'public' ]
+                | kvals[ 'protected' ]
+                | kvals[ 'private' ],
+            this.Sut.kmasks.amods
+        );
+    },
+
+
+    /**
+     * Likewise, a virtual bitmask is also useful since it can be denoted by
+     * multiple keywords (abstract is implicitly virtual).
+     */
+    'Virtual bitmask catches abstract and virtual keywords': function()
+    {
+        var kvals = this.Sut.kvals;
+
+        this.assertEqual(
+            this.Sut.kmasks[ 'virtual' ]
+                | kvals[ 'abstract' ]
+                | kvals[ 'virtual' ],
+            this.Sut.kmasks[ 'virtual' ]
+        );
+    },
 } );
