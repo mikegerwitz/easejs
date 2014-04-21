@@ -33,7 +33,7 @@ RMTRAIL="$PATH_TOOLS/rmtrail"
 cat_modules=$(
     cd "$PATH_TOOLS/../" &&
     grep -rIo ' require(.*)' lib/ \
-        | sed "s/^lib\///;s/\.js://;s/require(.*'\/\(.*\)'.*/\1/" \
+        | sed "s/^lib\///;s/\.js://;s/require( *'\.\/\(.*\)'.*/\1/" \
         | node tools/combine-order.js
 ) || {
     echo "Failed to get module list" >&2
