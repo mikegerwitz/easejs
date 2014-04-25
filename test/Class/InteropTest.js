@@ -278,5 +278,34 @@ require( 'common' ).testCase(
             } );
         } );
     },
+
+
+    /**
+     * This check is probably not necessary, but is added to prevent any
+     * potential regressions. This ensures that public methods on the
+     * prototype will always return the public visibility object---and they
+     * would anyway, since that's the context in which they are invoked
+     * through the public API.
+     *
+     * The only other concern is that when they are invoked by other ease.js
+     * methods, then they are passed the private member object as the
+     * context. In this case, however, the return value is passed back to
+     * the caller (the ease.js method), which properly handles returning the
+     * public member object instead.
+     */
+    'Returning `this` from prototype method yields public obj': function()
+    {
+        var P = function()
+        {
+            // when invoked by an ease.js method, is passed private member
+            // object
+            this.pub = function() { return this; }
+        };
+
+        var inst = this.Class.extend( P, {} )();
+
+        // should return itself; we should not have modified that behavior
+        this.assertStrictEqual( inst.pub(), inst );
+    },
 } );
 
