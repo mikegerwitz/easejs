@@ -1,7 +1,7 @@
 /**
  * Tests named trait definitions
  *
- *  Copyright (C) 2014 Free Software Foundation, Inc.
+ *  Copyright (C) 2014 Mike Gerwitz
  *
  *  This file is part of GNU ease.js.
  *
@@ -23,8 +23,9 @@ require( 'common' ).testCase(
 {
     caseSetUp: function()
     {
-        this.Sut   = this.require( 'Trait' );
-        this.Class = this.require( 'class' );
+        this.Sut       = this.require( 'Trait' );
+        this.Class     = this.require( 'class' );
+        this.Interface = this.require( 'interface' );
     },
 
 
@@ -83,5 +84,87 @@ require( 'common' ).testCase(
         {
             Sut( {}, {} );
         } );
+    },
+
+
+    /**
+     * Just as is the case with classes, providing only a name for the trait
+     * should create a staging object with which subsequent calls may be
+     * chained, just as if those calls were made on Trait directly. The
+     * difference is that the name shall propagate.
+     */
+    'Providing only trait name creates staging object': function()
+    {
+        var Sut = this.Sut;
+        this.assertDoesNotThrow( function()
+        {
+            // this does not create a trait, but it should be acceptable
+            // just as Class( "Foo" ) is
+            Sut( "Foo" );
+        } );
+    },
+
+
+    /**
+     * The named trait staging object should permit direct extension using
+     * an extend method, which should do the same thing as Trait.extend.
+     */
+    'Can extend named trait staging object': function()
+    {
+        var Sut      = this.Sut,
+            expected = {},
+            name     = "Foo",
+            T        = null;
+
+        this.assertDoesNotThrow( function()
+        {
+            // this does not create a trait, but it should be acceptable
+            // just as Class( "Foo" ) is
+            T = Sut( name )
+                .extend( { foo: function() { return expected; } } );
+        } );
+
+        // ensure that extending worked as expected
+        this.assertStrictEqual(
+            this.Class( {} ).use( T )().foo(),
+            expected
+        );
+
+        // ensure that trait was properly named
+        this.assertOk( T.toString().match( name ) );
+    },
+
+
+    /**
+     * The implement method on the named staging object should work just as
+     * Trait.implement.
+     */
+    'Can implement interface using named trait staging object':
+    function()
+    {
+
+        var Sut      = this.Sut,
+            expected = {},
+            name     = "Foo",
+            I        = this.Interface( {} ),
+            I2       = this.Interface( {} ),
+            T        = null;
+
+        this.assertDoesNotThrow( function()
+        {
+            // this does not create a trait, but it should be acceptable
+            // just as Class( "Foo" ) is
+            T = Sut( "Foo" )
+                .implement( I, I2 )
+                .extend( {} );
+        } );
+
+        // ensure that implement worked as intended
+        var inst = this.Class( {} ).use( T )();
+        this.assertOk( this.Class.isA( I, inst ) );
+        this.assertOk( this.Class.isA( I2, inst ) );
+
+        // ensure that trait was properly named
+        this.assertOk( T.toString().match( name ) );
     },
 } );
