@@ -317,5 +317,99 @@ require( 'common' ).testCase(
         // should return itself; we should not have modified that behavior
         this.assertStrictEqual( inst.pub(), inst );
     },
+
+
+    /**
+     * When prototypally extending a class, it is not wise to invoke the
+     * constructor (just like ease.js does not invoke the constructor of
+     * subtypes until the supertype is instantiated), as the constructor may
+     * validate its arguments, or may even have side-effects. Expose this
+     * internal deferral functionality for our prototypal friends.
+     *
+     * It is incredibly unwise to use this function purely to circumvent the
+     * constructor, as classes will use the constructor to ensure that the
+     * inststance is in a consistent and expected state.
+     *
+     * This may also have its uses for stubbing/mocking.
+     */
+    'Can defer invoking __construct': function()
+    {
+        var expected = {};
+
+        var C = this.Class(
+        {
+            __construct: function()
+            {
+                throw Error( "__construct called!" );
+            },
+
+            foo: function() { return expected; },
+        } );
+
+        var inst;
+        this.assertDoesNotThrow( function()
+        {
+            inst = C.asPrototype();
+        } );
+
+        // should have instantiated C without invoking its constructor
+        this.assertOk( this.Class.isA( C, inst ) );
+
+        // we should be able to invoke methods even though the ctor has not
+        // yet run
+        this.assertStrictEqual( expected, inst.foo() );
+    },
+
+
+    /**
+     * Ensure that the prototype is able to invoke the deferred constructor.
+     * Let's hope they actually do. This should properly bind the context to
+     * whatever was provided; it should not be overridden. But see the test
+     * case below.
+     */
+    'Can invoke constructor within context of prototypal subtype':
+    function()
+    {
+        var expected = {};
+
+        var C = this.Class(
+        {
+            foo: null,
+            __construct: function() { this.foo = expected; },
+        } );
+
+        function SubC() { this.__construct.call( this ); }
+        SubC.prototype = C.asPrototype();
+
+        this.assertStrictEqual(
+            ( new SubC() ).foo,
+            expected
+        );
+    },
+
+
+    /**
+     * Despite being used as part of a prototype, it's important that
+     * ease.js' context switching between visibility objects remains active.
+     */
+    'Deferred constructor still has access to private context': function()
+    {
+        var expected = {};
+
+        var C = this.Class(
+        {
+            'private _foo': null,
+            __construct: function() { this._foo = expected; },
+            getFoo: function() { return this._foo },
+        } );
+
+        function SubC() { this.__construct.call( this ); }
+        SubC.prototype = C.asPrototype();
+
+        this.assertStrictEqual(
+            ( new SubC() ).getFoo(),
+            expected
+        );
+    },
 } );
 
