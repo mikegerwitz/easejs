@@ -21,7 +21,7 @@
 ##
 
 info_TEXINFOS = easejs.texi
-easejs_TEXINFOS = license.texi about.texi classes.texi              \
+easejs_TEXINFOS = license.texi about.texi classes.texi interop.texi \
 impl-details.texi integration.texi mkeywords.texi source-tree.texi
 
 EXTRA_DIST = img README highlight.pack.js interactive.js easejs.css
