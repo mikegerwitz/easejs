@@ -91,6 +91,7 @@ require( 'common' ).testCase(
             'AbstractClass',
             'FinalClass',
             'Interface',
+            'Trait',
             'version'
         ] .forEach( function( item )
         {
