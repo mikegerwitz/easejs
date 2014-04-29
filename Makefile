@@ -80,4 +80,4 @@ publish: | default
 	rsync -vrL $(outdir)/./* "$(PUBROOT)"
 
 clean:
-	${RM} -r webroot
+	${RM} -r webroot doc-cp
