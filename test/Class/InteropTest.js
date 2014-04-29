@@ -320,6 +320,42 @@ require( 'common' ).testCase(
 
 
     /**
+     * This is a regression test for an interesting (and particularily
+     * nasty) bug for a situation that is probably reasonably rare. The
+     * original check for a non-class supertype checked whether the
+     * supertype was an instance of the internal base class. While this
+     * works, it unforunately causes problems for subtypes of the class that
+     * extended the prototype---the check will fail, since there is no
+     * ClassBase in the prototype chain.
+     *
+     * This resulted in it processing the class fields, which ended up
+     * overwriting ___$$vis$$, which clobbered all the methods. Doh.
+     */
+    'Subtypes of prototype subtypes yield stable classes': function()
+    {
+        function P() {};
+
+        // sub-subtype of P
+        var expected = {};
+        var C = this.Class.extend( P, {} ).extend(
+        {
+            foo: function() { return expected; }
+        } );
+
+        var inst = C();
+
+        // this should be recognized as a class (prior to the fix, it was
+        // not), and inst should be an instance of a class
+        this.assertOk( this.Class.isClass( C ) );
+        this.assertOk( this.Class.isClassInstance( inst ) );
+        this.assertOk( this.Class.isA( C, inst ) );
+
+        // before the fix, foo is undefined since ___$$vis$$ was clobbered
+        this.assertStrictEqual( inst.foo(), expected );
+    },
+
+
+    /**
      * When prototypally extending a class, it is not wise to invoke the
      * constructor (just like ease.js does not invoke the constructor of
      * subtypes until the supertype is instantiated), as the constructor may
