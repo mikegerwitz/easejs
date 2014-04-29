@@ -55,6 +55,7 @@ Free Documentation License".
 * Integration::            How to integrate ease.js into your project
 * Classes::                Learn to work with Classes
 * Member Keywords::        Control member visibility and more.
+* Interoperability::       Playing nice with vanilla ECMAScript.
 * Source Tree::            Overview of source tree
 * Implementation Details:: The how and why of ease.js
 * License::                Document License
@@ -69,6 +70,7 @@ Free Documentation License".
 @include integration.texi
 @include classes.texi
 @include mkeywords.texi
+@include interop.texi
 @include source-tree.texi
 @include impl-details.texi
 @include license.texi
