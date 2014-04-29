@@ -101,7 +101,7 @@ webify()
 }
 
 # generate the documentation from the master branch
-git checkout "${WEBDOC_BRANCH:-origin/master}" \
+git checkout "${WEBDOC_BRANCH:-master}" \
   && autoreconf -fvi \
   && ./configure \
   && make html html-single \
