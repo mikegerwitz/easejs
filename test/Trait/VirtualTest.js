@@ -191,50 +191,6 @@ require( 'common' ).testCase(
 
 
     /**
-     * Virtual methods for traits are handled via a series of proxy methods
-     * that determine, at runtime (as opposed to when the class is created),
-     * where the call should go. (At least that was the implementation at
-     * the time this test was written.) This test relies on the proper
-     * parameter metadata being set on those proxy methods so that the
-     * necessary length requirements can be validated.
-     *
-     * This was a bug in the initial implemenation: the above tests did not
-     * catch it because the virtual methods had no arguments. The initial
-     * problem was that, since __length was not defined on the generated
-     * method that was recognized as the override, it was always zero, which
-     * always failed if there were any arguments on the virtual method. The
-     * reverse case was also a problem, but it didn't manifest as an
-     * error---rather, it did *not* error when it should have.
-     *
-     * Note the instantiation in these cases: this is because the trait
-     * implementation lazily performs the mixin on first use.
-     */
-    'Subtype must meet compatibility requirements of virtual trait method':
-    function()
-    {
-        var _self = this;
-
-        var C = this.Class.use(
-            this.Sut( { 'virtual foo': function( a, b ) {} } )
-        );
-
-        this.assertThrows( function()
-        {
-            // does not meet param requirements (note the
-            // instantiation---traits defer processing until they are used)
-            C.extend( { 'override foo': function( a ) {} } )();
-        } );
-
-        this.assertDoesNotThrow( function()
-        {
-            // does not meet param requirements (note the
-            // instantiation---traits defer processing until they are used)
-            C.extend( { 'override foo': function( a, b ) {} } )();
-        } );
-    },
-
-
-    /**
      * This is the same concept as the non-virtual test found in the
      * DefinitionTest case: since a trait is mixed into a class, if it
      * returns itself, then it should in actuality return the instance of
