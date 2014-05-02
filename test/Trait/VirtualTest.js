@@ -191,6 +191,52 @@ require( 'common' ).testCase(
 
 
     /**
+     * This test unfortunately requires knowledge of implementation details
+     * to explain; it is a regression test covering a rather obnoxious bug,
+     * especially when the author was away from the implementation for a
+     * couple months.
+     *
+     * Proxying to an overridden protected method was not a problem because
+     * it proxies to the protected member object (PMO) which is passed into
+     * the ctor and, as is evident by its name, provides both the public and
+     * protected API. However, when not overridden, we fall back to having
+     * to invoke our original method, which is on our supertype---the
+     * abstract trait class. The problem there is that the stored supertype
+     * prototype provides only the public API.
+     *
+     * This test ensures that we properly access the protected API of our
+     * supertype. This problem existed before any general solution to this
+     * problem for all subtypes. We test public as well to produce a more
+     * general test case.
+     *
+     * The second part of this test is implicit---we're testing multiple
+     * virtual methods to ensure that they return distinct results, ensuring
+     * that we don't have any variable reassignment issues in the loop that
+     * generates the closures.
+     */
+    'Properly invokes non-overridden virtual trait methods':
+    function()
+    {
+        var expecteda = { a: true },
+            expectedb = { b: true };
+
+        var T = this.Sut(
+        {
+            pub:  function() { return this.vpub(); },
+            prot: function() { return this.vprot(); },
+
+            'virtual public vpub':     function() { return expecteda; },
+            'virtual protected vprot': function() { return expectedb; }
+        } );
+
+        var inst = this.Class.use( T ).extend( {} )();
+
+        this.assertStrictEqual( inst.pub(), expecteda );
+        this.assertStrictEqual( inst.prot(), expectedb );
+    },
+
+
+    /**
      * This is the same concept as the non-virtual test found in the
      * DefinitionTest case: since a trait is mixed into a class, if it
      * returns itself, then it should in actuality return the instance of
