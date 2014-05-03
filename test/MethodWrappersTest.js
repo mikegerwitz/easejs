@@ -202,6 +202,39 @@ require( 'common' ).testCase(
 
 
     /**
+     * While __super is convenient and concise, it is not general-purpose
+     * and does not solve the problem of invoking any arbitrary method on
+     * the supertype. In particular, we may override some method foo, but
+     * wish to call the parent foo in another method; we cannot do that with
+     * __super.
+     *
+     * Note, however, that this will require foo.super.call( this ) to
+     * provide the proper context.
+     */
+    'Can invoke super method by calling override.super': function()
+    {
+        var expected = {},
+            getInst  = function() { return {}; },
+
+            // super method to be overridden
+            method = this._sut.standard.wrapNew(
+                function() { return expected; },
+                null, 0, getInst
+            ),
+
+            // the overriding method (we don't care what this does)
+            override = this._sut.standard.wrapOverride(
+                function() {}, method, 0, getInst
+            )
+        ;
+
+        // we should be able to invoke the super method by override.super,
+        // which is added atop of the wrapper
+        this.assertStrictEqual( override.super(), expected );
+    },
+
+
+    /**
      * The proxy wrapper should forward all arguments to the provided object's
      * appropriate method. The return value should also be proxied back to the
      * caller.
