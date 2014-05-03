@@ -191,46 +191,48 @@ require( 'common' ).testCase(
 
 
     /**
-     * Virtual methods for traits are handled via a series of proxy methods
-     * that determine, at runtime (as opposed to when the class is created),
-     * where the call should go. (At least that was the implementation at
-     * the time this test was written.) This test relies on the proper
-     * parameter metadata being set on those proxy methods so that the
-     * necessary length requirements can be validated.
+     * This test unfortunately requires knowledge of implementation details
+     * to explain; it is a regression test covering a rather obnoxious bug,
+     * especially when the author was away from the implementation for a
+     * couple months.
      *
-     * This was a bug in the initial implemenation: the above tests did not
-     * catch it because the virtual methods had no arguments. The initial
-     * problem was that, since __length was not defined on the generated
-     * method that was recognized as the override, it was always zero, which
-     * always failed if there were any arguments on the virtual method. The
-     * reverse case was also a problem, but it didn't manifest as an
-     * error---rather, it did *not* error when it should have.
+     * Proxying to an overridden protected method was not a problem because
+     * it proxies to the protected member object (PMO) which is passed into
+     * the ctor and, as is evident by its name, provides both the public and
+     * protected API. However, when not overridden, we fall back to having
+     * to invoke our original method, which is on our supertype---the
+     * abstract trait class. The problem there is that the stored supertype
+     * prototype provides only the public API.
      *
-     * Note the instantiation in these cases: this is because the trait
-     * implementation lazily performs the mixin on first use.
+     * This test ensures that we properly access the protected API of our
+     * supertype. This problem existed before any general solution to this
+     * problem for all subtypes. We test public as well to produce a more
+     * general test case.
+     *
+     * The second part of this test is implicit---we're testing multiple
+     * virtual methods to ensure that they return distinct results, ensuring
+     * that we don't have any variable reassignment issues in the loop that
+     * generates the closures.
      */
-    'Subtype must meet compatibility requirements of virtual trait method':
+    'Properly invokes non-overridden virtual trait methods':
     function()
     {
-        var _self = this;
+        var expecteda = { a: true },
+            expectedb = { b: true };
 
-        var C = this.Class.use(
-            this.Sut( { 'virtual foo': function( a, b ) {} } )
-        );
-
-        this.assertThrows( function()
+        var T = this.Sut(
         {
-            // does not meet param requirements (note the
-            // instantiation---traits defer processing until they are used)
-            C.extend( { 'override foo': function( a ) {} } )();
+            pub:  function() { return this.vpub(); },
+            prot: function() { return this.vprot(); },
+
+            'virtual public vpub':     function() { return expecteda; },
+            'virtual protected vprot': function() { return expectedb; }
         } );
 
-        this.assertDoesNotThrow( function()
-        {
-            // does not meet param requirements (note the
-            // instantiation---traits defer processing until they are used)
-            C.extend( { 'override foo': function( a, b ) {} } )();
-        } );
+        var inst = this.Class.use( T ).extend( {} )();
+
+        this.assertStrictEqual( inst.pub(), expecteda );
+        this.assertStrictEqual( inst.prot(), expectedb );
     },
 
 
