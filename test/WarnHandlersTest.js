@@ -85,10 +85,11 @@ require( 'common' ).testCase(
         Sut.setConsole( undefined );
 
         // attempt to log
+        var _self = this;
         this.assertDoesNotThrow( function()
         {
-            Sut.handlers.log( this.warnstub );
-        }, Error );
+            Sut.handlers.log( _self.warnstub );
+        } );
 
         // restore console
         Sut.setConsole( console );
@@ -163,10 +164,11 @@ require( 'common' ).testCase(
         Sut.setConsole( undefined );
 
         // no errors should occur because it should not do anything.
+        var _self = this;
         this.assertDoesNotThrow( function()
         {
-            Sut.handlers.dismiss( this.warnstub );
-        }, Error );
+            Sut.handlers.dismiss( _self.warnstub );
+        } );
 
         // restore console
         Sut.setConsole( console );

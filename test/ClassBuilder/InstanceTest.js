@@ -38,7 +38,8 @@ require( 'common' ).testCase(
         var _self = this;
 
         // object to assert against
-        var obj = {};
+        var obj    = {},
+            called = false;
 
         // mock type
         var type = { __isInstanceOf: function( givent, giveno )

@@ -127,8 +127,8 @@ require( 'common' ).testCase(
     '@each(ctor) Supertype definition is applied when using traits':
     function( T )
     {
-        var expected  = 'bar';
-            expected2 = 'baz';
+        var expected  = 'bar',
+            expected2 = 'baz',
             Foo       = this.Class( { foo: expected } ),
             SubFoo    = this.Class.use( T( {} ) )
                 .extend( Foo, { bar: expected2  } );
@@ -210,7 +210,9 @@ require( 'common' ).testCase(
             return;
         }
 
-        this.fail( "Traits should not be able to define __construct" );
+        this.fail( false, true,
+            "Traits should not be able to define __construct"
+        );
     },
 
 

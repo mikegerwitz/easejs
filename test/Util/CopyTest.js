@@ -41,8 +41,8 @@ require( 'common' ).testCase(
                 c: true,
                 d: false,
                 e: undefined,
-                d: null,
-                f: function() {},
+                f: null,
+                g: function() {},
             },
             dest = {}
         ;

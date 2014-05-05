@@ -219,7 +219,7 @@ require( 'common' ).testCase(
      */
     'Supports dynamic context to handlers': function()
     {
-        var _self   = this;
+        var _self   = this,
             context = {};
 
         // should trigger all of the handlers
@@ -227,6 +227,8 @@ require( 'common' ).testCase(
             prop:   'prop',
             method: function() {},
         };
+
+        var get, set;
 
         // run test on getters/setters only if supported by the environment
         if ( this.hasGetSet )

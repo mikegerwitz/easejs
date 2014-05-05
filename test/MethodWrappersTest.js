@@ -402,7 +402,7 @@ require( 'common' ).testCase(
                 };
             },
 
-            keywords = { 'static': true };
+            keywords = { 'static': true },
 
             val = [ 'value' ],
             s   = {
