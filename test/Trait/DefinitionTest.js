@@ -82,6 +82,8 @@ require( 'common' ).testCase(
     /**
      * A trait can only be used by something else---it does not make sense
      * to instantiate them directly, since they form an incomplete picture.
+     *
+     * Now, that said, see parameterized traits.
      */
     '@each(ctor) Cannot instantiate trait without error': function( T )
     {
