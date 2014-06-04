@@ -259,5 +259,31 @@ require( 'common' ).testCase(
 
         this.assertEqual( n, 3 );
     },
+
+
+    /**
+     * Sibling traits are an interesting case---rather than stacking, they
+     * are mixed in alongside each other, meaning that there may be
+     * multiple traits that define __mixin. Ordinarily, this is a problem;
+     * however, __mixin shall be treated as if it were private and shall be
+     * invoked once per trait, giving each a chance to initialize.
+     *
+     * Furthermore, each should retain access to their own configuration.
+     */
+    'Invokes __mixin of each sibling mixin': function()
+    {
+        var args = [],
+            vals = [ {}, [] ],
+            c    = function() { args.push( arguments ) };
+
+        var Ta = this.createParamTrait( c ),
+            Tb = this.createParamTrait( c );
+
+        this.Class( {} ).use( Ta( vals[0] ), Tb( vals[1] ) )();
+
+        this.assertEqual( args.length, 2 );
+        this.assertStrictEqual( args[0][0], vals[0] );
+        this.assertStrictEqual( args[1][0], vals[1] );
+    }
 } );
 
