@@ -19,7 +19,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if ( typeof console === 'undefined' ) console = undefined;
+try { void console } catch ( e ) { console = undefined; }
 
 require( 'common' ).testCase(
 {
