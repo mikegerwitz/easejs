@@ -207,5 +207,57 @@ require( 'common' ).testCase(
             this.Class( {} ).use( T( expected ) )().getFoo()
         );
     },
+
+
+    /**
+     * It is still useful to be able to define a __mixin method to be called
+     * as an initialization method for default state; otherwise, arbitrary
+     * method overrides or explicit method calls are needed.
+     */
+    '__mixin with empty parameter list is still invoked': function()
+    {
+        var expected = {},
+            given;
+
+        var T = this.createParamTrait( function() { given = expected; } );
+
+        // notice that we still configure T, with an empty argument list
+        this.Class( {} ).use( T() )();
+        this.assertStrictEqual( expected, given );
+    },
+
+
+    /**
+     * Parameterized traits are intended to be configured. However, there
+     * are a number of reasons to allow them to be mixed in without
+     * configuration (that is---without being converted into argument
+     * traits):
+     *   - Permits default behavior with no configuration, overridable with;
+     *   - If any __mixin definition required configuration, then traits
+     *     would break backwards-compatibility if they wished to define it,
+     *     with no means of maintaining BC;
+     *   - Allows trait itself to determine whether arguments are required.
+     */
+    'Mixing in param trait will invoke __mixin with no arguments':
+    function()
+    {
+        var n = 0;
+
+        // ensure consistency at any arity; we'll test nullary and unary,
+        // assuming the same holds true for any n-ary __mixin method
+        var T0 = this.createParamTrait( function() { n |= 1; } ),
+            T1 = this.createParamTrait( function( a ) { n |= 2; } );
+
+        // ensure that param traits do not throw errors when mixed in (as
+        // opposed to argument traits, which have been tested thusfar)
+        var C = this.Class( {} );
+        this.assertDoesNotThrow( function()
+        {
+            C.use( T0 )();
+            C.use( T1 )();
+        } );
+
+        this.assertEqual( n, 3 );
+    },
 } );
 
