@@ -19,6 +19,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*** XXX __construct or __mixin first? __mixin with no parameters should
+ * permit standard trait with initialization procedure ***/
+
 require( 'common' ).testCase(
 {
     caseSetUp: function()
@@ -284,6 +287,84 @@ require( 'common' ).testCase(
         this.assertEqual( args.length, 2 );
         this.assertStrictEqual( args[0][0], vals[0] );
         this.assertStrictEqual( args[1][0], vals[1] );
-    }
+    },
+
+
+    /**
+     * This decision is not arbitrary.
+     *
+     * We shall consider two different scenarios: first, the case of mixing
+     * in some trait T atop of some class C. Assume that C defines a
+     * __construct method; it does not know whether or not a trait will be
+     * mixed in, nor should it care---it should proceed initializing its
+     * state as normal. However, what if a trait were to be mixed in,
+     * overriding certain behaviors? It is then imperative that T be
+     * initialized prior to any calls by C#__construct. It is not important
+     * that C be initialized prior to T#__mixin, because T can know that it
+     * should not invoke any methods that will fail---it should be used only
+     * to initialize state. (In the future, ease.js may enforce this
+     * restriction.)
+     *
+     * The second scenario is described in the test that follows.
+     */
+    'Invokes __mixin before __construct when C.use(T)': function()
+    {
+        var mixok = false;
+
+        var T = this.createParamTrait( function() { mixok = true } ),
+            C = this.Class(
+            {
+                __construct: function()
+                {
+                    if ( !mixok ) throw Error(
+                        "__construct called before __mixin"
+                    );
+                }
+            } );
+
+        this.assertDoesNotThrow( function()
+        {
+            C.use( T )();
+        } );
+    },
+
+
+    /**
+     * (Continued from above test.)
+     *
+     * In the reverse situation---whereby C effectively extends T---we want
+     * __construct to instead be called *after* __mixin of T (and any other
+     * traits in the set). This is because __construct may wish to invoke
+     * methods of T, but what would cause problems if T were not
+     * initialized. Further, T would not have knowledge of C and, if it
+     * expected a concrete implementation to be called from T#__mixin, then
+     * T would have already been initialized, or C's concrete implementation
+     * would know what not to do (in the case of a partial initialization).
+     *
+     * This is also more intuitive---we are invoking initialize methods as
+     * if they were part of a stack.
+     */
+    'Invokes __construct before __mixin when Class.use(T).extend()':
+    function()
+    {
+        var cok = false;
+
+        var T = this.createParamTrait( function()
+            {
+                if ( !cok ) throw Error(
+                    "__mixin called before __construct"
+                );
+            } );
+
+        var C = this.Class.use( T ).extend(
+        {
+            __construct: function() { cok = true }
+        } );
+
+        this.assertDoesNotThrow( function()
+        {
+            C();
+        } );
+    },
 } );
 
