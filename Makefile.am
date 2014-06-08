@@ -44,7 +44,7 @@ MKDIR_P = @MKDIR_P@
 # see README
 SUBDIRS = doc
 EXTRA_DIST = AUTHORS NEWS ChangeLog README.md README.hacking README.traits \
-             lib test index.js package.json \
+             lib test index.js package.json version \
              $(path_combine_output) $(path_combine_output_full) \
              $(path_browser_test) $(path_combine_output_min) \
              $(path_combine_output_full_min) \
@@ -52,7 +52,7 @@ EXTRA_DIST = AUTHORS NEWS ChangeLog README.md README.hacking README.traits \
              tools/signchk tools/browser-test.html tools/combine-order.js \
              tools/combine-test.tpl tools/combine.tpl tools/externs-global.js \
              tools/externs.js tools/license-min.tpl tools/license.tpl \
-             tools/linechk-ignores
+             tools/linechk-ignores tools/vergen
 
 .PHONY: mkbuild combine min doc check test test-suite perf FORCE
 
@@ -140,19 +140,23 @@ else
 endif
 
 # generate the familiar files that automake normally checks for
-dist-hook: AUTHORS NEWS ChangeLog
+dist-hook: AUTHORS NEWS ChangeLog version
 	cp $? $(distdir)
 AUTHORS: FORCE
-	$(path_tools)/gitlog-to-authors > AUTHORS
+	$(path_tools)/gitlog-to-authors > $@
 NEWS: FORCE
-	$(path_tools)/gitlog-to-news $(path_tools)/news-ignore > NEWS
+	$(path_tools)/gitlog-to-news $(path_tools)/news-ignore > $@
 ChangeLog: FORCE
 	$(path_tools)/gitlog-to-changelog \
 		--strip-cherry-pick \
 		--format=%s \
 		-- \
 		--no-merges \
-		> ChangeLog
+		> $@
+# we *only* want this in a distribution, otherwise the version number will
+# never change!
+version:
+	$(path_tools)/vergen > $@
 
 clean-local:
 	-rm -rf "$(path_build)"

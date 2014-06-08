@@ -20,7 +20,7 @@
 ##
 
 # for distributions
-if [ -f version ]; then
+if [ -s version ]; then
   cat version
   exit
 fi
