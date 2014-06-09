@@ -88,6 +88,7 @@ if HAS_CCJAR
 	$(JAVA) -jar $(compiler) \
 		--externs $(path_tools)/externs-global.js \
 		--externs $(path_build)/externs-internal.js \
+		--language_in=ECMASCRIPT5_STRICT \
 		--js $< >> $@ || rm $@
 else
 	@echo "cannot create $@:"
