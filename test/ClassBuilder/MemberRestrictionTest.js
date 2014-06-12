@@ -291,6 +291,7 @@ require( 'common' ).testCase(
             build = this.require( 'MemberBuilder' )();
 
         var sut = this.Sut(
+            this.require( 'warn' ).DismissiveHandler(),
             build,
             this.require( 'VisibilityObjectFactoryFactory' )
                 .fromEnvironment()

@@ -73,6 +73,7 @@ require( 'common' ).testCase(
     {
         // XXX: clean up this mess.
         var builder = this.require( 'ClassBuilder' )(
+            this.require( 'warn' ).DismissiveHandler(),
             this.require( 'MemberBuilder' )(),
             this.require( 'VisibilityObjectFactoryFactory' )
                 .fromEnvironment()

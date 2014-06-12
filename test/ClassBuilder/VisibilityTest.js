@@ -25,8 +25,6 @@ require( 'common' ).testCase(
 {
     caseSetUp: function()
     {
-        // XXX: get rid of this disgusting mess; we're mid-refactor and all
-        // these dependencies should not be necessary for testing
         this.Sut                  = this.require( 'ClassBuilder' );
         this.MethodWrapperFactory = this.require( 'MethodWrapperFactory' );
 
@@ -37,7 +35,10 @@ require( 'common' ).testCase(
 
     setUp: function()
     {
+        // XXX: get rid of this disgusting mess; we're mid-refactor and all
+        // these dependencies should not be necessary for testing
         this.builder = this.Sut(
+            this.require( 'warn' ).DismissiveHandler(),
             this.require( '/MemberBuilder' )(
                 this.MethodWrapperFactory( this.wrappers.wrapNew ),
                 this.MethodWrapperFactory( this.wrappers.wrapOverride ),
