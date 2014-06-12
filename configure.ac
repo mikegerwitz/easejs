@@ -22,7 +22,7 @@
 m4_define([ver], m4_esyscmd(./tools/vergen))
 m4_if(ver, [], [m4_exit(1)])
 
-AC_INIT([easejs], [ver], [bugs@easejs.org])
+AC_INIT([easejs], [ver], [bug-easejs@gnu.org])
 AC_CONFIG_AUX_DIR([tools])
 AM_INIT_AUTOMAKE([foreign])
 
