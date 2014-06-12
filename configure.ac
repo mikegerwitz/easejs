@@ -18,12 +18,21 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-AC_INIT([easejs], [0.2.2], [bugs@easejs.org])
+# version string is dynamically generated
+m4_define([ver], m4_esyscmd(./tools/vergen))
+m4_if(ver, [], [m4_exit(1)])
+
+AC_INIT([easejs], [ver], [bug-easejs@gnu.org])
 AC_CONFIG_AUX_DIR([tools])
 AM_INIT_AUTOMAKE([foreign])
 
-# provide more granular version numbers based on the above AC_INIT line
-m4_define([ver_split], m4_split(m4_translit(AC_PACKAGE_VERSION, [-], [.]), [\.]))
+# provide more granular version numbers based on the version string, using
+# the format MAJOR.MINOR.REV[-SUFFIX], where SUFFIX can itself contain
+# dashes (and often will)
+m4_define([ver_split],
+  m4_split(
+    patsubst(AC_PACKAGE_VERSION, [^\([^-]+\)-], [\1.]),
+    [\.]))
 AC_SUBST(MAJOR, m4_argn(1, ver_split))
 AC_SUBST(MINOR, m4_argn(2, ver_split))
 AC_SUBST(REV, m4_argn(3, ver_split))
