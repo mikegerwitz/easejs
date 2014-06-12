@@ -65,7 +65,11 @@ $(path_build):
 	$(MKDIR_P) "$(path_build)"
 
 
-combine: $(path_combine_output) $(path_build)/browser-test.html
+combine: reconf $(path_combine_output) $(path_build)/browser-test.html
+
+# will force a reconfigure (for version data) if in the git repo
+reconf:
+	test -d .git && autoconf && ./configure
 
 # combine all modules into easily redistributable ease.js file (intended for
 # browser)
@@ -155,7 +159,7 @@ ChangeLog: FORCE
 		> $@
 # we *only* want this in a distribution, otherwise the version number will
 # never change!
-version:
+version: FORCE
 	$(path_tools)/vergen > $@
 
 clean-local:
