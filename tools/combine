@@ -127,6 +127,7 @@ for module in $cat_modules; do
     echo "( function( module, __dirname )"
     echo "{"
     echo "    var exports = module.exports = {};"
+    echo "    __cwd = '$( dirname "$module" )';"
 
     # add the module, removing trailing commas
     cat $filename | $RMTRAIL
@@ -171,6 +172,7 @@ if [ "$INC_TEST" ]; then
         echo "( function( module, __dirname )"
         echo "{"
         echo "    var exports = module.exports = {};"
+        echo "    __cwd = '.';"
 
         # write out current test to make debugging easier in browsers with very
         # little debugging support

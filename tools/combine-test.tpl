@@ -26,7 +26,7 @@ module.common = module['test/common'] = { exports: {
 
     testCase: function()
     {
-        return require( 'test/inc-testcase' ).apply( this, arguments );
+        return require( '/test/inc-testcase' ).apply( this, arguments );
     }
 } };
 

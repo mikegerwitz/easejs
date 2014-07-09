@@ -47,6 +47,6 @@ exports.require = function( module )
  *
  * @return  {udnefined}
  */
-exports.testCase = require( __dirname + '/inc-testcase.js' );
+exports.testCase = require( './inc-testcase.js' );
 
 

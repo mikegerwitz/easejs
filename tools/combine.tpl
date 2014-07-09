@@ -15,7 +15,7 @@
  */
 var easejs = {};
 
-( function( ns_exports )
+( function( ns_exports, __cwd )
 {
     /**
      * CommonJS module exports
@@ -42,15 +42,26 @@ var easejs = {};
      */
     var require = function( module_id )
     {
-        // remove the './' directory prefix (every module is currently included
-        // via a relative path), stupidly remove ../'s and remove .js extensions
-        var id_clean = module_id.replace( /^\.?\/|[^/]*?\/\.\.\/|\.js$/, '' );
+        // anything that is not an absolute require path will be prefixed
+        // with __cwd, which is set by the combined module; this allows
+        // including relative paths (but note that this also means that
+        // modules that perform ad-hoc conditional requires after another
+        // module has been processed may not work properly; we don't do
+        // this, though)
+        var id_norm = ( module_id.substr( 0, 1 ) === '/' )
+            ? module_id
+            : __cwd + '/' + module_id;
+
+        // strip `../`, poorly strip `./` (for example, it would also strip
+        // `foo./`, but we know that this won't ever be the case with our
+        // files), and strip leading `/`
+        var id_clean = id_norm.replace( /([^\/]+\/\.\.\/|\.\/|^\/)/g, '' );
 
         // attempt to retrieve the module
         var mod = module[ id_clean ];
         if ( mod === undefined )
         {
-            throw "[ease.js] Undefined module: " + module_id;
+            throw "[ease.js] Undefined module: " + id_clean;
         }
 
         return mod.exports;
@@ -65,5 +76,5 @@ var easejs = {};
     ns_exports.Interface     = module['interface'].exports;
     ns_exports.Trait         = module['Trait'].exports;
     ns_exports.version       = module['version'].exports;
-} )( easejs );
+} )( easejs, '.' );
 
