@@ -33,14 +33,14 @@ require( 'common' ).testCase(
      * to the holder of a reference to the symbol used to create that field.
      * Since this fallback is intended to be used in environments that do
      * not support symbols, the alternative is to return a random string
-     * that is highly unlikely to exist in practice.
+     * that is highly unlikely to exist in practice. However, we must also
+     * return an object to allow for instanceof checks. See below test for
+     * more details.
      */
-    'Constructor returns a generated string': function()
+    'Constructor returns an instance of Symbol': function()
     {
         var result = this.Sut();
-
-        this.assertOk( typeof result === 'string' );
-        this.assertOk( result.length > 0 );
+        this.assertOk( result instanceof this.Sut );
     },
 
 
