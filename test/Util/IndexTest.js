@@ -1,7 +1,7 @@
 /**
- * ease.js warning system
+ * Tests utility module entry point
  *
- *  Copyright (C) 2011, 2012, 2013, 2014 Free Software Foundation, Inc.
+ *  Copyright (C) 2014 Free Software Foundation, Inc.
  *
  *  This file is part of GNU ease.js.
  *
@@ -17,13 +17,25 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * N.B. Despite this saying that it tests the index (i.e. entry point), this
+ * is not yet the case; it will be in the future, though.
  */
 
-module.exports = {
-    Warning: require( './warn/Warning' ),
+require( 'common' ).testCase(
+{
+    caseSetUp: function()
+    {
+        this.Sut = this.require( 'util' );
+    },
 
-    DismissiveHandler: require( './warn/DismissiveHandler' ),
-    LogHandler:        require( './warn/LogHandler' ),
-    ThrowHandler:      require( './warn/ThrowHandler' ),
-};
+
+    'Exposes Global prototype': function()
+    {
+        this.assertStrictEqual(
+            this.Sut.Global,
+            this.require( 'util/Global' )
+        );
+    },
+} );
 

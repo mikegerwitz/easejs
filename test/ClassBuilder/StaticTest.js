@@ -26,8 +26,6 @@ require( 'common' ).testCase(
     {
         this.fallback = this.require( 'util' ).definePropertyFallback();
 
-        // XXX: get rid of this disgusting mess; we're mid-refactor and all
-        // these dependencies should not be necessary for testing
         this.ClassBuilder         = this.require( 'ClassBuilder' );
         this.MemberBuilder        = this.require( 'MemberBuilder' );
         this.MethodWrapperFactory = this.require( 'MethodWrapperFactory' );
@@ -38,7 +36,10 @@ require( 'common' ).testCase(
 
     setUp: function()
     {
+        // XXX: get rid of this disgusting mess; we're mid-refactor and all
+        // these dependencies should not be necessary for testing
         this.builder = this.ClassBuilder(
+            this.require( 'warn' ).DismissiveHandler(),
             this.MemberBuilder(
                 this.MethodWrapperFactory( this.wrappers.wrapNew ),
                 this.MethodWrapperFactory( this.wrappers.wrapOverride ),
