@@ -81,14 +81,28 @@ function incAssertCount()
  * This will be evolving throughout the life of the project. Mainly, it cannot
  * be run as part of a suite without multiple summary outputs.
  *
- * @param  {Object.<string,function()>}  object containing tests
+ * @param  {string|Object.<string,function()>}  SUT module path; or object
+ *                                              containing tests
+ *
+ * @param  {Object.<string,function()>=}  object containing tests, if first
+ *                                        argument is provided
  *
  * @return  {undefined}
  */
-module.exports = function( test_case )
+module.exports = function( _, __ )
 {
+    var args      = Array.prototype.slice.call( arguments ),
+        test_case = args.pop(),
+        sutpath   = args.pop();
+
     var context  = prepareCaseContext(),
         setUp    = test_case.setUp;
+
+    // automatically include SUT if its module path was provided
+    if ( sutpath )
+    {
+        context.Sut = common_require( sutpath );
+    }
 
     // if we're not running a suite, clear out the failures
     if ( !( suite ) )
