@@ -366,5 +366,34 @@ require( 'common' ).testCase(
             C();
         } );
     },
+
+
+    /**
+     * The same concept as above, extended to subtypes. In particular, we
+     * need to ensure that the subtype is able to properly initialize or
+     * alter state that __mixin of a supertype depends upon.
+     */
+    'Subtype invokes ctor before supertype __construct or __mixin':
+    function()
+    {
+        var cok = false;
+
+        var T = this.createParamTrait( function()
+            {
+                if ( !cok ) throw Error(
+                    "__mixin called before Sub#__construct"
+                );
+            } );
+
+        var Sub = this.Class( {} ).use( T ).extend(
+        {
+            __construct: function() { cok = true }
+        } );
+
+        this.assertDoesNotThrow( function()
+        {
+            Sub();
+        } );
+    },
 } );
 
