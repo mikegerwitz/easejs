@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 #  Copyright (C) 2012, 2013, 2014 Free Software Foundation, Inc.
 #
@@ -18,5 +18,14 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # #
 
-NODE_PATH=".:$NODE_PATH" @NODE@ --stack-trace-limit=20 \
+declare -a nodeargs=()
+declare -i an=0
+
+while [ "${1:0:1}" == - ]; do
+  nodeargs[$an]="$1"
+  ((an++))
+  shift
+done
+
+NODE_PATH=".:$NODE_PATH" node --stack-trace-limit=20 "${nodeargs[@]}" \
   ./runner.js "$@"
