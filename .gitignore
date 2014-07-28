@@ -17,6 +17,7 @@
 /*.cache/
 /configure
 /config.*
+/version
 
 # script output
 /perf.*
