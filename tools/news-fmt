@@ -34,19 +34,15 @@ function escprint( str )
 }
 
 
-/^commit / { next }
-
-# store author
-match( $0, /^Author: *([^<]+)/, a ) { author = a[1]; next }
-
-# store date
-match( $0, /^Date: *[^ ]+ ([^ ]+ [^ ]+ [^ ]+)/, a ) { date = a[1]; next }
+match( $0, /^commit *(.{7})/, m ) { commit = m[1]; next }
+match( $0, /^Author: *([^<]+)/, m ) { author = m[1]; next }
+match( $0, /^Date: *[^ ]+ ([^ ]+ [^ ]+ [^ ]+)/, m ) { date = m[1]; next }
 
 # commit messages are indented by four spaces, with the subject line
 # occupying the first paragraph (that is---until an empty line)
 /^    / {
   # begin the subject line output
-  printf "<h3 class=\"git-commit\">"
+  printf "<h3 id=\"%s\" class=\"git-commit\">", commit
 
   do {
     escprint( $0 " " )
