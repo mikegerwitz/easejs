@@ -1,0 +1,91 @@
+#!/bin/bash
+# Automates the task of tagging and making a release of GNU ease.js
+#
+#  Copyright (C) 2014 Free Software Foundation, Inc.
+#
+#  This file is part of GNU ease.js.
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##
+
+promptabort()
+{
+  read -p "$1 (y/N) " resp
+  case "$resp" in
+    [yY]) ;;
+    *)
+      echo "Aborting." >&2
+      exit 1
+  esac
+}
+
+version="${1?Please specify a version to release}"
+
+# found in gnulib
+which gnupload >&/dev/null || {
+  echo "fatal: gnupload not found in PATH" >&2
+  exit 1
+}
+
+# check out tag
+git checkout "$version" || {
+  [ "$( git symbolic-ref HEAD )" == refs/heads/master ] \
+    || echo "WARNING: not on master!" >&2
+
+  promptabort "Tag for $version does not exist; create one?"
+
+  # open editor for announcement
+  ${EDITOR:-editor} announce
+
+  # create tag
+  git tag -s "$version" -Fannounce
+}
+
+# if we have a makefile, clean up; if not, that's fine
+[ -f Makefile ] && make distclean
+
+# rebuild and prepare distributions
+autoreconf -fvi \
+  && ./configure \
+  && make dist distdir \
+  || exit $?
+
+# create links for gnupload filenames (gnuput does not like symlinks here)
+srcln="easejs-$version/build"
+ln -f "$srcln/ease.js" ease-"$version".js \
+  && ln -f "$srcln/ease.min.js" ease-"$version".min.js \
+  || exit $?
+
+# upload JS files and tarball
+gnupload --to ftp.gnu.org:easejs --symlink-regex \
+  ease-"$version"{,.min}.js \
+  easejs-"$version".tar.gz \
+  || exit $?
+
+# publish to npm (assumes already logged in); note that failure will not
+# abort the process, just in case
+npm publish easejs-"$version".tar.gz
+
+# now the website
+git checkout website \
+  && make clean default webdoc news \
+  || exit $?
+
+echo "GNU ease.js $version has been released!"
+echo "Please remember to:"
+echo "  - Release the webroot after testing locally"
+echo "  - Verify successful \`npm publish\`"
+echo "  - Send announcement to info-gnu@gnu.org, info-easejs@gnu.org"
+echo "  - Place announcement on Savannah"
+
