@@ -166,7 +166,7 @@ version: FORCE
 clean-local:
 	-rm -rf "$(path_build)"
 	-rm -rf doc-cp  # created by website branch build
-	-rm -f AUTHORS NEWS ChangeLog
+	-rm -f AUTHORS NEWS ChangeLog version
 
 distclean-local:
 	-rm -f package.json
