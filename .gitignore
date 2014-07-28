@@ -9,6 +9,8 @@
 /ChangeLog
 
 # autotools- and configure-generated
+/doc/Makefile.in
+/doc/Makefile
 /test/runner
 /test/perf/runner
 /aclocal.m4
