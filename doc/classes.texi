@@ -785,6 +785,62 @@ method. That is, if the overridden method requires arguments, you must pass
 them to @code{__super()}. This allows you to modify the argument list before
 it is sent to the overridden method.
 
+@subsubsection Arbitrary Supertype Method Invocation
+The aforementioned @code{__super} method satisfies invoking an overridden
+method within the context of the method that is overriding it, but falls
+short when needing to invoke an overridden method outside of that context.
+
+As an example, consider that @code{AngryDog} also implemented a
+@code{pokeWithDeliciousBone} method, in which case we want to bypass the
+dog's angry tendencies and fall back to behaving like a @code{LazyDog} (the
+supertype). This poses a problem, as we have overridden @code{LazyDog#poke},
+so calling @code{this.poke} would not yield the correct result (the dog
+would still respond angerly). @code{__super} cannot be used, because that
+would attempt to invoke a supermethod named
+@code{pokeWithDeliciousBone}; no such method even exists, so in this case,
+@code{__super} wouldn't even be defined.
+
+We can remedy this using @code{this.poke.super}, which is a strict reference
+to the overridden @code{poke} method (in this case, @code{LazyDog.poke}):
+
+@float Figure, f:arbitrary-super-method
+@verbatim
+    var AngryDog = Class( 'AngryDog' ).extend( LazyDog,
+    {
+        'public poke': function()
+        {
+            // ...
+        },
+
+        'public pokeWithDeliciousBone': function()
+        {
+            // invoke LazyDog.poke
+            this.poke.super.call( this );
+        }
+    } );
+
+    // poke a new AngryDog instance with a delicious bone
+    AngryDog().pokeWithDeliciousBone();
+
+    // Output:
+    // Woof!
+@end verbatim
+@caption{Using the method-supecific @code{super} reference}
+@end float
+
+It is important to note that, in its current implementation, since
+@code{super} is a reference to a function, its context must be provided
+using the ECMAScript-native @code{apply} or @code{call} (the first argument
+being the context); using @code{this} as the context (as shown above) will
+invoke the method within the context of the calling
+instance.@footnote{Specifically, it will invoke the method within the
+context of the calling instance's private visibility object (@pxref{The
+Visibility Object}). While this may seem like a bad idea---since it appears
+to give the supermethod access to our private state---note that the method
+wrapper for the overridden method will properly restore the private state of
+the @emph{supertype} upon invocation.}
+
+
 @node Type Checks and Polymorphism
 @subsection Type Checks and Polymorphism
 The fact that the API of the parent is inherited is a very important detail.
