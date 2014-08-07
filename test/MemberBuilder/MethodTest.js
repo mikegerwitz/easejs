@@ -78,7 +78,9 @@ require( 'common' ).testCase(
         var stubProxyFactory = this.require( 'MethodWrapperFactory' )(
              function()
              {
-                _self.proxyFactoryCall = arguments;
+                _self.proxyFactoryCall =
+                    Array.prototype.slice.call( arguments );
+
                 return _self.proxyReturnValue;
              }
         );
