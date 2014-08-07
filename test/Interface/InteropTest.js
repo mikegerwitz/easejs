@@ -23,7 +23,8 @@ require( 'common' ).testCase(
 {
     caseSetUp: function()
     {
-        this.Sut = this.require( 'interface' );
+        this.Sut   = this.require( 'interface' );
+        this.Class = this.require( 'class' );
 
         this.I = this.Sut(
         {
@@ -34,11 +35,13 @@ require( 'common' ).testCase(
         this.assertICompat = function( I, inst )
         {
             this.assertOk( I.isCompatible( inst ) );
+            this.assertOk( this.Sut.isInstanceOf( I, inst ) );
         };
 
         this.assertNotICompat = function( I, inst )
         {
             this.assertOk( !I.isCompatible( inst ) );
+            this.assertOk( !this.Sut.isInstanceOf( I, inst ) );
         };
     },
 
@@ -164,6 +167,43 @@ require( 'common' ).testCase(
             I   = this.Sut( { foo: [] } );
 
         this.assertICompat( I, obj );
+    },
+
+
+    /**
+     * When an object is instantiated from an ease.js class, it does not
+     * matter if the interface is compatible: in order to be considered an
+     * instance some interface I, the instance's type must implement I; in
+     * this sense, ease.js' interface typing is strict, allowing *intent* to
+     * be conveyed.
+     *
+     * An example of why this is important can be found in the
+     * interoperability section of the manual.
+     */
+    'Objects can be compatible but not instances of interface': function()
+    {
+        // same API, different interface objects
+        var Ia = this.Sut( { foo: [] } ),
+            Ib = this.Sut( { foo: [] } );
+
+        var dfn = { foo: function() {} },
+            Ca  = this.Class.implement( Ia ).extend( dfn ),
+            Cb  = this.Class.implement( Ib ).extend( dfn );
+
+        var ia = Ca(),
+            ib = Cb();
+
+        // clearly the two are compatible, regardless of their type
+        this.assertOk( Ia.isCompatible( ia ) );
+        this.assertOk( Ia.isCompatible( ib ) );
+        this.assertOk( Ib.isCompatible( ia ) );
+        this.assertOk( Ib.isCompatible( ib ) );
+
+        // but ia is *not* an instance of Ib, nor ib of Ia
+        this.assertOk( this.Sut.isInstanceOf( Ia, ia ) );
+        this.assertOk( !this.Sut.isInstanceOf( Ia, ib ) );
+        this.assertOk( this.Sut.isInstanceOf( Ib, ib ) );
+        this.assertOk( !this.Sut.isInstanceOf( Ib, ia ) );
     },
 } );
 
