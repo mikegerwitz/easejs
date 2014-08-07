@@ -30,6 +30,16 @@ require( 'common' ).testCase(
             foo: [ 'a', 'b' ],
             bar: [ 'a' ],
         } );
+
+        this.assertICompat = function( I, inst )
+        {
+            this.assertOk( I.isCompatible( inst ) );
+        };
+
+        this.assertNotICompat = function( I, inst )
+        {
+            this.assertOk( !I.isCompatible( inst ) );
+        };
     },
 
 
@@ -68,12 +78,14 @@ require( 'common' ).testCase(
             bar: function( a ) {},
         };
 
+        var p = new P();
+
         // instance should therefore be conforming
-        this.assertOk( this.I.isCompatible( new P() ) );
+        this.assertICompat( this.I, p );
 
         // ah but why stop there? (note that this implies that *any* object,
         // prototype or not, can conform to an interface)
-        this.assertOk( this.I.isCompatible( P.prototype ) );
+        this.assertICompat( this.I, P.prototype );
     },
 
 
@@ -89,8 +101,8 @@ require( 'common' ).testCase(
             foo: function( a, b ) {},
         };
 
-        this.assertOk( !( this.I.isCompatible( new P() ) ) );
-        this.assertOk( !( this.I.isCompatible( P.prototype ) ) );
+        this.assertNotICompat( this.I, new P() );
+        this.assertNotICompat( this.I, P.prototype );
     },
 
 
@@ -111,7 +123,7 @@ require( 'common' ).testCase(
         var obj = { foo: function( a ) {} },
             I   = this.Sut( { foo: [ 'a', 'b' ] } );
 
-        this.assertOk( !( I.isCompatible( obj ) ) );
+        this.assertNotICompat( I, obj );
     },
 
 
@@ -124,7 +136,7 @@ require( 'common' ).testCase(
         var obj = { foo: function( a, b, c ) {} },
             I   = this.Sut( { foo: [ 'a', 'b' ] } );
 
-        this.assertOk( I.isCompatible( obj ) );
+        this.assertICompat( I, obj );
     },
 
 
@@ -137,7 +149,7 @@ require( 'common' ).testCase(
         var obj = { foo: {} },
             I   = this.Sut( { foo: [] } );
 
-        this.assertOk( !( I.isCompatible( obj ) ) );
+        this.assertNotICompat( I, obj );
     },
 
 
@@ -151,7 +163,7 @@ require( 'common' ).testCase(
         var obj = { foo: function() {}, bar: function() {} },
             I   = this.Sut( { foo: [] } );
 
-        this.assertOk( I.isCompatible( obj ) );
+        this.assertICompat( I, obj );
     },
 } );
 
