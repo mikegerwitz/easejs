@@ -229,8 +229,9 @@ require( 'common' ).testCase(
         ;
 
         // we should be able to invoke the super method by override.super,
-        // which is added atop of the wrapper
-        this.assertStrictEqual( override.super(), expected );
+        // which is added atop of the wrapper (note that we quote it to avoid
+        // problems with ES3 engines)
+        this.assertStrictEqual( override['super'](), expected );
     },
 
 
