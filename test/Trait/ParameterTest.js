@@ -19,9 +19,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*** XXX __construct or __mixin first? __mixin with no parameters should
- * permit standard trait with initialization procedure ***/
-
 require( 'common' ).testCase(
 {
     caseSetUp: function()
