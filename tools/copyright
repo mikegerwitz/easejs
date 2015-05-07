@@ -53,7 +53,7 @@ shopt -s extglob || {
 # we will be updating all files that contain this line
 ident='This \(file\|document\) is part of \(the \)\?GNU ease.js'
 
-ignorepath='.git|build|webroot|node_modules'
+ignorepath='.|..|.git|build|webroot|node_modules'
 files=$( grep -rl "$ident" ../!($ignorepath) )
 
 (
