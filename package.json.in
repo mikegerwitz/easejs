@@ -31,16 +31,16 @@
   "keywords": [
       "classes",
       "classical",
-      "extend"
+      "extend",
       "gnu",
       "inheritance",
       "interfaces",
-      "mixins"
+      "mixins",
       "object oriented",
       "oo",
       "oop",
       "protected members",
       "traits",
-      "visibility",
+      "visibility"
   ]
 }
