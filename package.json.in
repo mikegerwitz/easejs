@@ -28,7 +28,7 @@
     "test": "make test"
   },
 
-  "tags": [
+  "keywords": [
       "object oriented",
       "oo",
       "oop",
