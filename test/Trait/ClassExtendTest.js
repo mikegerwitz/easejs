@@ -25,6 +25,18 @@ require( 'common' ).testCase(
     {
         this.Sut           = this.require( 'Trait' );
         this.Class         = this.require( 'class' );
+
+        // nonsensical extend bases
+        this.nonsense = [
+            '',
+            null,
+            undefined,
+            false,
+            NaN,
+            Infinity,
+            {},
+            [],
+        ];
     },
 
 
@@ -211,5 +223,40 @@ require( 'common' ).testCase(
             // extra argument
             _self.Sut.extend( _self.Class( {} ), {}, {} );
         } );
+    },
+
+
+    /**
+     * Help out the programmer by letting her know when she provides an
+     * invalid base, which would surely not give her the result that she
+     * expects.
+     */
+    '@each(nonsense) Traits cannot extend nonsense': function( base )
+    {
+        var _self = this;
+
+        this.assertThrows( function()
+        {
+            _self.Sut.extend( base, {} );
+        } );
+    },
+
+
+    /**
+     * Eventually, traits will be able to extend other traits just as they
+     * can classes---by asserting and operating on the type.  This is just a
+     * generalization that needs to be properly tested and allowed, and
+     * should not function any differently than a class.
+     *
+     * Don't worry; it'll happen in the future.
+     */
+    'Traits cannot yet extend other traits': function()
+    {
+        var _self = this;
+
+        this.assertThrows( function()
+        {
+            _self.Sut.extend( _self.Sut( {} ), {} );
+        }, TypeError );
     },
 } );
