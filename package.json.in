@@ -28,14 +28,19 @@
     "test": "make test"
   },
 
-  "tags": [
+  "keywords": [
+      "classes",
+      "classical",
+      "extend"
+      "gnu",
+      "inheritance",
+      "interfaces",
+      "mixins"
       "object oriented",
       "oo",
       "oop",
-      "classes",
-      "classical",
-      "interfaces",
       "protected members",
-      "inheritance"
+      "traits",
+      "visibility",
   ]
 }
