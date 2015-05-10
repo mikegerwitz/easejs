@@ -27,6 +27,9 @@
  * It is this very important (and powerful) system that allows traits to be
  * used as stackable modifications, similar to how one would use the
  * decorator pattern (but more tightly coupled).
+ *
+ * See also ClassExtendTest, which is related in that it can too define
+ * virtual methods.
  */
 
 require( 'common' ).testCase(
