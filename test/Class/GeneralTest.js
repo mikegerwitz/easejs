@@ -24,7 +24,8 @@ require( 'common' ).testCase(
 {
     setUp: function()
     {
-        this.Sut = this.require( 'class' );
+        this.Sut          = this.require( 'class' );
+        this.ClassBuilder = this.require( 'ClassBuilder' );
 
         this.Foo = this.Sut.extend(
         {
@@ -246,6 +247,21 @@ require( 'common' ).testCase(
             inst.isInstanceOf,
             inst.isA
         );
+    },
+
+
+    /**
+     * There are cases---intended for internal use---where it is beneficial
+     * for an object to be treated as though it were actually a class.
+     */
+    'Any object may masquerade as a class': function()
+    {
+        var obj = {};
+
+        // XXX: tightly coupled logic here; refactor things
+        this.ClassBuilder.masquerade( obj );
+
+        this.assertOk( this.Sut.isClass( obj ) );
     },
 
 
