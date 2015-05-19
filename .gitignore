@@ -1,4 +1,6 @@
-node_modules
-webroot
-tools/compiler.jar
-build/
+/node_modules
+/webroot
+/tools/compiler.jar
+/build
+/.release-*.html
+

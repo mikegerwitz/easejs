@@ -34,7 +34,7 @@ output_html := $(addprefix $(outdir)/, $(input_html))
 output_images := $(addprefix $(outdir)/, $(input_images))
 output_scripts := $(addprefix $(outdir)/, $(input_scripts))
 
-.PHONY: default clean news publish
+.PHONY: default clean news publish FORCE
 
 default: $(outdir) $(output_html) $(output_images) \
          $(output_scripts) $(outdir)/style.css $(outdir)/fonts
@@ -54,6 +54,8 @@ $(outdir)/images/%.png: images/%.png | $(outdir)
 $(outdir)/fonts: fonts
 	mkdir -p "$@" && cp $</*.woff "$@"
 
+$(outdir)/download.html: .release-current.html
+$(outdir)/release-notes.html: .release-all.html
 $(outdir)/%.html: %.html $(header) $(footer) tools/page-parse | $(outdir)
 	cat $(header) \
 		| sed 's/\(<body\)/\1 class="$*"/' \
@@ -61,6 +63,12 @@ $(outdir)/%.html: %.html $(header) $(footer) tools/page-parse | $(outdir)
 		| sed 's/^ \+//;s/^ *#//;' \
 		| tools/page-parse \
 		> $@
+
+.release-current.html: FORCE
+	./tools/release-notes 1 > $@
+
+.release-all.html: FORCE
+	./tools/release-notes > $@
 
 # requires git-weblog from mikegerwitz's git-supp package
 news:
@@ -81,3 +89,5 @@ publish: | default
 
 clean:
 	${RM} -r webroot doc-cp
+
+FORCE:

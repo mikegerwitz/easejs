@@ -1,0 +1,40 @@
+#!/bin/bash
+
+release-tags() {
+  local -i limit="$1"
+
+  git tag -l '[0-9]*' \
+    | tac \
+    | { test $limit -gt 0 \
+          && head -n$limit \
+          || cat; }
+}
+
+tag-subject() {
+  local tag="${1?Missing tag}"
+
+  git tag -n1 -l "$tag" \
+    | sed 's/ \+/: /'
+}
+
+tag-body() {
+  local tag="${1?Missing tag}"
+
+  git cat-file tag "$tag" \
+    | awk '/^-----BEGIN PGP SIGNATURE-----$/ { exit; }
+           nl>=2 { print; next; }
+           /^$/ { nl++; }' \
+    | sed 's/&/\&amp\;/g
+           s/</\&lt\;/g;
+           s/>/\&gt\;/g;'
+}
+
+# optional limit
+declare -i limit="$1"
+
+for t in $( release-tags "$limit" ); do
+  cat <<EOF
+<h4>$( tag-subject "$t" )</h4>
+<pre>$( tag-body "$t" )</pre>
+EOF
+done
