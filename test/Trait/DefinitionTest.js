@@ -455,4 +455,24 @@ require( 'common' ).testCase(
             Sut( dfn );
         } );
     },
+
+
+    /**
+     * The stating object rendered by `#use` calls implement the same
+     * methods as classes, and are even treated as classes when invoked
+     * using the immediate syntax (see ImmediateTest).  When defining
+     * abstract classes, staging objects may be extended as if they were
+     * classes (see AbstractTest).
+     *
+     * It makes sense for staging objects to be able to be treated as if
+     * they were classes, which demands reflection API consistency.
+     */
+    'Staging object for eventual mixin is considered to be class': function()
+    {
+        var T = this.Sut( {} );
+
+        this.assertOk(
+            this.Class.isClass( this.Class( {} ).use( T ) )
+        );
+    },
 } );

@@ -78,11 +78,5 @@ complete.
   improvement.  Until that time, be mindful of the performance test
   cases in the =test/perf= directory.
 
-* TODO Intermediate object as class
-  The immediate syntax---=Foo.use(T)()=---is a short-hand equivalent
-  of =Foo.use(T).extend({})()=. As such, for consistency, =Class.isA=
-  should consider the intermediate object returned by a call to =use=
-  to be a class.
-
   If we are to do so, though, we must make sure that the entire class
   API is supported.
