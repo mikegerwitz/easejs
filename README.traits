@@ -12,12 +12,11 @@ complete.
 
 
 * TODO Trait Extending
-  Currently, the only way for a trait to override methods of a class
-  it is being mixed into is to implement a common interface.  Traits
-  should alternatively be able to "extend" classes, which will have
-  effects similar to Scala in that the trait can only be mixed into
-  that class.  Further, traits should be able to extend and mix in
-  other traits (though such should be done conservatively).
+  Traits are able to "extend" classes, thereby declaring interface
+  compatability; this is a useful alternative to interfaces when a trait is
+  designed to augment a specific type.  This convenience should be extended
+  to traits: a trait should be able to "extend" another trait in the same
+  manner that it may extend a class.
 
 * TODO Documentation
   Due to the trait implementation taking longer than expected to
@@ -77,12 +76,6 @@ complete.
   for most users' uses, there is plenty of room for
   improvement.  Until that time, be mindful of the performance test
   cases in the =test/perf= directory.
-
-* TODO Intermediate object as class
-  The immediate syntax---=Foo.use(T)()=---is a short-hand equivalent
-  of =Foo.use(T).extend({})()=. As such, for consistency, =Class.isA=
-  should consider the intermediate object returned by a call to =use=
-  to be a class.
 
   If we are to do so, though, we must make sure that the entire class
   API is supported.

@@ -1,7 +1,7 @@
 /**
  * Tests abstract trait definition and use
  *
- *  Copyright (C) 2014 Free Software Foundation, Inc.
+ *  Copyright (C) 2015 Free Software Foundation, Inc.
  *
  *  This file is part of GNU ease.js.
  *
@@ -359,5 +359,71 @@ require( 'common' ).testCase(
         {
             _self.Class.use( Ta ).extend();
         } );
+    },
+
+
+    /**
+     * Before traits, the only way to make an abstract class concrete, or
+     * vice versa, was by extending.  Now, however, a mixing in a trait can
+     * introduce abstract or concrete methods.  This poses a problem, since
+     * the syntax for providing self-documenting AbstractClass definitions
+     * no longer works: invoking `AbstractClass.use' produces different
+     * results than invoking `SomeAbstractClass.use', with the goal of
+     * extending it.
+     *
+     * Consider this issue: we wish to mix some trait T into abstract class
+     * AC.  Trait T does not provide a concrete implementation of the
+     * abstract methods in AT, and so the resulting class after the final
+     * `#extend' call would be abstract.
+     *
+     * We have no choice but to allow extending the intermediate object
+     * produced by a class's `#use' method; otherwise, any call to `#extend'
+     * on the intermediate object would result in an error, because the
+     * class would still have abstract members, but has not been declared to
+     * be abstract.  Handling abstract classes in this manner would be
+     * consistent with all other scenarios, and would be transparent: why
+     * should the user care that there is some odd intermediate object being
+     * used rather than an actual class?
+     */
+    'Abstract classes can be derived from intermediates': function()
+    {
+        var chk = [{}];
+
+        var AC = this.AbstractClass( { 'abstract foo': [] } ),
+            T  = this.Sut( { moo: function() { return chk; } } );
+
+        // mix trait into an abstract class
+        var M = this.AbstractClass.extend(
+            AC.use( T ),
+            {}
+        );
+
+        this.assertOk( this.Class.isClass( M ) );
+        this.assertOk( M.isAbstract() );
+
+        var inst = M.extend( { foo: function() {} } )();
+
+        // we should not have lost the original abstract class
+        this.assertOk(
+            this.Class.isA( AC, inst )
+        );
+
+        // not strictly necessary; comfort/sanity check: if this succeeds
+        // but the next fails, then there's a problem marking the
+        // implemented types
+        this.assertStrictEqual(
+            chk,
+            inst.moo()
+        );
+
+        // the trait should have been applied (see above note if this
+        // fails); if this does fail, note that, without
+        // AbstractClass.extend, we have (correctly):
+        // isA( T, AC.use( T ).extend( ... )() )
+        this.assertOk(
+            this.Class.isA( T, inst ),
+            'Instance is not recognized as having mixed in type T, but ' +
+                'incorporates its definition; metadata bug?'
+        );
     },
 } );
