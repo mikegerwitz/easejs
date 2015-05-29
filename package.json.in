@@ -2,7 +2,7 @@
   "name":        "easejs",
   "description": "A Classical Object-Oriented Framework for JavaScript",
   "version":     "@VERSION@",
-  "author":      "Mike Gerwitz <mike@mikegerwitz.com> (http://mikegerwitz.com)",
+  "author":      "Mike Gerwitz <mtg@gnu.org> (http://mikegerwitz.com)",
   "homepage":    "https://www.gnu.org/software/easejs/",
 
   "repository": {
