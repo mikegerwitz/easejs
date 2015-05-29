@@ -10,10 +10,6 @@
     "url":  "http://git.savannah.gnu.org/r/easejs.git/"
   },
 
-  "engines": {
-    "node": ">0.0.0"
-  },
-
   "dependencies": {},
   "devDependencies": {},
 
