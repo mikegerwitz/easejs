@@ -19,10 +19,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-exports.Class         = require( __dirname + '/lib/class' );
-exports.AbstractClass = require( __dirname + '/lib/class_abstract' );
-exports.FinalClass    = require( __dirname + '/lib/class_final' );
-exports.Interface     = require( __dirname + '/lib/interface' );
-exports.Trait         = require( __dirname + '/lib/Trait' );
-exports.version       = require( __dirname + '/lib/version' );
+exports.Class         = require( './lib/class' );
+exports.AbstractClass = require( './lib/class_abstract' );
+exports.FinalClass    = require( './lib/class_final' );
+exports.Interface     = require( './lib/interface' );
+exports.Trait         = require( './lib/Trait' );
+exports.version       = require( './lib/version' );
 
