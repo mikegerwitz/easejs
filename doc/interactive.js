@@ -23,63 +23,39 @@
  * in this page.
  */
 
-var head       = document.getElementsByTagName( 'head' )[ 0 ],
-    sjquery    = document.createElement( 'script' ),
-    sjquery_ui = document.createElement( 'script' ),
-    css        = document.createElement( 'link' );
-
-sjquery.type = sjquery_ui.type = 'text/javascript';
+var head = document.getElementsByTagName( 'head' )[ 0 ],
+    css  = document.createElement( 'link' );
 
 css.type = 'text/css';
 css.rel  = 'stylesheet';
 
-sjquery.src  =
-    'https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js';
+// quick-n-dirty sub and super script impl (it is by no means
+// perfect)
+var vars = document.getElementsByTagName( 'var' ),
+    chk  = /\\/;
 
-head.appendChild( sjquery );
-
-// will call callback when jQuery has been loaded
-function jqueryCheck( callback )
+for ( var i in vars )
 {
-    if ( typeof $ === 'undefined' )
-    {
-        // check again in 50ms
-        setTimeout( function()
-        {
-            jqueryCheck( callback );
-        }, 50 );
+    var v = vars[ i ];
 
-        return;
+    if ( !chk.test( v.innerHTML ) )
+    {
+        continue;
     }
 
-    callback();
+    v.innerHTML = v.innerHTML
+        .replace( /(\\.*)$/, '<div>$1</div>' )
+        .replace( /\\_([^ \\]+)/, '<sub>$1</sub>' )
+        .replace( /\\\^([^ \\]+)/, '<sup>$1</sup>' )
+        .replace( /(<\/su[bp]><su[bp])>/, '$1 class="left">' );
 }
 
-jqueryCheck( function()
+var hlnodes = document.querySelectorAll(
+    '.verbatim, .samp, .code, .example'
+);
+
+// highlight code blocks
+for ( var i in hlnodes )
 {
-    $( document ).ready( function()
-    {
-        // syntax highlighting for code samples
-        $( '.verbatim, .samp, .code, .example' ).each(
-            function( i, element )
-            {
-                hljs.highlightBlock( element, '    ' );
-            }
-        );
-
-        // quick-n-dirty sub and super script impl (it is by no means
-        // perfect)
-        $( 'var:contains("\\")' ).each( function()
-        {
-            var $this = $( this );
-
-            $this.html(
-                $this.html().replace( /(\\.*)$/, '<div>$1</div>' )
-                .replace( /\\_([^ \\]+)/, '<sub>$1</sub>' )
-                .replace( /\\\^([^ \\]+)/, '<sup>$1</sup>' )
-                .replace( /(<\/su[bp]><su[bp])>/, '$1 class="left">' )
-            );
-        } );
-    } );
-} );
-
+    hljs.highlightBlock( hlnodes[ i ], '    ' );
+}
