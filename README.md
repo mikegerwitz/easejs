@@ -1,5 +1,5 @@
 <!--
-  Copyright (C) 2010, 2011, 2013, 2014 Free Software Foundation, Inc.
+  Copyright (C) 2010, 2011, 2013, 2014, 2015 Free Software Foundation, Inc.
 
   This file is part of GNU ease.js.
 
@@ -55,6 +55,10 @@ can be applied to different problem domains in order to achieve results that
 are more natural or intuitive to developers; GNU ease.js works seamlessly
 with existing prototypes, allowing the developer to choose whether or not
 they want to use "classes".
+
+
+## Building and Installation
+See [INSTALL](./INSTALL).
 
 
 ## License

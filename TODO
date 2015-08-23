@@ -1,6 +1,29 @@
 # -*-org-*-
-# TITLE: GNU ease.js Traits
+# TITLE: GNU ease.js TODOs
 
+TODO tasks can be found in the bug tracker at
+http://easejs.org/bugs. Below is a list of the glaring issues that may
+be found at first glance.
+
+* TODO Coupling
+  During the beginning of the project, all modules were represented as
+  object literals, which is similar to the concept of a
+  Singleton.  This satisfied the needs of the early project, but it
+  soon evolved far past its original design and resulted in a tightly
+  coupled system that was difficult to maintain, add to and
+  test.  Refactoring into prototypes is ongoing.
+
+* TODO Performance tests
+  Performance tests need to be written for every aspect of the
+  system.  They will ultimately be graphed to show the relative
+  performance across versions of the software.
+
+* TODO Closure compiler warnings
+  Certain warnings are suppressed.  Figure out the best way to resolve
+  them without suppressing them, unless suppression is truely the best
+  option.
+
+* Traits [0/8]
 The trait implementation is not yet complete; this is the list of known
 issues/TODOs.  If you discover any problems, please send an e-mail to
 bug-easejs@gnu.org.
@@ -11,14 +34,14 @@ information and a plethora of examples until the documentation is
 complete.
 
 
-* TODO Trait Extending
+** TODO Trait Extending
   Traits are able to "extend" classes, thereby declaring interface
   compatability; this is a useful alternative to interfaces when a trait is
   designed to augment a specific type.  This convenience should be extended
   to traits: a trait should be able to "extend" another trait in the same
   manner that it may extend a class.
 
-* TODO Documentation
+** TODO Documentation
   Due to the trait implementation taking longer than expected to
   complete, and the importance of the first GNU release, trait
   documentation is not yet complete.  Instead, traits have been
@@ -28,18 +51,18 @@ complete.
   Comprehensive documentation, including implementation details and
   rationale, will be available shortly.
 
-* TODO Static members
+** TODO Static members
   Static members are currently unsupported.  There is no particular
   difficulty in implementing them---the author didn't want it to hold
   up an initial release (the first GNU release) even further.
 
-* TODO Getters/setters
+** TODO Getters/setters
   Getters and setters, although they act like properties, should be
   treated as though they are methods.  Further, they do not suffer
   from the same complications as properties, because they are only
   available in an ES5 environment (as an ECMAScript language feature).
 
-* TODO Mixin Caching
+** TODO Mixin Caching
   The pattern =Type.use(...)(...)=---that is, mix a trait into a class
   and immediate instantiate the result---is a common idiom that can
   often be better for self-documentation than storing the resulting
@@ -51,7 +74,7 @@ complete.
   fairly cheap to use such an idiom.  Further, this would permit the
   Scala-like ability to use Type.use in Class.isA checks.
 
-* TODO Public/Protected Property Support
+** TODO Public/Protected Property Support
   Private properties are currently supported on traits because they do
   not affect the API of the type they are mixed into.  However, due to
   limitations of pre-ES5 environments, implementing public and
@@ -63,14 +86,14 @@ complete.
   encapsulate all data, not expose it---but it does have its
   legitimate uses.  As such, this is not a high-priority item.
 
-* TODO Trait-specific error messages
+** TODO Trait-specific error messages
   All error messages resulting from traits should refer to the trait
   by name and any problem members by name, and should offer
   context-specific suggestions for resolution.  Currently, the errors
   may be more general and may reflect the internal construction of
   traits, which will be rather confusing to users.
 
-* TODO Performance enhancements
+** TODO Performance enhancements
   The current trait implementation works well, but is relatively slow
   (compared to how performant it could be).  While this is sufficient
   for most users' uses, there is plenty of room for
