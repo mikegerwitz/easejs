@@ -78,7 +78,7 @@ news:
 		> "$(outdir)/news.html"
 
 # documentation, styled to match the rest of the website
-webdoc:
+webdoc: default
 	./tools/webdoc
 
 # publish webroot to remote server using rsync (do not delete files, since we
