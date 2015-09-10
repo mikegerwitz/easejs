@@ -1,7 +1,7 @@
 /**
  * Tests index.js
  *
- *  Copyright (C) 2014 Free Software Foundation, Inc.
+ *  Copyright (C) 2014, 2015 Free Software Foundation, Inc.
  *
  *  This file is part of GNU ease.js.
  *
@@ -62,5 +62,28 @@ require( 'common' ).testCase(
     'Version information is exported as `version\'': function()
     {
         this.exportedAs( 'version', 'version' );
+    },
+
+
+    /**
+     * Since ECMAScript 6 introduces the ability to define prototypes using
+     * the `class` keyword and some syntatic sugar, it is awkward to use the
+     * traditional ease.js class abstraction with it.  Instead, if a user
+     * wishes to wrap a prototype defined in this manner (to take advantage
+     * of ease.js' features), it would be more appropriate to make it look
+     * like we're doing just that.
+     *
+     * This is a shorthand for Class.extend( proto, {} ).
+     */
+    'Invoking is equivalent to extending with empty definition': function()
+    {
+        var proto  = function() {},
+            result = this.Sut( proto );
+
+        this.assertOk( this.Sut.Class.isClass( result ) );
+
+        // this is not a comprehensive test (once we add reflection of some
+        // sort, verify that nothing is added to the prototype)
+        this.assertOk( this.Sut.Class.isA( proto, result() ) );
     },
 } );
