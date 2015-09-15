@@ -1,7 +1,7 @@
 /**
  * Tests class module constructor creation
  *
- *  Copyright (C) 2014 Free Software Foundation, Inc.
+ *  Copyright (C) 2014, 2015 Free Software Foundation, Inc.
  *
  *  This file is part of GNU ease.js.
  *
@@ -21,6 +21,24 @@
 
 require( 'common' ).testCase(
 {
+    caseSetUp: function()
+    {
+        // ease.js was written long before ES6 drafts began providing class
+        // support.  Now that they do, we should support their constructor
+        // decision as well as our own.
+        this.ctors = [ '__construct', 'constructor' ];
+
+        // we only use ES3 features, thus this
+        this.mkctor = function( name, f )
+        {
+            var o = {};
+            o[ name ] = f;
+
+            return o;
+        };
+    },
+
+
     setUp: function()
     {
         this.Sut = this.require( 'class' );
@@ -32,10 +50,15 @@ require( 'common' ).testCase(
      * defining the class. (Note that the case of ensuring that it is not
      * called when creating a subtype is handled by the ExtendTest case.)
      */
-    'Constructor should not be invoked before instantiation': function()
+    '@each(ctors) Should not be invoked before instantiation':
+    function( name )
     {
-        var called = false;
-        this.Sut.extend( { __construct: function() { called = true; } } );
+        var called = false,
+            dfn    = {};
+
+        this.Sut.extend(
+            this.mkctor( name, function() { called = true; } )
+        );
 
         this.assertNotEqual( called, true );
     },
@@ -47,14 +70,14 @@ require( 'common' ).testCase(
      * is instantiated. Further, it should only be called a single time,
      * which is particularly important if it produces side-effects.
      */
-    'Constructor should be invoked once upon instantiation': function()
+    '@each(ctors) Should be invoked once upon instantiation':
+    function( name )
     {
         var called = 0;
 
         var Foo = this.Sut.extend(
-        {
-            __construct: function() { called++; }
-        } );
+            this.mkctor( name, function() { called++; } )
+        );
 
         // note that we're not yet testing the more consise new-less
         // invocation style
@@ -67,16 +90,19 @@ require( 'common' ).testCase(
      * Once invoked, the __construct method should be bound to the newly
      * created instance.
      */
-    'Constructor should be invoked within context of new instance':
-    function()
+    '@each(ctors) Should be invoked within context of new instance':
+    function( name )
     {
         var expected = Math.random();
 
-        var Foo = this.Sut.extend(
-            {
-                val: null,
-                __construct: function() { this.val = expected; }
-            } );
+        var dfn = this.mkctor( name, function()
+        {
+            this.val = expected;
+        } );
+
+        dfn.val = null;
+
+        var Foo = this.Sut.extend( dfn );
 
         // if `this' was bound to the instance, then __construct should set
         // VAL to EXPECTED
@@ -90,19 +116,18 @@ require( 'common' ).testCase(
      * ``class'') should be passed to __construct, unchanged and
      * uncopied---that is, references should be retained.
      */
-    'Constructor arguments should be passed unchanged to __construct':
-    function()
+    '@each(ctors) Arguments should be passed unchanged to __construct':
+    function( name )
     {
         var args  = [ "foo", { bar: 'baz' }, [ 'moo', 'cow' ] ],
             given = null;
 
         var Foo = this.Sut.extend(
-        {
-            __construct: function()
+            this.mkctor( name, function()
             {
                 given = Array.prototype.slice.call( arguments, 0 );
-            }
-        } );
+            } )
+        );
 
         new Foo( args[ 0 ], args[ 1 ], args[ 2 ] );
 
@@ -125,15 +150,16 @@ require( 'common' ).testCase(
      * the name __construct---is modelled after PHP; Java classes, for
      * instance, do not inherit their parents' constructors.
      */
-    'Parent constructor should be invoked for subtype if not overridden':
-    function()
+    '@each(ctors)Parent constructor invoked for subtype if not overridden':
+    function( name )
     {
         var called = false;
 
-        var Sub = this.Sut.extend(
-        {
-            __construct: function() { called = true; }
-        } ).extend( {} );
+        var dfn = {};
+        dfn[ name ] = function() { called = true; };
+
+        var Sub = this.Sut.extend( dfn )
+            .extend( {} );
 
         new Sub();
         this.assertOk( called );
@@ -172,18 +198,22 @@ require( 'common' ).testCase(
      * __construct, since public is the default and there is no other
      * option.)
      */
-    '__construct must be public': function()
+    '@each(ctors) Constructor must be public': function( name )
     {
         var Sut = this.Sut;
 
         this.assertThrows( function()
         {
-            Sut( { 'protected __construct': function() {} } );
+            var dfn = {};
+            dfn[ 'protected ' + name ] = function() {};
+            Sut( dfn );
         }, TypeError, "Constructor should not be able to be protected" );
 
         this.assertThrows( function()
         {
-            Sut( { 'private __construct': function() {} } );
+            var dfn = {};
+            dfn[ 'private ' + name ] = function() {};
+            Sut( dfn );
         }, TypeError, "Constructor should not be able to be private" );
     },
 

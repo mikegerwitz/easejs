@@ -1,7 +1,7 @@
 /**
  * Tests class builder member restrictions
  *
- *  Copyright (C) 2014 Free Software Foundation, Inc.
+ *  Copyright (C) 2014, 2015 Free Software Foundation, Inc.
  *
  *  This file is part of GNU ease.js.
  *
@@ -88,7 +88,7 @@ require( 'common' ).testCase(
      */
     'Proper members are reserved': function()
     {
-        var chk      = [ '__initProps', 'constructor' ],
+        var chk      = [ '__initProps' ],
             i        = chk.length,
             reserved = this.Sut.getReservedMembers();
 
