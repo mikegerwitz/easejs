@@ -230,4 +230,35 @@ require( 'common' ).testCase(
         var Foo = this.Sut.extend( {} );
         this.assertStrictEqual( Foo().constructor, Foo );
     },
+
+
+    /**
+     * We support multiple constructor styles; only one may be provided.
+     *
+     * This error should happen as a consequence of other method checks that
+     * prohibit redefinitions.
+     */
+    'Cannot provide multiple constructor styles': function()
+    {
+        var Sut = this.Sut,
+            len = this.ctors.length;
+
+        // this will not test every permutation, but will hopefully be a
+        // reasonable test in the event that any additional constructors are
+        // added in the future (we start at 1 because it'll wrap modulo LEN)
+        for ( var i = 1; i < len; i++ )
+        {
+            var dfn = {},
+                a   = this.ctors[ i ],
+                b   = this.ctors[ ( i + 1 ) % len ];
+
+            dfn[ a ] = function() {};
+            dfn[ b ] = function() {};
+
+            this.assertThrows( function()
+            {
+                Sut( dfn );
+            }, Error, "Multiple constructors should not be permitted" );
+        }
+    },
 } );
