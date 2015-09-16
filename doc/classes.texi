@@ -323,17 +323,22 @@ class is causing the issue.
 
 @node Constructors
 @subsection Constructors
-In JavaScript, we are used to functions themselves being a constructor
-because only constructors can be instantiated. With ease.js, constructors
-are handled in a manner similar to most other languages, by providing a
-separate method. The implementation ease.js chose is very similar to that of
-PHP's (@pxref{Constructor Implementation}).
+A ``constructor'' in JavaScript is simply a function---whether or not
+it actually constructs a new object depends on whether the @code{tt}
+keyword is used.  With ease.js, constructors are handled in a manner
+similar to most other languages: by providing a separate method.
+
+Until the release of ECMAScript@tie{}6, which introduced the @code{class}
+keyword, there was no convention for constructors defined in this
+manner.  The implementation ease.js chose is very similar to that of
+PHP's (@pxref{Constructor Implementation}):
 
 @float Figure, f:constructor
 @verbatim
     var Foo = Class( 'Foo',
     {
-        'public __construct': function( name )
+        // may also use `construct`; see below
+        __construct: function( name )
         {
             console.log( 'Hello, ' + name + '!' );
         }
@@ -346,6 +351,31 @@ PHP's (@pxref{Constructor Implementation}).
     // Hello, World!
 @end verbatim
 @caption{Declaring constructors using ease.js}
+@end float
+
+ease.js introduced the @code{constructor} method in version@tie{}0.2.7
+to match the ES6 ``class'' implementation; it is an alias for
+@code{__construct}.  This method name may be used prior to ES6.
+
+@float Figure, f:constructor-es6
+@verbatim
+    // ECMAScript 6 syntax
+    let Foo = Class( 'Foo',
+    {
+        // you may still use __construct
+        constructor( name )
+        {
+            console.log( 'Hello, ' + name + '!' );
+        }
+    } );
+
+    // instantiate the class, invoking the constructor
+    Foo( 'World' );
+
+    // Output:
+    // Hello, World!
+@end verbatim
+@caption{Declaring constructors in an ECMAScript 6 style}
 @end float
 
 When the class is instantiated, the constructor is invoked, permitting you
@@ -1148,7 +1178,7 @@ Therefore, we will use a static property of class @var{BigBang}.
          *
          * @return  {undefined}
          */
-        'public __construct': function( type, data )
+        __construct: function( type, data )
         {
             this._type = type;
 
@@ -1313,7 +1343,7 @@ mounts from @file{/etc/fstab}:
         'private _mountPoints': [],
 
 
-        'public __construct': function()
+        __construct: function()
         {
             var data = fs.readFileSync( this.$('_PATH') );
             this._parseMountPoints( data );
