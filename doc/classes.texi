@@ -1178,7 +1178,7 @@ Therefore, we will use a static property of class @var{BigBang}.
          *
          * @return  {undefined}
          */
-        'public __construct': function( type, data )
+        __construct: function( type, data )
         {
             this._type = type;
 
@@ -1343,7 +1343,7 @@ mounts from @file{/etc/fstab}:
         'private _mountPoints': [],
 
 
-        'public __construct': function()
+        __construct: function()
         {
             var data = fs.readFileSync( this.$('_PATH') );
             this._parseMountPoints( data );
