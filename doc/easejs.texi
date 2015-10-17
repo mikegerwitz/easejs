@@ -8,12 +8,12 @@
 @c    A copy of the license is included in the section entitled ``GNU Free
 @c    Documentation License''.
 
+@include version.texi
+
 @c %**start of header
 @setfilename easejs.info
 @settitle GNU ease.js Manual v@value{VERSION}
 @c %**end of header
-
-@include version.texi
 
 @copying
 This manual is for GNU ease.js, version @value{VERSION}.

@@ -555,14 +555,14 @@ One of the following conditions must always be true:
   @ref{Member Keywords,,@code{override}} keyword.
   @itemize
     @item
-    Note that @var{dfn\_n\^C'} will not become @ref{Member
-    Keywords,,@code{virtual}} by default (unlike languages such as C++);
-    they must be explicitly declared as such.
+    Note that @var{dfn\_n\^C'} will not become @ref{Member Keywords,,@code{virtual}}
+    by default (unlike languages such as C++); they must be explicitly
+    declared as such.
   @end itemize
   @item
-  @var{dfn\_n\^C} is declared with the @ref{Member
-  Keywords,,@code{abstract}} keyword and @var{dfn\_n\^C'} omits the
-  @ref{Member Keywords,,@code{override}} keywords.
+  @var{dfn\_n\^C} is declared with the @ref{Member Keywords,,@code{abstract}}
+  keyword and @var{dfn\_n\^C'} omits the @ref{Member Keywords,,@code{override}}
+  keywords.
   @end itemize
 @item
 The argument count of method @var{dfn\_n\^C'} must be >= the argument count
@@ -583,8 +583,8 @@ A method is said to be @dfn{concrete} when it provides a definition and
   Any method @var{n} such that @var{dfn\_n\^C} is declared @code{abstract}
   may be overridden by a concrete or abstract method @var{dfn\_n\^C'}.
   @item
-  A method @var{n} may @emph{not} be declared @ref{Member
-  Keywords,,@code{abstract}} if @var{dfn\_n\^C} is concrete.
+  A method @var{n} may @emph{not} be declared
+  @ref{Member Keywords,,@code{abstract}} if @var{dfn\_n\^C} is concrete.
 @end itemize
 @item
 Member @var{dfn\_n\^C'} must be a method.
