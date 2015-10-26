@@ -276,4 +276,282 @@ require( 'common' ).testCase(
             _self.Sut.extend( _self.FinalClass( {} ), {} );
         }, TypeError );
     },
+
+
+    /**
+     * When extending a class C with a concrete implementation for some
+     * method M, we should be able to override C#M as T#M and have C#M
+     * recognized as its super method.  Just as you would expect when
+     * subtyping using classes.
+     */
+    'Traits can override public virtual super methods': function()
+    {
+        var super_val = {};
+
+        var C = this.Class(
+        {
+            'virtual foo': function()
+            {
+                return super_val;
+            }
+        } );
+
+        var T = this.Sut.extend( C,
+        {
+            'override foo': function()
+            {
+                return { sval: this.__super() };
+            }
+        } );
+
+        this.assertStrictEqual(
+            C.use( T )().foo().sval,
+            super_val
+        );
+    },
+
+
+    /**
+     * Unlike implementing interfaces---which define only public
+     * APIs---class can also provide protected methods.  The ability to
+     * override protected methods is important, since it allows modifying
+     * internal state.  This can be used in place of a Strategy, for
+     * example.
+     *
+     * This otherwise does not differ at all from the public test above.
+     */
+    'Traits can override protected virtual super methods': function()
+    {
+        var super_val = {};
+
+        var C = this.Class(
+        {
+            'virtual protected foo': function()
+            {
+                return super_val;
+            },
+
+            getFoo: function()
+            {
+                return this.foo();
+            },
+        } );
+
+        var T = this.Sut.extend( C,
+        {
+            'override protected foo': function()
+            {
+                return { sval: this.__super() };
+            },
+        } );
+
+        this.assertStrictEqual(
+            C.use( T )().getFoo().sval,
+            super_val
+        );
+    },
+
+
+    /**
+     * When providing a concrete definition for some abstract method A on
+     * interface I, traits must use the `abstract override` keyword, because
+     * we cannot know what type of object we will be mixed into---the class
+     * could have a concrete implementation, or it may not.
+     *
+     * This is not the case when extending a class directly.  We should
+     * therefore expect that we can provide a concrete definition in the
+     * same way we would when subclassing---without any special keywords.
+     *
+     * Note that we do _not_ have a test to define what happens when
+     * `abstract override` _is_ used in this scenario; this was
+     * intentionally left undefined, and may or may not be given proper
+     * attention in the future.  Don't do it.
+     */
+    'Traits can provide concrete definition for abstract method': function()
+    {
+        var expected = {};
+
+        var C = this.AbstractClass(
+        {
+            foo: function()
+            {
+                return this.concrete();
+            },
+
+            'abstract concrete': [],
+        } );
+
+        var T = this.Sut.extend( C,
+        {
+            concrete: function()
+            {
+                return expected;
+            },
+        } );
+
+        this.assertStrictEqual(
+            C.use( T )().foo(),
+            expected
+        );
+    },
+
+
+    /**
+     * The stackable property of traits should be preserved under all
+     * circumstances (so long as override is virtual).  This is different
+     * than subtyping with classes, which would always invoke the
+     * supertype's method as the super method.
+     *
+     * Note the use of `abstract override` here---this is needed for the
+     * same reason that it is needed for traits that implement interfaces
+     * and want to override concrete methods of a class that it is being
+     * mixed into.  The test that follows this one will demonstrate the
+     * behavior when a normal `override` is used.
+     *
+     * See the linearization tests for more information.
+     */
+    'Trait class method abstract overrides can be stacked': function()
+    {
+        var C = this.Class(
+        {
+            'virtual foo': function()
+            {
+                return 1;
+            },
+        } );
+
+        var T1 = this.Sut.extend( C,
+        {
+            'virtual abstract override foo': function()
+            {
+                return 3 + this.__super();
+            },
+        } );
+
+        var T2 = this.Sut.extend( C,
+        {
+            'virtual abstract override foo': function()
+            {
+                return 13 + this.__super();
+            },
+        } );
+
+        this.assertEqual(
+            20,
+            C.use( T1 )
+                .use( T1 )
+                .use( T2 )
+                ().foo()
+        );
+    },
+
+
+    /**
+     * This test is in the exact same format as the above in order to
+     * illustrate the important distinction between the two concepts.
+     *
+     * This can be confusing---and frustrating to users of an API if its
+     * developer does not understand the distinction---but it is important
+     * to note that it is consistent with the rest of the system: `override`
+     * on its own will always determine the super method at the time of
+     * definition, whereas `abstract override` will defer that determination
+     * until the time of mixin.
+     */
+    'Trait class C#M non-abstract override always uses C#M as super':
+    function()
+    {
+        var C = this.Class(
+        {
+            'virtual foo': function()
+            {
+                return 1;
+            },
+        } );
+
+        var T1 = this.Sut.extend( C,
+        {
+            'virtual override foo': function()
+            {
+                return 3 + this.__super();
+            },
+        } );
+
+        var T2 = this.Sut.extend( C,
+        {
+            'virtual override foo': function()
+            {
+                return 13 + this.__super();
+            },
+        } );
+
+        this.assertEqual(
+            14,
+            C.use( T1 )
+                .use( T1 )
+                .use( T2 )
+                ().foo()
+        );
+    },
+
+
+    /**
+     * The stackable property should apply when the super class's method is
+     * abstract as well---just as it does with interfaces.  Plainly:
+     * abstract classes and interfaces are identical in method behavior with
+     * the exception that abstract classes can provide concrete
+     * implementations.
+     *
+     * There is one caveat: traits cannot blindly override methods, abstract
+     * or concrete---the `override` keyword assumes a concrete method M to
+     * act as the super method, which would not exist if the supertype has
+     * only an abstract method M.  This is behavior consistent with classes.
+     *
+     * This is also consistent with Scala's stackable trait pattern: the
+     * abstract class C (below) is the "base", T1 acts as the "core", and T2
+     * is a "stackable".  This consistency was not intentional, but is a
+     * natural evolution for a consistent system.  (It is a desirable
+     * consistency, though, so that others can apply their knowledge of
+     * Scala---and any other systems motivated by it.)
+     */
+    'Traits can stack concrete definitions for class abstract methods':
+    function()
+    {
+        var C = this.AbstractClass(
+        {
+            foo: function()
+            {
+                return this.concrete();
+            },
+
+            'abstract concrete': [],
+        } );
+
+        var T1 = this.Sut.extend( C,
+        {
+            // this cannot be an abstract override, because there is not yet
+            // a concrete definition (and we know this immediately, since
+            // we're explicitly extending C)
+            'virtual concrete': function()
+            {
+                return 3;
+            },
+        } );
+
+        var T2 = this.Sut.extend( C,
+        {
+            // T1 provides a concrete method that we can override
+            'virtual abstract override concrete': function()
+            {
+                return 5 + this.__super();
+            },
+        } );
+
+        this.assertEqual(
+            13,
+            C.use( T1 )
+                .use( T2 )
+                .use( T2 )
+                ().foo()
+        );
+    },
 } );

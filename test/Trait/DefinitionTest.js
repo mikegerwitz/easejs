@@ -475,4 +475,30 @@ require( 'common' ).testCase(
             this.Class.isClass( this.Class( {} ).use( T ) )
         );
     },
+
+
+    /**
+     * Attempts to mix in non-traits should immediately trigger an error
+     * during the declaration.  It is important not to defer this until the
+     * time of actual mix in---which is lazy---since the stack will not
+     * provide useful information on how to correct it.
+     */
+    'Throws error when object to mix in is not a trait': function()
+    {
+        var _self = this;
+
+        // one of one
+        this.assertThrows( function()
+        {
+            // this should error immediately; it should not wait until
+            // the actual mix in (which is lazy)
+            _self.Class( {} ).use( {} );
+        }, TypeError );
+
+        // one of many
+        this.assertThrows( function()
+        {
+            _self.Class( {} ).use( _self.Trait( {} ), {} );
+        }, TypeError );
+    },
 } );
