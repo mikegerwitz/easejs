@@ -43,7 +43,7 @@ MKDIR_P = @MKDIR_P@
 
 # see README
 SUBDIRS = doc
-EXTRA_DIST = AUTHORS NEWS ChangeLog README.md README.hacking README.traits \
+EXTRA_DIST = AUTHORS NEWS ChangeLog README.md HACKING INSTALL \
              lib test index.js package.json version \
              $(path_combine_output) $(path_combine_output_full) \
              $(path_browser_test) $(path_combine_output_min) \
