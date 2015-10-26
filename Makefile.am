@@ -145,7 +145,7 @@ else
 endif
 
 # generate the familiar files that automake normally checks for
-dist-hook: AUTHORS NEWS ChangeLog version
+dist-hook: check AUTHORS NEWS ChangeLog version
 	cp $? $(distdir)
 AUTHORS: FORCE
 	$(path_tools)/gitlog-to-authors > $@
