@@ -6,7 +6,7 @@
 # Allows for automated detection of potential attacks or false authorship of
 # commits by validating signatures against trusted public GPG keys.
 #
-#  Copyright (C) 2012, 2013 Free Software Foundation, Inc.
+#  Copyright (C) 2012, 2013, 2015 Free Software Foundation, Inc.
 #
 #  This file is part of GNU ease.js.
 #
@@ -31,6 +31,10 @@ chkafter="${1:-1b1790029}"
 # provided) for a trusted signature, listing invalid commits. %G? will output
 # "G" if the signature is trusted. In the case of a merge commit, the merge
 # commit itself need only be signed.
+#
+# signchk-ignore contains commits that are known to be unsigned; these were
+# a mistake, but it's too late to rewrite history
 t=$'\t'
 git log --first-parent --pretty="format:%H %aN$t%s$t%G?" "$chkafter.." \
-  | grep -v "${t}G$"
+  | grep -v "${t}G$" \
+  | grep -vFf signchk-ignore
