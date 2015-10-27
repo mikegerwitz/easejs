@@ -168,6 +168,28 @@ require( 'common' ).testCase(
 
 
     /**
+     * This test unfortunately relies on certain implementation details;
+     * we're testing at a high level here.
+     *
+     * When determining what methods need to be proxied for a mixin, ease.js
+     * checks certain properties of the supertype.  If the value is
+     * null/undefined, then it is not an object, and cannot have any such
+     * properties.
+     */
+    'Trait mixin handles supertype null values': function()
+    {
+        // note the null value
+        var C = this.Class( { foo: null, bar: undefined } ),
+            T = this.Sut.extend( C, {} );
+
+        this.assertDoesNotThrow( function()
+        {
+            C.use( T )();
+        } );
+    },
+
+
+    /**
      * This is a corollary, but is still worth testing for assurance.
      *
      * We already stated that a trait Tb extending C's subtype C2 cannot be
