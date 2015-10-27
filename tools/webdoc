@@ -83,8 +83,8 @@ webify()
     s#</body>#\n&#;
   ' "$docpath" \
     | awk '
-      /<body>/ {
-        print "<body class=\"manual\">";
+      /<body/ {
+        print "<body class=\"manual\" lang=\"en\">";
         system( "awk \"/body/{i=1;next;} i\" includes/header.html | '"$shref"'" );
         next
       }
