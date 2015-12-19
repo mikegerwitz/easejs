@@ -1,3 +1,4 @@
+# GNU ease.js
 <!--
   Copyright (C) 2010, 2011, 2013, 2014, 2015 Free Software Foundation, Inc.
 
@@ -8,8 +9,6 @@
   this notice are preserved.  This file is offered as-is, without warranty
   of any kind.
 -->
-
-# GNU ease.js
 
 GNU ease.js is a classical object-oriented framework for Javascript,
 intended to eliminate boilerplate code and "ease" the transition into
