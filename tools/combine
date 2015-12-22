@@ -39,6 +39,7 @@ cat_modules=$(
             s/[^/\]\+\/\.\.//g;
             s/\( \|\/\)\.\//\1/g;
         " \
+        | LC_ALL=C sort \
         | node tools/combine-order.js \
 ) || {
     echo "Failed to get module list" >&2
@@ -56,7 +57,7 @@ all_modules=$(
 remain_modules=$(
     echo "$cat_modules
 $all_modules" \
-    | sort \
+    | LC_ALL=C sort \
     | uniq -u
 )
 
@@ -140,7 +141,7 @@ if [ "$INC_TEST" ]; then
     # note that not all tests are included
     TEST_CASES=$( cd "$PATH_TEST"; find . -name '*Test*.js' \
         | sed 's/^.\///' \
-        | sort \
+        | LC_ALL=C sort \
         | grep -v '\(Combine\(PreEs5\)\?\|Index\)Test.js' \
     )
 
@@ -189,6 +190,3 @@ fi
 
 # output combined file footer
 tpl_footer
-
-exit 0
-
