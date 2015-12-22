@@ -19,7 +19,7 @@
 ##
 
 # version string is dynamically generated
-m4_define([ver], m4_esyscmd(./tools/vergen))
+m4_define([ver], m4_esyscmd(tools/vergen))
 m4_if(ver, [], [m4_exit(1)])
 
 AC_INIT([easejs], [ver], [bug-easejs@gnu.org])
@@ -57,8 +57,8 @@ test "$NODE" || AC_MSG_WARN([
 # file includes exactly what is contained within the dir and is rebuilt if /any/
 # of the files change
 AC_MSG_CHECKING([for source js files])
-SRC_JS_LIB="$(find lib/*.js | tr '\n' ' ' | LC_ALL=C sort )"
-SRC_JS="index.js $SRC_JS_LIB"
+SRC_JS_LIB="$(find $srcdir/lib/*.js | tr '\n' ' ' | LC_ALL=C sort )"
+SRC_JS="$srcdir/index.js $SRC_JS_LIB"
 AC_SUBST(SRC_JS)
 if test -n "$SRC_JS_LIB"; then
     AC_MSG_RESULT(ok)
@@ -92,7 +92,7 @@ AM_CONDITIONAL(HAS_CCJAR, [test "$CCJAR"])
 
 # check for performance tests
 AC_MSG_CHECKING([for performance tests])
-PERF_TESTS=$( find test/perf -name 'perf-*.js' | tr '\n' ' ' | LC_ALL=C sort )
+PERF_TESTS=$( find $srcdir/test/perf -name 'perf-*.js' | tr '\n' ' ' | LC_ALL=C sort )
 AC_SUBST(PERF_TESTS)
 AS_IF([test "$PERF_TESTS"], [AC_MSG_RESULT(ok)], [AC_MSG_WARN(none found)])
 

@@ -39,8 +39,9 @@ path_doc_css_ref=$(path_doc_css)
 
 MAKEINFOHTML=$(MAKEINFO) --html --css-ref="$(path_doc_css_ref)"
 
-doc_src := $(wildcard *.texi)
-doc_imgs := $(patsubst %.dia, %.png, $(wildcard $(path_doc_img)/*.dia))
+doc_src      := $(wildcard *.texi)
+doc_imgs     := $(patsubst %.dia, %.png, $(wildcard $(path_doc_img)/*.dia))
+doc_imgs_eps := $(patsubst %.dia, %.eps, $(wildcard $(path_doc_img)/*.dia))
 doc_imgs_txt := $(patsubst %.dia, %.png, $(wildcard $(path_doc_img)/*.txt))
 
 doc_replace := s/<\/body>/<script type="text\/javascript" \
@@ -62,6 +63,9 @@ img/%.png: img/%.dia
 	echo "$<" | grep -q 'wide' \
 		&& dia -e $@ -s x250 $< \
 		|| dia -e $@ -s 300x $<
+
+img/%.eps: img/%.dia
+	dia -e $@ $<
 
 # doc plain text
 $(path_doc_output_plain): $(doc_imgs_txt)
@@ -98,7 +102,7 @@ $(path_doc_output_html)/%.css: %.css
 	cp $< $@
 
 
-img: $(doc_imgs)
+img: $(doc_imgs) $(doc_imgs_eps)
 
 plain: $(path_doc_output_plain)
 install-plain: plain
@@ -107,6 +111,6 @@ install-plain: plain
 		$(DESTDIR)$(docdir)/easejs.txt
 
 clean-local:
-	rm -rf $(path_doc_img)/*.png
+	rm -rf $(doc_imgs) $(doc_imgs_eps)
 	rm -f $(path_doc_output_plain)
 
