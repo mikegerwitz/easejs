@@ -34,8 +34,8 @@ path_combine_output_full_min = $(path_combine_output_full:.js=.min.js)
 src_js                = @SRC_JS@
 path_externs_internal = $(path_build)/externs-internal.js
 
-test_cases=$(shell cd test/ && find . -name '*Test.*' | tr '\n' ' ' )
-src_tests=$(shell find test/ -name test-* | tr '\n' ' ' )
+test_cases=$(shell cd test/ && find . -name '*Test.*' | tr '\n' ' ' | LC_ALL=C sort )
+src_tests=$(shell find test/ -name test-* | tr '\n' ' ' | LC_ALL=C sort )
 
 combine  = $(path_tools)/combine
 compiler = @CCJAR@
