@@ -1,6 +1,6 @@
 # For use by automake and autoconf
 #
-#  Copyright (C) 2013, 2014 Free Software Foundation, Inc.
+#  Copyright (C) 2013, 2014, 2015 Free Software Foundation, Inc.
 #
 #  This file is part of GNU ease.js.
 #
@@ -57,7 +57,7 @@ test "$NODE" || AC_MSG_WARN([
 # file includes exactly what is contained within the dir and is rebuilt if /any/
 # of the files change
 AC_MSG_CHECKING([for source js files])
-SRC_JS_LIB="$(find lib/*.js | tr '\n' ' ' )"
+SRC_JS_LIB="$(find lib/*.js | tr '\n' ' ' | LC_ALL=C sort )"
 SRC_JS="index.js $SRC_JS_LIB"
 AC_SUBST(SRC_JS)
 if test -n "$SRC_JS_LIB"; then
@@ -92,7 +92,7 @@ AM_CONDITIONAL(HAS_CCJAR, [test "$CCJAR"])
 
 # check for performance tests
 AC_MSG_CHECKING([for performance tests])
-PERF_TESTS=$( find test/perf -name 'perf-*.js' | tr '\n' ' ' )
+PERF_TESTS=$( find test/perf -name 'perf-*.js' | tr '\n' ' ' | LC_ALL=C sort )
 AC_SUBST(PERF_TESTS)
 AS_IF([test "$PERF_TESTS"], [AC_MSG_RESULT(ok)], [AC_MSG_WARN(none found)])
 
