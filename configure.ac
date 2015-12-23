@@ -90,6 +90,23 @@ AS_IF(test "$JAVA" -a ! "$CCJAR",
 
 AM_CONDITIONAL(HAS_CCJAR, [test "$CCJAR"])
 
+# dia used for documentation images
+path_dia=dia
+AC_ARG_WITH([dia],
+  [AS_HELP_STRING([--without-dia],
+     [disable support for documentation graphics])],
+  [],
+  [with_dia=yes])
+
+AS_IF([test "$with_dia" != no],
+  [AC_CHECK_PROGS(DIA, [dia])
+   AS_IF([test "$DIA"],
+     [],
+     [AC_MSG_WARN([could not locate dia (--without-dia to disable)])])
+   ])
+
+AM_CONDITIONAL(HAS_DIA, [test "$DIA"])
+
 # check for performance tests
 AC_MSG_CHECKING([for performance tests])
 PERF_TESTS=$( find $srcdir/test/perf -name 'perf-*.js' | tr '\n' ' ' | LC_ALL=C sort )
