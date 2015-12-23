@@ -61,7 +61,7 @@ EXTRA_DIST = AUTHORS NEWS ChangeLog README.md HACKING INSTALL \
 
 .PHONY: mkbuild combine min doc check test test-suite perf FORCE
 
-default: combine
+all: combine
 
 mkbuild: $(path_build)
 
