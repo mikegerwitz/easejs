@@ -59,13 +59,21 @@ pdf-local: img
 html-local: img easejs.css highlight.pack.js interactive.js
 
 # doc images
+if HAS_DIA
 img/%.png: img/%.dia
 	echo "$<" | grep -q 'wide' \
-		&& dia -e $@ -s x250 $< \
-		|| dia -e $@ -s 300x $<
+		&& $(DIA) -e $@ -s x250 $< \
+		|| $(DIA) -e $@ -s 300x $<
+else
+	@echo "warning: not building eps (--without-dia)"
+endif
 
 img/%.eps: img/%.dia
-	dia -e $@ $<
+if HAS_DIA
+	$(DIA) -e $@ $<
+else
+	@echo "warning: not building eps (--without-dia)"
+endif
 
 # doc plain text
 $(path_doc_output_plain): $(doc_imgs_txt)
