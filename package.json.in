@@ -13,12 +13,7 @@
   "dependencies": {},
   "devDependencies": {},
 
-  "licenses": [
-    {
-      "type": "GPLv3+",
-      "url": "http://www.gnu.org/licenses/gpl.html"
-    }
-  ],
+  "license": "GPL-3.0",
 
   "scripts": {
     "test": "make test"
