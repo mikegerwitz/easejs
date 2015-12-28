@@ -73,4 +73,5 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 **N.B.:** Versions prior to 0.2.0 were released under the LGPLv3+. Upon becoming
 a GNU project, it was relicensed under the GPLv3+ to help the FSF stand strong
 in its fight against proprietary JavaScript. For more information, please see
-the NEWS file (which can be built with `make NEWS`).
+the NEWS file (which can be built with `make NEWS`) and
+https://gnu.org/software/easejs/whyfreejs.html.
