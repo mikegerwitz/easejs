@@ -17,3 +17,21 @@ Therefore, my decisions is intended to enforce freedom.
 because of more permissive licenses; that was the ease.js reason. glibc is
 released under the LGPL to encourage others to adopt it over other proprietary
 libraries.)
+
+*   *
+  *
+
+[Fast-foward to 2016-05-12]
+
+It's interesting looking back on notes that look back on commits.
+
+By now, ease.js has long been part of GNU and relicensed under the GPLv3+.
+My worries about other frameworks springing up in ease.js' place were
+ill-founded: there is still nothing like it.
+
+But more importantly, we're taking a stand: I don't care if others do not
+use ease.js---I care about users' freedoms.
+
+  https://www.gnu.org/software/easejs/whyfreejs.html
+
+Happy hacking.
