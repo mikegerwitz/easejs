@@ -507,4 +507,51 @@ require( 'common' ).testCase(
 
         this.assertOk( !sut.isError( function() {} ) );
     },
+
+
+    /**
+     * A function may optionally be provided to be invoked after the
+     * constructor has completed---this allows for the constructor to be
+     * augmented in such a way that the top stack frame is still the
+     * generated constructor when the error is instantiated.
+     */
+    'Invokes provided function after self': function()
+    {
+        var called  = false,
+            context = undefined,
+            argchk  = {},
+            message = 'stillrunctor';
+
+        var result = new (
+            this.Sut( DummyError )
+                .createCtor( DummyError, '', function()
+                {
+                    called  = arguments;
+                    context = this;
+                } )
+        )( message, argchk );
+
+        this.assertOk( called );
+        this.assertStrictEqual( argchk, called[ 1 ] );
+        this.assertStrictEqual( result, context );
+
+        // the ctor itself should also still be called (this depends on
+        // previous test also succeeding)
+        this.assertEqual( message, result.message );
+    },
+
+
+    /**
+     * Don't wait until instantiation to blow up on an invalid AFTER.
+     */
+    'Throws error given a non-function `after\' argument': function()
+    {
+        var Sut = this.Sut;
+
+        this.assertThrows( function()
+        {
+            Sut( DummyError )
+                .createCtor( DummyError, '', "oops" );
+        }, TypeError );
+    },
 } );
