@@ -19,15 +19,15 @@
 <ul class="features">
   <li><a href="#class-dfn">Simple and intuitive class definitions</a></li>
   <li><a href="#inheritance">Classical inheritance</a></li>
-  <li><a href="#abstract">Abstract classes and methods</a></li>
-  <li><a href="#interfaces">Interfaces</a></li>
+  <li><a href="#traits">Traits as mixins</a></li>
  <li>
    <a href="#access-modifiers">
       Access modifiers (public, protected and private)
     </a>
   </li>
+  <li><a href="#abstract">Abstract classes and methods</a></li>
+  <li><a href="#interfaces">Interfaces</a></li>
   <li><a href="#static">Static and constant members</a></li>
-  <li><a href="#traits">Traits as mixins</a></li>
   <li>Support for ECMAScript 3+</li>
 </ul>
 </div>
@@ -126,6 +126,64 @@
 <a href="#" class="top">&uarr;</a>
 
 
+<h3 id="traits" class="bigemph">
+  Traits As Mixins
+  <span class="anchor"><a href="#traits">&para;</a></span>
+</h3>
+<p>
+  Trait support was introduced in celebration of becoming a GNU
+  project.  It is currently under development and has not yet been
+  finalized, but has been included in each GNU ease.js release since v0.2.0,
+  and is stable.
+</p>
+<p>
+  Documentation will be available once some final details are
+  finalized.  Until that time,
+  the <a href="http://git.savannah.gnu.org/cgit/easejs.git/tree/test/Trait">test
+  cases provide extensive examples and rationale</a>.  The following posts
+  also summarize some of the features:
+
+  <ul>
+    <li><a href="news.html#ac1a036">Preliminary support for traits as mixins</a></li>
+    <li><a href="news.html#3005cda">Support for stacked mixins</a></li>
+    <li><a href="news.html#3fc0f90">Initial implementation of parameterized traits</a></li>
+    <li><a href="news.html#d9b86c1">Class supertype overrides</a></li>
+  </ul>
+</p>
+<a href="#" class="top">&uarr;</a>
+
+
+<h3 id="access-modifiers" class="bigemph">
+  Access Modifiers
+  <span class="anchor"><a href="#access-modifiers">&para;</a></span>
+</h3>
+<p>
+  All three common access modifiers&mdash;public, protected and
+  private&mdash;are supported, but <a href="manual/Pre_002dES5-Fallback.html"
+  class="man">enforced only in ECMAScript 5 and later</a> environments.
+</p>
+<pre class="js">
+  <!--%inc scripts/ex/access-modifiers.js -->
+</pre>
+<p>
+  In the above example, the database connection remains encapsulated within
+  <tt>DatabaseRecord</tt>. Subtypes are able to query and escape strings and
+  external callers are able to retrieve a name for a given id. Attempting to
+  access a private or protected member externally will result in an error.
+  Attempting to access a private member from within a subtype will result in an
+  error.
+</p>
+<p>
+  Alternatively, a more concise style may be used, which is more natural to
+  users of JavaScript's native prototype model:
+</p>
+<pre class="js">
+  <!--%inc scripts/ex/access-modifiers-implicit.js -->
+</pre>
+<a href="manual/Access-Modifiers.html">&rarr; Read more in manual</a>
+<a href="#" class="top">&uarr;</a>
+
+
 <h3 id="abstract" class="bigemph">
   Abstract Classes and Methods
   <span class="anchor"><a href="#abstract">&para;</a></span>
@@ -176,37 +234,6 @@
 <a href="#" class="top">&uarr;</a>
 
 
-<h3 id="access-modifiers" class="bigemph">
-  Access Modifiers
-  <span class="anchor"><a href="#access-modifiers">&para;</a></span>
-</h3>
-<p>
-  All three common access modifiers&mdash;public, protected and
-  private&mdash;are supported, but <a href="manual/Pre_002dES5-Fallback.html"
-  class="man">enforced only in ECMAScript 5 and later</a> environments.
-</p>
-<pre class="js">
-  <!--%inc scripts/ex/access-modifiers.js -->
-</pre>
-<p>
-  In the above example, the database connection remains encapsulated within
-  <tt>DatabaseRecord</tt>. Subtypes are able to query and escape strings and
-  external callers are able to retrieve a name for a given id. Attempting to
-  access a private or protected member externally will result in an error.
-  Attempting to access a private member from within a subtype will result in an
-  error.
-</p>
-<p>
-  Alternatively, a more concise style may be used, which is more natural to
-  users of JavaScript's native prototype model:
-</p>
-<pre class="js">
-  <!--%inc scripts/ex/access-modifiers-implicit.js -->
-</pre>
-<a href="manual/Access-Modifiers.html">&rarr; Read more in manual</a>
-<a href="#" class="top">&uarr;</a>
-
-
 <h3 id="static" class="bigemph">
   Static and Constant Members
   <span class="anchor"><a href="#static">&para;</a></span>
@@ -223,33 +250,6 @@
   <!--%inc scripts/ex/static-members.js -->
 </pre>
 <a href="manual/Static-Members.html">&rarr; Read more in manual</a>
-<a href="#" class="top">&uarr;</a>
-
-
-<h3 id="traits" class="bigemph">
-  Traits As Mixins
-  <span class="anchor"><a href="#traits">&para;</a></span>
-</h3>
-<p>
-  Trait support was introduced in celebration of becoming a GNU
-  project.  It is currently under development and has not yet been
-  finalized, but has been included in each GNU ease.js release since v0.2.0,
-  and is stable.
-</p>
-<p>
-  Documentation will be available once some final details are
-  finalized.  Until that time,
-  the <a href="http://git.savannah.gnu.org/cgit/easejs.git/tree/test/Trait">test
-  cases provide extensive examples and rationale</a>.  The following posts
-  also summarize some of the features:
-
-  <ul>
-    <li><a href="news.html#ac1a036">Preliminary support for traits as mixins</a></li>
-    <li><a href="news.html#3005cda">Support for stacked mixins</a></li>
-    <li><a href="news.html#3fc0f90">Initial implementation of parameterized traits</a></li>
-    <li><a href="news.html#d9b86c1">Class supertype overrides</a></li>
-  </ul>
-</p>
 <a href="#" class="top">&uarr;</a>
 
 
