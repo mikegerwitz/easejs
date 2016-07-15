@@ -225,9 +225,10 @@ a couple important notes before we continue evaluating this example:
 @itemize
 @item
 The first thing you will likely notice is our use of the @code{public}
-keyword.  This is optional (the default visibility is public), but always
-recommended.  Future versions of ease.js may provide warnings when the
-visibility is omitted.  We will get more into visibility later on.
+  keyword;
+    this is optional (the default visibility is public);
+      it may be omitted for a more traditional JavaScript feel.
+We will get more into visibility later on (@pxref{Access Modifiers}).
 
 @item
 Unlike @ref{f:class-js,}, we do not use the @code{new} keyword in order to
