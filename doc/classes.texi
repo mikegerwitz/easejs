@@ -700,6 +700,7 @@ classes for their conciseness.
                                         one-another
 * Visibility Escalation::             Increasing visibility of inherited
                                         members
+* Error Subtypes::                    Transparent Error subtyping
 * Final Classes::                     Classes that cannot be inherited from
 @end menu
 
@@ -1067,6 +1068,123 @@ Let's take a look at an example.
 
 Note that, in the above example, making the public @var{cannotMakeProtected}
 method protected would throw an error.
+
+
+@node Error Subtypes
+@subsection Error Subtypes
+Extending ECMAScript's built-in @var{Error} type is a bit cumbersome (to
+say the least)---it involves not only the traditional prototype chain,
+but also setting specific properties within the constructor.  Further,
+different environments support different features (e.g. stack traces and
+column numbers), and values are relative to the stack frame of the
+@var{Error} subtype constructor itself.
+
+With GNU ease.js, error subtyping is transparent:
+
+@float Figure, f:error-extend
+@verbatim
+    var MyError = Class( 'MyError' )
+        .extend( Error, {} );
+
+    var e = MyError( 'Foo' );
+    e.message;  // Foo
+    e.name;     // MyError
+
+    // -- if supported by environment --
+    e.stack;         // stack beginning at caller
+    e.fileName;      // caller filename
+    e.lineNumber;    // caller line number
+    e.columnNumber;  // caller column number
+
+    // general case
+    throw MyError( 'Foo' );
+@end verbatim
+@caption{Transparent @var{Error} extending in ease.js}
+@end float
+
+If ease.js detects that you are extending an @var{Error} object or any
+of its subtypes, it will handle a number of things for you, depending on
+environment:
+
+@enumerate
+@item Produce a default constructor method (@pxref{Constructors}) that
+assigns the error message to the string passed as the first argument;
+
+@item Sets the error name to the class name;
+
+@item Provides a stack trace via @var{stack}, if supported by the
+environment, stripping itself from the head of the stack; and
+
+@item Sets any of @var{fileName}, @var{lineNumber}, and/or
+@var{columnNumber} when supported by the environment.
+@end enumerate
+
+If a constructor method is provided in the class definition
+(@pxref{Constructors}), then it will be invoked immediately after the
+error object is initialized by the aforementioned default
+constructor.@footnote{The reason that ease.js
+does not permit overriding the generated constructor is an
+implementation detail: the generated constructor is not on the
+supertype, so there is not anything to actually override.  Further, the
+generated constructor provides a sane default behavior that should be
+implicit in error classes anyway; that behavior can be overridden simply
+be re-assigning the values that are assigned for you (e.g. name or line
+number).}  @var{this.__super} in that context refers to the constructor
+of the supertype (as would be expected), @emph{not} the default error
+constructor.
+
+ease.js will automatically detect what features are supported by the
+current environment, and will @emph{only} set respective values if the
+environment itself would normally set them.  For example, if ease.js can
+determine a column number from the stack trace, but the environment does
+not normally set @var{columnNumber} on @var{Error} objects, then neither
+will ease.js; this leads to predictable and consistent behavior.
+
+ease.js makes its best attempt to strip itself from the head of the
+stack trace.  To see why this is important, consider the generally
+recommended way of creating an @var{Error} subtype in ECMAScript:
+
+@float Figure, f:ecma-error-extend
+@verbatim
+    function ErrorSubtype( message )
+    {
+        var err = new Error();
+
+        this.name         = 'ErrorSubtype';
+        this.message      = message || 'Error';
+        this.stack        = err.stack;
+        this.lineNumber   = err.lineNumber;
+        this.columnNumber = err.columnNumber;
+        this.fileName     = err.fileName;
+    }
+
+    ErrorSubtype.prototype             = new Error();
+    ErrorSubtype.prototype.constructor = ErrorSubtype;
+@end verbatim
+@caption{@var{Error} subtyping in plain ECMAScript 3}
+@end float
+
+Not only is @ref{f:ecma-error-extend} all boilerplate and messy, but
+it's not entirely truthful:  To get a stack trace, @var{Error} is
+instantiated within the constructor @var{ErrorSubtype}; this ensures
+that the stack trace will actually include the caller.  Unfortunately,
+it also includes the @emph{current frame}; the topmost frame in the
+stack trace will be @var{ErrorSubtype} itself.  To make matters worse,
+all of @var{lineNumber}, @var{columNumber}, and @var{fileName} (if
+defined) will be set to the stack frame of our constructor, @emph{not}
+the caller.
+
+ease.js will set each of those values to represent the caller.  To do
+so, it parses common stack trace formats.  Should it fail, it simply
+falls back to the default behavior of including itself in the stack
+frame.
+
+The end result of all of this is---hopefully---concise @var{Error}
+subtypes that actually function as you would expect of an @var{Error},
+without any boilerplate at all.  The @var{Error} subtypes created with
+ease.js can be extended like the built-ins, and may extend any of the
+built-in error types (e.g. @var{TypeError} and @var{SyntaxError}).
+
 
 @node Final Classes
 @subsection Final Classes
