@@ -28,6 +28,7 @@
   <li><a href="#abstract">Abstract classes and methods</a></li>
   <li><a href="#interfaces">Interfaces</a></li>
   <li><a href="#static">Static and constant members</a></li>
+  <li><a href="#error">Transparent Error Subtyping</a></li>
   <li>Support for ECMAScript 3+</li>
 </ul>
 </div>
@@ -250,6 +251,23 @@
   <!--%inc scripts/ex/static-members.js -->
 </pre>
 <a href="manual/Static-Members.html">&rarr; Read more in manual</a>
+<a href="#" class="top">&uarr;</a>
+
+
+<h3 id="error" class="bigemph">
+  Transparent Error Subtyping
+  <span class="anchor"><a href="#error">&para;</a></span>
+</h3>
+<p>
+  Error subtyping (creating your own error types) in ECMAScript is
+  notoriously crude, and getting it to work intuitively is even
+  harder.  ease.js transparently handles all necessarily boilerplate when
+  extending <tt>Error</tt> or its subtypes.
+</p>
+<pre class="js">
+  <!--%inc scripts/ex/error-subtype.js -->
+</pre>
+<a href="manual/Error-Subtypes.html">&rarr; Read more in manual</a>
 <a href="#" class="top">&uarr;</a>
 
 
