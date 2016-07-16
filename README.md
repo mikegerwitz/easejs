@@ -18,11 +18,12 @@ Current support includes:
 
 * Simple and intuitive class definitions
 * Classical inheritance
+* Traits as mixins
+* Access modifiers (public, protected, and private)
 * Abstract classes and methods
 * Interfaces
-* Traits as mixins
-* Visibility (public, protected, and private members)
 * Static and constant members
+* Transparent error subtyping
 
 
 ## Documentation
