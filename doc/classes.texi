@@ -251,11 +251,148 @@ variable @var{MyClass}. By convention, we use CamelCase, with the first
 letter capital, for class names (and nothing else).
 
 @menu
+* Class Caveats::        Important things to note about using ease.js classes
 * Anonymous vs. Named Classes::
 * Constructors::         How to declare a constructor
 * Temporary Classes::    Throwaway classes that only need to be used once
 * Temporary Instances::  Throwaway instances that only need to be used once
 @end menu
+
+
+@node Class Caveats
+@subsection Class Caveats
+ease.js tries to make classes act as in traditional Classical@tie{}OOP
+  as much as possible,
+    but there are certain limitations,
+    especially when supporting ECMAScript@tie{}3.
+These situations can cause some subtle bugs,
+  so it's important to note and understand them.
+
+@subsubsection Returning Self
+Returning @code{this} is a common practice for method
+  chaining.@footnote{
+    An interface that performs method chaining is less frequently
+      referred to as a ``fluent interface''.
+    This manual does not use that terminology.
+    Note also that method chaining implies that the class has state:
+      consider making your objects immutable instead,
+        which creates code that is easier to reason about.}
+In the majority of cases, this works fine in ease.js
+  (see also @ref{Temporary Classes}):
+
+@float Figure, f:method-chain
+@verbatim
+  var Foo = Class( 'Foo',
+  {
+      'public beginning': function()
+      {
+          return this;
+      },
+
+      'public middle': function()
+      {
+          return this;
+      },
+
+      'public end': function()
+      {
+          // ...
+      }
+  } );
+
+  Foo().beginning().middle().end();
+@end verbatim
+@caption{Using @code{this} for method chaining}
+@end float
+
+Within the context of the method, @code{this} is a reference to
+  the@tie{}privacy visibility object for that instance
+  (@pxref{The Visibility Object}).
+That is---it exposes all of the object's internal state.
+When it is returned from a method call, ease.js recognizes this and
+  replaces it with a reference to the @emph{public} visibility
+  object---the object that the rest of the world interacts with.
+
+But what if you produce @code{this} in some other context?
+A callback, for example:
+
+@float Figure, f:method-this-callback
+@verbatim
+  var Foo = Class( 'Foo',
+  {
+     'private _foo': 'good',
+
+      'public beginning': function( c )
+      {
+          // XXX: `this' is the private visibility object
+          c( this );
+      },
+
+      'public end': function()
+      {
+          return this._foo;
+      }
+  } );
+
+  // result: 'bad'
+  Foo()
+      .beginning( function( self )
+      {
+          // has access to internal state
+          self._foo = 'bad';
+      } )
+      .end();
+@end verbatim
+@caption{Accidentally revealing internal state via callback}
+@end float
+
+In @ref{f:method-this-callback},
+   @code{beginning} applies the callback with a reference to what most
+   would believe to be the class instance
+     (which is a reasonable assumption,
+       considering that ease.js usually maintains that facade).
+Since @code{this} is a reference to the private visibility object,
+  the callback has access to all its internal state,
+  and therefore the ability to set @code{_foo}.
+
+To solve this problem,
+  use @code{this.__inst},
+    which is a reference to the @emph{public} visibility object
+    (the same one that ease.js would normally translate to on your
+      behalf):
+
+@float Figure, f:method-callback-inst
+@verbatim
+  var Foo = Class( 'Foo',
+  {
+     'private _foo': 'good',
+
+      'public beginning': function( c )
+      {
+          // OK
+          c( this.__inst );
+      },
+
+      'public end': function()
+      {
+          return this._foo;
+      }
+  } );
+
+  // result: 'good'
+  Foo()
+      .beginning( function( self )
+      {
+          // sets public property `_foo', since `self' is now the public
+          // visibility object
+          self._foo = 'bad';
+      } )
+      .end();
+@end verbatim
+@caption{Providing public visibility object using @code{this.__inst}}
+@end float
+
+
 
 @node Anonymous vs. Named Classes
 @subsection Anonymous vs. Named Classes
