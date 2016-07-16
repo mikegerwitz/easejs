@@ -26,31 +26,6 @@
 #   manual/easejs.html           single-page HTML
 ##
 
-# ensure that we are within the git repository (otherwise, we cannot generate
-# content from master)
-git rev-parse --git-dir >/dev/null 2>/dev/null || {
-  echo "This command may only be run from within the git repository" >&2
-  exit 1
-}
-
-# we do not want to switch branches if it may risk losing changes
-[ "$( git status --short | grep -v '??' )" ] && {
-  # auto-stashing can be used during development to test this script without
-  # fighting with git
-  if [ -z "$WEBDOC_AUTOSTASH" ]; then
-    echo "Working tree is dirty; please stash or commit changes" >&2
-    exit 2
-  fi
-
-  # automatically stash changes
-  echo "Stashing changes before switching branches..." >&2
-  git stash save 'Stashed by webdoc'
-
-  # on exit, pop the stash
-  trap 'git stash pop' EXIT
-}
-
-
 path_dest=webroot/manual
 path_doc="$(pwd)/doc-cp"
 path_img="$path_doc/img"
@@ -101,13 +76,14 @@ webify()
 }
 
 # generate the documentation from the master branch
-git checkout "${WEBDOC_BRANCH:-master}" \
-  && autoreconf -fvi \
-  && ./configure \
-  && make html html-single \
-  && cp -rl doc "$path_doc" \
-  && git checkout - \
-         && pwd \
+(
+  cd .. \
+    && autoreconf -fvi \
+    && ./configure \
+    && make html html-single \
+    && cp -rl doc "$path_doc"
+) \
+    && pwd \
     && ln -sfv "$path_doc/easejs-single.html" "$path_doc_multi/easejs.html" \
     && for path in $( find "$path_doc_multi" -name '*.htm?' )
       do

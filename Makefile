@@ -72,7 +72,7 @@ $(outdir)/%.html: %.html $(header) $(footer) tools/page-parse | $(outdir)
 
 # requires git-weblog from mikegerwitz's git-supp package
 news:
-	tools/news-fmt < NEWS \
+	tools/news-fmt < ../NEWS \
 		| cat $(header) $(header_news) - $(footer) \
 		| sed 's/\(<body\)/\1 class="news"/' \
 		> "$(outdir)/news.html"
