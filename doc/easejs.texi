@@ -1,6 +1,8 @@
 \input texinfo   @c -*-texinfo-*-
 @c  This document is part of the GNU ease.js manual.
-@c  Copyright (C) 2011, 2012, 2013, 2014, 2015 Free Software Foundation, Inc.
+@c  Copyright (C) 2011, 2012, 2013, 2014, 2015, 2016
+@c     Free Software Foundation, Inc.
+@c
 @c    Permission is granted to copy, distribute and/or modify this document
 @c    under the terms of the GNU Free Documentation License, Version 1.3 or
 @c    any later version published by the Free Software Foundation; with no
@@ -18,7 +20,8 @@
 @copying
 This manual is for GNU ease.js, version @value{VERSION}.
 
-Copyright @copyright{} 2011, 2012, 2013, 2014 Free Software Foundation, Inc.
+Copyright @copyright{} 2011, 2012, 2013, 2014, 2015, 2016
+  Free Software Foundation, Inc.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
