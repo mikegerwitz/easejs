@@ -7,7 +7,8 @@
  *  @licstart The following is the entire license notice for the JavaScript
  *  code in this file.
  *
- *  Copyright (C) 2010, 2011, 2012, 2013, 2014, 2015 Free Software Foundation, Inc.
+ *  Copyright (C) 2010, 2011, 2012, 2013, 2014, 2015, 2016
+ *    Free Software Foundation, Inc.
  *
  *  GNU ease.js is free software: you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License (GNU GPL) as published

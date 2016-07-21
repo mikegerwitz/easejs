@@ -1,6 +1,6 @@
 # Included in full combined file for test cases
 #
-#  Copyright (C) 2010, 2011, 2013, 2014 Free Software Foundation, Inc.
+#  Copyright (C) 2010, 2011, 2013, 2014, 2015, 2016 Free Software Foundation, Inc.
 #
 #  This file is part of GNU ease.js.
 #
