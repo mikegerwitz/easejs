@@ -5,11 +5,11 @@
  * All modules will be available via this namespace. In CommonJS format, they
  * were accessed via the require() function. For example:
  *
- *   var util = require( 'easejs' ).Class;
+ *   var easejs = require( 'easejs' ).Class;
  *
  * In this file, the above would be written as:
  *
- *   var util = easejs.Class;
+ *   var easejs = easejs.Class;
  *
  * @type  {Object}
  */
