@@ -75,7 +75,8 @@ gnupload --to ftp.gnu.org:easejs --symlink-regex \
 
 # publish to npm (assumes already logged in); note that failure will not
 # abort the process, just in case
-npm publish easejs-"$version".tar.gz
+npm publish easejs-"$version".tar.gz \
+  || echo '!!! npm upload failed!' >&2
 
 # now the website
 git checkout website \
