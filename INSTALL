@@ -1,0 +1,45 @@
+GNU ease.js may be used directly from the distribution archive available on
+the [website](https://www.gnu.org/software/easejs/download.html).  All
+versions, including previous versions as far back as 0.2.0, are available on
+[ftp.gnu.org](https://ftp.gnu.org/gnu/easejs/).
+
+Alternatively, you may install ease.js using npm for use with Node.js or
+io.js by issuing the following command:
+
+  $ npm install easejs
+
+To install globally, use the `-g` flag.
+
+To build from source, see `Configuring' below.
+
+
+Configuring
+===========
+If your distribution contains a `configure` file in the project root, you
+may immediately run `./configure`.
+
+Otherwise, you likely have the sources as they exist in the project
+repository, which does not contain the generated `configure` script; you
+may generate it by issuing the following command:
+
+  $ ./autogen.sh
+
+Please note that certain files (such as `AUTHORS`, `NEWS`, and `ChangeLog`)
+are generated as part of the `dist` target and do not exist as part of the
+repository.  To build them, run `make` on the appropriate target.
+
+
+Building
+========
+After running `./configure`, ease.js may be used by `require`'ing the path
+using Node.js or io.js.
+
+To build the distribution files (found in `build/` in the distributions),
+run `make distdir`.  To create the distribution tarball, run `make dist`.
+To build only the combined files and the browser test page, run `make
+combine`; to create the minified files, run `make min`.  Each of these are
+included in the distribution.
+
+To run all tests, run `make test`.  To run the tests in the browser, make
+any of the above targets and load `tools/browser-test.html` in your web
+browser.

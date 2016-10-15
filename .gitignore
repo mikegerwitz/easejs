@@ -25,7 +25,6 @@
 /perf.*
 
 # should be added using autoreconf -i
-/INSTALL
 /tools/install-sh
 /tools/missing
 /tools/mdate-sh
