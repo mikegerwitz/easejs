@@ -142,19 +142,17 @@ require( 'common' ).testCase(
     'Can implement interface using named trait staging object':
     function()
     {
-
-        var Sut      = this.Sut,
-            expected = {},
-            name     = "Foo",
-            I        = this.Interface( {} ),
-            I2       = this.Interface( {} ),
-            T        = null;
+        var Sut  = this.Sut,
+            name = "Foo",
+            I    = this.Interface( {} ),
+            I2   = this.Interface( {} ),
+            T    = null;
 
         this.assertDoesNotThrow( function()
         {
             // this does not create a trait, but it should be acceptable
             // just as Class( "Foo" ) is
-            T = Sut( "Foo" )
+            T = Sut( name )
                 .implement( I, I2 )
                 .extend( {} );
         } );
