@@ -1,7 +1,7 @@
 /**
  * Tests named trait definitions
  *
- *  Copyright (C) 2014 Free Software Foundation, Inc.
+ *  Copyright (C) 2014, 2016 Free Software Foundation, Inc.
  *
  *  This file is part of GNU ease.js.
  *
@@ -163,6 +163,50 @@ require( 'common' ).testCase(
         var inst = this.Class( {} ).use( T )();
         this.assertOk( this.Class.isA( I, inst ) );
         this.assertOk( this.Class.isA( I2, inst ) );
+
+        // ensure that trait was properly named
+        this.assertOk( T.toString().match( name ) );
+    },
+
+
+    /**
+     * The extend method on the named staging object should work just as
+     * Trait.extend.
+     */
+    'Can extend class using named trait staging object': function()
+    {
+        var Sut      = this.Sut,
+            name     = "Extended",
+            expected = {},
+            T        = null;
+
+        var C = this.Class(
+        {
+            _foo: null,
+
+            getFoo: function() { return expected; },
+        } );
+
+        this.assertDoesNotThrow( function()
+        {
+            T = Sut( name )
+                .extend( C,
+                {
+                    get: function() { return this.getFoo(); },
+                } );
+        } );
+
+        // should be okay if properly extended
+        this.assertStrictEqual(
+            expected,
+            C.use( T )().get()
+        );
+
+        // should _not_ be
+        this.assertThrows( function()
+        {
+            this.Class.use( T )();
+        } );
 
         // ensure that trait was properly named
         this.assertOk( T.toString().match( name ) );
