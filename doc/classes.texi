@@ -505,7 +505,14 @@ Implementation}), using a @code{__construct}@tie{}method:
 ease.js introduced the @code{constructor} method in version@tie{}0.2.7
   to match the ES6 ``class'' implementation;
     it is an alias for @code{__construct},
-      and they may be used interchangeably.
+      and they may be used interchangeably.@footnote{
+        With one caveat:
+          when referencing the constructor method from another method
+          (dare I ask why you would do such a thing?),
+            you must use e.g.@tie{}@samp{this.__construct};
+              using @samp{this.constructor} would not be very useful,
+                as this is always set (in JavaScript) to the function
+                that instantiated the object.}
 This method name may also be used prior to ES6.
 
 @float Figure, f:constructor-es6
