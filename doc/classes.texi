@@ -461,17 +461,26 @@ is functionally no difference between named and anonymous classes.}
 Much better! We now have a useful error message and immediately know which
 class is causing the issue.
 
+
 @node Constructors
 @subsection Constructors
-A ``constructor'' in JavaScript is simply a function---whether or not
-it actually constructs a new object depends on whether the @code{tt}
-keyword is used.  With ease.js, constructors are handled in a manner
-similar to most other languages: by providing a separate method.
+ease.js defines object constructors in a manner consistent with many
+  other classical object-oriented languages:
+    a specially named method on the@tie{}class.
 
-Until the release of ECMAScript@tie{}6, which introduced the @code{class}
-keyword, there was no convention for constructors defined in this
-manner.  The implementation ease.js chose is very similar to that of
-PHP's (@pxref{Constructor Implementation}):
+Traditionally, a ``constructor'' in JavaScript is a function intended to
+  initialize a new object when invoked with the@tie{}@code{new}
+  keyword.
+That function also contains a @code{prototype} property that defines the
+  object's prototype.
+ECMAScript@tie{}6,
+  with the introduction of the@tie{}@code{class} keyword,
+  provided a standard @code{constructor} method that generates
+  constructor for the prototype.
+
+ease.js was written long before ES6 was ratified.  The implementation
+it chose is very similar to that of PHP's (@pxref{Constructor
+Implementation}), using a @code{__construct}@tie{}method:
 
 @float Figure, f:constructor
 @verbatim
@@ -494,15 +503,17 @@ PHP's (@pxref{Constructor Implementation}):
 @end float
 
 ease.js introduced the @code{constructor} method in version@tie{}0.2.7
-to match the ES6 ``class'' implementation; it is an alias for
-@code{__construct}.  This method name may be used prior to ES6.
+  to match the ES6 ``class'' implementation;
+    it is an alias for @code{__construct},
+      and they may be used interchangeably.
+This method name may also be used prior to ES6.
 
 @float Figure, f:constructor-es6
 @verbatim
     // ECMAScript 6 syntax
     let Foo = Class( 'Foo',
     {
-        // you may still use __construct
+        // you may still use __construct if you'd prefer, as shown above
         constructor( name )
         {
             console.log( 'Hello, ' + name + '!' );
@@ -518,23 +529,31 @@ to match the ES6 ``class'' implementation; it is an alias for
 @caption{Declaring constructors in an ECMAScript 6 style}
 @end float
 
-When the class is instantiated, the constructor is invoked, permitting you
-do to any necessary initialization tasks before the class can be used. The
-constructor operates exactly how you would expect a constructor to in
-JavaScript, with one major difference. Returning an object in the
-constructor does @emph{not} return that object instead of the new class
-instance, since this does not make sense in a Class-based model.
+The constructor is invoked just after the class is instantiated,
+   allowing for necessary initialization tasks before the class can be
+   used.
+It is good practice to use the constructor @emph{only} for
+   initialization that is critical to the object's integrity (such as
+   initializing internal state).
+It is considered poor design for the constructor to have side-effects;
+  that is,
+    the act of instantiating an object should not manipulate global
+    variables or the environment.
 
-If you wish to prevent a class from being instantiated, simply throw an
-exception within the constructor. This is useful if the class is intended to
-provide only static methods, or if you wish to enforce a single instance
-(one means of achieving a Singleton).
+The constructor operates exactly how you would expect a constructor to
+  in JavaScript,
+  with one important difference:
+    returning an object in the constructor does @emph{not} return that
+    object in place of the new class instance.
+
+If you wish to prevent a class from being instantiated,
+  simply throw an exception within the constructor.
 
 @float Figure, f:constructor-prevent
 @verbatim
     var Foo = Class( 'Foo',
     {
-        'public __construct': function( name )
+        __construct: function( name )
         {
             throw Error( "Cannot instantiate class Foo" );
         }
@@ -543,8 +562,19 @@ provide only static methods, or if you wish to enforce a single instance
 @caption{Prevent class from being instantiated}
 @end float
 
-Constructors are optional. By default, nothing is done after the class is
-instantiated.
+Constructors are always public;
+  there is no harm in explicitly specifying the keyword,
+    but it's usually omitted for brevity.
+It is not permitted to make a constructor protected or private
+  (@pxref{Access Modifiers}).
+
+Constructors are optional,
+  and no constructor is defined by default.@footnote{
+    That is, no user-facing constructor is defined by default;
+      ease.js handles plenty of its own internal tasks during
+      construction,
+        which cannot be overridden or inhibited.}
+
 
 @node Temporary Classes
 @subsection Temporary Classes
