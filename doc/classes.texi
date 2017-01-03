@@ -568,6 +568,25 @@ Constructors are always public;
 It is not permitted to make a constructor protected or private
   (@pxref{Access Modifiers}).
 
+Unlike all other methods,
+  constructors are @ref{Member Keywords,,@code{virtual}} by default.
+Many other languages (C++, Java, C#, and others) do not inherit
+  class constructors from their supertypes.
+ease.js classes are prototypes,
+  and uninstantiated prototypes are functions (constructors),
+  so classes are effectively first-class objects in JavaScript.
+Consequently,
+  they can be passed around and invoked like any other function,
+    which can be a convenient alternative to factories
+      (and a transparent alternative to functions that create objects).
+It is therefore useful to have the constructor as part of the class's
+  public API.
+However,
+  it is also important that subtypes always be able to override the
+  constructor (@pxref{Overriding Methods});
+    otherwise subtypes may not be able to initialize properly,
+      making for a very clumsy implementation.
+
 Constructors are optional,
   and no constructor is defined by default.@footnote{
     That is, no user-facing constructor is defined by default;

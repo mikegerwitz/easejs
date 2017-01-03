@@ -219,6 +219,39 @@ require( 'common' ).testCase(
 
 
     /**
+     * This one is a bit of an interesting case.  Information can be found
+     * in the manual, but for the sake of this test, all we need to know is
+     * that we should be able to override `__construct' without having
+     * provided the `virtual' keyword on the supertype.  This differs from
+     * all other methods which are non-virtual by default.
+     */
+    '@each(ctors) Constructor is virtual by default': function( name )
+    {
+        var _self = this;
+
+        this.assertDoesNotThrow( function()
+        {
+            var sub_called = false;
+
+            // not explicitly virtual
+            var base_dfn = {};
+            base_dfn[ name ] = function() {};
+
+            var sub_dfn = {};
+            sub_dfn[ 'override ' + name ] = function()
+            {
+                sub_called = true;
+            };
+
+            _self.Sut.extend( _self.Sut( base_dfn ), sub_dfn )();
+
+            // sanity check
+            _self.assertOk( sub_called );
+        }, Error );
+    },
+
+
+    /**
      * When a constructor is instantiated conventionally in ECMAScript, the
      * instance's `constructor' property is set to the constructor that was
      * used to instantiate it.  The same should be true for class instances.
