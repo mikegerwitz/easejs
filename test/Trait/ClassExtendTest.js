@@ -1,7 +1,7 @@
 /**
  * Tests extending traits from classes
  *
- *  Copyright (C) 2015 Free Software Foundation, Inc.
+ *  Copyright (C) 2015, 2017 Free Software Foundation, Inc.
  *
  *  This file is part of GNU ease.js.
  *
@@ -186,6 +186,47 @@ require( 'common' ).testCase(
         {
             C.use( T )();
         } );
+    },
+
+
+    /**
+     * Also an implementation detail: when a constructor is present on the
+     * supertype, special care is needed to make sure that we have no errors
+     * in an override---the trait itself has its own constructor.
+     *
+     * Another subtle detail is that our constructor override needs to take
+     * into account that the supertype constructor could have any number of
+     * arguments.  Since easejs enforces argument length for overrides, we
+     * need to make sure that the trait will handle this.  (In actuality,
+     * the implementation just sets the argument length of the trait class
+     * `__construct' to Infinity.)
+     */
+    'Trait mixin handles supertype constructor': function()
+    {
+        var ctor_called = 0;
+
+        var C = this.Class(
+        {
+            // notice that this isn't virtual (another implementation quirk
+            // to handle), and notice the argument count (which creates
+            // quite the rainbow if you have semantic coloring for your
+            // editor!)
+            __construct: function( a, b, c, d, e, f, g, h, i, j, k, l )
+            {
+                ctor_called++;
+            }
+        } );
+
+        var T = this.Sut.extend( C, {} );
+
+        this.assertDoesNotThrow( function()
+        {
+            C.use( T )();
+        } );
+
+        // the supertype's constructor should be invoked only _once_ (we
+        // were mixed into an object that should have already invoked it)
+        this.assertEqual( 1, ctor_called );
     },
 
 
