@@ -137,7 +137,7 @@ require( 'common' ).testCase(
 
         var Ta = this.Sut.implement( I ).extend(
         {
-            'virtual abstract override foo': function()
+            'abstract override foo': function()
             {
                 called.a = true;
                 this.__super();
@@ -182,7 +182,7 @@ require( 'common' ).testCase(
 
         var T = this.Sut.implement( I ).extend(
         {
-            'virtual abstract override foo': function()
+            'abstract override foo': function()
             {
                 called++;
                 this.__super();

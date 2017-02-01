@@ -340,7 +340,7 @@ require( 'common' ).testCase(
         this.assertStrictEqual( expected,
             this.Class.use( T ).extend(
             {
-                'override virtual foo': function()
+                'override foo': function()
                 {
                     return this.__super();
                 },

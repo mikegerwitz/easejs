@@ -192,9 +192,18 @@ require( 'common' ).testCase(
 
 
     /**
-     * Overriding a method in ease.js does not immediately make it virtual.
-     * Rather, the virtual keyword must be explicitly specified. Let's ensure
-     * that it is permitted.
+     * An override is implicitly virtual.  This was not always the case:
+     * prior to v0.2.9, an override did not imply virtual.
+     */
+    'Can override overridden method with concrete method': function()
+    {
+        this.quickKeywordMethodTest( [ 'override' ], null, [ 'override' ] );
+    },
+
+
+    /**
+     * For legacy reasons; see above test.  In the future, this might
+     * trigger a notice, since it's redundant.  No harm in being explicit!
      */
     'Can declare override as virtual': function()
     {

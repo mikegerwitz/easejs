@@ -55,9 +55,9 @@ var Cv = Class.implement( I ).extend(
 
 var To = Trait.implement( I ).extend(
 {
-    'virtual abstract override a': function() {},
-    'virtual abstract override b': function() {},
-    'virtual abstract override c': function() {},
+    'abstract override a': function() {},
+    'abstract override b': function() {},
+    'abstract override c': function() {},
 } );
 
 

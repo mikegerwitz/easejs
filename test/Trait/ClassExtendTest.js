@@ -485,7 +485,7 @@ require( 'common' ).testCase(
 
         var T1 = this.Sut.extend( C,
         {
-            'virtual abstract override foo': function()
+            'abstract override foo': function()
             {
                 return 3 + this.__super();
             },
@@ -493,7 +493,7 @@ require( 'common' ).testCase(
 
         var T2 = this.Sut.extend( C,
         {
-            'virtual abstract override foo': function()
+            'abstract override foo': function()
             {
                 return 13 + this.__super();
             },
@@ -533,7 +533,7 @@ require( 'common' ).testCase(
 
         var T1 = this.Sut.extend( C,
         {
-            'virtual override foo': function()
+            'override foo': function()
             {
                 return 3 + this.__super();
             },
@@ -541,7 +541,7 @@ require( 'common' ).testCase(
 
         var T2 = this.Sut.extend( C,
         {
-            'virtual override foo': function()
+            'override foo': function()
             {
                 return 13 + this.__super();
             },
@@ -603,7 +603,7 @@ require( 'common' ).testCase(
         var T2 = this.Sut.extend( C,
         {
             // T1 provides a concrete method that we can override
-            'virtual abstract override concrete': function()
+            'abstract override concrete': function()
             {
                 return 5 + this.__super();
             },

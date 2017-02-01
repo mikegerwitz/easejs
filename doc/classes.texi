@@ -749,12 +749,10 @@ One of the following conditions must always be true:
   @var{dfn\_n\^C} is declared with the @ref{Member Keywords,,@code{virtual}}
   keyword and @var{dfn\_n\^C'} is declared with the
   @ref{Member Keywords,,@code{override}} keyword.
-  @itemize
-    @item
-    Note that @var{dfn\_n\^C'} will not become @ref{Member Keywords,,@code{virtual}}
-    by default (unlike languages such as C++); they must be explicitly
-    declared as such.
-  @end itemize
+  @item
+  @var{dfn\_n\^C} is declared with the @ref{Member Keywords,,@code{override}}
+  keyword and @var{dfn\_n\^C'} is also declared with the
+  @ref{Member Keywords,,@code{override}} keyword.
   @item
   @var{dfn\_n\^C} is declared with the @ref{Member Keywords,,@code{abstract}}
   keyword and @var{dfn\_n\^C'} omits the @ref{Member Keywords,,@code{override}}
@@ -860,9 +858,23 @@ classes using ease.js?
             console.log( 'Walking the dog on two feet' );
         }
     } );
+
+    // supertype override is implicitly virtual
+    var ReallyLazyDog = LazyDog.extend(
+    {
+        'override public walk': function()
+        {
+            // ...
+        }
+    } );
 @end verbatim
 @caption{Inheritance in ease.js}
 @end float
+
+(The above inheritance tree is a bad idea and is for illustration
+  purposes only:
+    if you want to layer attributes,
+      use Traits or a composition-based pattern like Decorators.)
 
 You should already understand how to define a class (@pxref{Defining
 Classes}).  The above example introduced two means of @dfn{extending}
