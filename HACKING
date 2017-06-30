@@ -13,6 +13,9 @@ static analysis tools. In the meantime, please use your best judgment. The code
 has a certain "feel" to it. Try to follow this feel when submitting your own
 patches or making modifications to ensure consistency.
 
+ECMAScript has evolved a great deal since ease.js was created.  The project
+uses handwritten ES3 code only.  Deal with it. ;)
+
 
 Unit Testing
 ------------
