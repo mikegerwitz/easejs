@@ -1,7 +1,7 @@
 /**
  * Tests named trait definitions
  *
- *  Copyright (C) 2014, 2016 Free Software Foundation, Inc.
+ *  Copyright (C) 2014, 2016, 2017 Free Software Foundation, Inc.
  *
  *  This file is part of GNU ease.js.
  *
@@ -208,5 +208,26 @@ require( 'common' ).testCase(
 
         // ensure that trait was properly named
         this.assertOk( T.toString().match( name ) );
+    },
+
+
+    /**
+     * This is a regression test for a bug whereby `#__mixin' was not
+     * properly detected when extending a class, preventing a trait from
+     * becoming parameterized.  This was actually fixed when implementing
+     * named trait extending (and noticed on a version that did not have it
+     * implemented), but it's still an important test.
+     */
+    'Can create parameterized trait using named staging object': function()
+    {
+        var C = this.Class( {} );
+
+        this.assertOk( this.Sut.isParameterTrait(
+            this.Sut( 'Foo' ).extend( C,
+            {
+                // makes it parameterized
+                __mixin: function() {},
+            } )
+        ) );
     },
 } );
