@@ -1,6 +1,7 @@
 # GNU ease.js
 <!--
-  Copyright (C) 2010, 2011, 2013, 2014, 2015 Free Software Foundation, Inc.
+  Copyright (C) 2010, 2011, 2013, 2014, 2015, 2017
+    Free Software Foundation, Inc.
 
   This file is part of GNU ease.js.
 
@@ -58,7 +59,34 @@ they want to use "classes".
 
 
 ## Building and Installation
-See [INSTALL](./INSTALL).
+For information on installing ease.js on your system, see
+[`INSTALL`](./INSTALL).  Alternatively, you may install the software using
+npm by issuing the following command:
+
+```
+$ npm install easejs
+```
+
+## Configuring
+If your distribution contains a `configure` file in the project root, you
+may jump immediately to [`INSTALL`](./INSTALL).
+
+Otherwise, you likely have the sources as they exist in the project
+repository, which does not contain the generated `configure' script; you
+may generate it by issuing the following command:
+
+```
+$ autoreconf -fvi
+```
+
+Please note that certain files (such as AUTHORS, NEWS, and ChangeLog) are
+generated as part of the `dist` target and do not exist as part of the
+repository.
+
+
+## Hacking
+For information on hacking and contributing to GNU ease.js, please see
+[`README.hacking`](./README.hacking).
 
 
 ## License
