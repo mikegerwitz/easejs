@@ -31,6 +31,8 @@ require( 'common' ).testCase(
         {
             value: 'foo',
         } );
+
+        this.asserts = [ 'assertInstanceOf', 'assertIsA' ];
     },
 
 
@@ -283,5 +285,45 @@ require( 'common' ).testCase(
         this.assertOk(
             ( this.Foo.prototype.__cid !== undefined )
         );
+    },
+
+
+    /**
+     * When enforcing polymorphism (as opposed to duck typing), assertions
+     * are common; it's a lot of boilerplate.
+     */
+    '@each(asserts) assertIsA throws TypeError if not instance of class':
+    function( assertm )
+    {
+        var FooType = this.Sut( 'FooType' ).extend( {} );
+
+        try
+        {
+            this.Sut[ assertm ]( FooType, {} );
+        }
+        catch ( e )
+        {
+            this.assertOk( e instanceof TypeError );
+            this.assertOk( /instance of `FooType'/.test( e.message ) );
+        }
+    },
+
+
+    /**
+     * Same as above, but with the ability to add a custom error message.
+     */
+    '@each(asserts) assertIsA throws TypeError with custom message':
+    function( assertm )
+    {
+        var expected = "Test assertIsA message";
+
+        try
+        {
+            this.Sut[ assertm ]( this.Foo, {}, expected );
+        }
+        catch ( e )
+        {
+            this.assertEqual( e.message, expected );
+        }
     },
 } );
