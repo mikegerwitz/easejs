@@ -1,4 +1,4 @@
-var Filesystem = Interface( 'Filesystem',
+const Filesystem = Interface( 'Filesystem',
 {
     'public open': [ 'path', 'mode' ],
 

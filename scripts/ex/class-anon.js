@@ -1,12 +1,12 @@
-var Foo = Class(
+const Foo = Class(
     'private _name': '',
 
-    __construct: function( name )
+    constructor( name )
     {
         this._name = ''+( name );
     },
 
-    'public sayHello': function()
+    'public sayHello'()
     {
         return this._name + " says 'Hello!'";
     },

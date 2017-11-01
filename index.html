@@ -74,8 +74,8 @@
   <a href="manual/Temporary-Instances.html" class="man">temporary instances</a>.
 </p>
 <pre class="js">
-  var inst = Foo( "John Doe" );
-  var inst = new Foo( "John Doe" );
+  const inst_a = Foo( "John Doe" );
+  const inst_b = new Foo( "John Doe" );
 
   // temporary instance
   Foo( "John Doe" ).sayHello();
@@ -103,7 +103,7 @@
   <tt>extend()</tt> method may be used.
 </p>
 <pre class="js">
-  var SturdyCow = Cow.extend( { /*...*/ } );
+  const SturdyCow = Cow.extend( { /*...*/ } );
 </pre>
 
 <p>

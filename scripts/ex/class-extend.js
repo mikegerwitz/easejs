@@ -1,15 +1,15 @@
-var Cow = Class( 'Cow',
+const Cow = Class( 'Cow',
 {
-    'virtual public tip': function()
+    'virtual public tip'()
     {
         return "Omph.";
     },
 } );
 
-var SturdyCow = Class( 'SturdyCow' )
+const SturdyCow = Class( 'SturdyCow' )
     .extend( Cow,
 {
-    'override public tip': function()
+    'override public tip'()
     {
         return "Moo.";
     },

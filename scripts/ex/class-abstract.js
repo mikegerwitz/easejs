@@ -1,6 +1,6 @@
-var Database = AbstractClass( 'Database',
+const Database = AbstractClass( 'Database',
 {
-    'public connect': function( user, pass )
+    'public connect'( user, pass )
     {
         if ( !( this.authenticate( user, pass ) ) )
         {
@@ -12,11 +12,11 @@ var Database = AbstractClass( 'Database',
     'abstract protected authenticate': [ 'user', 'pass' ],
 } );
 
-var MongoDatabase = Class( 'MongoDatabase' )
+const MongoDatabase = Class( 'MongoDatabase' )
     .extend( Database,
 {
     // must implement each argument for Database.authenticate()
-    'protected authenticate': function( user, pass )
+    'protected authenticate'( user, pass )
     {
         // ...
     },

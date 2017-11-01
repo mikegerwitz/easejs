@@ -1,23 +1,23 @@
-var ConcreteFilesystem = Class( 'ConcreteFilesystem' )
+const ConcreteFilesystem = Class( 'ConcreteFilesystem' )
     .implement( Filesystem )  // multiple interfaces as separate arguments
 {
-    'public open': function( path, mode )
+    'public open'( path, mode )
     {
         return { path: path, mode: mode };
     },
 
-    'public read': function( handle, length )
+    'public read'( handle, length )
     {
         return "";
     },
 
-    'public write': function( handle, data )
+    'public write'( handle, data )
     {
         // ...
         return data.length;
     },
 
-    'public close': function( handle )
+    'public close'( handle )
     {
         // ...
         return this;

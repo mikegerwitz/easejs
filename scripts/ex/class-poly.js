@@ -1,5 +1,5 @@
-var cow    = Cow(),
-    sturdy = SturdyCow();
+const cow    = Cow();
+const sturdy = SturdyCow();
 
 Class.isA( Cow, cow );           // true
 Class.isA( SturdyCow, cow );     // false

@@ -1,15 +1,15 @@
-var Class = easejs.Class;
+const { Class } = easejs;
 
-var Stack = Class( 'Stack',
+const Stack = Class( 'Stack',
 {
     'private _stack': [],
 
-    'public push': function( value )
+    'public push'( value )
     {
         this._stack.push( value );
     },
 
-    'public pop': function()
+    'public pop'()
     {
         return this._stack.pop();
     },

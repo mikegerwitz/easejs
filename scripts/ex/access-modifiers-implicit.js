@@ -1,34 +1,34 @@
-var DatabaseRecord = Class( 'DatabaseRecord',
+const DatabaseRecord = Class( 'DatabaseRecord',
 {
     /* implicitly private */
     _connection: null,
 
 
-    __construct: function( host, user, pass )
+    constructor( host, user, pass )
     {
         this._connection = this._connect( host, user, pass );
     },
 
     /* implicitly private */
-    _connect: function( host, user, pass )
+    _connect( host, user, pass )
     {
         // (do connection stuff)
         return { host: host };
     },
 
-    'protected query': function( query )
+    'protected query'( query )
     {
         // perform query on this._connection, rather than exposing
         // this._connection to subtypes
     },
 
-    'protected escapeString': function( field )
+    'protected escapeString'( field )
     {
         return field.replace( "'", "\\'" );
     },
 
     /* public by default */
-    getName: function( id )
+    getName( id )
     {
         return this._query(
             "SELECT name FROM users WHERE id = '" +

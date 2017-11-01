@@ -1,6 +1,6 @@
-var Foo = FinalClass( 'Foo',
+const Foo = FinalClass( 'Foo',
 {
-    'public describe': function()
+    'public describe'()
     {
         return "I cannot be extended.";
     },
