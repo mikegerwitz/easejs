@@ -199,5 +199,40 @@ require( 'common' ).testCase(
         this.assertEqual( called, 3 );
         this.assertOk( calledbase );
     },
+
+
+    /**
+     * Once all mixins are applied, a class is generated.  This class is
+     * then instantiated, producing some object O.  `this.__inst' in each
+     * mixin should then be bound to the public visibility object of O.
+     */
+    '__inst refers to mixin class object': function()
+    {
+        var _self   = this,
+            scalled = false;
+
+        var T = this.Sut(
+        {
+            'virtual public foo': function()
+            {
+                _self.assertStrictEqual( sut, this.__inst );
+                scalled = true;
+            },
+        } );
+
+        var sut = this.Class.use( T ).extend(
+        {
+            'override public foo': function()
+            {
+                this.__super();
+            },
+        } )();
+
+        sut.foo();
+
+        // sanity check (this is covered by an above test, but we need to be
+        // sure that it doesn't silently fail beacuse it's never called)
+        this.assertOk( scalled );
+   },
 } );
 
