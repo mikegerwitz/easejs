@@ -35,7 +35,7 @@ object in JavaScript:
      */
 
     // our "class"
-    var MyClass = function()
+    const MyClass = function()
     {
         this.prop = 'foobar';
     }
@@ -47,7 +47,7 @@ object in JavaScript:
     };
 
     // create a new instance of the class and execute doStuff()
-    var foo = new MyClass();
+    const foo = new MyClass();
     console.log( foo.getProp() ); // outputs "foobar"
 @end verbatim
 @caption{Basic ``Class'' in JavaScript @emph{without} using ease.js}
@@ -202,20 +202,21 @@ Let's take a look at how to declare that exact same class using ease.js:
 
 @float Figure, f:class-easejs
 @verbatim
-    var Class = require( 'easejs' ).Class;
+    const { Class } = require( 'easejs' );
+    // or: var Class = require( 'easejs' ).Class;
 
-    var MyClass = Class(
+    const MyClass = Class(
     {
         'public prop': 'foobar',
 
-        'public getProp': function()
+        'public getProp'()
         {
             return this.prop;
         }
     } );
 
     // create a new instance of the class and execute doStuff()
-    var foo = MyClass();
+    const foo = MyClass();
     console.log( foo.getProp() ); // outputs "foobar"
 @end verbatim
 @caption{Basic anonymous class declaration using ease.js}
@@ -244,7 +245,7 @@ later on.
 @item
 ease.js's class module is imported using @code{require()} in the above
 example.  If using ease.js client-side (@pxref{Client-Side Include}), you
-can instead use @samp{var Class = easejs.Class}. From this point on,
+can instead use @samp{const @{Class@} = easejs}. From this point on,
 importing the module will not be included in examples.
 @end itemize
 
@@ -284,19 +285,19 @@ In the majority of cases, this works fine in ease.js
 
 @float Figure, f:method-chain
 @verbatim
-  var Foo = Class( 'Foo',
+  const Foo = Class( 'Foo',
   {
-      'public beginning': function()
+      'public beginning'()
       {
           return this;
       },
 
-      'public middle': function()
+      'public middle'()
       {
           return this;
       },
 
-      'public end': function()
+      'public end'()
       {
           // ...
       }
@@ -320,17 +321,17 @@ A callback, for example:
 
 @float Figure, f:method-this-callback
 @verbatim
-  var Foo = Class( 'Foo',
+  const Foo = Class( 'Foo',
   {
-     'private _foo': 'good',
+      'private _foo': 'good',
 
-      'public beginning': function( c )
+      'public beginning'( c )
       {
           // XXX: `this' is the private visibility object
           c( this );
       },
 
-      'public end': function()
+      'public end'()
       {
           return this._foo;
       }
@@ -338,7 +339,7 @@ A callback, for example:
 
   // result: 'bad'
   Foo()
-      .beginning( function( self )
+      .beginning( self =>
       {
           // has access to internal state
           self._foo = 'bad';
@@ -365,17 +366,17 @@ To solve this problem,
 
 @float Figure, f:method-callback-inst
 @verbatim
-  var Foo = Class( 'Foo',
+  const Foo = Class( 'Foo',
   {
      'private _foo': 'good',
 
-      'public beginning': function( c )
+      'public beginning'( c )
       {
           // OK
           c( this.__inst );
       },
 
-      'public end': function()
+      'public end'()
       {
           return this._foo;
       }
@@ -383,7 +384,7 @@ To solve this problem,
 
   // result: 'good'
   Foo()
-      .beginning( function( self )
+      .beginning( self =>
       {
           // sets public property `_foo', since `self' is now the public
           // visibility object
@@ -406,7 +407,7 @@ the common act of creating anonymous functions in JavaScript:
 @float Figure, f:anon-func
 @verbatim
     // anonymous
-    var myFunc = function() {};
+    const myFunc = function() {};
 
     // named
     function myNamedFunc() {};
@@ -447,8 +448,8 @@ is functionally no difference between named and anonymous classes.}
 
 @float Figure, f:class-named
 @verbatim
-    var MyFoo = Class( 'MyFoo', {} ),
-        foo   = MyFoo();
+    const MyFoo = Class( 'MyFoo', {} );
+    const foo   = MyFoo();
 
     // call non-existent method
     foo.baz();
@@ -484,10 +485,10 @@ Implementation}), using a @code{__construct}@tie{}method:
 
 @float Figure, f:constructor
 @verbatim
-    var Foo = Class( 'Foo',
+    const Foo = Class( 'Foo',
     {
-        // may also use `construct`; see below
-        __construct: function( name )
+        // may also use `constructor`; see below
+        __construct( name )
         {
             console.log( 'Hello, ' + name + '!' );
         }
@@ -518,7 +519,7 @@ This method name may also be used prior to ES6.
 @float Figure, f:constructor-es6
 @verbatim
     // ECMAScript 6 syntax
-    let Foo = Class( 'Foo',
+    const Foo = Class( 'Foo',
     {
         // you may still use __construct if you'd prefer, as shown above
         constructor( name )
@@ -558,9 +559,9 @@ If you wish to prevent a class from being instantiated,
 
 @float Figure, f:constructor-prevent
 @verbatim
-    var Foo = Class( 'Foo',
+    const Foo = Class( 'Foo',
     {
-        __construct: function( name )
+        constructor( name )
         {
             throw Error( "Cannot instantiate class Foo" );
         }
@@ -614,9 +615,9 @@ Consider the following example:
 @float Figure, f:class-tmp
 @verbatim
     // new instance of anonymous class
-    var foo = Class(
+    const foo = Class(
     {
-        'public bar': function()
+        'public bar'()
         {
             return 'baz';
         }
@@ -654,20 +655,18 @@ or chain of methods, then are immediately discarded.
 @float Figure, f:inst-tmp
 @verbatim
     // retrieve the name from an instance of Foo
-    var name = Foo().getName();
+    const name = Foo().getName();
 
     // method chaining
-    var car = VehicleFactory()
+    const car = VehicleFactory()
         .createBody()
         .addWheel( 4 )
         .addDoor( 2 )
         .build();
 
     // temporary class with callback
-    HttpRequest( host, port ).get( path, function( data )
-    {
-        console.log( data );
-    } );
+    HttpRequest( host, port )
+        .get( path, data => console.log( data ) );
 
     // Conventionally (without ease.js), you'd accomplish the above using
     // the 'new' keyword. You may still do this with ease.js, though it is
@@ -828,41 +827,41 @@ classes using ease.js?
 @float Figure, f:inheritance
 @verbatim
     // our parent class (supertype)
-    var Dog = Class( 'Dog',
+    const Dog = Class( 'Dog',
     {
-        'virtual public walk': function()
+        'virtual public walk'()
         {
             console.log( 'Walking the dog' );
         },
 
-        'public bark': function()
+        'public bark'()
         {
             console.log( 'Woof!' );
         }
     } );
 
     // subclass (child), as a named class
-    var LazyDog = Class( 'LazyDog' ).extend( Dog,
+    const LazyDog = Class( 'LazyDog' ).extend( Dog,
     {
-        'override public walk': function()
+        'override public walk'()
         {
             console.log( 'Lazy dog refuses to walk.' );
         }
     } );
 
     // subclass (child), as an anonymous class
-    var TwoLeggedDog = Dog.extend(
+    const TwoLeggedDog = Dog.extend(
     {
-        'override public walk': function()
+        'override public walk'()
         {
             console.log( 'Walking the dog on two feet' );
         }
     } );
 
     // supertype override is implicitly virtual
-    var ReallyLazyDog = LazyDog.extend(
+    const ReallyLazyDog = LazyDog.extend(
     {
-        'override public walk': function()
+        'override public walk'()
         {
             // ...
         }
@@ -948,12 +947,12 @@ method inherited from the parent.
 
 @float Figure, f:using-inherited-members
 @verbatim
-    var LazyDog = Class( 'LazyDog' ).extend( Dog,
+    const LazyDog = Class( 'LazyDog' ).extend( Dog,
     {
         /**
          * Bark when we're poked
          */
-        'virtual public poke': function()
+        'virtual public poke'()
         {
             this.bark();
         }
@@ -994,9 +993,9 @@ this dog lazy, but he's rather moody.
 
 @float Figure, f:super-method
 @verbatim
-    var AngryDog = Class( 'AngryDog' ).extend( LazyDog,
+    const AngryDog = Class( 'AngryDog' ).extend( LazyDog,
     {
-        'public poke': function()
+        'public poke'()
         {
             // augment the parent method
             console.log( 'Grrrrrr...' );
@@ -1048,14 +1047,14 @@ to the overridden @code{poke} method (in this case, @code{LazyDog.poke}):
 
 @float Figure, f:arbitrary-super-method
 @verbatim
-    var AngryDog = Class( 'AngryDog' ).extend( LazyDog,
+    const AngryDog = Class( 'AngryDog' ).extend( LazyDog,
     {
-        'public poke': function()
+        'public poke'()
         {
             // ...
         },
 
-        'public pokeWithDeliciousBone': function()
+        'public pokeWithDeliciousBone'()
         {
             // invoke LazyDog.poke
             this.poke.super.call( this );
@@ -1179,9 +1178,9 @@ It doesn't matter what instance of @var{Dog}---be it a @var{LazyDog} or
 
 @float Figure, f:polymorphism-easejs
 @verbatim
-    var DogTrainer = Class( 'DogTrainer',
+    const DogTrainer = Class( 'DogTrainer',
     {
-        'public __construct': function( dog )
+        constructor( dog )
         {
             this.assertIsA( Dog, dog );
         }
@@ -1271,36 +1270,36 @@ Let's take a look at an example.
 
 @float Figure, f:vis-esc
 @verbatim
-    var Foo = Class(
+    const Foo = Class(
+    {
+        'virtual protected canEscalate': 'baz',
+
+        'virtual protected escalateMe'( arg )
         {
-            'virtual protected canEscalate': 'baz',
+            console.log( 'In escalateMe' );
+        },
 
-            'virtual protected escalateMe': function( arg )
-            {
-                console.log( 'In escalateMe' );
-            },
-
-            'virtual public cannotMakeProtected': function()
-            {
-            }
-        } ),
-
-        SubFoo = Foo.extend(
+        'virtual public cannotMakeProtected'()
         {
-            /**
-             * Escalating a property means redefining it
-             */
-            'public canEscalate': 'baz',
+        }
+    } );
 
-            /**
-             * We can go protected -> public
-             */
-            'public escalateMe': function( arg )
-            {
-                // simply call the parent method
-                this.__super( arg );
-            }
-        } );
+    const SubFoo = Foo.extend(
+    {
+        /**
+         * Escalating a property means redefining it
+         */
+        'public canEscalate': 'baz',
+
+        /**
+         * We can go protected -> public
+         */
+        'public escalateMe'( arg )
+        {
+            // simply call the parent method
+            this.__super( arg );
+        }
+    } );
 @end verbatim
 @caption{Visibility can be escalated}
 @end float
@@ -1322,10 +1321,10 @@ With GNU ease.js, error subtyping is transparent:
 
 @float Figure, f:error-extend
 @verbatim
-    var MyError = Class( 'MyError' )
+    const MyError = Class( 'MyError' )
         .extend( Error, {} );
 
-    var e = MyError( 'Foo' );
+    const e = MyError( 'Foo' );
     e.message;  // Foo
     e.name;     // MyError
 
@@ -1387,7 +1386,7 @@ recommended way of creating an @var{Error} subtype in ECMAScript:
 @verbatim
     function ErrorSubtype( message )
     {
-        var err = new Error();
+        const err = new Error();
 
         this.name         = 'ErrorSubtype';
         this.message      = message || 'Error';
@@ -1471,7 +1470,7 @@ Therefore, we will use a static property of class @var{BigBang}.
 
 @float Figure, f:static-ex
 @verbatim
-    var BigBang = Class( 'BigBang',
+    const BigBang = Class( 'BigBang',
     {
         /**
          * Number of big bangs that has occurred
@@ -1493,7 +1492,7 @@ Therefore, we will use a static property of class @var{BigBang}.
          *
          * @return  {BigBang}  new big bang
          */
-        'public static fromBraneCollision': function( brane_set )
+        'public static fromBraneCollision'( brane_set )
         {
             // do initialization tasks...
 
@@ -1508,7 +1507,7 @@ Therefore, we will use a static property of class @var{BigBang}.
          *
          * @return  {BigBang}  new big bang
          */
-        'public static fromBigCrunch': function( crunch )
+        'public static fromBigCrunch'( crunch )
         {
             // do initialization tasks...
 
@@ -1521,7 +1520,7 @@ Therefore, we will use a static property of class @var{BigBang}.
          *
          * @return  {number}  total number of big bangs
          */
-        'public static getTotalCount': function()
+        'public static getTotalCount'()
         {
             return this.$('_count');
         }
@@ -1535,7 +1534,7 @@ Therefore, we will use a static property of class @var{BigBang}.
          *
          * @return  {undefined}
          */
-        __construct: function( type, data )
+        constructor( type, data )
         {
             this._type = type;
 
@@ -1549,8 +1548,8 @@ Therefore, we will use a static property of class @var{BigBang}.
     } );
 
     // create one of each
-    var brane_bang  = BigBang.fromBraneCollision( branes ),
-        crunch_bang = BigBang.fromBigCrunch( crunch_incident );
+    const brane_bang  = BigBang.fromBraneCollision( branes );
+    const crunch_bang = BigBang.fromBigCrunch( crunch_incident );
 
     console.log( "Total number of big bangs: %d", BigBang.getTotalCount() );
     // Total number of big bangs: 2
@@ -1593,13 +1592,13 @@ The final rule above is not true when the situation is reversed. Non-static
 methods @emph{can} call static methods through use of the @var{__self}
 object, which is a reference to the class itself. That is, @var{this} in a
 static method is the same object as @var{this.__self} in a non-static
-method. This is demonstrated by @code{getTotalCount()}
+method. This is demonstrated by @code{getTotalCount}
 
 @verbatim
     this.$('_count')
 @end verbatim
 
-and @code{__construct()}.
+and @code{#construct}.
 
 @verbatim
     this.__self.$('_count')
@@ -1630,7 +1629,7 @@ acts as a getter, as in @ref{f:static-ex}'s @code{getTotalCount()}:
 @end verbatim
 
 If the second argument is provided, it acts as a setter, as in
-@code{__construct()}:
+@code{#construct}:
 
 @verbatim
     this.__self.$( '_count',
@@ -1649,13 +1648,12 @@ omitted. Consider the following example:
 
 @float Figure, f:static-accessor
 @verbatim
-    var Foo = Class( 'Foo',
-        {
-            'public static bar': 'baz',
-        },
+    const Foo = Class( 'Foo',
+    {
+        'public static bar': 'baz',
+    } );
 
-        SubFoo = Class( 'SubFoo' ).extend( Foo, {} )
-    ;
+    const SubFoo = Class( 'SubFoo' ).extend( Foo, {} );
 
     // correct
     Foo.$( 'bar, 'baz2' );
@@ -1700,9 +1698,9 @@ mounts from @file{/etc/fstab}:
         'private _mountPoints': [],
 
 
-        __construct: function()
+        constructor()
         {
-            var data = fs.readFileSync( this.$('_PATH') );
+            const data = fs.readFileSync( this.$('_PATH') );
             this._parseMountPoints( data );
         },
 
@@ -1876,7 +1874,7 @@ others. We could define this API in a @code{Socket} interface:
 
 @float Figure, f:interface-def
 @verbatim
-var Socket = Interface( 'Socket',
+const Socket = Interface( 'Socket',
 {
     'public connect': [ 'host', 'port' ],
 
@@ -1894,20 +1892,20 @@ We can then provide any number of @code{Socket} implementations:
 
 @float Figure f:interface-impl
 @verbatim
-var WebSocket = Class( 'WebSocket' ).implement( Socket ).extend(
-    {
-        'public connect': function( host, port )
-        {
-            // ...
-        },
-
-        // ...
-    } ),
-
-    SomeCustomSocket = Class.implement( Socket ).extend(
+const WebSocket = Class( 'WebSocket' ).implement( Socket ).extend(
+{
+    'public connect'( host, port )
     {
         // ...
-    } );
+    },
+
+    // ...
+} );
+
+const SomeCustomSocket = Class.implement( Socket ).extend(
+{
+    // ...
+} );
 @end verbatim
 @caption{Implementing an interface}
 @end float
@@ -1917,22 +1915,18 @@ polymorphically:
 
 @float Figure, f:interface-poly
 @verbatim
-var ChatClient = Class(
+const ChatClient = Class(
 {
     'private _socket': null,
 
-    __construct: function( socket )
+    constructor( socket )
     {
-        // only allow sockets
-        if ( !( Class.isA( Socket, socket ) ) )
-        {
-            throw TypeError( 'Expected socket' );
-        }
+        this.assertIsA( Socket, socket );
 
         this._socket = socket;
     },
 
-    'public sendMessage': function( channel, message )
+    'public sendMessage'( channel, message )
     {
         this._socket.send( {
             channel: channel,
@@ -1972,7 +1966,7 @@ allow us to do something like @samp{some_socket.on( 'receive', function()
 
 @float Figure, f:interface-impl-multi
 @verbatim
-var AnotherSocket = Class.implement( Socket, Event ).extend(
+const AnotherSocket = Class.implement( Socket, Event ).extend(
 {
     'public connect': // ...
 
@@ -2085,7 +2079,7 @@ Class( 'Dialog',
 {
     'private _factory': null,
 
-    __construct: function( factory )
+    constructor( factory )
     {
         if ( !( Class.isA( WidgetFactory, factory ) ) )
         {
@@ -2095,10 +2089,10 @@ Class( 'Dialog',
         this._factory = factory;
     },
 
-    'public open': function()
+    'public open'()
     {
         // before we open the dialog, we need to create and add the widgets
-        var btn = this._factory.createButtonWidget( 'btn_ok', "OK" );
+        const btn = this._factory.createButtonWidget( 'btn_ok', "OK" );
 
         // ...
     },
@@ -2128,11 +2122,11 @@ subtypes:
 @verbatim
 AbstractClass( 'WidgetFactory',
 {
-    'public createButtonWidget': function( id, label )
+    'public createButtonWidget'( id, label )
     {
         // note that this is a call to an abstract method; the
         // implementation is not yet defined
-        var widget = this.getNewButtonWidget();
+        const widget = this.getNewButtonWidget();
 
         // perform common initialization tasks
         widget.setId( id );
@@ -2175,7 +2169,7 @@ Class( 'JqueryUiWidgetFactory' )
     .extend( WidgetFactory,
 {
     // concrete method
-    'protected getNewButtonWidget': function()
+    'protected getNewButtonWidget'()
     {
         // ...
     },
@@ -2233,43 +2227,43 @@ design patterns.
 
 @float Figure, f:method-proxy-use
 @verbatim
-var Pidgin = Class( 'Pidgin',
+const Pigeon = Class( 'Pigeon',
 {
     'private _name': 'Flutter',
 
-    'public cheep': function( chirp )
+    'public cheep'( chirp )
     {
         return this._name + ": cheep " + chirp;
     }
 
-    'public rename': function( name )
+    'public rename'( name )
     {
         this._name = ''+name;
         return this;
     }
 } );
 
-var IratePidginCheep = Class( 'IratePidginCheep',
+const IratePigeonCheep = Class( 'IratePigeonCheep',
 {
-    'private _pidgin': null,
+    'private _pigeon': null,
 
-    __construct: function( pidgin )
+    constructor( pigeon )
     {
-        this._pidgin = pidgin;
+        this._pigeon = pigeon;
     }
 
     // add our own method
-    'public irateCheep': function( chirp )
+    'public irateCheep'( chirp )
     {
-        return this._pidgin.cheep( chirp ).toUpperCase();
+        return this._pigeon.cheep( chirp ).toUpperCase();
     },
 
     // retain original methods
-    'proxy cheep':  '_pidgin',
-    'proxy rename': '_pidgin',
+    'proxy cheep':  '_pigeon',
+    'proxy rename': '_pigeon',
 } );
 
-var irate = IratePidginCheep( Pidgin() );
+const irate = IratePigeonCheep( Pigeon() );
 
 irate.cheep( 'chirp' );
 // "Flutter: cheep chirp"
@@ -2279,7 +2273,7 @@ irate.irateCheep( 'chop' );
 // "BUTTER: CHEEP CHOP"
 @end verbatim
 @caption{Using the @code{proxy} keyword to proxy @code{cheep} and
-@code{rename} method calls to the object stored in property @code{_pidgin}.}
+@code{rename} method calls to the object stored in property @code{_pigeon}.}
 @end float
 
 Consider some object @code{O} whoose class uses method proxies.

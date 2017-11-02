@@ -240,7 +240,7 @@ Class( 'Dog',
     // ...
 
 
-    'public walk': function()
+    'public walk'()
     {
         this.stand();
         this._moveFrontLeg( 0 );
@@ -249,7 +249,7 @@ Class( 'Dog',
         this._moveBackLeg( 0 );
     },
 
-    'protected stand': function()
+    'protected stand'()
     {
         if ( this.isSitting() )
         {
@@ -257,17 +257,17 @@ Class( 'Dog',
         }
     },
 
-    'public rollOver': function()
+    'public rollOver'()
     {
         this._body.roll();
     },
 
-    'private _moveFrontLeg': function( leg )
+    'private _moveFrontLeg'( leg )
     {
         this._legs.front[ leg ].move();
     },
 
-    'private _moveBackLeg': function( leg )
+    'private _moveBackLeg'( leg )
     {
         this._legs.back[ leg ].move();
     },
@@ -299,7 +299,7 @@ are not available outside the class.
 
 @float Figure, f:encapsulation-call-priv
 @verbatim
-    var dog = Dog();
+    const dog = Dog();
     dog._moveFrontLeg( 1 );
 
     // TypeError: Object #<Dog> has no method '_moveFrontLeg'
@@ -324,12 +324,12 @@ explore that approach:
 
 @float Figure, f:encapsulation-inherit-priv
 @verbatim
-    var two_legged_dog = Class( 'TwoLeggedDog' ).extend( Dog,
+    const two_legged_dog = Class( 'TwoLeggedDog' ).extend( Dog,
     {
         /**
          * This won't override the parent method.
          */
-        'private _moveFrontLeg': function( leg )
+        'private _moveFrontLeg'( leg )
         {
             // don't do anything
             return;
@@ -392,12 +392,12 @@ another subtype, @var{LazyDog}, which refuses to stand.
 
 @float Figure, f:encapsulation-inherit-prot
 @verbatim
-    var lazy_dog = Class( 'LazyDog' ).extend( Dog,
+    const lazy_dog = Class( 'LazyDog' ).extend( Dog,
     {
         /**
          * Overrides parent method
          */
-         'protected stand': function()
+         'protected stand'()
          {
             // nope!
             this.rollOver();

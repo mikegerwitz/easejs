@@ -163,7 +163,7 @@ have been done for you.
 @float Figure, f:inc-serverside
 @verbatim
 /** example-include.js **/
-var easejs = require( 'easejs' );
+const easejs = require( 'easejs' );
 @end verbatim
 @caption{Including ease.js via require()}
 @end float
