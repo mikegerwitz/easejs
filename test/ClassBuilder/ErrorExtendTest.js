@@ -38,6 +38,8 @@ require( 'common' ).testCase(
             RangeError,
             URIError,
         ];
+
+        this.ctors = [ '__construct', 'constructor' ];
     },
 
 
@@ -164,7 +166,7 @@ require( 'common' ).testCase(
      * implementation.  However, a user can provide a method to be invoked
      * after the generated constructor.
      */
-    'Can override generated constructor': function()
+    '@each(ctors) Can override generated constructor': function( ctor )
     {
         var called_gen = false,
             called_own = false;
@@ -178,12 +180,13 @@ require( 'common' ).testCase(
             };
         };
 
-        var result = this.builder.build( {}, {
-            __construct: function()
-            {
-                called_own = true;
-            },
-        } )();
+        var dfn = {};
+        dfn[ ctor ] = function()
+        {
+            called_own = true;
+        };
+
+        var result = this.builder.build( {}, dfn )();
 
         this.assertOk( called_gen );
         this.assertOk( called_own );
