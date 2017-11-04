@@ -468,4 +468,36 @@ require( 'common' ).testCase(
         // protected foo was recognized
         this.assertOk( called );
     },
+
+
+    /**
+     * When a single argument is provided to `#extend' in the form
+     * `C.extend(o)', it is assumed that `o' is the definition
+     * object.  However, it's also possible that the user provided the class
+     * to extend but _forgot_ the definition object.
+     *
+     * In this case, prior to this change, the supertype was treated as the
+     * definition object, which yielded some pretty confusing results.  It's
+     * better to help the user out and provide a clear indication of what
+     * went wrong.
+     */
+    'Extending with one argument that is a class yields an error': function()
+    {
+        var _self = this;
+
+        // missing second argument
+        this.assertThrows( function()
+        {
+            _self.Sut.extend( _self.Sut( 'Whoops', {} ) );
+        }, TypeError );
+
+        // class provided as second argument (>_>)
+        this.assertThrows( function()
+        {
+            _self.Sut.extend(
+                _self.Sut( 'Base', {} ),
+                _self.Sut( 'Wth', {} )
+            );
+        }, TypeError );
+    }
 } );
