@@ -1,7 +1,7 @@
 #!/bin/bash
 # Automates the task of tagging and making a release of GNU ease.js
 #
-#  Copyright (C) 2014 Free Software Foundation, Inc.
+#  Copyright (C) 2014, 2017 Free Software Foundation, Inc.
 #
 #  This file is part of GNU ease.js.
 #
@@ -58,8 +58,11 @@ git checkout "$version" || {
 # rebuild and prepare distributions
 autoreconf -fvi \
   && ./configure \
-  && make dist distdir \
-  || exit $?
+  && make distcheck distdir \
+  || {
+    echo "distcheck hint: use absolute path for CCJAR env var" >&2
+    exit 1
+  }
 
 # create links for gnupload filenames (gnuput does not like symlinks here)
 srcln="easejs-$version/build"
