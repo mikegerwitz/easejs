@@ -74,7 +74,7 @@ combine: reconf $(path_combine_output) $(path_build)/browser-test.html
 
 # will force a reconfigure (for version data) if in the git repo
 reconf:
-	test -d .git && autoconf && ./configure
+	test ! -d .git || ./autogen.sh
 
 # combine all modules into easily redistributable ease.js file (intended for
 # browser)
