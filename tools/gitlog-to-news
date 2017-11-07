@@ -34,7 +34,7 @@ git log --log-size --format="%H%n%B" \
       # remember that four (or five, if merge) of these lines are the header
       # (including empty line)
       len=$( wc -l <<< "$text" )
-      test "$len" -gt 10 || continue
+      test "$len" -gt 15 || continue
 
       echo "$text"
     done \
