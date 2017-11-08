@@ -18,11 +18,11 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-path_build = $(srcdir)/build
-path_tools = $(srcdir)/tools
-path_lib   = $(srcdir)/lib
-path_test  = $(srcdir)/test
-path_doc   = $(srcdir)/doc
+path_build = $(top_builddir)/build
+path_tools = $(top_srcdir)/tools
+path_lib   = $(top_srcdir)/lib
+path_test  = $(top_srcdir)/test
+path_doc   = $(top_srcdir)/doc
 
 path_combine_output      = $(path_build)/ease.js
 path_combine_output_full = $(path_build)/ease-full.js
@@ -59,16 +59,9 @@ EXTRA_DIST = AUTHORS NEWS ChangeLog README.md HACKING INSTALL \
              $(path_tools)/gitlog-to-changelog \
              $(path_tools)/gitlog-to-news
 
-.PHONY: mkbuild combine min doc check test test-suite perf FORCE
+.PHONY: combine min doc check test test-suite perf FORCE
 
 all: combine
-
-mkbuild: $(path_build)
-
-# create build dir
-$(path_build):
-	$(MKDIR_P) "$(path_build)"
-
 
 combine: reconf $(path_combine_output) $(path_build)/browser-test.html
 
@@ -78,19 +71,23 @@ reconf:
 
 # combine all modules into easily redistributable ease.js file (intended for
 # browser)
-$(path_combine_output): $(src_js) | mkbuild
-	$(combine) > "$(path_combine_output)"
-$(path_combine_output_full): $(src_js) $(src_tests) | mkbuild
-	INC_TEST=1 "$(combine)" > "${path_combine_output_full}"
-$(path_build)/browser-test.html: $(path_browser_test) | $(path_combine_output_full)
+$(path_combine_output): $(src_js)
+	$(MKDIR_P) "$(path_build)"
+	$(combine) > $@
+$(path_combine_output_full): $(src_js) $(src_tests)
+	$(MKDIR_P) "$(path_build)"
+	INC_TEST=1 "$(combine)" > $@
+$(path_build)/browser-test.html: $(path_browser_test) $(path_combine_output_full)
+	$(MKDIR_P) "$(path_build)"
 	cp -f "$(path_browser_test)" $@
-$(path_build)/browser-test-min.html: $(path_browser_test) | $(path_combine_output_full)
+$(path_build)/browser-test-min.html: $(path_browser_test) $(path_combine_output_full)
+	$(MKDIR_P) "$(path_build)"
 	cat "$(path_browser_test)" | sed 's/ease-full\.js/ease-full\.min\.js/' > $@
 
 # minification process uses Google Closure compiler
 min: $(path_build)/ease.min.js $(path_build)/ease-full.min.js \
 $(path_build)/browser-test-min.html | combine
-build/%.min.js: build/%.js $(path_tools)/externs-global.js  $(path_externs_internal)
+$(path_build)/%.min.js: $(path_build)/%.js $(path_tools)/externs-global.js  $(path_externs_internal)
 if HAS_JAVA
 if HAS_CCJAR
 	cat $(path_tools)/license-min.tpl > $@
@@ -110,7 +107,8 @@ else
 endif
 
 # externs for compilation process
-$(path_externs_internal): | mkbuild
+$(path_externs_internal):
+	$(MKDIR_P) "$(path_build)"
 	$(path_tools)/mkexterns > $@
 
 doc:
